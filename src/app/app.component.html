@@ -1,0 +1,26 @@
+<div>
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" [routerLink]="['/home']">
+                    <i class="fa fa-thumbs-up"></i> Jimi </a>
+            </div>
+
+            <ul class="nav navbar-nav">
+                <li>
+                    <a [routerLink]="['/home']">Topics</a>
+                </li>
+                <li>
+                    <a [routerLink]="['/about']">About</a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <main>
+        <router-outlet></router-outlet>
+    </main>
+
+</div>
