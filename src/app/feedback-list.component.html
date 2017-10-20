@@ -14,7 +14,7 @@
          <tbody>
             <tr *ngFor="let feedback of feedbackList">
                <td>{{ feedback.topic }}</td>
-               <td>{{ feedback.rating }}</td>
+               <td><img src="/assets/img/face-{{ feedback.rating }}.svg"/></td>
                <td>{{ feedback.comments }}</td>
             </tr>
       </table>
