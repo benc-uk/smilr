@@ -1,0 +1,12 @@
+<div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2 class="panel-title">Active Feedback Topics</h2>
+      </div>
+      <div class="panel-body">
+          <ul>
+              <li *ngFor="let topic of topics">
+                  <a [routerLink]="['/feedback', topic.id]">{{ topic.desc }}</a>
+              </li>
+          </ul>
+      </div>
+    </div>

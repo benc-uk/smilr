@@ -1,13 +1,17 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { HomeComponent }   from './home.component';
-import { FeedbackComponent }   from './feedback.component';
+import { HomeComponent }        from './home.component';
+import { TopicListComponent }      from './topic-list.component';
+import { FeedbackComponent }    from './feedback.component';
+import { FeedbackListComponent }    from './feedback-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home',  component: HomeComponent },
-  { path: 'feedback/:id',  component: FeedbackComponent }
+  { path: 'topics',  component: TopicListComponent },
+  { path: 'feedback/:topic',  component: FeedbackComponent },
+  { path: 'feedback',  component: FeedbackListComponent, pathMatch: 'full' }
 ];
 
 @NgModule({

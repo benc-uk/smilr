@@ -1,34 +1,27 @@
 
-    <h1><i class="fa fa-thumbs-up"></i> Jimi - Feedback made simple</h1>
+<h1><i class="fa fa-thumbs-up"></i>Jimi - Feedback made simple</h1>
 
-    <hr/>
+<hr/>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h2 class="panel-title">Active Feedback Topics</h2>
-        </div>
-        <div class="panel-body">
-            <ul>
-                <li><a [routerLink]="['/feedback', 'goats']">Workshop on Goats</a></li>
-                <li><a [routerLink]="['/feedback', 'goats']">Piano Lessons with Lemmy</a></li>
-                <li><a [routerLink]="['/feedback', 'goats']">Introduction to Dung Beetles</a></li>
-              </ul>
-        </div>
-      </div>
+<!-- component -->
+<topic-list></topic-list>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title">Topic Code</h3>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Topic Code</h3>
+    </div>
+    <div class="panel-body">
+        <h4>Or provide a topic code:</h4>
+        <div class="input-group" style="width:40%">
+            <input type="text" class="form-control" placeholder="e.g. zy348" #topic (keyup.enter)="enterTopic(topic.value)">
+            <span class="input-group-btn">
+                <button class="btn btn-success" (click)="enterTopic(topic.value)">
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
         </div>
-        <div class="panel-body">
-            <h4>Or provide a topic code:</h4>
-            <form action="feedback">
-                <div class="input-group" style="width:40%">
-                    <input type="text" class="form-control" placeholder="e.g. zy348" name="topic">
-                    <span class="input-group-btn">
-                         <button class="btn btn-success" type="submit"><i class="fa fa-search"></i></button>
-                    </span>
-                 </div>
-            </form>
+        <div *ngIf="showWarning" class="alert alert-warning" style="width:40%">
+            <strong>Sorry!</strong> That topic was not found!
         </div>
-      </div>
+    </div>
+</div>

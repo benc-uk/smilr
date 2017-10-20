@@ -1,5 +1,12 @@
+import 'rxjs/add/operator/switchMap';
 import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { Directive, ElementRef } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+
+import { TopicService } from './topic.service';
+import { FeedbackService } from './feedback.service';
+import { Topic } from './models/topic';
+import { Feedback } from './models/feedback';
 
 @Directive({ selector: '[face]' })
 export class FaceDirective {
@@ -12,12 +19,10 @@ export class FaceDirective {
   deselect() {
     this.selfEle.nativeElement.classList.add('unselected')
   }
+
   select() {
     this.selfEle.nativeElement.classList.remove('unselected')
   }
-  /*@HostListener('click', ['$event']) onClick($event){
-    this.selfEle.nativeElement.classList.remove('unselected')
-  }*/
 }
 
 @Component({
@@ -25,29 +30,39 @@ export class FaceDirective {
   styleUrls: ['./feedback.component.css']
 })
 export class FeedbackComponent  {
-  selected: number;
+  topic: Topic;
+  feedback: Feedback;
   @ViewChildren(FaceDirective) faces: QueryList<FaceDirective>;
   @ViewChild('subbut') submitButton;
-  @ViewChild('dialog') dialog;
   
-  constructor() { 
-    this.selected = 0;
+  constructor(private topicService: TopicService, private route: ActivatedRoute, private feedbackService: FeedbackService) { 
+    this.feedback = new Feedback();
+    this.feedback.comments = '';
+    this.feedback.rating = 0;
   }
 
-  clickFace(face, event: any): void {
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(
+      params => { this.topicService.get(params.get('topic')).subscribe(t => {this.topic = t; this.feedback.topic = t.id })}
+    );
+  }
 
-    this.selected = face;
+  clickFace(face): void {
+    this.feedback.rating = face;
     this.faces.forEach(f => {
       f.deselect();
     });
     this.faces.toArray()[face-1].select();
-    if(this.selected != 0) {
+    if(this.feedback.rating > 0) {
       this.submitButton.nativeElement.removeAttribute('disabled');
     }
   }
 
   submit() {
-
+    this.feedbackService.create(this.feedback)
+      .subscribe(
+        d => { document.getElementById("openModalButton").click() }, 
+        e => console.log("Error saving feedback!", e));
   }
 
 }

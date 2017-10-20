@@ -1,0 +1,23 @@
+<div class="panel panel-primary">
+   <div class="panel-heading">
+      <h2 class="panel-title">Feedback Received</h2>
+   </div>
+   <div class="panel-body">
+      <table class="table table-hover">
+         <thead>
+            <tr>
+               <th>Topic</th>
+               <th>Rating</th>
+               <th>Comments</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr *ngFor="let feedback of feedbackList">
+               <td>{{ feedback.topic }}</td>
+               <td>{{ feedback.rating }}</td>
+               <td>{{ feedback.comments }}</td>
+            </tr>
+      </table>
+
+   </div>
+</div>

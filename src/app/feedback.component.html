@@ -1,6 +1,6 @@
-<div class="panel panel-primary" style="width:85%; margin: 0 auto;">
+<div class="panel panel-primary" style="width:85%; margin: 0 auto;" *ngIf="topic">
    <div class="panel-heading">
-      <h3 class="panel-title">Feedback on Foo</h3>
+      <h3 class="panel-title">Feedback on {{topic.desc}}</h3>
    </div>
 
    <div class="panel-body faces-center">
@@ -27,13 +27,16 @@
 
    <div class="row">
       <div class="col-xs-8 col-md-8 col-lg-8 vcenter">
-         <textarea placeholder="Provide any additional comments (optional)"></textarea>
+         <textarea [(ngModel)]="feedback.comments" placeholder="Provide any additional comments (optional)"></textarea>
       </div><div class="col-xs-4 col-md-4 col-lg-4 vcenter">
-         <button #subbut class="btn btn-success" disabled (click)="submit()" data-toggle="modal" data-target="#myModal">Submit</button>
+         <button #subbut class="btn btn-success" disabled (click)="submit()" >Submit</button>
       </div>
    </div>
 
-   <div id="myModal" class="modal fade" #dialog>
+   <!-- This hidden button is a workaround/hack to allow us to show a Bootstrap modal from an Angular component -->
+   <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#doneModal"
+          data-backdrop="static" data-keyboard="false" >Open Modal</button>
+   <div id="doneModal" class="modal fade" id="doneModal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -43,8 +46,9 @@
             <p>Thanks for providing your feedback</p>
           </div>
           <div class="modal-footer">
-            <a type="button" class="btn btn-primary" data-dismiss="modal">No Problem!</a>
+            <a type="button" class="btn btn-primary" data-dismiss="modal" [routerLink]="['/']">No Problem!</a>
           </div>
         </div>
       </div>
     </div>
+
