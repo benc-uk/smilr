@@ -4,7 +4,6 @@ import { Topic } from './models/topic';
 
 @Component({
   templateUrl: './topic-list.component.html',
-  styleUrls: ['./home.component.css'],
   selector: "topic-list"
 })
 

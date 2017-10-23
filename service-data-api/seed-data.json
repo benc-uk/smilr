@@ -1,0 +1,14 @@
+{
+   "topics":
+   [
+      { "id": "speccy", "desc": "Sinclair Research" },
+      { "id": "workshop", "desc": "Just another workshop" }
+   ],
+
+   "feedback":
+   [
+      { "topic": "speccy", "rating": 4, "comment": "Very good session" },
+      { "topic": "speccy", "rating": 1, "comment": "I didn't like this, sorry bye" },
+      { "topic": "workshop", "rating": 5, "comment": "Best thing ever!" }
+   ]
+}

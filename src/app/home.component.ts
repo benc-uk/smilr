@@ -6,8 +6,7 @@ import { TopicService } from './topic.service';
 import { Topic } from './models/topic';
 
 @Component({
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  templateUrl: './home.component.html'
 })
 export class HomeComponent  {
   topics: Topic[] = [];

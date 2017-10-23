@@ -3,8 +3,7 @@ import { FeedbackService } from './feedback.service';
 import { Feedback } from './models/feedback';
 
 @Component({
-  templateUrl: './feedback-list.component.html',
-  styleUrls: ['./home.component.css']
+  templateUrl: './feedback-list.component.html'
 })
 
 export class FeedbackListComponent  {

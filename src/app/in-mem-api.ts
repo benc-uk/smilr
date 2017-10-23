@@ -10,9 +10,9 @@ export class InMemService implements InMemoryDbService {
       { id: 'test', desc: 'Monkey Tennis' }
     ];
     let feedback = [
-      { id: 1, topic: 'workshop', rating: 5, comments: "Best workshop on goats, I've been to this week!" },
-      { id: 2, topic: 'workshop', rating: 2, comments: "Awful, too much goat" },
-      { id: 3, topic: 'kube', rating: 4, comments: "I like containers" },
+      { id: 1, topic: 'workshop', rating: 5, comment: "Best workshop on goats, I've been to this week!" },
+      { id: 2, topic: 'workshop', rating: 2, comment: "Awful, too much goat" },
+      { id: 3, topic: 'kube', rating: 4, comment: "I like containers" },
     ];    
 
     //console.log(environment.production)

@@ -37,7 +37,7 @@ export class FeedbackComponent  {
   
   constructor(private topicService: TopicService, private route: ActivatedRoute, private feedbackService: FeedbackService) { 
     this.feedback = new Feedback();
-    this.feedback.comments = '';
+    this.feedback.comment = '';
     this.feedback.rating = 0;
   }
 

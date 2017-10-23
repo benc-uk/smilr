@@ -1,0 +1,24 @@
+{
+  "name": "frontend-service",
+  "version": "1.0.0",
+  "main": "server.js",
+  "engines": {
+    "node": "6.11.2"
+  },
+  "description": "Simple server for Angular apps",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "Apache-2.0",
+  "repository": "https://github.com/benc-uk/angular-server-azure",
+  "dependencies": {
+    "azure-storage": "^2.6.0",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "mongoose": "^4.12.3",
+    "morgan": "^1.9.0",
+    "uuid": "^3.1.0"
+  }
+}

@@ -1,0 +1,15 @@
+FROM node:6-alpine
+LABEL version="1.0.0" 
+ARG basedir="service-frontend"
+
+# Node.js setup for the frontend
+ENV NODE_ENV production
+WORKDIR /home/app
+COPY ${basedir}/ .
+RUN npm install --production --silent
+
+# Copy in Angular app, build app first with `ng build --prod`
+COPY dist .
+
+EXPOSE 3000
+CMD npm start

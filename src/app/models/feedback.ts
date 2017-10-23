@@ -5,5 +5,5 @@ export class Feedback {
   id: number;
   topic: string;
   rating: number;
-  comments: string;
+  comment: string;
 }
