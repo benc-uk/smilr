@@ -1,50 +1,61 @@
 <div>
-   <nav class="navbar navbar-inverse" role="navigation">
-      <div class="container-fluid">
+  <nav class="navbar navbar-toggleable-md navbar-inverse" role="navigation">
+    <div class="container-fluid">
 
-         <div class="navbar-header">
-            <a class="navbar-brand" [routerLink]="['/home']">
-               <i class="fa fa-thumbs-up"></i> Jimi </a>
-         </div>
-
-         <ul class="nav navbar-nav">
-            <li>
-               <a [routerLink]="['/topics']">
-                  <i class="fa fa-book"></i> Topics</a>
-            </li>
-            <li>
-               <a [routerLink]="['/feedback']">
-                  <i class="fa fa-bar-chart"></i> Feedback</a>
-            </li>
-            <li>
-               <a href="#aboutModal" data-toggle="modal">
-                  <i class="fa fa-info-circle"></i> About</a>
-            </li>
-         </ul>
-
+      <div class="navbar-header">
+        <a class="navbar-brand" [routerLink]="['/home']">
+          <i class="fa fa-thumbs-up"></i> Jimi </a>
       </div>
-   </nav>
 
-   <main>
-      <router-outlet></router-outlet>
-   </main>
+      <ul class="nav navbar-nav navbar-left">
+        <li>
+          <p class="navbar-btn">
+            <a class="btn btn-success" [routerLink]="['/topics']">
+              <i class="fa fa-book"></i> Topics</a>&nbsp;</p>
+        </li>
+        <li>
+          <p class="navbar-btn">
+            <a class="btn btn-success" [routerLink]="['/feedback']">
+              <i class="fa fa-bar-chart"></i> Feedback</a>&nbsp;</p>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <p class="navbar-btn">
+            <a class="btn btn-primary" [routerLink]="['/debug']">
+              <i class="fa fa-wrench"></i> Debug</a>&nbsp;</p>
+        </li>
+        <li>
+          <p class="navbar-btn">
+            <a class="btn btn-primary" href="#aboutModal" data-toggle="modal">
+              <i class="fa fa-info-circle"></i> About</a>&nbsp;</p>
+        </li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
 
 </div>
 
 <div id="aboutModal" class="modal fade" #about>
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h4 class="modal-title">About</h4>
-         </div>
-         <div class="modal-body">
-            <p>
-               <img src="assets/img/jimi.jpg" width="100%">
-            </p>
-         </div>
-         <div class="modal-footer">
-            <a type="button" class="btn btn-primary" data-dismiss="modal">OK</a>
-         </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">About</h4>
       </div>
-   </div>
+      <div class="modal-body">
+        <p>
+          <img src="assets/img/jimi.jpg" width="100%">
+        </p>
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-primary" data-dismiss="modal">OK</a>
+      </div>
+    </div>
+  </div>
 </div>

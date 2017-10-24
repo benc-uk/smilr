@@ -3,7 +3,7 @@ body {
    font-size: 14px;
 }
 .navbar-brand {
-   font-size: 40px;
+   font-size: 40px !important;
 }
 .navbar-nav li a {
    line-height: 40px;
@@ -19,8 +19,8 @@ li {
    font-size: 190%;
 }
 .panel-title {
-   font-size: 200%;
+   font-size: 200% !important;
 }
 table {
-   font-size: 160%;
+   font-size: 160% !important;
 }

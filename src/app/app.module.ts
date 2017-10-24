@@ -10,6 +10,7 @@ import { HomeComponent } from './home.component';
 import { TopicListComponent } from './topic-list.component';
 import { FeedbackComponent } from './feedback.component';
 import { FeedbackListComponent } from './feedback-list.component';
+import { DebugComponent } from './debug.component';
 import { FeedbackService } from './feedback.service';
 import { FaceDirective } from './feedback.component';
 import { TopicService } from './topic.service';
@@ -22,7 +23,8 @@ import { InMemService } from './in-mem-api';
     HomeComponent,
     TopicListComponent,
     FeedbackComponent,
-    FeedbackListComponent
+    FeedbackListComponent,
+    DebugComponent
   ],
   imports: [
     BrowserModule,
