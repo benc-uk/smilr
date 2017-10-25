@@ -81,3 +81,7 @@ The server listens on port 4000 and requires two configuration variables to be s
 
 
 # Kubernetes 
+Deployment YAML files for the front and backend services are held in the [docker](docker) directory. Before deployment build the docker images and push to Azure Container Registry, the ACR name in the YAML will require modification. 
+
+Also prior to deployment a Kubernetes secret will need to be created with the Azure Storage account key. This is done via kubectl as follows  
+ `kubectl create secret generic azuresecrets --from-literal=storeAcctKey=<keyhere>`
