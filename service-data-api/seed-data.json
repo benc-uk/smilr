@@ -1,14 +1,16 @@
 {
    "topics":
    [
-      { "id": "speccy", "desc": "Sinclair Research" },
-      { "id": "workshop", "desc": "Just another workshop" }
+      { "id": "azure", "desc": "Azure is pretty nice, learn about it" },
+      { "id": "workshop", "desc": "Just another workshop about something" },
+      { "id": "data&ai", "desc": "Data and AI, more than CSV files and 'if' statements?" }
    ],
 
    "feedback":
    [
-      { "topic": "speccy", "rating": 4, "comment": "Very good session" },
-      { "topic": "speccy", "rating": 1, "comment": "I didn't like this, sorry bye" },
-      { "topic": "workshop", "rating": 5, "comment": "Best thing ever!" }
+      { "topic": "data&ai", "rating": 4, "comment": "Very good session" },
+      { "topic": "azure", "rating": 1, "comment": "I didn't like this, sorry bye" },
+      { "topic": "workshop", "rating": 5, "comment": "Best thing ever!" },
+      { "topic": "workshop", "rating": 2, "comment": "The sandwiches were dry" }
    ]
 }

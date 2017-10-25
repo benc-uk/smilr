@@ -19,8 +19,8 @@ if (app.get('env') === 'production') {
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
 // We need these set or it's impossible to continue!
-if(!process.env.APPSETTING_STORAGE_ACCOUNT || !process.env.APPSETTING_STORAGE_KEY) {
-  console.error("### !ERROR! Missing env variables `APPSETTING_STORAGE_ACCOUNT` or `APPSETTING_STORAGE_KEY`. Exiting!");
+if(!process.env.STORAGE_ACCOUNT || !process.env.STORAGE_KEY) {
+  console.error("### !ERROR! Missing env variables `STORAGE_ACCOUNT` or `STORAGE_KEY`. Exiting!");
   process.exit(1)
 }
 

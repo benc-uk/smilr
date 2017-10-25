@@ -11,8 +11,8 @@ const FEEDBACK_TABLE_PKEY = 'feedback';
 // Constructor
 function DataAccess() {
    // Connect to Azure storage
-   console.log('### Connecting to storage account ', process.env.APPSETTING_STORAGE_ACCOUNT);
-   this.tableSvc =  azure.createTableService(process.env.APPSETTING_STORAGE_ACCOUNT, process.env.APPSETTING_STORAGE_KEY);
+   console.log('### Connecting to storage account ', process.env.STORAGE_ACCOUNT);
+   this.tableSvc =  azure.createTableService(process.env.STORAGE_ACCOUNT, process.env.STORAGE_KEY);
 }
 
 DataAccess.prototype.getAllTopics = function () {

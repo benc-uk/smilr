@@ -4,8 +4,8 @@ import { environment } from '../environments/environment';
 export class InMemService implements InMemoryDbService {
   createDb() {
     let topics = [
-      { id: 'workshop', desc: 'Goat heardIng workshop' },
-      { id: 'piano', desc: 'Learn the tuba with Lemmy from Motorhead' },
+      { id: 'workshop', desc: 'Goat hearding workshop' },
+      { id: 'tuba', desc: 'Learn the tuba with Lemmy from Motorhead' },
       { id: 'kube', desc: 'Something about Kubernetes' },
       { id: 'test', desc: 'Monkey Tennis' }
     ];
