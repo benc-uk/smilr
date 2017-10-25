@@ -19,10 +19,10 @@ export class FeedbackService {
     return this.http.get<Array<Feedback>>(`${this.apiUrl}/feedback`);
   }
 
-  public get(topic: string): Observable<Feedback> {
-    console.log(`#### ${this.apiUrl}/feedback/${topic}`)
-    return this.http.get<Feedback>(`${this.apiUrl}/feedback/${topic}`);
-  }
+  /*public get(feedback: string): Observable<Feedback> {
+    console.log(`#### ${this.apiUrl}/feedback/${feedback}`)
+    return this.http.get<Feedback>(`${this.apiUrl}/feedback/${feedback}`);
+  }*/
 
   public create(feedback: Feedback): Observable<Feedback> {
     console.log(`#### POST ${this.apiUrl}/feedback`)
