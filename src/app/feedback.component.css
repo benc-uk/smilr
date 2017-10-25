@@ -1,12 +1,12 @@
 .face {
-   margin: 10px;
+   margin: 0.5em;
    width: 100%;
    filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.75));
    transition: 0.3s ease-in-out;
 }
 
 .face:hover {
-   filter: drop-shadow(0px 12px 8px rgba(0, 0, 0, 0.75));
+   filter: drop-shadow(0px 1em 0.6em rgba(0, 0, 0, 0.75));
    transform: translate(0px, -16px);
    transition: 0.3s ease-in-out;
 }
@@ -19,6 +19,7 @@
 textarea::placeholder, input::placeholder  {
    color:#cccccc;
 }
+
 textarea {
    border: 1px solid #dddddd;
    /*font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;*/
@@ -28,12 +29,15 @@ textarea {
    width: 90%;
    height: 150px;
 }
+
 button {
    font-size: 1.6em;
 }
+
 .panel-title {
    font-size: 200%;
 }
+
 .vcenter {
    display: inline-block;
    vertical-align: middle;

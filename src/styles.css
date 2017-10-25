@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-body { 
-   font-size: 14px;
-}
+/*body { 
+   font-size: 100%;
+}*/
 .navbar-brand {
    font-size: 40px !important;
 }
@@ -10,10 +10,10 @@ body {
    font-size: 25px;
 }
 main {
-   margin: 30px;
+   margin: 0.5em;
 }
 h1 {
-   font-size: 50px;
+   font-size: 3em !important;
 }
 li {
    font-size: 190%;
