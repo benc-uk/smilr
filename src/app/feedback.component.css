@@ -1,5 +1,11 @@
+.facebox {
+   width: 17%; 
+   display: inline-block;
+   margin: 1%;
+}
+
 .face {
-   margin: 0.5em;
+   margin: 0.5em auto;
    width: 100%;
    filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.75));
    transition: 0.3s ease-in-out;
@@ -22,12 +28,11 @@ textarea::placeholder, input::placeholder  {
 
 textarea {
    border: 1px solid #dddddd;
-   /*font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;*/
-   font-size: 1.9em;
-   padding: 10px;
-   margin: 10px;
+   font-size: 3.5vw;
+   padding: 2%;
+   margin: 5%;
    width: 90%;
-   height: 150px;
+   height: 50%;
 }
 
 button {
@@ -43,6 +48,7 @@ button {
    vertical-align: middle;
    float: none;
 }
+
 .modal-dialog {
    margin-top: 20vh;
    font-size: 1.7em;

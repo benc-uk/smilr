@@ -7,7 +7,7 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home.component';
-import { TopicListComponent } from './topic-list.component';
+import { EventListComponent } from './event-list.component';
 import { FeedbackComponent } from './feedback.component';
 import { FeedbackListComponent } from './feedback-list.component';
 import { DebugComponent } from './debug.component';
@@ -21,7 +21,7 @@ import { InMemService } from './in-mem-api';
     FaceDirective,
     AppComponent,
     HomeComponent,
-    TopicListComponent,
+    EventListComponent,
     FeedbackComponent,
     FeedbackListComponent,
     DebugComponent

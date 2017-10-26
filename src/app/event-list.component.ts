@@ -3,11 +3,11 @@ import { TopicService } from './topic.service';
 import { Topic } from './models/topic';
 
 @Component({
-  templateUrl: './topic-list.component.html',
-  selector: "topic-list"
+  templateUrl: './event-list.component.html',
+  selector: "event-list"
 })
 
-export class TopicListComponent  {
+export class EventListComponent  {
   topics: Topic[] = [];
   private service: TopicService;
 
