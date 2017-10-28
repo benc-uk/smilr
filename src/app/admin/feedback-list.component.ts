@@ -9,7 +9,7 @@ import { Event } from '../models/event';
 })
 
 export class FeedbackListComponent  {
-  private events: Event[] = [];
+  events: Event[] = [];
   private feedbackService: FeedbackService;
   private eventService: EventService;
   

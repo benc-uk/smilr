@@ -28,15 +28,15 @@ textarea::placeholder, input::placeholder  {
 
 textarea {
    border: 1px solid #dddddd;
-   font-size: 3.5vw;
-   padding: 2%;
-   margin: 5%;
-   width: 90%;
+   font-size: calc(16px + .75vw);
+   padding: 1vw;
+   margin: 1vw;
+   width: 99%;
    height: 50%;
 }
 
 button {
-   font-size: 1.6em;
+   font-size: 3vw;
 }
 
 .panel-title {

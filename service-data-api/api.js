@@ -7,19 +7,19 @@ const os = require('os');
 const fs = require('fs');
 var data = new dataAccess();
 
-// Routes for topics API 
+// Routes for events API 
 
 routes
-.get('/api/topics', function (req, res, next) {
+.get('/api/events', function (req, res, next) {
   res.type('application/json');
-  data.getAllTopics()
+  data.getAllEvents()
     .then(d => res.send(d))
     .catch(e => res.status(e.statusCode).send(e));
 })
 
-.get('/api/topics/:id', function (req, res, next) {
+.get('/api/events/:id', function (req, res, next) {
   res.type('application/json');
-  data.getTopic(req.params.id)
+  data.getEvent(req.params.id)
     .then(d => res.send(d))
     .catch(e => res.status(e.statusCode).send(e));
 })
@@ -27,14 +27,20 @@ routes
 // Routes for feedback API 
 
 routes
-.get('/api/feedback', function (req, res, next) {
+.get('/api/feedback/:eventid/:topicid', function (req, res, next) {
   res.type('application/json');
-  data.getAllFeedback()
+  data.listFeedbackForEventTopic(req.params.eventid, parseInt(req.params.topicid))
     .then(d => res.send(d))
     .catch(e => res.status(e.statusCode).send(e));
 })
 
-routes
+.get('/api/feedback/:eventid', function (req, res, next) {
+  res.type('application/json');
+  data.listFeedbackForEvent(req.params.eventid)
+    .then(d => res.send(d))
+    .catch(e => res.status(e.statusCode).send(e));
+})
+
 .post('/api/feedback', function (req, res, next) {
   var feedback = req.body;
   res.type('application/json');
@@ -45,6 +51,7 @@ routes
 
 // Admin and db maintenance routes
 
+routes
 .get('/api/db/delete', function (req, res, next) {
   res.type('application/json');
   data.deleteTable()

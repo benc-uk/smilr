@@ -14,13 +14,15 @@ export class FeedbackService {
 
   constructor(private http: HttpClient) { }
 
-  public listForEventTopic(eventid: string, topicid: string): Observable<Array<Feedback>> {
-    console.log(`#### ${this.apiUrl}/feedback`)
-    return this.http.get<Array<Feedback>>(`${this.apiUrl}/feedback?event=${eventid}&topic=${topicid}`);
+  public listForEventTopic(eventid: string, topicid: string): Observable<Array<Feedback>> {    
+    // Kludgy workaround for in-mem API 
+    if(environment.production)
+      return this.http.get<Array<Feedback>>(`${this.apiUrl}/feedback/${eventid}/${topicid}`);
+    else
+      return this.http.get<Array<Feedback>>(`${this.apiUrl}/feedback?event=${eventid}&topic=${topicid}`);  
   }
 
   public create(feedback: Feedback): Observable<Feedback> {
-    console.log(`#### POST ${this.apiUrl}/feedback`)
     return this.http.post<Feedback>(`${this.apiUrl}/feedback`, feedback);
   }  
 

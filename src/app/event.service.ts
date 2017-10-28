@@ -15,13 +15,11 @@ export class EventService {
   constructor(private http: HttpClient) { }
 
   public list(): Observable<Array<Event>> {
-    console.log(`#### ${this.apiUrl}/events`)
     return this.http.get<Array<Event>>(`${this.apiUrl}/events`);
   }
 
   public get(id: string): Observable<Event> {
     var url = `${this.apiUrl}/events/${id}`
-    console.log(`#### ${url}`)
     return this.http.get<Event>(url);
   }
 
