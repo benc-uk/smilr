@@ -3,7 +3,8 @@
 
 export class Feedback {
   id: number;
-  topic: string;
+  event: string;
+  topic: number;
   rating: number;
   comment: string;
 }

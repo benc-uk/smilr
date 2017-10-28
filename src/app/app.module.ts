@@ -9,12 +9,14 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home.component';
 import { EventListComponent } from './event-list.component';
 import { FeedbackComponent } from './feedback.component';
-import { FeedbackListComponent } from './feedback-list.component';
-import { DebugComponent } from './debug.component';
 import { FeedbackService } from './feedback.service';
 import { FaceDirective } from './feedback.component';
-import { TopicService } from './topic.service';
+import { EventService } from './event.service';
 import { InMemService } from './in-mem-api';
+
+import { FeedbackListComponent } from './admin/feedback-list.component';
+import { DebugComponent } from './admin/debug.component';
+import { AdminService } from './admin/admin.service';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { InMemService } from './in-mem-api';
     HomeComponent,
     EventListComponent,
     FeedbackComponent,
+    // Admin components
     FeedbackListComponent,
     DebugComponent
   ],
@@ -31,11 +34,12 @@ import { InMemService } from './in-mem-api';
     FormsModule,
     RoutingModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemService, { passThruUnknownUrl: true }),
+    HttpClientInMemoryWebApiModule.forRoot(InMemService, { passThruUnknownUrl: true, delay: 0 }),
   ],
-  providers: [TopicService, FeedbackService],
+  providers: [EventService, FeedbackService, AdminService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { 
 
 }

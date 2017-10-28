@@ -14,8 +14,14 @@ h1 {
    font-size: 3.0em !important;
    text-align: center;
 }
+.panel-body h4 {
+    color: #999999;
+}
+.panel-heading img {
+    height: 40px;
+}
 li {
-   font-size: 190%;
+   font-size: 210%;
 }
 .panel-title {
    font-size: 200% !important;

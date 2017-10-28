@@ -1,0 +1,24 @@
+<div class="panel panel-primary" *ngFor="let event of events">
+   <div class="panel-heading">
+      <h2 class="panel-title">Feedback for {{ event.desc }}</h2>
+   </div>
+   <div class="panel-body">
+      <div *ngFor="let topic of event.topics">
+            <h4>{{ topic.desc }}</h4>
+            <table class="table table-hover">
+            <thead>
+                  <tr>
+                  <th>Rating</th>
+                  <th>Comments</th>
+                  </tr>
+            </thead>
+            <tbody>
+                  <tr *ngFor="let feedback of topic.feedback">
+                  <td><img src="/assets/img/face-{{ feedback.rating }}.svg"/></td>
+                  <td><span *ngIf="!feedback.comment">N/A</span>{{ feedback.comment }}</td>
+                  </tr>
+            </table>
+            <hr/>
+      </div>
+   </div>
+</div>

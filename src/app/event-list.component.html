@@ -1,11 +1,14 @@
-<div class="panel panel-primary">
+<div class="panel panel-primary" *ngFor="let event of events">
   <div class="panel-heading">
-    <h2 class="panel-title">Active Events</h2>
+    <h2 class="panel-title"><img src="/assets/img/events/{{event.type}}.png" /> &nbsp; {{ event.desc }}</h2>
   </div>
+  
   <div class="panel-body">
+    <h4>{{event.start | date:'longDate' }}</h4>
+    <!-- list all topics inside event -->
     <ul>
-      <li *ngFor="let topic of topics">
-        <a [routerLink]="['/feedback', topic.id]">{{ topic.desc }}</a>
+      <li *ngFor="let topic of event.topics">
+        <a [routerLink]="['/feedback', event.id, topic.id]">{{ topic.desc }}</a>
       </li>
     </ul>
   </div>

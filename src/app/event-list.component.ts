@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { TopicService } from './topic.service';
-import { Topic } from './models/topic';
+import { EventService } from './event.service';
+import { Event } from './models/event';
 
 @Component({
   templateUrl: './event-list.component.html',
@@ -8,13 +8,18 @@ import { Topic } from './models/topic';
 })
 
 export class EventListComponent  {
-  topics: Topic[] = [];
-  private service: TopicService;
+  events: Event[] = [];
+  private service: EventService;
 
-  constructor(private ts: TopicService) { 
-    this.service = ts;
-    this.service.list().subscribe(t => this.topics = t, err => {
-      console.log('Unable to load topics!');
-    });
+  constructor(private es: EventService) { 
+    this.service = es;
+    this.service.list().subscribe(
+      data => {
+        this.events = data;
+      },
+      err => {
+        console.log('Unable to load events!');
+      }
+    );
   }
 }

@@ -14,15 +14,10 @@ export class FeedbackService {
 
   constructor(private http: HttpClient) { }
 
-  public list(): Observable<Array<Feedback>> {
+  public listForEventTopic(eventid: string, topicid: string): Observable<Array<Feedback>> {
     console.log(`#### ${this.apiUrl}/feedback`)
-    return this.http.get<Array<Feedback>>(`${this.apiUrl}/feedback`);
+    return this.http.get<Array<Feedback>>(`${this.apiUrl}/feedback?event=${eventid}&topic=${topicid}`);
   }
-
-  /*public get(feedback: string): Observable<Feedback> {
-    console.log(`#### ${this.apiUrl}/feedback/${feedback}`)
-    return this.http.get<Feedback>(`${this.apiUrl}/feedback/${feedback}`);
-  }*/
 
   public create(feedback: Feedback): Observable<Feedback> {
     console.log(`#### POST ${this.apiUrl}/feedback`)

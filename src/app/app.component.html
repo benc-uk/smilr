@@ -6,9 +6,9 @@
       <!-- sidebar only show when toggled/opened -->
       <div id="mobileNav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-        <a [routerLink]="['/topics']" (click)="closeNav()"><i class="fa fa-book"></i> Events</a>
-        <a [routerLink]="['/feedback']" (click)="closeNav()"><i class="fa fa-bar-chart"></i> Feedback</a>
-        <a [routerLink]="['/debug']" (click)="closeNav()"><i class="fa fa-wrench"></i> Debug</a>
+        <a [routerLink]="['/events']" (click)="closeNav()"><i class="fa fa-book"></i> Events</a>
+        <a [routerLink]="['/admin/report']" (click)="closeNav()"><i class="fa fa-bar-chart"></i> Reports</a>
+        <a [routerLink]="['/admin/debug']" (click)="closeNav()"><i class="fa fa-wrench"></i> Debug</a>
         <a href="#aboutModal" data-toggle="modal" (click)="closeNav()"><i class="fa fa-info-circle"></i> About</a>
       </div>
 
@@ -18,20 +18,20 @@
       <!-- left hand buttons (hidden when mobile) -->
       <ul class="nav navbar-nav navbar-left hidden-xs">
         <li>
-          <p class="navbar-btn"><a class="btn btn-success" [routerLink]="['/topics']"><i class="fa fa-book"></i> Topics</a>&nbsp;</p>
+          <p class="navbar-btn"><a class="btn btn-success" [routerLink]="['/events']"><i class="fa fa-book"></i> Events</a>&nbsp;</p>
         </li>
         <li>
-          <p class="navbar-btn"><a class="btn btn-success" [routerLink]="['/feedback']"><i class="fa fa-bar-chart"></i> Feedback</a>&nbsp;</p>
+         <p class="navbar-btn"><a class="btn btn-success" href="#aboutModal" data-toggle="modal"><i class="fa fa-info-circle"></i> About</a>&nbsp;</p>
         </li>
       </ul>
 
       <!-- right hand buttons (hidden when mobile) -->
       <ul class="nav navbar-nav navbar-right hidden-xs">
         <li>
-          <p class="navbar-btn"><a class="btn btn-primary" [routerLink]="['/debug']"><i class="fa fa-wrench"></i> Debug</a>&nbsp;</p>
+          <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/report']"><i class="fa fa-bar-chart"></i> Reports</a>&nbsp;</p>
         </li>
         <li>
-          <p class="navbar-btn"><a class="btn btn-primary" href="#aboutModal" data-toggle="modal"><i class="fa fa-info-circle"></i> About</a>&nbsp;</p>
+          <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/report']"><i class="fa fa-wrench"></i> Debug</a>&nbsp;</p>
         </li>
       </ul>
 

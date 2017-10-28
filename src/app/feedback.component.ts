@@ -3,10 +3,11 @@ import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { Directive, ElementRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
-import { TopicService } from './topic.service';
+import { EventService } from './event.service';
 import { FeedbackService } from './feedback.service';
-import { Topic } from './models/topic';
+import { Event } from './models/event';
 import { Feedback } from './models/feedback';
+import { Topic } from './models/topic';
 
 @Directive({ selector: '[face]' })
 export class FaceDirective {
@@ -30,12 +31,13 @@ export class FaceDirective {
   styleUrls: ['./feedback.component.css']
 })
 export class FeedbackComponent  {
-  topic: Topic;
+  event: Event;
   feedback: Feedback;
+  topic: Topic;
   @ViewChildren(FaceDirective) faces: QueryList<FaceDirective>;
   @ViewChild('subbut') submitButton;
   
-  constructor(private topicService: TopicService, private route: ActivatedRoute, private feedbackService: FeedbackService) { 
+  constructor(private eventService: EventService, private route: ActivatedRoute, private feedbackService: FeedbackService) { 
     this.feedback = new Feedback();
     this.feedback.comment = '';
     this.feedback.rating = 0;
@@ -43,7 +45,17 @@ export class FeedbackComponent  {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(
-      params => { this.topicService.get(params.get('topic')).subscribe(t => {this.topic = t; this.feedback.topic = t.id })}
+      params => { 
+        
+        this.eventService.get(params.get('eventid')).subscribe(
+          data => {
+            this.event = data; 
+            var topic_id = parseInt(params.get('topicid'));
+            this.topic = this.event.topics.find(item => item.id === topic_id);
+            this.feedback.event = params.get('eventid');
+            this.feedback.topic = topic_id; 
+          }
+      )}
     );
   }
 
@@ -61,8 +73,9 @@ export class FeedbackComponent  {
   submit() {
     this.feedbackService.create(this.feedback)
       .subscribe(
-        d => { document.getElementById("openModalButton").click() }, 
-        e => console.log("Error saving feedback!", e));
+        data => { document.getElementById("openModalButton").click() }, 
+        err => console.log("Error saving feedback!", err)
+      );
   }
 
 }

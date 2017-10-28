@@ -1,7 +1,9 @@
+import { Feedback } from './feedback';
 
-// Basic model to hold a topic
+// Very basic model to hold a topic
 
 export class Topic {
-  id: string;
-  desc: string;
+    id: number;
+    desc: string;
+    feedback: Feedback[];
 }
