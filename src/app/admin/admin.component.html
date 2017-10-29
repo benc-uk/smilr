@@ -1,4 +1,4 @@
-<div class="panel panel-primary" style="width:60%; margin: 0 auto">
+<div class="panel panel-primary" style="width:80%; margin: 0 auto" *ngIf="!editEvent">
   <div class="panel-heading">
     <h2 class="panel-title">Event Admin</h2>
   </div>
@@ -18,7 +18,7 @@
         <tr *ngFor="let event of events">
           <td>{{ event.desc }} ({{ event.type }})</td>
           <td><button class="btn btn-success" (click)='edit(event)'><i class="fa fa-pencil"></i></button></td>
-          <td><button class="btn btn-warning"><i class="fa fa-trash"></i></button></td>
+          <td><button class="btn btn-warning" (click)='deleteEvent(event)'><i class="fa fa-trash"></i></button></td>
         </tr>
     </table>
 
@@ -28,68 +28,87 @@
 
 <!-- edit dialog, only shown when editEvent is active -->
 
-<div id="editModal" class="modal" style="display: inline" *ngIf="editEvent">
-    <div class="modal-dialog">
-      <div class="modal-content panel-primary">
-        <div class="modal-header panel-heading">
-          <h4 class="modal-title" style="color:white">Create / Edit Event</h4>
-        </div>
-        <div class="modal-body">
-          
+<div class="panel panel-primary" style="width:80%; margin: 0 auto" *ngIf="editEvent">
+  <div class="panel-heading">
+    <h2 class="panel-title">Edit / Create Event</h2>
+  </div>
+  <div class="panel-body">
 
-          <div class="form-group">
-            <label for="eventLabel">Identitifer</label>
-            <input pattern="[a-z,0-9]+" required class="form-control" #eventId="ngModel" id="eventId" [(ngModel)]="editEvent.id" value="{{editEvent.id}}" placeholder="e.g. azureworkshop, paaslab, iaashack">
-          </div>
-          <div *ngIf="eventId.invalid && (eventId.dirty || eventId.touched)" class="alert alert-warning">
-            ERROR: Event id must not be blank, or contain uppercase, spaces or special chars
-          </div>
-
-          <div class="form-group">
-            <label for="eventDesc">Description</label>
-            <input maxlength="50" required class="form-control" #eventDesc="ngModel" id="eventDesc" [(ngModel)]="editEvent.desc" value="{{editEvent.desc}}" placeholder="e.g. Workshop on Azure">
-          </div>  
-          <div *ngIf="eventDesc.invalid && (eventDesc.dirty || eventDesc.touched)" class="alert alert-warning">
-            ERROR: Event description must not be blank
-          </div>
-
-          <div class="form-group">
-            <label for="eventType">Type</label>
-            <br/>
-            <div style="width:40%; display: inline-block" >
-            <select class="form-control" id="eventType" [(ngModel)]="editEvent.type">
-              <option *ngFor="let type of eventTypes">{{ type }}</option>
-            </select>
-            </div>
-            <div style="width:40%; display: inline-block">
-              <img style="height: 35px;" src='/assets/img/events/{{editEvent.type}}.png' />
-            </div>
-          </div>        
-              
-          <div class="form-group">
-            <label for="eventStart">Start Date</label>
-            <input type="date" min="2017-01-01" max="2020-21-31" required class="form-control" #eventStart="ngModel" id="eventStart" [(ngModel)]="editEvent.start" value="{{editEvent.start}}">     
-          </div>   
-          <div class="form-group">
-            <label for="eventEnd">End Date</label>
-            <input type="date" min="2017-01-01" max="2020-12-31" required class="form-control" #eventEnd="ngModel" id="eventEnd" [(ngModel)]="editEvent.end" value="{{editEvent.end}}">     
-          </div>               
-
-          <div class="panel topicpanel">
-            <label for="topicsList">&nbsp; Topics</label>
-            <div id="topicsList">
-              <table class="table table-hover">
-                <tr *ngFor="let topic of editEvent.topics"><td>{{ topic.id }}</td><td>{{ topic.desc }}</td><td> <a (click)="ok()"><i class="fa fa-trash minibutton"></i></a> </td></tr>
-              </table>
-            </div>
-          </div>     
-
-        </div>
-        <div class="modal-footer">
-          <a type="button" class="btn btn-primary" style="font-size:120%" (click)='ok()'><i class="fa fa-check"></i> Save Event</a>
-        </div>
-      </div>
-
-
+    <div class="form-group">
+      <label for="eventLabel">Identitifer</label>
+      <input pattern="[a-z,0-9]+" required class="form-control" #eventId="ngModel" id="eventId" [(ngModel)]="editEvent.id" value="{{editEvent.id}}" placeholder="e.g. azureworkshop, paaslab, iaashack">
     </div>
-  </div> <!-- end of edit dialog -->
+    <div *ngIf="eventId.invalid" class="alert alert-warning">
+      Event id must not be blank, or contain uppercase, spaces or special chars
+    </div>
+
+    <div class="form-group">
+      <label for="eventDesc">Description</label>
+      <input maxlength="50" required class="form-control" #eventDesc="ngModel" id="eventDesc" [(ngModel)]="editEvent.desc" value="{{editEvent.desc}}" placeholder="e.g. Workshop on Azure">
+    </div>  
+    <div *ngIf="eventDesc.invalid" class="alert alert-warning">
+      Event description must not be blank, and must be less than 50 characters
+    </div>
+
+    <div class="form-group">
+      <label for="eventType">Type</label>
+      <br/>
+      <div style="width:40%; display: inline-block" >
+      <select class="form-control" id="eventType" [(ngModel)]="editEvent.type">
+        <option *ngFor="let type of eventTypes">{{ type }}</option>
+      </select>
+      </div>
+      <div style="width:40%; display: inline-block">
+        &nbsp;&nbsp;&nbsp;<img style="height: 55px;" src='/assets/img/events/{{editEvent.type}}.png' />
+      </div>
+    </div>        
+        
+    <div class="form-group">
+      <label for="eventStart">Start Date</label>
+      <input style="width:30%;" type="date" min="2017-01-01" max="2020-21-31" required class="form-control" #eventStart="ngModel" id="eventStart" [(ngModel)]="editEvent.start" value="{{editEvent.start}}">     
+    </div>   
+    <div *ngIf="eventStart.invalid" class="alert alert-warning">
+        Event start date must be set
+    </div>
+    <div class="form-group">
+      <label for="eventEnd">End Date</label>
+      <input style="width:30%;"  type="date" min="2017-01-01" max="2020-12-31" required class="form-control" #eventEnd="ngModel" id="eventEnd" [(ngModel)]="editEvent.end" value="{{editEvent.end}}">     
+    </div>    
+    <div *ngIf="eventEnd.invalid" class="alert alert-warning">
+        Event end date must be set
+    </div>
+    <div *ngIf="dateError" class="alert alert-warning">
+        Event end date must be same day or later than start date
+    </div>
+
+    <div class="panel">
+      <div class="panel-heading">
+        <h2 class="panel-title">Topics <button class="btn btn-success" style="font-size:60%; float:right" (click)="newTopic(editEvent)"><i class="fa fa-plus"></i>&nbsp; Add Topic</button> </h2>
+      </div>
+      <div class="panel-body">
+        <table class="table table-hover">
+          <tr *ngFor="let topic of editEvent.topics">
+            <td>{{ topic.id }}</td> 
+            <td><input required type="text" #eventEnd="ngModel" class="form-control" [(ngModel)]="topic.desc" value="{{ topic.desc }}"/></td> 
+            <td><a (click)="deleteTopic(editEvent, topic)"><i class="fa fa-trash minibutton"></i></a></td>
+          </tr>
+        </table>
+        <div *ngIf="topicError" class="alert alert-warning">
+            ERROR: One or more topics is invalid or blank
+          </div>  
+      </div>
+    </div>
+    
+    <button [disabled]="eventId.invalid || eventDesc.invalid || eventStart.invalid || eventEnd.invalid" class="btn btn-primary" style="font-size:150%" (click)='saveEvent(editEvent)'>
+      <i class="fa fa-check"></i> 
+      <span *ngIf="!createNewEvent">Update Event</span>
+      <span *ngIf="createNewEvent">Create New Event</span>
+    </button>
+
+    <button *ngIf="createNewEvent" class="btn btn-default" style="font-size:150%" (click)='cancel()'>
+      <i class="fa fa-times"></i> 
+      Cancel
+    </button>
+
+  </div>
+</div>
