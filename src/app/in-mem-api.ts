@@ -9,7 +9,7 @@ export class InMemService implements InMemoryDbService {
         desc: 'Azure App Dev Workshop', 
         type: 'workshop', 
         start: '2017-10-26', 
-        end: '2019-10-26',
+        end: '2019-05-19',
         topics: [
           {id: 1, desc: 'General' }
         ]
@@ -19,7 +19,7 @@ export class InMemService implements InMemoryDbService {
         desc: 'Introduction to PaaS', 
         type: 'event', 
         start: '2017-10-26', 
-        end: '2019-10-26',
+        end: '2018-12-07',
         topics: [
           {id: 1, desc: 'Morning Session'},
           {id: 2, desc: 'Afternoon Session'}

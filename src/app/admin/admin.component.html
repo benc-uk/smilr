@@ -1,0 +1,95 @@
+<div class="panel panel-primary" style="width:60%; margin: 0 auto">
+  <div class="panel-heading">
+    <h2 class="panel-title">Event Admin</h2>
+  </div>
+  <div class="panel-body">
+
+    <button class="btn btn-primary" (click)="newEvent()"><i class="fa fa-calendar-plus-o"></i>&nbsp; Add Event</button>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of events">
+          <td>{{ event.desc }} ({{ event.type }})</td>
+          <td><button class="btn btn-success" (click)='edit(event)'><i class="fa fa-pencil"></i></button></td>
+          <td><button class="btn btn-warning"><i class="fa fa-trash"></i></button></td>
+        </tr>
+    </table>
+
+  </div>
+</div>
+
+
+<!-- edit dialog, only shown when editEvent is active -->
+
+<div id="editModal" class="modal" style="display: inline" *ngIf="editEvent">
+    <div class="modal-dialog">
+      <div class="modal-content panel-primary">
+        <div class="modal-header panel-heading">
+          <h4 class="modal-title" style="color:white">Create / Edit Event</h4>
+        </div>
+        <div class="modal-body">
+          
+
+          <div class="form-group">
+            <label for="eventLabel">Identitifer</label>
+            <input pattern="[a-z,0-9]+" required class="form-control" #eventId="ngModel" id="eventId" [(ngModel)]="editEvent.id" value="{{editEvent.id}}" placeholder="e.g. azureworkshop, paaslab, iaashack">
+          </div>
+          <div *ngIf="eventId.invalid && (eventId.dirty || eventId.touched)" class="alert alert-warning">
+            ERROR: Event id must not be blank, or contain uppercase, spaces or special chars
+          </div>
+
+          <div class="form-group">
+            <label for="eventDesc">Description</label>
+            <input maxlength="50" required class="form-control" #eventDesc="ngModel" id="eventDesc" [(ngModel)]="editEvent.desc" value="{{editEvent.desc}}" placeholder="e.g. Workshop on Azure">
+          </div>  
+          <div *ngIf="eventDesc.invalid && (eventDesc.dirty || eventDesc.touched)" class="alert alert-warning">
+            ERROR: Event description must not be blank
+          </div>
+
+          <div class="form-group">
+            <label for="eventType">Type</label>
+            <br/>
+            <div style="width:40%; display: inline-block" >
+            <select class="form-control" id="eventType" [(ngModel)]="editEvent.type">
+              <option *ngFor="let type of eventTypes">{{ type }}</option>
+            </select>
+            </div>
+            <div style="width:40%; display: inline-block">
+              <img style="height: 35px;" src='/assets/img/events/{{editEvent.type}}.png' />
+            </div>
+          </div>        
+              
+          <div class="form-group">
+            <label for="eventStart">Start Date</label>
+            <input type="date" min="2017-01-01" max="2020-21-31" required class="form-control" #eventStart="ngModel" id="eventStart" [(ngModel)]="editEvent.start" value="{{editEvent.start}}">     
+          </div>   
+          <div class="form-group">
+            <label for="eventEnd">End Date</label>
+            <input type="date" min="2017-01-01" max="2020-12-31" required class="form-control" #eventEnd="ngModel" id="eventEnd" [(ngModel)]="editEvent.end" value="{{editEvent.end}}">     
+          </div>               
+
+          <div class="panel topicpanel">
+            <label for="topicsList">&nbsp; Topics</label>
+            <div id="topicsList">
+              <table class="table table-hover">
+                <tr *ngFor="let topic of editEvent.topics"><td>{{ topic.id }}</td><td>{{ topic.desc }}</td><td> <a (click)="ok()"><i class="fa fa-trash minibutton"></i></a> </td></tr>
+              </table>
+            </div>
+          </div>     
+
+        </div>
+        <div class="modal-footer">
+          <a type="button" class="btn btn-primary" style="font-size:120%" (click)='ok()'><i class="fa fa-check"></i> Save Event</a>
+        </div>
+      </div>
+
+
+    </div>
+  </div> <!-- end of edit dialog -->

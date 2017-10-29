@@ -11,3 +11,6 @@ export class Event {
   end: Date;
   topics: Topic[];
 }
+
+var EventTypes = [ 'event', 'workshop', 'hack', 'lab' ];
+export default EventTypes;

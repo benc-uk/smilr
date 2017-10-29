@@ -85,3 +85,6 @@ Deployment YAML files for the front and backend services are held in the [docker
 
 Also prior to deployment a Kubernetes secret will need to be created with the Azure Storage account key. This is done via kubectl as follows  
  `kubectl create secret generic azuresecrets --from-literal=storeAcctKey=<keyhere>`
+
+
+ # Running a real "production" instance

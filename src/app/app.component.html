@@ -25,13 +25,18 @@
         </li>
       </ul>
 
-      <!-- right hand buttons (hidden when mobile) -->
-      <ul class="nav navbar-nav navbar-right hidden-xs">
+      <!-- ADMIN right hand buttons (hidden when mobile) -->
+      <ul class="nav navbar-nav navbar-right hidden-xs" *ngIf="!env.secured || userService.isLoggedIn()">
         <li>
           <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/report']"><i class="fa fa-bar-chart"></i> Reports</a>&nbsp;</p>
         </li>
         <li>
-          <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/debug']"><i class="fa fa-wrench"></i> Debug</a>&nbsp;</p>
+          <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/events']"><i class="fa fa-wrench"></i> Admin</a>&nbsp;</p>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right hidden-xs" *ngIf="env.secured && !userService.isLoggedIn()">
+        <li>
+          <p class="navbar-btn"><a class="btn btn-warning" href='/.auth/login/aad?post_login_redirect_uri=/logincomplete'><i class="fa fa-user"></i> Login</a>&nbsp;</p>
         </li>
       </ul>
 
@@ -49,6 +54,11 @@
   <main>
     <router-outlet></router-outlet>
   </main>
+
+  <footer>
+    <div *ngIf="env.secured">Security enabled</div> <div *ngIf="!env.secured">Security disabled (demo mode)</div> 
+    <div *ngIf="userService.isLoggedIn()">You are logged in as: {{ userService.getUserId() }}</div>
+  </footer>
 
 </div>
 

@@ -9,11 +9,9 @@ import { Event } from './models/event';
 
 export class EventListComponent  {
   events: Event[] = [];
-  private service: EventService;
 
-  constructor(private es: EventService) { 
-    this.service = es;
-    this.service.list().subscribe(
+  constructor(private eventService: EventService) { 
+    this.eventService.list().subscribe(
       data => {
         this.events = data;
       },

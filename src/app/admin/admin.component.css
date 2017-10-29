@@ -1,0 +1,14 @@
+button {
+    font-size: 190%;
+}
+td button {
+    font-size: 110%;
+}
+.minibutton {
+    font-size:120%;
+    color: #2196f3;
+    cursor: pointer;
+}
+.topicpanel td {
+    font-size: 80%;
+}

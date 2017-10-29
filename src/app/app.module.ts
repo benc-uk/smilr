@@ -15,8 +15,9 @@ import { EventService } from './event.service';
 import { InMemService } from './in-mem-api';
 
 import { FeedbackListComponent } from './admin/feedback-list.component';
-import { DebugComponent } from './admin/debug.component';
-import { AdminService } from './admin/admin.service';
+import { AdminComponent } from './admin/admin.component';
+import { UserService } from './admin/user.service';
+import { AppSvcLogin } from './admin/app-svc-login.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { AdminService } from './admin/admin.service';
     FeedbackComponent,
     // Admin components
     FeedbackListComponent,
-    DebugComponent
+    AdminComponent,
+    AppSvcLogin
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,7 @@ import { AdminService } from './admin/admin.service';
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(InMemService, { passThruUnknownUrl: true, delay: 0 }),
   ],
-  providers: [EventService, FeedbackService, AdminService],
+  providers: [EventService, FeedbackService, UserService],
   bootstrap: [AppComponent]
 })
 

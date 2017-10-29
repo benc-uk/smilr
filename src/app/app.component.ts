@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { environment } from '../environments/environment';
+import { UserService } from './admin/user.service';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +9,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+  env = environment;
+  userService;
 
+  constructor(us: UserService) {
+    this.userService = us;
+  }
+  
   openNav() {
     document.getElementById("mobileNav").style.width = "50%";
   }

@@ -29,3 +29,9 @@ li {
 table {
    font-size: 160% !important;
 }
+footer {
+    float: right;
+    font-size: 14px;
+    text-align: right;
+    padding-right: 2%;
+}
