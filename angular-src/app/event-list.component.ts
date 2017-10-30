@@ -8,6 +8,7 @@ import { Event } from './models/event';
 })
 
 export class EventListComponent  {
+
   events: Event[] = [];
 
   constructor(private eventService: EventService) { 
