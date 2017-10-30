@@ -21,7 +21,7 @@
           <p class="navbar-btn"><a class="btn btn-success" [routerLink]="['/events']"><i class="fa fa-book"></i> Events</a>&nbsp;</p>
         </li>
         <li>
-         <p class="navbar-btn"><a class="btn btn-success" href="#aboutModal" data-toggle="modal"><i class="fa fa-info-circle"></i> About</a>&nbsp;</p>
+         <p class="navbar-btn"><a class="btn btn-success" (click)="aboutDialog.show()"><i class="fa fa-info-circle"></i> About</a>&nbsp;</p>
         </li>
       </ul>
 
@@ -62,22 +62,6 @@
 
 </div>
 
-<!-- about dialog popup -->
-<div id="aboutModal" class="modal fade" #about>
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">About</h4>
-      </div>
-      <div class="modal-body">
-        <p>
-          <img src="assets/img/jimi.jpg" width="100%">
-        </p>
-      </div>
-      <div class="modal-footer">
-        <a type="button" class="btn btn-primary" data-dismiss="modal">OK</a>
-      </div>
-    </div>
-  </div>
-</div>
+<modal-dialog #aboutDialog dialogTitle="About" hideCancel="true" dialogBody=" Jimi<br/>v1.0.0 " ></modal-dialog>
+
 

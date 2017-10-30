@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from '../../environments/environment';
 import { EventService } from '../event.service';
 import { Event } from '../models/event';
 import { Topic } from '../models/topic';
-import EventTypes from '../models/eventypes';
+import EventTypes from '../models/event';
 
 @Component({
   templateUrl: './admin.component.html',
@@ -14,22 +14,18 @@ import EventTypes from '../models/eventypes';
 
 export class AdminComponent  {
   events: Event[] = [];
-  eventService: EventService
+  //eventService: EventService
   editEvent : Event = null;
   eventTypes = EventTypes;
   topicError = false;
   dateError = false;
-  createNewEvent = false;
+  //createNewEvent = false;
+  @ViewChild('deleteDialog') deleteDialog;
 
-  constructor(private es: EventService, private router: Router) { 
-  this.eventService = es;
+  constructor(private eventService: EventService, private router: Router) { 
     this.eventService.list().subscribe(
-      data => {
-        this.events = data;
-      },
-      err => {
-        console.log('Unable to load events!');
-      }
+      data => { this.events = data; },
+      err => { console.log('Unable to load events!'); }
     );
   }
 
@@ -37,7 +33,6 @@ export class AdminComponent  {
     this.topicError = false;
 
     this.editEvent = new Event();
-    this.createNewEvent = true;
     this.editEvent.type = "event";
   
     var topic = new Topic();
@@ -49,13 +44,11 @@ export class AdminComponent  {
   }
 
   edit(event) {
-    this.createNewEvent = false;
     this.topicError = false;
     this.editEvent = event;
   }
 
   saveEvent(event: Event) {
-
     this.topicError = false;
     this.dateError = false;
 
@@ -67,20 +60,19 @@ export class AdminComponent  {
     this.dateError = (event.end < event.start);  // Bloody hell, string compare works on ISO 8601 dates!
     if(this.dateError) return;
 
-    // Send event to API, either add or update
-    if(this.createNewEvent) {
+    // Send event to API, either add or update, if id present means update
+    if(!event.id) {
       this.eventService.add(event).subscribe(
-        data => { this.events.push(this.editEvent); },
-        err => { console.log(err) }
+        data => { this.editEvent.id = data.id; this.events.push(this.editEvent); },
+        err => { console.log("Error creating event", err) }
       );
     } else {
       this.eventService.update(event).subscribe(
         data => { },
-        err => { console.log(err) }
+        err => { console.log("Error updating event", err) }
       )
     }
     
-    this.createNewEvent = false;
     this.editEvent = null;
   }  
 
@@ -101,14 +93,24 @@ export class AdminComponent  {
   }  
 
   deleteEvent(event: Event) {
-    this.eventService.delete(event).subscribe(
-      data => { this.events.forEach((e, i) => { if(e.id === event.id) this.events.splice(i, 1) }); },
-      err => console.log(err)
-    );
+    this.deleteDialog.okCallback = () => {
+      this.eventService.delete(event).subscribe(
+        data => { this.events.forEach((e, i) => { if(e.id === event.id) this.events.splice(i, 1) }); },
+        err => console.log("Error deleting event", err)
+     );
+    }
+    this.deleteDialog.dialogBody = `Do you want to delete '${event.title}'? <br/><br/> This operation can not be undone!`;
+    this.deleteDialog.show();
   }  
 
+  /*deleteConfirmed(data: any) {
+    data.eventService.delete(data.event).subscribe(
+       resdata => { data.eventList.forEach((e, i) => { if(e.id === data.event.id) data.eventList.splice(i, 1) }); },
+       err => console.log("Error deleting event", err)
+    );
+  }  */
+
   cancel() {
-    this.createNewEvent = false;
     this.editEvent = null;
   }
 }

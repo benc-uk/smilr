@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/switchMap';
 import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { Directive, ElementRef } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 import { EventService } from './event.service';
 import { FeedbackService } from './feedback.service';
@@ -36,8 +36,10 @@ export class FeedbackComponent  {
   topic: Topic;
   @ViewChildren(FaceDirective) faces: QueryList<FaceDirective>;
   @ViewChild('subbut') submitButton;
+  @ViewChild('confirmDialog') confirmDialog;
+  @ViewChild('goAwayDialog') goAwayDialog;
   
-  constructor(private eventService: EventService, private route: ActivatedRoute, private feedbackService: FeedbackService) { 
+  constructor(private eventService: EventService, private route: ActivatedRoute, private feedbackService: FeedbackService, private router: Router) { 
     this.feedback = new Feedback();
     this.feedback.comment = '';
     this.feedback.rating = 0;
@@ -54,6 +56,14 @@ export class FeedbackComponent  {
             this.topic = this.event.topics.find(item => item.id === topic_id);
             this.feedback.event = params.get('eventid');
             this.feedback.topic = topic_id; 
+
+            // Check already given feedback
+            var previous = readCookie(`feedback_${this.event.id}_${this.topic.id}`);
+            if(readCookie(`feedback_${this.event.id}_${this.topic.id}`)) {
+              this.event = null;
+              this.goAwayDialog.okCallback = () => { this.router.navigate(['/home']) }
+              this.goAwayDialog.show(); 
+            }            
           }
       )}
     );
@@ -73,10 +83,43 @@ export class FeedbackComponent  {
   submit() {
     this.feedbackService.create(this.feedback)
       .subscribe(
-        data => { document.getElementById("openModalButton").click() }, 
+        data => { 
+          createCookie(`feedback_${this.event.id}_${this.topic.id}`, this.feedback.rating, 9999);
+
+          this.event = null; 
+          this.confirmDialog.okCallback = () => { this.router.navigate(['/home']); }; 
+          this.confirmDialog.show(); 
+        }, 
         err => console.log("Error saving feedback!", err)
       );
   }
-
 }
 
+//
+// Simple cookie library
+// Taken from https://stackoverflow.com/a/24103596/1343261 
+//
+function createCookie(name,value,days) {
+  var expires = "";
+  if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days*24*60*60*1000));
+      expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
+
+function eraseCookie(name) {
+  createCookie(name,"",-1);
+}

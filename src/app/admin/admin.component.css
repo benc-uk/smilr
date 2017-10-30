@@ -12,3 +12,15 @@ td button {
 .topicpanel td {
     font-size: 80%;
 }
+.alert-warning {
+    background-color: #f8deb1  !important;
+    color: #222222;
+}
+
+.modal {
+    background: rgba(0,0,0,0.6) !important;
+}
+.modal-backdrop
+{
+    opacity:0.5 !important;
+}

@@ -10,13 +10,17 @@
       <thead>
         <tr>
           <th>Event</th>
+          <th>Type</th>
+          <th>Start Date</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let event of events">
-          <td>{{ event.desc }} ({{ event.type }})</td>
+          <td>{{ event.title }}</td>
+          <td>{{ event.type }}</td>
+          <td>{{ event.start | date:'longDate' }}</td>
           <td><button class="btn btn-success" (click)='edit(event)'><i class="fa fa-pencil"></i></button></td>
           <td><button class="btn btn-warning" (click)='deleteEvent(event)'><i class="fa fa-trash"></i></button></td>
         </tr>
@@ -30,24 +34,18 @@
 
 <div class="panel panel-primary" style="width:80%; margin: 0 auto" *ngIf="editEvent">
   <div class="panel-heading">
-    <h2 class="panel-title">Edit / Create Event</h2>
+    <h2 class="panel-title">
+      <span *ngIf="editEvent.id">Edit Event ({{editEvent.id}})</span>
+      <span *ngIf="!editEvent.id">Create Event</span>
+    </h2>
   </div>
   <div class="panel-body">
-
     <div class="form-group">
-      <label for="eventLabel">Identitifer</label>
-      <input pattern="[a-z,0-9]+" required class="form-control" #eventId="ngModel" id="eventId" [(ngModel)]="editEvent.id" value="{{editEvent.id}}" placeholder="e.g. azureworkshop, paaslab, iaashack">
-    </div>
-    <div *ngIf="eventId.invalid" class="alert alert-warning">
-      Event id must not be blank, or contain uppercase, spaces or special chars
-    </div>
-
-    <div class="form-group">
-      <label for="eventDesc">Description</label>
-      <input maxlength="50" required class="form-control" #eventDesc="ngModel" id="eventDesc" [(ngModel)]="editEvent.desc" value="{{editEvent.desc}}" placeholder="e.g. Workshop on Azure">
+      <label for="eventTitle">Title</label>
+      <input maxlength="50" required class="form-control" #eventTitle="ngModel" id="eventTitle" [(ngModel)]="editEvent.title" value="{{editEvent.title}}" placeholder="e.g. Workshop on Azure">
     </div>  
-    <div *ngIf="eventDesc.invalid" class="alert alert-warning">
-      Event description must not be blank, and must be less than 50 characters
+    <div *ngIf="eventTitle.invalid" class="alert alert-warning">
+      Event title must not be blank, and must be less than 50 characters
     </div>
 
     <div class="form-group">
@@ -72,7 +70,7 @@
     </div>
     <div class="form-group">
       <label for="eventEnd">End Date</label>
-      <input style="width:30%;"  type="date" min="2017-01-01" max="2020-12-31" required class="form-control" #eventEnd="ngModel" id="eventEnd" [(ngModel)]="editEvent.end" value="{{editEvent.end}}">     
+      <input style="width:30%;" type="date" min="2017-01-01" max="2020-12-31" required class="form-control" #eventEnd="ngModel" id="eventEnd" [(ngModel)]="editEvent.end" value="{{editEvent.end}}">     
     </div>    
     <div *ngIf="eventEnd.invalid" class="alert alert-warning">
         Event end date must be set
@@ -99,16 +97,18 @@
       </div>
     </div>
     
-    <button [disabled]="eventId.invalid || eventDesc.invalid || eventStart.invalid || eventEnd.invalid" class="btn btn-primary" style="font-size:150%" (click)='saveEvent(editEvent)'>
+    <button [disabled]="eventTitle.invalid || eventStart.invalid || eventEnd.invalid" class="btn btn-primary" style="font-size:150%" (click)='saveEvent(editEvent)'>
       <i class="fa fa-check"></i> 
-      <span *ngIf="!createNewEvent">Update Event</span>
-      <span *ngIf="createNewEvent">Create New Event</span>
+      <span *ngIf="editEvent.id">Update Event</span>
+      <span *ngIf="!editEvent.id">Create New Event</span>
     </button>
 
-    <button *ngIf="createNewEvent" class="btn btn-default" style="font-size:150%" (click)='cancel()'>
+    <button *ngIf="!editEvent.id" class="btn btn-default" style="font-size:150%" (click)='cancel()'>
       <i class="fa fa-times"></i> 
       Cancel
     </button>
 
   </div>
 </div>
+
+<modal-dialog #deleteDialog dialogTitle="Are you sure?" okButtonText=" DELETE "></modal-dialog>

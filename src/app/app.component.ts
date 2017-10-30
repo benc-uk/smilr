@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { environment } from '../environments/environment';
 import { UserService } from './admin/user.service';
 
@@ -10,7 +10,7 @@ import { UserService } from './admin/user.service';
 export class AppComponent {
   title = 'app';
   env = environment;
-  userService;
+  userService: UserService;
 
   constructor(us: UserService) {
     this.userService = us;

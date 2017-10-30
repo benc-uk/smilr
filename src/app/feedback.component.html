@@ -1,6 +1,6 @@
 <div class="panel panel-primary" *ngIf="event">
    <div class="panel-heading">
-      <h3 class="panel-title">Feedback for - {{event.desc}} ({{topic.desc}})</h3>
+      <h3 class="panel-title">Feedback for - {{ event.title }} ({{ topic.desc }})</h3>
    </div>
 
    <div class="panel-body faces-center">
@@ -30,23 +30,7 @@
          <button #subbut class="btn btn-success" disabled (click)="submit()">Submit</button>
       </div>
    </div>
+</div>
 
-   <!-- This hidden button is a workaround/hack to allow us to show a Bootstrap modal from an Angular component -->
-   <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#doneModal"
-          data-backdrop="static" data-keyboard="false" >Open Modal</button>
-   <div id="doneModal" class="modal fade" id="doneModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Feedback Submitted</h4>
-          </div>
-          <div class="modal-body">
-            <p>Thanks for providing your feedback</p>
-          </div>
-          <div class="modal-footer">
-            <a type="button" class="btn btn-primary" data-dismiss="modal" [routerLink]="['/']">No Problem!</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
+<modal-dialog #confirmDialog hideCancel="true" dialogTitle="Thanks!" dialogBody="Thanks for providing your feedback! Your response has been saved."></modal-dialog>
+<modal-dialog #goAwayDialog hideCancel="true" dialogTitle="Sorry!" dialogBody="You have already provided feedback for this event and topic session"></modal-dialog>

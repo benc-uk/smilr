@@ -24,7 +24,10 @@ export class EventService {
   }
 
   public add(event: Event): Observable<Event> {
-    var url = `${this.apiUrl}/events/${event.id}`
+    if(!environment.production) {
+      event.id = makeid(6);
+    }
+    var url = `${this.apiUrl}/events`
     return this.http.post<Event>(url, event);
   }
 
@@ -37,4 +40,17 @@ export class EventService {
     var url = `${this.apiUrl}/events/${event.id}`
     return this.http.delete<any>(url);
   }
+}
+
+//
+// Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
+//
+function makeid(len) {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < len; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
 }
