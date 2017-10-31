@@ -14,12 +14,10 @@ import EventTypes from '../models/event';
 
 export class AdminComponent  {
   events: Event[] = [];
-  //eventService: EventService
   editEvent : Event = null;
   eventTypes = EventTypes;
   topicError = false;
   dateError = false;
-  //createNewEvent = false;
   @ViewChild('deleteDialog') deleteDialog;
 
   constructor(private eventService: EventService, private router: Router) { 

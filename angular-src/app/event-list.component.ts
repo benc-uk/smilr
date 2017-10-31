@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EventService } from './event.service';
 import { Event } from './models/event';
 
@@ -8,7 +8,7 @@ import { Event } from './models/event';
 })
 
 export class EventListComponent  {
-
+  @Input() time: string; // one of: current, past, future
   events: Event[] = [];
 
   constructor(private eventService: EventService) { 

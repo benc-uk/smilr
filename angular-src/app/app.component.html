@@ -7,9 +7,10 @@
       <div id="mobileNav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
         <a [routerLink]="['/events']" (click)="closeNav()"><i class="fa fa-book"></i> Events</a>
-        <a [routerLink]="['/admin/report']" (click)="closeNav()"><i class="fa fa-bar-chart"></i> Reports</a>
-        <a [routerLink]="['/admin/debug']" (click)="closeNav()"><i class="fa fa-wrench"></i> Debug</a>
-        <a href="#aboutModal" data-toggle="modal" (click)="closeNav()"><i class="fa fa-info-circle"></i> About</a>
+        <a *ngIf="!env.secured || userService.isLoggedIn()" [routerLink]="['/admin/report']" (click)="closeNav()"><i class="fa fa-bar-chart"></i> Reports</a>
+        <a *ngIf="!env.secured || userService.isLoggedIn()" [routerLink]="['/admin/events']" (click)="closeNav()"><i class="fa fa-wrench"></i> Admin</a>
+        <a *ngIf="env.secured && !userService.isLoggedIn()" href='/.auth/login/aad?post_login_redirect_uri=/logincomplete'><i class="fa fa-user"></i> Login</a>
+        <a (click)="closeNav(); aboutDialog.show()"><i class="fa fa-info-circle"></i> About</a>
       </div>
 
       <!-- logo -->
@@ -40,7 +41,7 @@
         </li>
       </ul>
 
-      <!-- toggle sidenav menu button (shown on mobile) -->
+      <!-- toggle sidenav menu button (only shown on mobile) -->
       <div class="nav navbar-nav pull-right visible-xs" >
         <button type="button" class="btn btn-primary" (click)="toggleNav()">
           <i class="fa fa-bars" style="font-size:40px"></i>
@@ -62,6 +63,7 @@
 
 </div>
 
+<!-- About dialog -->
 <modal-dialog #aboutDialog dialogTitle="About" hideCancel="true" dialogBody=" Jimi<br/>v1.0.0 " ></modal-dialog>
 
 

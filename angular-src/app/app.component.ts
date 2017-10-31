@@ -8,7 +8,8 @@ import { UserService } from './admin/user.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  title = 'app'; 
+  
   env = environment;
   userService: UserService;
 
