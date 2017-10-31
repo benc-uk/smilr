@@ -10,8 +10,8 @@
       <thead>
         <tr>
           <th>Event</th>
-          <th>Type</th>
-          <th>Start Date</th>
+          <th class="hidden-xs">Type</th>
+          <th class="hidden-xs">Start Date</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
@@ -19,8 +19,8 @@
       <tbody>
         <tr *ngFor="let event of events">
           <td>{{ event.title }}</td>
-          <td>{{ event.type }}</td>
-          <td>{{ event.start | date:'longDate' }}</td>
+          <td class="hidden-xs">{{ event.type }}</td>
+          <td class="hidden-xs">{{ event.start | date:'longDate' }}</td>
           <td><button class="btn btn-success" (click)='edit(event)'><i class="fa fa-pencil"></i></button></td>
           <td><button class="btn btn-warning" (click)='deleteEvent(event)'><i class="fa fa-trash"></i></button></td>
         </tr>
