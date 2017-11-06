@@ -21,7 +21,7 @@ export class AdminComponent  {
   @ViewChild('deleteDialog') deleteDialog;
 
   constructor(private eventService: EventService, private router: Router) { 
-    this.eventService.list().subscribe(
+    this.eventService.listAll().subscribe(
       data => { this.events = data; },
       err => { console.log('Unable to load events!'); }
     );
@@ -61,7 +61,7 @@ export class AdminComponent  {
     // Send event to API, either add or update, if id present means update
     if(!event.id) {
       this.eventService.add(event).subscribe(
-        data => { this.editEvent.id = data.id; this.events.push(this.editEvent); },
+        data => { console.log(data); this.events.push(data) },
         err => { console.log("Error creating event", err) }
       );
     } else {
@@ -99,14 +99,7 @@ export class AdminComponent  {
     }
     this.deleteDialog.dialogBody = `Do you want to delete '${event.title}'? <br/><br/> This operation can not be undone!`;
     this.deleteDialog.show();
-  }  
-
-  /*deleteConfirmed(data: any) {
-    data.eventService.delete(data.event).subscribe(
-       resdata => { data.eventList.forEach((e, i) => { if(e.id === data.event.id) data.eventList.splice(i, 1) }); },
-       err => console.log("Error deleting event", err)
-    );
-  }  */
+  } 
 
   cancel() {
     this.editEvent = null;

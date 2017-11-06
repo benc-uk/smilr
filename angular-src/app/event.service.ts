@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/filter';
 
 import { Event } from './models/event';
 import { environment } from '../environments/environment';
@@ -10,47 +11,113 @@ export class EventService {
 
   // URL to web api - can be remote or local in memory 
   private apiUrl = environment.api_endpoint;
-  private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: HttpClient) { }
 
-  public list(): Observable<Array<Event>> {
+  //
+  // Get all events. GET /api/events
+  //
+  public listAll(): Observable<Array<Event>> {
     return this.http.get<Array<Event>>(`${this.apiUrl}/events`);
   }
 
+
+  //
+  // Get events which are active/running. GET /api/events?type=active
+  //
+  public listActive(): Observable<Array<Event>> {
+    var today = new Date().toISOString().substring(0, 10);
+
+    if(environment.production) {
+      return this.http.get<Array<Event>>(`${this.apiUrl}/events?mode=active`);
+    } else {
+      // In mem API workaround, return *all* events then filter 
+      return this.http.get<Array<Event>>(`${this.apiUrl}/events`)
+      .map(events => events.filter(event => {
+        if(event.start.toString() <= today && event.end.toString() >= today) return true;
+      }));
+    }
+  }
+
+  //
+  // Get events which are in the past. GET /api/events?type=past
+  //
+  public listPast(): Observable<Array<Event>> {
+    var today = new Date().toISOString().substring(0, 10);
+
+    if(environment.production) {
+      return this.http.get<Array<Event>>(`${this.apiUrl}/events?mode=past`);
+    } else {
+      // In mem API workaround, return *all* events then filter 
+      return this.http.get<Array<Event>>(`${this.apiUrl}/events`)
+      .map(events => events.filter(event => {
+        if(event.end.toString() < today) return true;
+      }));
+    }
+  }
+
+  //
+  // Get events which are in the future. GET /api/events?type=future
+  //
+  public listFuture(): Observable<Array<Event>> {
+    var today = new Date().toISOString().substring(0, 10);
+
+    if(environment.production) {
+      return this.http.get<Array<Event>>(`${this.apiUrl}/events?mode=future`);
+    } else {
+      // In mem API workaround, return *all* events then filter 
+      return this.http.get<Array<Event>>(`${this.apiUrl}/events`)
+      .map(events => events.filter(event => {
+        if(event.start.toString() > today) return true;
+      }));
+    }
+  }
+
+  //
+  // Get single event. GET /api/events/{id}
+  //
   public get(id: string): Observable<Event> {
     var url = `${this.apiUrl}/events/${id}`
     return this.http.get<Event>(url);
   }
 
+  //
+  // Create a new event. POST /api/events
+  //
   public add(event: Event): Observable<Event> {
     if(!environment.production) {
-      event.id = makeid(6);
+      event.id = EventService.makeId(6);
     }
     var url = `${this.apiUrl}/events`
     return this.http.post<Event>(url, event);
   }
 
+  //
+  // Update an existing event. PUT /api/events/{id}
+  //
   public update(event: Event): Observable<Event> {
-    var url = `${this.apiUrl}/events/${event.id}`
+    var url = `${this.apiUrl}/events`
     return this.http.put<Event>(url, event);
   }
 
+  //
+  // Delete an event. DELETE /api/events/{id}
+  //
   public delete(event: Event): Observable<Event> {
     var url = `${this.apiUrl}/events/${event.id}`
     return this.http.delete<any>(url);
   }
-}
 
-//
-// Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
-//
-function makeid(len) {
-  var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (var i = 0; i < len; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
+  //
+  // Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
+  //
+  public static makeId(len: number) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+    for (var i = 0; i < len; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return text;    
+  }
 }

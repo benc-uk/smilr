@@ -17,7 +17,7 @@ export class FeedbackListComponent  {
     this.feedbackService = fs;
     this.eventService = es;
     
-    this.eventService.list().subscribe(
+    this.eventService.listAll().subscribe(
       eventdata => {
         this.events = eventdata;
         this.events.forEach(event => {

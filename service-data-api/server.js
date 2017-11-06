@@ -25,8 +25,12 @@ if(!process.env.STORAGE_ACCOUNT || !process.env.STORAGE_KEY) {
 }
 
 // Routing to controllers
-api = require('./api');
-app.use('/', api);
+api_events = require('./api_events');
+api_feedback = require('./api_feedback');
+api_other = require('./api_other');
+app.use('/', api_events);
+app.use('/', api_feedback);
+app.use('/', api_other);
 
 // Start the server
 var port = process.env.PORT || 4000;

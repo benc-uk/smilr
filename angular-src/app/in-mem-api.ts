@@ -8,8 +8,8 @@ export class InMemService implements InMemoryDbService {
         id: 1,
         title: 'Azure App Dev Workshop', 
         type: 'workshop', 
-        start: '2017-10-26', 
-        end: '2019-05-19',
+        start: '2017-01-01', 
+        end: '2017-12-30',
         topics: [
           {id: 1, desc: 'General' }
         ]
@@ -18,13 +18,24 @@ export class InMemService implements InMemoryDbService {
         id: 2,
         title: 'Introduction to PaaS', 
         type: 'event', 
-        start: '2017-10-26', 
-        end: '2018-12-07',
+        start: '2018-10-29', 
+        end: '2018-10-31',
         topics: [
           {id: 1, desc: 'Morning Session'},
           {id: 2, desc: 'Afternoon Session'}
         ]
-      }
+      },
+      { 
+        id: 3,
+        title: 'Goat Herding with Bill Oddie', 
+        type: 'lab', 
+        start: '2017-02-07', 
+        end: '2017-02-07',
+        topics: [
+          {id: 1, desc: 'Intro to Goats'},
+          {id: 2, desc: 'More about Goats'}
+        ]
+      }      
     ];
     let feedback = [
       { 

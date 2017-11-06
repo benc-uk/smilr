@@ -15,9 +15,11 @@ function DataAccess() {
    this.tableSvc =  azure.createTableService(process.env.STORAGE_ACCOUNT, process.env.STORAGE_KEY);
 }
 
-DataAccess.prototype.getAllEvents = function () {
-   var query = new azure.TableQuery().where('PartitionKey eq ?', EVENT_TABLE_PKEY);
-   // Must use arrow function here to preserve context and access to this
+DataAccess.prototype.queryEvents = function (query) {
+  console.log(query);
+   var query = new azure.TableQuery().where('PartitionKey eq ?', EVENT_TABLE_PKEY)
+                                     .and(query);
+   
    return new Promise((resolve, reject) => {
       this.tableSvc.queryEntities(TABLE_NAME, query, null, function (error, result) {
          if (!error) {
@@ -31,7 +33,7 @@ DataAccess.prototype.getAllEvents = function () {
 
 DataAccess.prototype.getEvent = function (id) {
    var query = new azure.TableQuery().where('PartitionKey eq ?', EVENT_TABLE_PKEY);
-   // Must use arrow function here to preserve context and access to this
+   
    return new Promise((resolve, reject) => {
       this.tableSvc.retrieveEntity(TABLE_NAME, EVENT_TABLE_PKEY, id, function (error, result) {
          if (!error) {
@@ -43,13 +45,60 @@ DataAccess.prototype.getEvent = function (id) {
    });
 };
 
+DataAccess.prototype.createOrUpdateEvent = function (event) {
+  event.PartitionKey = EVENT_TABLE_PKEY;
+  
+  if(event.id) {
+    // Update with RowKey
+    event.RowKey = event.id;
+  } else {
+    // Create a random id for RowKey
+    event.RowKey = makeId(6);
+  }
+
+  // Need to stringify topics array for Azure Tables
+  let topicsArray = event.topics;
+  event.topics = JSON.stringify(event.topics);
+
+  return new Promise((resolve, reject) => {
+     this.tableSvc.insertOrReplaceEntity(TABLE_NAME, event, function (error, result) {
+        if (!error) {
+          // Clean up for returning the result, topics needs to be array again!
+          event.topics = topicsArray;
+          event.id = event.RowKey
+          delete event.RowKey;
+          delete event.PartitionKey;
+          resolve(event);
+        } else {
+          reject(error);
+        }
+     });
+  });
+};
+
+DataAccess.prototype.deleteEvent = function (id) {
+  let event = {
+    PartitionKey: {'_': EVENT_TABLE_PKEY},
+    RowKey: {'_': id}
+  };
+
+  return new Promise((resolve, reject) => {
+     this.tableSvc.deleteEntity(TABLE_NAME, event, function (error, result) {
+        if (!error) {
+           resolve(result);
+        } else {
+           reject(error);
+        }
+     });
+  });
+};
+
 DataAccess.prototype.listFeedbackForEventTopic = function (eventid, topicid) {
    var query = new azure.TableQuery()
    .where('PartitionKey eq ?', FEEDBACK_TABLE_PKEY)
    .and("event eq ?", eventid)
    .and("topic eq ?", topicid);
 
-   // Must use arrow function here to preserve context and access to this
    return new Promise((resolve, reject) => {
       this.tableSvc.queryEntities(TABLE_NAME, query, null, function (error, result) {
          if (!error) {
@@ -61,30 +110,12 @@ DataAccess.prototype.listFeedbackForEventTopic = function (eventid, topicid) {
    });
 };
 
-DataAccess.prototype.listFeedbackForEvent = function (eventid) {
-    var query = new azure.TableQuery()
-    .where('PartitionKey eq ?', FEEDBACK_TABLE_PKEY)
-    .and("event eq ?", eventid);
- 
-    // Must use arrow function here to preserve context and access to this
-    return new Promise((resolve, reject) => {
-       this.tableSvc.queryEntities(TABLE_NAME, query, null, function (error, result) {
-          if (!error) {
-             resolve( result.entries.map(t => prepareModel(t)) );
-          } else {
-             reject(error);
-          }
-       });
-    });
- };
-
-
 DataAccess.prototype.createFeedback = function (feedback) {
    feedback.PartitionKey = FEEDBACK_TABLE_PKEY;
    // Create a random UUID for RowKey because why not
    feedback.RowKey = uuid();
    return new Promise((resolve, reject) => {
-      this.tableSvc.insertEntity(TABLE_NAME, feedback, function (error, result) {
+      this.tableSvc.insertOrReplaceEntity(TABLE_NAME, feedback, function (error, result) {
          if (!error) {
             resolve(result);
          } else {
@@ -139,7 +170,7 @@ DataAccess.prototype.populate = function () {
             var event = {
                PartitionKey: { '_': EVENT_TABLE_PKEY },
                RowKey: { '_': eventData[i].id },
-               desc: { '_': eventData[i].desc },
+               title: { '_': eventData[i].title },
                type: { '_': eventData[i].type },
                start: { '_': eventData[i].start },
                end: { '_': eventData[i].end },
@@ -193,6 +224,7 @@ function prepareModel(obj) {
    for (prop in obj) {
       obj[prop] = obj[prop]._;
 
+      // As Azure Tables isn't a real document store, we need to do this I guess. Meh.
       // Reinflate topics from serialised form
       if(prop === 'topics') {
         obj['topics'] = JSON.parse(obj['topics'] );
@@ -206,3 +238,15 @@ function prepareModel(obj) {
    return obj;
 }
 
+//
+// Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
+//
+function makeId(len) {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < len; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;    
+}

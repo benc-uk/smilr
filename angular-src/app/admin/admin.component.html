@@ -19,7 +19,7 @@
       <tbody>
         <tr *ngFor="let event of events">
           <td>{{ event.title }}</td>
-          <td class="hidden-xs">{{ event.type }}</td>
+          <td class="hidden-xs">{{ event.type | titlecase }}</td>
           <td class="hidden-xs">{{ event.start | date:'longDate' }}</td>
           <td><button class="btn btn-success" (click)='edit(event)'><i class="fa fa-pencil"></i></button></td>
           <td><button class="btn btn-warning" (click)='deleteEvent(event)'><i class="fa fa-trash"></i></button></td>
@@ -53,7 +53,7 @@
       <br/>
       <div style="width:40%; display: inline-block" >
       <select class="form-control" id="eventType" [(ngModel)]="editEvent.type">
-        <option *ngFor="let type of eventTypes">{{ type }}</option>
+        <option *ngFor="let type of eventTypes">{{ type | titlecase}}</option>
       </select>
       </div>
       <div style="width:40%; display: inline-block">

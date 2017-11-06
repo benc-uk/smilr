@@ -1,4 +1,5 @@
 import 'rxjs/add/operator/switchMap';
+import { Observable } from "rxjs/Observable";
 import { Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { Directive, ElementRef } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -30,42 +31,53 @@ export class FaceDirective {
   templateUrl: './feedback.component.html',
   styleUrls: ['./feedback.component.css']
 })
-export class FeedbackComponent  {
-  event: Event;
-  feedback: Feedback;
-  topic: Topic;
+export class FeedbackComponent {
+  public event: Event;
+  public feedback: Feedback;
+  public topic: Topic;
   @ViewChildren(FaceDirective) faces: QueryList<FaceDirective>;
   @ViewChild('subbut') submitButton;
   @ViewChild('confirmDialog') confirmDialog;
   @ViewChild('goAwayDialog') goAwayDialog;
+  @ViewChild('badDateDialog') badDateDialog;
   
   constructor(private eventService: EventService, private route: ActivatedRoute, private feedbackService: FeedbackService, private router: Router) { 
     this.feedback = new Feedback();
     this.feedback.comment = '';
     this.feedback.rating = 0;
   }
-
+  
   ngOnInit(): void {
     this.route.paramMap.subscribe(
       params => { 
-        
         this.eventService.get(params.get('eventid')).subscribe(
           data => {
             this.event = data; 
-            var topic_id = parseInt(params.get('topicid'));
-            this.topic = this.event.topics.find(item => item.id === topic_id);
+            let topicId = parseInt(params.get('topicid'));
+            this.topic = this.event.topics.find(item => item.id === topicId);
             this.feedback.event = params.get('eventid');
-            this.feedback.topic = topic_id; 
+            this.feedback.topic = topicId; 
 
-            // Check already given feedback
+            // Check dates are valid
+            var today = new Date().toISOString().substring(0, 10);    
+            if(this.event.start.toString() > today || this.event.end.toString() < today) {
+              this.event = null;
+              this.badDateDialog.okCallback = () => { this.router.navigate(['/home']) }
+              this.badDateDialog.show(); 
+              return;
+            }
+
+            // Check if already given feedback
             var previous = readCookie(`feedback_${this.event.id}_${this.topic.id}`);
             if(readCookie(`feedback_${this.event.id}_${this.topic.id}`)) {
               this.event = null;
               this.goAwayDialog.okCallback = () => { this.router.navigate(['/home']) }
               this.goAwayDialog.show(); 
+              return;
             }            
           }
-      )}
+        )
+      }
     );
   }
 

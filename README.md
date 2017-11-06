@@ -34,6 +34,9 @@ The endpoint is held in the Angular CLI `environment` files in the [src/environm
 
 # Data Model
 Just two models currently exist, one for topics and one for submitted feedback
+
+> !TODO! Update this info, it's out of date
+
 ```ts
 Topic {
   id: string
@@ -62,6 +65,8 @@ The service listens on port 3000 and requires no config
 ### Data API server 
 This is held in [service-data-api](service-data-api) and is another Node.js Express app. It acts as the REST API endpoint for the Angular client app.
 
+> !TODO! Update this info, it's out of date
+
 All API routes are held in `api.js` and currently are set up as follows:
 - `GET /api/topics` - Return all topics
 - `GET /api/topic/{id}` - Return just one topic, by id
@@ -87,4 +92,8 @@ Also prior to deployment a Kubernetes secret will need to be created with the Az
  `kubectl create secret generic azuresecrets --from-literal=storeAcctKey=<keyhere>`
 
 
- # Running a real "production" instance
+# Running a live, secured instance
+
+> !TODO! Put something here about running in App Service with AAD Auth + switching secured to true in environment.ts
+
+ 

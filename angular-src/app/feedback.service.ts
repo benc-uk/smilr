@@ -14,6 +14,9 @@ export class FeedbackService {
 
   constructor(private http: HttpClient) { }
 
+  //
+  // List feedback for an event & topic. GET /api/feedback/{eventid}/{topicid}
+  //
   public listForEventTopic(eventid: string, topicid: string): Observable<Array<Feedback>> {    
     // Kludgy workaround for in-mem API 
     if(environment.production)
@@ -22,6 +25,9 @@ export class FeedbackService {
       return this.http.get<Array<Feedback>>(`${this.apiUrl}/feedback?event=${eventid}&topic=${topicid}`);  
   }
 
+  //
+  // Create new feedback. POST /api/feedback
+  //
   public create(feedback: Feedback): Observable<Feedback> {
     return this.http.post<Feedback>(`${this.apiUrl}/feedback`, feedback);
   }  

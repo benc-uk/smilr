@@ -1,8 +1,8 @@
 {
     "events": [
         { 
-          "id": "azure",
-          "desc": "Azure Compute Options Workshop", 
+          "id": "123456",
+          "title": "Azure Compute Options Workshop", 
           "type": "workshop", 
           "start": "2017-10-26", 
           "end": "2019-10-26",
@@ -11,8 +11,8 @@
           ]
         },
         { 
-          "id": "paas",
-          "desc": "Introduction to PaaS", 
+          "id": "abcdef",
+          "title": "Introduction to PaaS", 
           "type": "event", 
           "start": "2017-10-26", 
           "end": "2019-10-26",
@@ -25,19 +25,19 @@
       
       "feedback": [
         { 
-          "event": "azure",
+          "event": "123456",
           "topic": 1,
           "rating": 5, 
           "comment": "Best workshop on Azure, I've been to this week!"
         },
         { 
-          "event": "paas",
+          "event": "abcdef",
           "topic": 1,
           "rating": 5, 
           "comment": "I loved the morning session!"
         },
         { 
-          "event": "paas",
+          "event": "abcdef",
           "topic": 2,
           "rating": 1, 
           "comment": "I hated the afternoon"

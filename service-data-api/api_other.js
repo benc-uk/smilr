@@ -7,48 +7,6 @@ const os = require('os');
 const fs = require('fs');
 var data = new dataAccess();
 
-// Routes for events API 
-
-routes
-.get('/api/events', function (req, res, next) {
-  res.type('application/json');
-  data.getAllEvents()
-    .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));
-})
-
-.get('/api/events/:id', function (req, res, next) {
-  res.type('application/json');
-  data.getEvent(req.params.id)
-    .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));
-})
-
-// Routes for feedback API 
-
-routes
-.get('/api/feedback/:eventid/:topicid', function (req, res, next) {
-  res.type('application/json');
-  data.listFeedbackForEventTopic(req.params.eventid, parseInt(req.params.topicid))
-    .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));
-})
-
-.get('/api/feedback/:eventid', function (req, res, next) {
-  res.type('application/json');
-  data.listFeedbackForEvent(req.params.eventid)
-    .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));
-})
-
-.post('/api/feedback', function (req, res, next) {
-  var feedback = req.body;
-  res.type('application/json');
-  data.createFeedback(feedback)
-    .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));
-})
-
 // Admin and db maintenance routes
 
 routes
@@ -91,7 +49,7 @@ routes
 })
 
 .get('*', function (req, res, next) {
-  res.send(400);
+  res.sendStatus(400);
 })
 
 module.exports = routes;

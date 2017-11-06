@@ -12,7 +12,8 @@ main {
 }
 h1 {
    font-size: 3.0em !important;
-   text-align: center;
+   background-color: #eeeeee;
+   padding: 6px;
 }
 .panel-body h4 {
     color: #999999;

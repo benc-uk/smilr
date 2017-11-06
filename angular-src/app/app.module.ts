@@ -9,6 +9,7 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 // My components
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home.component';
+import { EventHistoryComponent } from './event-history.component';
 import { EventListComponent } from './event-list.component';
 import { FeedbackComponent } from './feedback.component';
 import { FaceDirective } from './feedback.component';
@@ -29,6 +30,7 @@ import { AppSvcLogin } from './admin/app-svc-login.component';
     AppComponent,
     HomeComponent,
     EventListComponent,
+    EventHistoryComponent,
     FeedbackComponent,
     ModalDialogComponent,
     FeedbackListComponent,
