@@ -13,9 +13,10 @@ routes
 .get('/api/events', function (req, res, next) {
   res.type('application/json');
 
-  if(req.query.mode) {
+  if(req.query.time) {
     let today = new Date().toISOString().substring(0, 10);
-    switch(req.query.mode) {
+    
+    switch(req.query.time) {
       case 'active': 
         data.queryEvents(`start le '${today}' and end ge '${today}'`)
           .then(d => res.send(d))
@@ -32,13 +33,11 @@ routes
           .catch(e => res.status(e.statusCode).send(e));
         break;
       default:
-        // Return all events
-        data.queryEvents('true')
-          .then(d => res.send(d))
-          .catch(e => res.status(e.statusCode).send(e));      
+        // If time not valid
+        res.status(400).send({message:'Error. Supplied time not valid, must be one of: [active, future, past]'});      
     }
   } else {
-    // If mode omitted, return all events
+    // If time omitted, return all events
     data.queryEvents('true')
       .then(d => res.send(d))
       .catch(e => res.status(e.statusCode).send(e));    

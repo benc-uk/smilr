@@ -19,7 +19,7 @@ import { FeedbackService } from './feedback.service';
 import { InMemService } from './in-mem-api';
 
 // My components for admin
-import { FeedbackListComponent } from './admin/feedback-list.component';
+import { ReportComponent } from './admin/report.component';
 import { AdminComponent } from './admin/admin.component';
 import { UserService } from './admin/user.service';
 import { AppSvcLogin } from './admin/app-svc-login.component';
@@ -33,7 +33,7 @@ import { AppSvcLogin } from './admin/app-svc-login.component';
     EventHistoryComponent,
     FeedbackComponent,
     ModalDialogComponent,
-    FeedbackListComponent,
+    ReportComponent,
     AdminComponent,
     AppSvcLogin
   ],

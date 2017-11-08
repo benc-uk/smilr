@@ -6,7 +6,7 @@ import { EventListComponent }    from './event-list.component';
 import { EventHistoryComponent } from './event-history.component';
 import { FeedbackComponent }     from './feedback.component';
 
-import { FeedbackListComponent } from './admin/feedback-list.component';
+import { ReportComponent }       from './admin/report.component';
 import { AdminComponent }        from './admin/admin.component';
 import { UserService }           from './admin/user.service';
 import { AppSvcLogin }           from './admin/app-svc-login.component';
@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'events', component: EventHistoryComponent },
   { path: 'feedback/:eventid/:topicid', component: FeedbackComponent },
   { path: 'admin/events', component: AdminComponent, canActivate: [UserService] },
-  { path: 'admin/report', component: FeedbackListComponent, canActivate: [UserService] },
+  { path: 'admin/report', component: ReportComponent, canActivate: [UserService] },
   { path: 'logincomplete', component: AppSvcLogin }
 ];
 

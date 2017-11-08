@@ -56,12 +56,19 @@ export class InMemService implements InMemoryDbService {
         id: 3, 
         event: 2,
         topic: 2,
-        rating: 1, 
+        rating: 2, 
         comment: "I hated the afternoon"
       },
       { 
+        id: 3, 
+        event: 2,
+        topic: 2,
+        rating: 3, 
+        comment: "I kinda liked the afternoon"
+      },      
+      { 
         id: 4, 
-        event: 'paas',
+        event: 3,
         topic: 2,
         rating: 3, 
         comment: "The PaaS afternoon was ok"

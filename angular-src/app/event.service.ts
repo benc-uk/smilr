@@ -29,9 +29,10 @@ export class EventService {
     var today = new Date().toISOString().substring(0, 10);
 
     if(environment.production) {
-      return this.http.get<Array<Event>>(`${this.apiUrl}/events?mode=active`);
+      // Call real external REST API, return observable
+      return this.http.get<Array<Event>>(`${this.apiUrl}/events?time=active`);
     } else {
-      // In mem API workaround, return *all* events then filter 
+      // In mem API, return *all* events then filter 
       return this.http.get<Array<Event>>(`${this.apiUrl}/events`)
       .map(events => events.filter(event => {
         if(event.start.toString() <= today && event.end.toString() >= today) return true;
@@ -46,7 +47,8 @@ export class EventService {
     var today = new Date().toISOString().substring(0, 10);
 
     if(environment.production) {
-      return this.http.get<Array<Event>>(`${this.apiUrl}/events?mode=past`);
+      // Call real external REST API, return observable
+      return this.http.get<Array<Event>>(`${this.apiUrl}/events?time=past`);
     } else {
       // In mem API workaround, return *all* events then filter 
       return this.http.get<Array<Event>>(`${this.apiUrl}/events`)
@@ -63,7 +65,8 @@ export class EventService {
     var today = new Date().toISOString().substring(0, 10);
 
     if(environment.production) {
-      return this.http.get<Array<Event>>(`${this.apiUrl}/events?mode=future`);
+      // Call real external REST API, return observable
+      return this.http.get<Array<Event>>(`${this.apiUrl}/events?time=future`);
     } else {
       // In mem API workaround, return *all* events then filter 
       return this.http.get<Array<Event>>(`${this.apiUrl}/events`)

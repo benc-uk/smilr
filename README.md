@@ -35,23 +35,33 @@ The endpoint is held in the Angular CLI `environment` files in the [src/environm
 # Data Model
 Just two models currently exist, one for topics and one for submitted feedback
 
-> !TODO! Update this info, it's out of date
-
+```ts
+Event {
+  id: any           // six character UID string or int
+  title: string     // Title of the event, 50 char max
+  type: string      // Type of event ['event', 'workshop', 'hack', 'lab']
+  start: Date       // Start date
+  end: Date         // End date
+  topics: Topic[];  // List of Topics, must be at least one
+}
+``` 
 ```ts
 Topic {
-  id: string
-  desc: string
+  id: number              // int
+  desc: string            // Short description 
+  feedback: Feedback[];   // Only populated when reporting
 }
 ``` 
 ```ts
 Feedback {
-  id: string      (GUID)
-  topic: string   (ref to Topic.id)
-  rating: number
-  comment: string
+  id: number        // UUID
+  event: string     // event id
+  topic: number     // topic id
+  rating: number    // Feedback rating 1 to 5
+  comment: string   // Feedback comments
+  metadata: string  // Extra metadata from enrichment, e.g. sentiment
 }
 ``` 
-> TODO - Update model with events, topics (sit under events) and feeback. Events will have start & end dates, out of date events will not be eligible for feedback
 
 # Services 
 
@@ -65,14 +75,20 @@ The service listens on port 3000 and requires no config
 ### Data API server 
 This is held in [service-data-api](service-data-api) and is another Node.js Express app. It acts as the REST API endpoint for the Angular client app.
 
-> !TODO! Update this info, it's out of date
+The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` and currently are set up as follows:
+#### Events:
+- `GET /api/events` - Return all events
+- `GET /api/events?time={active|future|past}` - Return events in given time frame
+- `GET /api/event/{id}` - Return just one topic, by id
+- `POST /api/events` - Create a new event
+- `PUT /api/events` - Update existing event
+- `DELETE /api/events/{id}` - Delete event
 
-All API routes are held in `api.js` and currently are set up as follows:
-- `GET /api/topics` - Return all topics
-- `GET /api/topic/{id}` - Return just one topic, by id
-- `GET /api/feedback` - Return all feedback (TODO paginate or restrict this)
+#### Feedback:
+- `GET /api/feedback/{eventid}/{topicid}` - Return all feedback for given event and topic
+- `POST /api/feedback` - Submit feedback
 
-Some admin/helper routes are provided:
+#### Other. Admin & helper routes:
 - `GET /api/db/delete` - Delete the Azure table
 - `GET /api/db/create` - Create the Azure table
 - `GET /api/db/seed` - Load the table with seed/sample data
