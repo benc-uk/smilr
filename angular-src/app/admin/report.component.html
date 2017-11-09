@@ -7,10 +7,10 @@
       <tr><td>Start Date: &nbsp;&nbsp; </td><td>{{event.start | date:'MMMM d, yyyy' }}</td></tr>
       <tr><td>End Date: &nbsp;&nbsp; </td><td>{{event.end | date:'MMMM d, yyyy' }}</td></tr>
       <tr><td>Type: &nbsp;&nbsp; </td><td>{{event.type | titlecase}}</td></tr>
-      <tr><td>Feedback: &nbsp;&nbsp; </td><td>{{ eventStats['_'+event.id].count }}</td></tr>
+      <tr *ngIf="eventStats['_'+event.id]"><td>Feedback: &nbsp;&nbsp; </td><td>{{ eventStats['_'+event.id].count }}</td></tr>
       <tr>
         <td>Average Rating: &nbsp;&nbsp; </td><td>
-          <div style="text-align: center; color: #111111; height:40px; border-radius:3px;" [ngStyle]="{'background-color': eventStats['_'+event.id].colour}">
+          <div *ngIf="eventStats['_'+event.id]" style="text-align: center; color: #111111; height:40px; border-radius:3px;" [ngStyle]="{'background-color': eventStats['_'+event.id].colour}">
             {{ eventStats['_'+event.id].avg | number:'1.2-2' }}
           </div>  
         </td>
