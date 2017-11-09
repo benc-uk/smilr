@@ -53,7 +53,7 @@
       <br/>
       <div style="width:40%; display: inline-block" >
       <select class="form-control" id="eventType" [(ngModel)]="editEvent.type">
-        <option *ngFor="let type of eventTypes">{{ type | titlecase}}</option>
+        <option *ngFor="let type of eventTypes" value="{{ type }}">{{ type | titlecase}}</option>
       </select>
       </div>
       <div style="width:40%; display: inline-block">

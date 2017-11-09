@@ -1,21 +1,23 @@
 {
     "events": [
         { 
-          "id": "123456",
+          "id": "evt001",
+          "doctype": "event",
           "title": "Azure Compute Options Workshop", 
           "type": "workshop", 
           "start": "2017-10-26", 
-          "end": "2019-10-26",
+          "end": "2019-12-30",
           "topics": [
             {"id": 1, "desc": "General" }
           ]
         },
         { 
-          "id": "abcdef",
+          "id": "evt002",
+          "doctype": "event",
           "title": "Introduction to PaaS", 
           "type": "event", 
-          "start": "2017-10-26", 
-          "end": "2019-10-26",
+          "start": "2017-12-02", 
+          "end": "2017-12-08",
           "topics": [
             {"id": 1, "desc": "Morning Session"},
             {"id": 2, "desc": "Afternoon Session"}
@@ -25,28 +27,36 @@
       
       "feedback": [
         { 
-          "event": "123456",
+          "id": "o8b231",
+          "doctype": "feedback",
+          "event": "evt001",
           "topic": 1,
           "rating": 5, 
           "comment": "Best workshop on Azure, I've been to this week!"
         },
         { 
-          "event": "abcdef",
+          "id": "u47ash",
+          "doctype": "feedback",
+          "event": "evt002",
           "topic": 1,
           "rating": 5, 
-          "comment": "I loved the morning session!"
+          "comment": "I loved the morning session! You guys are the best"
         },
         { 
-          "event": "abcdef",
+          "id": "bdf73q",
+          "doctype": "feedback",
+          "event": "evt002",
           "topic": 2,
           "rating": 1, 
-          "comment": "I hated the afternoon"
+          "comment": "I hated the afternoon, and I don't know why."
         },
         { 
-          "event": "paas",
+          "id": "zgs22k",
+          "doctype": "feedback",
+          "event": "evt002",
           "topic": 2,
-          "rating": 3, 
-          "comment": "The PaaS afternoon was ok"
+          "rating": 4, 
+          "comment": "The afternoon was ok, but I wasn't listening"
         }                  
       ]   
 }

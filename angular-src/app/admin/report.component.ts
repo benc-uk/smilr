@@ -40,11 +40,12 @@ export class ReportComponent  {
               feedbackdata => { 
                 feedbackdata.forEach(f => {totalRating += f.rating; feedbackCount++});
                 topic.feedback = feedbackdata; 
+
+                let avg = totalRating / feedbackCount;
+                this.eventStats[`_${event.id}`] = {avg: avg, count: feedbackCount, colour: this.colours[Math.floor(avg) - 1]}                       
               }
             );             
-          }); 
-          let avg = totalRating / feedbackCount;
-          this.eventStats[`_${event.id}`] = {avg: avg, count: feedbackCount, colour: this.colours[Math.floor(avg) - 1]}       
+          });     
         });
       },
       err => {

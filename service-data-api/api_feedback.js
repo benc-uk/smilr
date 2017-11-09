@@ -1,11 +1,11 @@
 const express = require('express');
 const routes = express.Router();
 const mongoose = require('mongoose');
-const dataAccess = require('./data-access');
+const DataAccess = require('./data-access');
 const uuidv4 = require('uuid/v4');
 const os = require('os');
 const fs = require('fs');
-var data = new dataAccess();
+var data = new DataAccess();
 
 // Routes for feedback API 
 
@@ -14,7 +14,7 @@ routes
   res.type('application/json');
   data.listFeedbackForEventTopic(req.params.eventid, parseInt(req.params.topicid))
     .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));
+    .catch(e => res.status(400).send(e));
 })
 
 .post('/api/feedback', function (req, res, next) {
@@ -22,7 +22,7 @@ routes
   res.type('application/json');
   data.createFeedback(feedback)
     .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));
+    .catch(e => res.status(400).send(e));
 })
 
 module.exports = routes;

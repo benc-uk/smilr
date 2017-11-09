@@ -15,6 +15,7 @@
     "azure-storage": "^2.6.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
+    "documentdb": "^1.13.0",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "mongoose": "^4.12.3",

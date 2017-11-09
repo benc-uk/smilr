@@ -1,37 +1,23 @@
 const express = require('express');
 const routes = express.Router();
 const mongoose = require('mongoose');
-const dataAccess = require('./data-access');
+const DataAccess = require('./data-access');
 const uuidv4 = require('uuid/v4');
 const os = require('os');
 const fs = require('fs');
-var data = new dataAccess();
+var data = new DataAccess();
 
 // Admin and db maintenance routes
 
 routes
-.get('/api/db/delete', function (req, res, next) {
+.get('/api/dbinit', function (req, res, next) {
   res.type('application/json');
-  data.deleteTable()
+  data.initDatabase()
     .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));  
+    .catch(e => res.status(400).send(e));  
 })
 
-.get('/api/db/create', function (req, res, next) {
-  res.type('application/json');
-  data.createTable()
-    .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));  
-})
-
-.get('/api/db/seed', function (req, res, next) {
-  res.type('application/json');
-  data.populate()
-    .then(d => res.send(d))
-    .catch(e => res.status(e.statusCode).send(e));  
-})
-
-.get('/api/admin/info', function (req, res, next) {
+.get('/api/info', function (req, res, next) {
   res.type('application/json');
   var info = { 
     hostname: os.hostname(), 
