@@ -1,21 +1,21 @@
 # Microservices Demo App
 
 This is a simple app designed to showcase multiple microservices patterns & deployment architectures. It consists of a SPA written in Angular 4, and currently a single backend service, which provides all data to the client app via REST.  
-Currently the backend data store is Azure Tables, however this may be moved to Cosmos DB / MongoDB later.
+Currently the backend data store is Cosmos DB
 
 The backend services are written in Node.js Express. They can be deployed directly to Azure Web or API apps (as Node.js is supported), however as the purpose of the app is to demonstrate microservices rather than PaaS, this deployment path is a side effect of the technology rather than a desired outcome.
 
 The two services have been containerized so can be run in a number of container hosting options. Simple deployment can be done in Azure Linux Web Apps, or Azure Container Instances.  
 Deployment to Azure Container Service (in AKS managed Kubernetes) has also been tested.
 
-### Simplified architecture
-![arch](https://user-images.githubusercontent.com/14982936/32010128-dca5d85e-b9a8-11e7-9802-e0147342093e.png)
+### Simplified Architecture
+![arch](https://user-images.githubusercontent.com/14982936/32603569-18f43734-c542-11e7-80c3-afb616714d24.png)
 
 
 # Angular 4 Front End
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.9
 
-### Development server
+### Development Server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 When running in non production mode, InMemoryDbService is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
 
@@ -33,7 +33,7 @@ The endpoint is held in the Angular CLI `environment` files in the [src/environm
 ![screen](https://user-images.githubusercontent.com/14982936/32010139-e7542fda-b9a8-11e7-874f-545133f45c83.png)
 
 # Data Model
-Just two models currently exist, one for topics and one for submitted feedback
+Two main models exist, one for events and one for submitted feedback, Topics exist as simple objects nested in Events.
 
 ```ts
 Event {
@@ -62,6 +62,11 @@ Feedback {
   metadata: string  // Extra metadata from enrichment, e.g. sentiment
 }
 ``` 
+## Data Model in Cosmos DB
+All data is held in a single Cosmos DB database called `microserviceDb` and also in single collection to save costs! This collection is called `alldata` :)  
+
+The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
+Note. This may not be the best partitioning scheme but it serves our purposes for now.
 
 # Services 
 
@@ -89,16 +94,14 @@ The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` an
 - `POST /api/feedback` - Submit feedback
 
 #### Other. Admin & helper routes:
-- `GET /api/db/delete` - Delete the Azure table
-- `GET /api/db/create` - Create the Azure table
-- `GET /api/db/seed` - Load the table with seed/sample data
-- `GET /api/admin/info` - Provide some information about the backend service, including hostname (good for debuging loadbalanced containers)
+- `GET /api/dbinit` - Reinit the database, delete and recreate Cosmos db & collection, then load seed data
+- `GET /api/info` - Provide some information about the backend service, including hostname (good for debuging loadbalanced containers)
 
 The server listens on port 4000 and requires two configuration variables to be set. These are taken from environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
 |Variable Name|Purpose|
 |-------------|-------|
-|STORAGE_ACCOUNT|Name of the Azure storage account|
-|STORAGE_KEY|Access key for the named storage account|
+|COSMOS_ENDPOINT|The URL endpoint of the Cosmos DB account, e.g. `https://foobar.documents.azure.com:443/`|
+|COSMOS_KEY|Master key for the Cosmos DB account|
 
 
 # Kubernetes 
