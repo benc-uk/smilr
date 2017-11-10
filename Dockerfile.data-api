@@ -1,4 +1,4 @@
-FROM node:6-alpine
+FROM node:8-alpine
 LABEL version="1.0.0" 
 ARG basedir="service-data-api"
 

@@ -111,8 +111,12 @@ Also prior to deployment a Kubernetes secret will need to be created with the Az
  `kubectl create secret generic azuresecrets --from-literal=storeAcctKey=<keyhere>`
 
 
-# Running a live, secured instance
+# Running A Secured Instance
+The application is designed to be deployed in a demo scenario, so access to the admin pages where you can create/edit events and view feedback is open to all, without login. 
 
-> !TODO! Put something here about running in App Service with AAD Auth + switching secured to true in environment.ts
+However should you want to run the app permanently in non-demo instance for real use, there is an option to secure it. In `environment.prod.ts` change the `secured` setting to `true`. The Angular app will now hide the admin and report sections behind a login prompt. Authentication is expected to be handled by Azure App Service authentication and AAD.
 
- 
+**Important Note!** For this `secured` mode to work the Angular app must be deployed with the supplied frontend server ([/service-frontend](/service-frontend)) and that ***must be deployed to a Windows App Service***. On that App Service, Authentication must be enabled but ***anonymous access should be allowed***, and AAD should be set up as an auth provider. No other configuration will work.
+
+As follows:
+![app-svc-auth](https://user-images.githubusercontent.com/14982936/32653292-4a065c4a-c5ff-11e7-8d48-a3d2df805b4a.png)

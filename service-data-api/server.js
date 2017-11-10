@@ -25,12 +25,12 @@ if(!process.env.COSMOS_ENDPOINT || !process.env.COSMOS_KEY) {
 }
 
 // Routing to controllers
-api_events = require('./api_events');
-api_feedback = require('./api_feedback');
-api_other = require('./api_other');
-app.use('/', api_events);
-app.use('/', api_feedback);
-app.use('/', api_other);
+apiEvents = require('./api-events');
+apiFeedback = require('./api-feedback');
+apiOther = require('./api-other');
+app.use('/', apiEvents);
+app.use('/', apiFeedback);
+app.use('/', apiOther);
 
 // Start the server
 var port = process.env.PORT || 4000;

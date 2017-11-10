@@ -9,6 +9,7 @@
         <a [routerLink]="['/events']" (click)="closeNav()"><i class="fa fa-book"></i> Events</a>
         <a *ngIf="!env.secured || userService.isLoggedIn()" [routerLink]="['/admin/report']" (click)="closeNav()"><i class="fa fa-bar-chart"></i> Reports</a>
         <a *ngIf="!env.secured || userService.isLoggedIn()" [routerLink]="['/admin/events']" (click)="closeNav()"><i class="fa fa-wrench"></i> Admin</a>
+        <a *ngIf="!env.secured || userService.isLoggedIn()" href='/.auth/logout/aad' (click)="closeNav()"><i class="fa fa-user-circle"></i> Logout</a>
         <a *ngIf="env.secured && !userService.isLoggedIn()" href='/.auth/login/aad?post_login_redirect_uri=/logincomplete'><i class="fa fa-user"></i> Login</a>
         <a (click)="closeNav(); aboutDialog.show()"><i class="fa fa-info-circle"></i> About</a>
       </div>
@@ -19,20 +20,23 @@
       <!-- left hand buttons (hidden when mobile) -->
       <ul class="nav navbar-nav navbar-left hidden-xs">
         <li>
-          <p class="navbar-btn"><a class="btn btn-success" [routerLink]="['/events']"><i class="fa fa-book"></i> Events</a>&nbsp;</p>
+          <p class="navbar-btn"><a class="btn btn-success" [routerLink]="['/events']"><i class="fa fa-book"></i> <span class="hidden-sm">Events</span></a>&nbsp;</p>
         </li>
         <li>
-         <p class="navbar-btn"><a class="btn btn-success" (click)="aboutDialog.show()"><i class="fa fa-info-circle"></i> About</a>&nbsp;</p>
+         <p class="navbar-btn"><a class="btn btn-success" (click)="aboutDialog.show()"><i class="fa fa-info-circle"></i> <span class="hidden-sm">About</span></a>&nbsp;</p>
         </li>
       </ul>
 
       <!-- ADMIN right hand buttons (hidden when mobile) -->
       <ul class="nav navbar-nav navbar-right hidden-xs" *ngIf="!env.secured || userService.isLoggedIn()">
         <li>
-          <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/report']"><i class="fa fa-bar-chart"></i> Reports</a>&nbsp;</p>
+          <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/report']"><i class="fa fa-bar-chart"></i> <span class="hidden-sm">Reports</span></a>&nbsp;</p>
         </li>
         <li>
-          <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/events']"><i class="fa fa-wrench"></i> Admin</a>&nbsp;</p>
+          <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/events']"><i class="fa fa-wrench"></i> <span class="hidden-sm">Admin</span></a>&nbsp;</p>
+        </li>
+        <li>
+          <p class="navbar-btn"><a class="btn btn-warning" href='/.auth/logout/aad'><i class="fa fa-user-circle"></i> <span class="hidden-md hidden-sm">Logout</span></a>&nbsp;</p>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right hidden-xs" *ngIf="env.secured && !userService.isLoggedIn()">
@@ -64,6 +68,6 @@
 </div>
 
 <!-- About dialog -->
-<modal-dialog #aboutDialog dialogTitle="About" hideCancel="true" dialogBody="MicroSurvey<br/>A microservices demonstration app<br/>v1.0.0</br>&copy; Ben Coleman, 2017" ></modal-dialog>
+<modal-dialog #aboutDialog dialogTitle="About" hideCancel="true" dialogBody="<h3><i class='fa fa-thumbs-up'></i> MicroSurvey</h3><br/>A microservices demonstration app<br/>v1.0.0</br>&copy; Ben Coleman, 2017" ></modal-dialog>
 
 
