@@ -1,6 +1,5 @@
 const express = require('express');
 const routes = express.Router();
-const mongoose = require('mongoose');
 const DataAccess = require('./data-access');
 const uuidv4 = require('uuid/v4');
 const os = require('os');

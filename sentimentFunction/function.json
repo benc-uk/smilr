@@ -1,0 +1,15 @@
+{
+   "bindings": [
+     {
+       "type": "cosmosDBTrigger",
+       "name": "docs",
+       "direction": "in",
+       "leaseCollectionName": "leases",
+       "connectionStringSetting": "microsurvey_DOCUMENTDB",
+       "databaseName": "microserviceDb",
+       "collectionName": "alldata",
+       "createLeaseCollectionIfNotExists": true
+     }
+   ],
+   "disabled": false
+ }

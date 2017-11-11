@@ -1,5 +1,5 @@
 {
-  "name": "frontend-service",
+  "name": "service-frontend",
   "version": "1.0.0",
   "main": "server.js",
   "engines": {

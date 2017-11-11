@@ -1,6 +1,5 @@
 const express = require('express');
 const routes = express.Router();
-const mongoose = require('mongoose');
 const DataAccess = require('./data-access');
 const uuidv4 = require('uuid/v4');
 const os = require('os');
@@ -28,7 +27,6 @@ routes
     cpuModel: os.cpus()[0].model, 
     cpuCount: os.cpus().length, 
     memory: Math.round(os.totalmem() / 1048576),
-    siteName: process.env.WEBSITE_SITE_NAME ? process.env.WEBSITE_SITE_NAME.split('-')[0] : 'Local',
     nodeVer: process.version
   }  
   res.send(info);

@@ -1,5 +1,5 @@
 FROM node:8-alpine
-LABEL version="1.0.0" 
+LABEL version="2.0.0" 
 ARG basedir="service-data-api"
 
 # Node.js setup for the data-api
