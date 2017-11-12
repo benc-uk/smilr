@@ -6,5 +6,5 @@
 export const environment = {
   production: true,
   api_endpoint: 'https://micro-survey-api.azurewebsites.net/api',
-  secured: false
+  secured: true
 };
