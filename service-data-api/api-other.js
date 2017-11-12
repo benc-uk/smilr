@@ -27,7 +27,8 @@ routes
     cpuModel: os.cpus()[0].model, 
     cpuCount: os.cpus().length, 
     memory: Math.round(os.totalmem() / 1048576),
-    nodeVer: process.version
+    nodeVer: process.version,
+    cosmosDb: data.getCosmosInfo()
   }  
   res.send(info);
 })
