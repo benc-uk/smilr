@@ -12,8 +12,8 @@ Deployment to Azure Container Service (in AKS managed Kubernetes) has also been 
 ![arch](https://user-images.githubusercontent.com/14982936/32603569-18f43734-c542-11e7-80c3-afb616714d24.png)
 
 
-# Angular 4 Front End
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.9
+# Angular Front End
+This project was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0
 
 ### Development Server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
@@ -25,7 +25,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ### API endpoint configuration
 ***IMPORTANT!*** The API endpoint for the backend data service must be set at build time. 
 
-This due to the nature of Angular apps (they run entirely on the client in the browser) and the Angular CLI used to package, bundle and build the app, makes it almost impossible to override this value at runtime. There are complex workarounds which cause additional problems and configuration pain
+This due to the nature of Angular apps (they run entirely on the client in the browser) and the Angular CLI used to package, bundle and build the app, makes it almost impossible to override this value at runtime. There are complex workarounds, which mainly end up causing additional problems and configuration pain
 
 The endpoint is held in the Angular CLI `environment` files in the [src/environments](src/environments) directory, in [`environment.prod.ts`](src/environments/environment.prod.ts), setting name is `api_endpoint`. Note the API endpoint for development mode is always ignored, due to the dev mode mock API intercepting all calls
 
@@ -37,7 +37,7 @@ Two main models exist, one for events and one for submitted feedback, Topics exi
 
 ```ts
 Event {
-  id: any           // six character UID string or int
+  id: any           // Six character UID string or int
   title: string     // Title of the event, 50 char max
   type: string      // Type of event ['event', 'workshop', 'hack', 'lab']
   start: Date       // Start date
@@ -54,9 +54,9 @@ Topic {
 ``` 
 ```ts
 Feedback {
-  id: number        // UUID
-  event: string     // event id
-  topic: number     // topic id
+  id: number        // Six character UID string or int
+  event: string     // Event id
+  topic: number     // Topic id
   rating: number    // Feedback rating 1 to 5
   comment: string   // Feedback comments
   metadata: string  // Extra metadata from enrichment, e.g. sentiment
@@ -66,19 +66,19 @@ Feedback {
 All data is held in a single Cosmos DB database called `microserviceDb` and also in single collection to save costs! This collection is called `alldata` :)  
 
 The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
-Note. This may not be the best partitioning scheme but it serves our purposes for now.
+Note. This may not be the best partitioning scheme but it serves our purposes.
 
 # Services 
 
 ### Front end server 
-This is held in [service-frontend](service-frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place.  
+This is held in [service-frontend](service-frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place. This service is stateless
 
-The Node.js server serves the static content from it's root directory, this content come from the output of `ng build --prod` which outputs to `./dist` so must be copied in. The Dockerfile ([Dockerfile.frontend](Dockerfile.frontend)) carries out this copy step
+The Node.js server serves the static content from its root directory, this content comes from the output of `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([Dockerfile.frontend](Dockerfile.frontend)) carries out this copy step
 
 The service listens on port 3000 and requires no config
 
 ### Data API server 
-This is held in [service-data-api](service-data-api) and is another Node.js Express app. It acts as the REST API endpoint for the Angular client app.
+This is held in [service-data-api](service-data-api) and is another Node.js Express app. It acts as the REST API endpoint for the Angular client app. This service is stateless
 
 The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` and currently are set up as follows:
 #### Events:
@@ -94,9 +94,13 @@ The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` an
 - `POST /api/feedback` - Submit feedback
 
 #### Other. Admin & helper routes:
-- `GET /api/dbinit` - Reinit the database, delete and recreate Cosmos db & collection, then load seed data
+- `GET /api/dbinit` - Reinit the database, delete and recreate Cosmos db & collection, then load seed data. Seed data is held in `seed-data.json` and can be modified as required.
 - `GET /api/info` - Provide some information about the backend service, including hostname (good for debuging loadbalanced containers)
 
+#### Data access
+All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess* in `data-access.js`. Any Cosmos DB specific code and logic is encapsulated here
+
+#### Data API server - Config
 The server listens on port 4000 and requires two configuration variables to be set. These are taken from environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
 |Variable Name|Purpose|
 |-------------|-------|
