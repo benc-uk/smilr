@@ -57,7 +57,8 @@ export class InMemService implements InMemoryDbService {
         event: 2,
         topic: 2,
         rating: 2, 
-        comment: "I hated the afternoon"
+        comment: "I hated the afternoon",
+        sentiment: 0.3780291
       },
       { 
         id: 3, 

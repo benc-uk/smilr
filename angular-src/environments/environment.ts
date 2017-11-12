@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  api_endpoint: "ignored",
+  api_endpoint: "http://this-is-ignored",
   secured: false
 };
