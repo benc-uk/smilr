@@ -1,3 +1,8 @@
+#
+# This script is designed to deploy the frontend to an  
+# existing Azure App Service instance 
+#
+
 # CHANGE THESE!
 $appService = "micro-survey"
 $appSvcUser = "bcdeployer"
