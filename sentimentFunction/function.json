@@ -1,15 +1,25 @@
 {
-   "bindings": [
-     {
-       "type": "cosmosDBTrigger",
-       "name": "docs",
-       "direction": "in",
-       "leaseCollectionName": "leases",
-       "connectionStringSetting": "microsurvey_DOCUMENTDB",
-       "databaseName": "microserviceDb",
-       "collectionName": "alldata",
-       "createLeaseCollectionIfNotExists": true
-     }
-   ],
-   "disabled": false
- }
+  "bindings": [
+    {
+      "type": "cosmosDBTrigger",
+      "name": "docs",
+      "connectionStringSetting": "microsurvey_DOCUMENTDB",
+      "databaseName": "microserviceDb",
+      "collectionName": "alldata",
+      "leaseCollectionName": "leases",
+      "createLeaseCollectionIfNotExists": true,
+      "direction": "in"
+    },
+    {
+      "type": "documentDB",
+      "name": "outputDoc",
+      "databaseName": "microserviceDb",
+      "collectionName": "alldata",
+      "createIfNotExists": false,
+      "partitionKey": "feedback",
+      "connection": "microsurvey_DOCUMENTDB",
+      "direction": "out"
+    }
+  ],
+  "disabled": false
+}
