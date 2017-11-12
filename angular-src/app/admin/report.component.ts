@@ -32,7 +32,7 @@ export class ReportComponent  {
               // This will load all feedback into the topic, and fully inflate the event object
               // And calc stats on rating
               feedbackdata => { 
-                feedbackdata.forEach(f => {totalRating += f.rating; feedbackCount++});
+                feedbackdata.forEach(f => {totalRating += +f.rating; feedbackCount++});
                 topic.feedback = feedbackdata; 
 
                 let avg = totalRating / feedbackCount;

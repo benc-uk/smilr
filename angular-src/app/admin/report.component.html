@@ -34,10 +34,11 @@
               <img src="/assets/img/face-{{ feedback.rating }}.svg" width="40px"/>
             </td>
             <td>
-              <span *ngIf="!feedback.comment"><i>No comment</i></span>"{{ feedback.comment }}"
+              <span *ngIf="!feedback.comment"><i>No comment</i></span>
+              <span *ngIf="feedback.comment">"{{ feedback.comment }}"</span>
             </td>
             <td>
-              <span *ngIf="!feedback.sentiment">None</span>{{ feedback.sentiment }}
+              <span *ngIf="!feedback.sentiment">None</span>{{ feedback.sentiment | percent:'1.1-1' }}
             </td>            
           </tr>
       </table>
