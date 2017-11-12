@@ -9,8 +9,9 @@
       <tr><td>Type: &nbsp;&nbsp; </td><td>{{event.type | titlecase}}</td></tr>
       <tr *ngIf="eventStats['_'+event.id]"><td>Feedback: &nbsp;&nbsp; </td><td>{{ eventStats['_'+event.id].count }}</td></tr>
       <tr>
-        <td>Average Rating: &nbsp;&nbsp; </td><td>
-          <div *ngIf="eventStats['_'+event.id]" style="text-align: center; color: #111111; height:40px; border-radius:3px;" [ngStyle]="{'background-color': eventStats['_'+event.id].colour}">
+        <td>Average Rating: &nbsp;&nbsp; </td>
+        <td>
+          <div *ngIf="eventStats['_'+event.id]" class="rating rating-colour-{{eventStats['_'+event.id].avgFloor}}">
             {{ eventStats['_'+event.id].avg | number:'1.2-2' }}
           </div>  
         </td>
@@ -22,18 +23,22 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>Rating</th>
+            <th>Rating</th>          
             <th>Comments</th>
+            <th>Sentiment Score</th>            
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let feedback of topic.feedback">
             <td>
-              <img src="/assets/img/face-{{ feedback.rating }}.svg" />
+              <img src="/assets/img/face-{{ feedback.rating }}.svg" width="40px"/>
             </td>
             <td>
-              <span *ngIf="!feedback.comment">N/A</span>{{ feedback.comment }}
+              <span *ngIf="!feedback.comment"><i>No comment</i></span>"{{ feedback.comment }}"
             </td>
+            <td>
+              <span *ngIf="!feedback.sentiment">None</span>{{ feedback.sentiment }}
+            </td>            
           </tr>
       </table>
       <hr/>

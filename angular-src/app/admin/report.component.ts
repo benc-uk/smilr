@@ -5,19 +5,13 @@ import { Feedback } from '../models/feedback';
 import { Event } from '../models/event';
 
 @Component({
-  templateUrl: './report.component.html'
+  templateUrl: './report.component.html',
+  styleUrls: ['./report.component.css']
 })
 
 export class ReportComponent  {
   events: Event[] = [];
   eventStats: any = {};
-  colours: any[] = [
-    '#FF4C3F',
-    '#FFA423',
-    '#FFEB23',
-    '#A5E200',
-    '#38E815'
-  ];
 
   private feedbackService: FeedbackService;
   private eventService: EventService;
@@ -42,7 +36,7 @@ export class ReportComponent  {
                 topic.feedback = feedbackdata; 
 
                 let avg = totalRating / feedbackCount;
-                this.eventStats[`_${event.id}`] = {avg: avg, count: feedbackCount, colour: this.colours[Math.floor(avg) - 1]}                       
+                this.eventStats[`_${event.id}`] = {avg: avg, count: feedbackCount, avgFloor: Math.round(avg)}                       
               }
             );             
           });     
