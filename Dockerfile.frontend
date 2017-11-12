@@ -1,5 +1,28 @@
+#
+# Build Angular app using @angular/cli
+#
+FROM node:8-alpine as angularapp
+LABEL version="2.0.0" 
+ARG src="angular-src"
+
+WORKDIR /build
+
+COPY package.json .
+RUN npm install --silent
+
+COPY .angular-cli.json .
+COPY tsconfig.json .
+COPY ${src}/ ./${src}/
+
+RUN node_modules/@angular/cli/bin/ng build --prod
+
+######################################################
+
+#
+# Build Node.js frontend service, pulling in output from previous image
+#
 FROM node:8-alpine
-LABEL version="1.0.0" 
+LABEL version="2.0.0" 
 ARG basedir="service-frontend"
 
 # Node.js setup for the frontend
@@ -15,8 +38,8 @@ RUN npm install --production --silent
 # NPM is done, now copy in the the whole project to the workdir
 COPY ${basedir}/ .
 
-# Copy in Angular app, build app first with `ng build --prod`
-COPY dist .
+# Copy in Angular app, uses previous image in Dockerfile
+COPY --from=angularapp /build/dist .
 
 EXPOSE 3000
 CMD npm start
