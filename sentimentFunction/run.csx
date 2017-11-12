@@ -52,11 +52,11 @@ public static void Run(IReadOnlyList<Document> docs, out dynamic[] outputDoc, Tr
             outputDoc[t] = new {
                 id = tempResults[t].origDoc.Id,
                 doctype= "feedback",
-                sentiment = tempResults[t].apiResp.documents[0].score.ToString(),
+                sentiment = Double.Parse(tempResults[t].apiResp.documents[0].score.ToString()),
                 comment = tempResults[t].origDoc.GetPropertyValue<string>("comment"),
                 rating = tempResults[t].origDoc.GetPropertyValue<string>("rating"),
                 @event = tempResults[t].origDoc.GetPropertyValue<string>("event"),
-                topic = tempResults[t].origDoc.GetPropertyValue<string>("topic")                
+                topic = tempResults[t].origDoc.GetPropertyValue<int>("topic")                
             };
         }
     }

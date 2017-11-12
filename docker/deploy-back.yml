@@ -11,7 +11,7 @@
 # ------------------- Deployment ------------------- #
 
 kind: Deployment
-apiVersion: apps/v1beta2
+apiVersion: apps/v1beta1
 metadata:
   name: backend-deploy
   labels:
@@ -32,12 +32,12 @@ spec:
         ports:
         - containerPort: 4000
         env:
-        - name: STORAGE_KEY
+        - name: COSMOS_KEY
           valueFrom:
             secretKeyRef:
-              name: azuresecrets
-              key: storeAcctKey        
-        - name: STORAGE_ACCOUNT
+              name: azureSecrets
+              key: cosmosKeySecret        
+        - name: COSMOS_ENDPOINT
           value: <changeme>
 
 ---
