@@ -26,7 +26,7 @@ class DataAccess {
 
   queryEvents(query) {
     return new Promise((resolve, reject) => {
-      let q = `SELECT * FROM d WHERE d.doctype='${this.EVENT_PKEY}' AND ${query}`;
+      let q = `SELECT * FROM event WHERE event.doctype='${this.EVENT_PKEY}' AND ${query}`;
       this.client.queryDocuments(this.collectionUrl, q).toArray((err, res) => {
         if (err) { reject(err) }
         else { resolve(res) };
@@ -110,20 +110,21 @@ class DataAccess {
   initDatabase () {
     console.log(`### DB init starting...`);
     return new Promise((resolve, reject) => {
-      this.client.deleteDatabase(`dbs/${DBNAME}`, (err) => {
-        if(err) reject(err)
-        this.client.createDatabase({id: DBNAME}, (err, res) => {
+      this.client.deleteDatabase(`dbs/${this.DBNAME}`, (err) => {
+        // Ignore errors as DB might not exist on first run, that's OK
+        //if(err) reject(err)
+        this.client.createDatabase({id: this.DBNAME}, (err, res) => {
           if(err) reject(err)
           // More undocumented magic, only found on Stackoverflow!
           // How to create a partitioned collection, by adding `partitionKey : { paths: ["/foo"], kind: "Hash" }` to the spec
-          this.client.createCollection(`dbs/${DBNAME}`, { id: this.COLLNAME, partitionKey : { paths: ["/doctype"], kind: "Hash" } }, (err, res) => {
+          this.client.createCollection(`dbs/${this.DBNAME}`, { id: this.COLLNAME, partitionKey : { paths: ["/doctype"], kind: "Hash" } }, (err, res) => {
             if(err) reject(err)
             console.log(`### DB and collection deleted and recreated...`);
 
             // Load seed data
-            var seedData = JSON.parse(require('fs').readFileSync('seed-data.json', 'utf8'));
-            eventData = seedData.events;   
-            feedbackData = seedData.feedback;  
+            let seedData = JSON.parse(require('fs').readFileSync('seed-data.json', 'utf8'));
+            let eventData = seedData.events;   
+            let feedbackData = seedData.feedback;  
             eventData.forEach(event =>  {
               this.client.createDocument(this.collectionUrl, event, (err, res) => {if(!err) console.log(`### Loaded event '${event.title}' into collection`); else reject(err) });
             });

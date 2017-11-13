@@ -17,17 +17,17 @@ routes
     
     switch(req.query.time) {
       case 'active': 
-        data.queryEvents(`d["start"] <= '${today}' AND d["end"] >= '${today}'`) //`start le '${today}' and end ge '${today}'`
+        data.queryEvents(`event["start"] <= '${today}' AND event["end"] >= '${today}'`) //`start le '${today}' and end ge '${today}'`
           .then(d => res.send(d))
           .catch(e => res.status(400).send(e));
         break;
       case 'future': 
-        data.queryEvents(`d["start"] > '${today}'`) //`start gt '${today}'`
+        data.queryEvents(`event["start"] > '${today}'`) //`start gt '${today}'`
           .then(d => res.send(d))
           .catch(e => res.status(400).send(e));
         break;
       case 'past': 
-        data.queryEvents(`d["end"] < '${today}'`) //`end lt '${today}'`
+        data.queryEvents(`event["end"] < '${today}'`) //`end lt '${today}'`
           .then(d => res.send(d))
           .catch(e => res.status(400).send(e));
         break;
