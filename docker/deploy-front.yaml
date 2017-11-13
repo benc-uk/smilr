@@ -25,6 +25,9 @@ spec:
         image: bcdemo.azurecr.io/microsvc/frontend
         ports:
         - containerPort: 3000
+        env:       
+        - name: API_ENDPOINT
+          value: http://40.114.10.71/api        
 
 ---
 # ------------------- Loadbalancer ------------------- #
