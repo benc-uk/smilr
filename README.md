@@ -28,7 +28,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 - Production mode: The API endpoint is fetched from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular-src/app\/config.service.ts) which is loaded during app initialization. Note [environment.prod.ts](angular-src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
 
 ### Screenshot
-![screen](https://user-images.githubusercontent.com/14982936/32010139-e7542fda-b9a8-11e7-874f-545133f45c83.png)
+![screen](https://user-images.githubusercontent.com/14982936/32730539-4b85e806-c87f-11e7-89a5-a12543314a34.png)
 
 # Data Model
 Two main models exist, one for events and one for submitted feedback, Topics exist as simple objects nested in Events.
