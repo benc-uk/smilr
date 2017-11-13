@@ -17,17 +17,15 @@ This project was generated with the [Angular CLI](https://github.com/angular/ang
 
 ### Development Server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-When running in non production mode, InMemoryDbService is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
+When running in non production (or dev) mode, InMemoryDbService is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
 
 ### Build
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
 ### API endpoint configuration
-***IMPORTANT!*** The API endpoint for the backend data service must be set at build time. 
-
-This due to the nature of Angular apps (they run entirely on the client in the browser) and the Angular CLI used to package, bundle and build the app, makes it almost impossible to override this value at runtime. There are complex workarounds, which mainly end up causing additional problems and configuration pain
-
-The endpoint is held in the Angular CLI `environment` files in the [src/environments](src/environments) directory, in [`environment.prod.ts`](src/environments/environment.prod.ts), setting name is `api_endpoint`. Note the API endpoint for development mode is always ignored, due to the dev mode mock API intercepting all calls
+***IMPORTANT!*** The API endpoint for the backend data service must be set, there are two ways this is done, depending on if you are running in non production (e.g. from `ng serve`) or in production mode:
+- Non production: The API endpoint is set in [environment.ts](angular-src/environments/environment.ts), see comments in there. However in non-prod mode the value of this setting is ignored as the InMemoryDbService intercepts all calls
+- Production mode: The API endpoint is fetched from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular-src/app\/config.service.ts) which is loaded during app initialization. Note [environment.prod.ts](angular-src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
 
 ### Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/32010139-e7542fda-b9a8-11e7-874f-545133f45c83.png)
@@ -70,14 +68,26 @@ Note. This may not be the best partitioning scheme but it serves our purposes.
 
 # Services 
 
-### Front end server 
+## Front end server 
 This is held in [service-frontend](service-frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place. This service is stateless
 
-The Node.js server serves the static content from its root directory, this content comes from the output of `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([Dockerfile.frontend](Dockerfile.frontend)) carries out this copy step
+The Node.js server serves the static content from its root directory, this content comes from the output of `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([Dockerfile.frontend](Dockerfile.frontend)) carries out both these tasks
 
-The service listens on port 3000 and requires no config
+The service listens on port 3000 and requires a single configuration variable to be set. This taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
+|Variable Name|Purpose|
+|-------------|-------|
+|API_ENDPOINT|The URL endpoint of the data service API, e.g. `https://myapi.azurewebsites.net/api`|
 
-### Data API server 
+### Front end server - config API
+The frontend server presents a special API located at `/.config` this API responds to GET requests and will return values of environmental variables from the server as JSON. This is a workaround to a well known configuration limitation of all client side JS apps (such as Angular, React and others)
+
+The API takes a comma separated list of variable names, and returns them in a single JSON object e.g.
+**GET `/.config/HOSTNAME,FOO`** will result in `{"HOSTNAME":"hostblah", "FOO":"Value of foo"}`
+
+This config API is used by the Angular app's **ConfigService** to get the API endpoint from the API_ENDPOINT env var.
+
+
+## Data API server 
 This is held in [service-data-api](service-data-api) and is another Node.js Express app. It acts as the REST API endpoint for the Angular client app. This service is stateless
 
 The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` and currently are set up as follows:
@@ -97,22 +107,21 @@ The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` an
 - `GET /api/dbinit` - Reinit the database, delete and recreate Cosmos db & collection, then load seed data. Seed data is held in `seed-data.json` and can be modified as required.
 - `GET /api/info` - Provide some information about the backend service, including hostname (good for debuging loadbalanced containers)
 
-#### Data access
+### Data access
 All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess* in `data-access.js`. Any Cosmos DB specific code and logic is encapsulated here
 
-#### Data API server - Config
-The server listens on port 4000 and requires two configuration variables to be set. These are taken from environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
+### Data API server - Config
+The server listens on port 4000 and requires two configuration variables to be set. These are taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
 |Variable Name|Purpose|
 |-------------|-------|
-|COSMOS_ENDPOINT|The URL endpoint of the Cosmos DB account, e.g. `https://foobar.documents.azure.com:443/`|
+|COSMOS_ENDPOINT|The URL endpoint of the Cosmos DB account, e.g. `https://foobar.documents.azure.com/`|
 |COSMOS_KEY|Master key for the Cosmos DB account|
 
 
 # Kubernetes 
-Deployment YAML files for the front and backend services are held in the [docker](docker) directory. Before deployment build the docker images and push to Azure Container Registry, the ACR name in the YAML will require modification. 
+Deployment YAML files for the front and backend services are held in the [docker](/docker) directory. Before deployment build the docker images and push to Azure Container Registry, the ACR name in the YAML will require modification. 
 
-Also prior to deployment a Kubernetes secret will need to be created with the Azure Storage account key. This is done via kubectl as follows  
- `kubectl create secret generic azuresecrets --from-literal=storeAcctKey=<keyhere>`
+More information on running the app in Kubernetes is contained in [kubernetes.md](docker/kubernetes.md)
 
 
 # Running A Secured Instance
