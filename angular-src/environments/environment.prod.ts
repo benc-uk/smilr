@@ -9,6 +9,6 @@ export const environment = {
   
   // In prod mode: config section is ignored and configServer must be an array of 
   // - environmental variables which will be fetched from the server
-  configServer: ['API_ENDPOINT'],
+  configServerVars: ['API_ENDPOINT'],
   config: {}
 };

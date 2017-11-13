@@ -12,7 +12,7 @@ export class ConfigService {
   constructor(private http: HttpClient) { }
 
   load(): Promise<any> {
-    let varNames = environment.configServer.join(',');
+    let varNames = environment.configServerVars.join(',');
 
     // When in prod-mode, fetch from server as environmental vars
     // We have a fixed dependency on the server to present the /.config route as an API to us

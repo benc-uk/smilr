@@ -9,7 +9,7 @@ export const environment = {
 
   // In dev mode: configServer is ignored and values are set in config section 
   // - config section is a simple sub-object of name=value pairs
-  configServer: [],
+  configServerVars: [],
   config: {
     API_ENDPOINT: "never-used-in-devmode"
   }
