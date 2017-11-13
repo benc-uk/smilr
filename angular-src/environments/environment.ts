@@ -5,6 +5,12 @@
 
 export const environment = {
   production: false,
-  api_endpoint: "http://this-is-ignored",
-  secured: false
+  secured: false,
+
+  // In dev mode: configServer is ignored and values are set in config section 
+  // - config section is a simple sub-object of name=value pairs
+  configServer: [],
+  config: {
+    API_ENDPOINT: "never-used-in-devmode"
+  }
 };

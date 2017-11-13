@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
+import { ConfigService } from './config.service';
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/filter';
 
@@ -9,16 +10,20 @@ import { environment } from '../environments/environment';
 @Injectable()
 export class EventService {
 
-  // URL to web api - can be remote or local in memory 
-  private apiUrl = environment.api_endpoint;
+  // URL to web api - can be remote or local in-memory 
+  private apiEndpoint;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, config: ConfigService) {
+    this.apiEndpoint = config.values.API_ENDPOINT;
+    if(!this.apiEndpoint) 
+      console.error(`### ERROR! API endpoint is not set! Configure the API_ENDPOINT in the config section of environment.ts or set on the server as environmental variable`)
+  }
 
   //
   // Get all events. GET /api/events
   //
   public listAll(): Observable<Array<Event>> {
-    return this.http.get<Array<Event>>(`${this.apiUrl}/events`);
+    return this.http.get<Array<Event>>(`${this.apiEndpoint}/events`);
   }
 
 
@@ -30,10 +35,10 @@ export class EventService {
 
     if(environment.production) {
       // Call real external REST API, return observable
-      return this.http.get<Array<Event>>(`${this.apiUrl}/events?time=active`);
+      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events?time=active`);
     } else {
       // In mem API, return *all* events then filter 
-      return this.http.get<Array<Event>>(`${this.apiUrl}/events`)
+      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events`)
       .map(events => events.filter(event => {
         if(event.start.toString() <= today && event.end.toString() >= today) return true;
       }));
@@ -48,10 +53,10 @@ export class EventService {
 
     if(environment.production) {
       // Call real external REST API, return observable
-      return this.http.get<Array<Event>>(`${this.apiUrl}/events?time=past`);
+      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events?time=past`);
     } else {
       // In mem API workaround, return *all* events then filter 
-      return this.http.get<Array<Event>>(`${this.apiUrl}/events`)
+      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events`)
       .map(events => events.filter(event => {
         if(event.end.toString() < today) return true;
       }));
@@ -66,10 +71,10 @@ export class EventService {
 
     if(environment.production) {
       // Call real external REST API, return observable
-      return this.http.get<Array<Event>>(`${this.apiUrl}/events?time=future`);
+      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events?time=future`);
     } else {
       // In mem API workaround, return *all* events then filter 
-      return this.http.get<Array<Event>>(`${this.apiUrl}/events`)
+      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events`)
       .map(events => events.filter(event => {
         if(event.start.toString() > today) return true;
       }));
@@ -80,7 +85,7 @@ export class EventService {
   // Get single event. GET /api/events/{id}
   //
   public get(id: string): Observable<Event> {
-    var url = `${this.apiUrl}/events/${id}`
+    var url = `${this.apiEndpoint}/events/${id}`
     return this.http.get<Event>(url);
   }
 
@@ -91,7 +96,7 @@ export class EventService {
     if(!environment.production) {
       event.id = EventService.makeId(6);
     }
-    var url = `${this.apiUrl}/events`
+    var url = `${this.apiEndpoint}/events`
     return this.http.post<Event>(url, event);
   }
 
@@ -99,7 +104,7 @@ export class EventService {
   // Update an existing event. PUT /api/events/{id}
   //
   public update(event: Event): Observable<Event> {
-    var url = `${this.apiUrl}/events`
+    var url = `${this.apiEndpoint}/events`
     return this.http.put<Event>(url, event);
   }
 
@@ -107,7 +112,7 @@ export class EventService {
   // Delete an event. DELETE /api/events/{id}
   //
   public delete(event: Event): Observable<Event> {
-    var url = `${this.apiUrl}/events/${event.id}`
+    var url = `${this.apiEndpoint}/events/${event.id}`
     return this.http.delete<any>(url);
   }
 

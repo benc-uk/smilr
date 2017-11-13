@@ -6,6 +6,17 @@ var static_dir = __dirname;
 app.use('/', express.static(static_dir));
 
 //
+// Allow Angular to fetch a comma separated set of environmental vars from the server
+//
+app.get('/.config/:vars', function (req, res) {
+    let data = {};
+    req.params.vars.split(",").forEach(varname =>{
+        data[varname] = process.env[varname];
+    })
+    res.send(data);
+});
+
+//
 // This is VERY important, with out this, App Service Auth and AAD Login will not work!
 // This prevents calls to /.auth (used by App Svc login flow) from being directed to our Angular code
 //

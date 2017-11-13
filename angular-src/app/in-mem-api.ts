@@ -2,6 +2,8 @@ import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { environment } from '../environments/environment';
 
 export class InMemService implements InMemoryDbService {
+
+  //
   createDb() {
     let events = [
       { 
@@ -76,7 +78,8 @@ export class InMemService implements InMemoryDbService {
       }                  
     ];    
 
-    //console.log(environment.production)
+    // This is important!
+    // Elegant way to bypass the in-mem API when in production mode
     if(!environment.production) {
       return {events, feedback};
     } else {

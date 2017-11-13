@@ -5,6 +5,10 @@
 
 export const environment = {
   production: true,
-  api_endpoint: 'https://micro-survey-api.azurewebsites.net/api',
-  secured: true
+  secured: true,
+  
+  // In prod mode: config section is ignored and configServer must be an array of 
+  // - environmental variables which will be fetched from the server
+  configServer: ['API_ENDPOINT'],
+  config: {}
 };
