@@ -6,7 +6,7 @@ This assumes you are using WSL bash and have the latest Azure CLI installed (2.0
 
 ### Set Variables
 ```
-resg=Temp.AKS2
+resg=Temp.AKS
 loc=ukwest
 name=ben-aks
 ```
