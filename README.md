@@ -74,6 +74,7 @@ This is held in [service-frontend](service-frontend) and is an extremely simple 
 The Node.js server serves the static content from its root directory, this content comes from the output of `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([Dockerfile.frontend](Dockerfile.frontend)) carries out both these tasks
 
 The service listens on port 3000 and requires a single configuration variable to be set. This taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
+
 |Variable Name|Purpose|
 |-------------|-------|
 |API_ENDPOINT|The URL endpoint of the data service API, e.g. `https://myapi.azurewebsites.net/api`|
@@ -112,6 +113,7 @@ All data is held in Cosmos DB, the data access layer is a plain ES6 class **Data
 
 ### Data API server - Config
 The server listens on port 4000 and requires two configuration variables to be set. These are taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
+
 |Variable Name|Purpose|
 |-------------|-------|
 |COSMOS_ENDPOINT|The URL endpoint of the Cosmos DB account, e.g. `https://foobar.documents.azure.com/`|
