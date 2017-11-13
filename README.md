@@ -9,7 +9,7 @@ The two services have been containerized so can be run in a number of container 
 Deployment to Azure Container Service (in AKS managed Kubernetes) has also been tested.
 
 ### Simplified Architecture
-![arch](https://user-images.githubusercontent.com/14982936/32721413-4feb3aac-c85e-11e7-8fa9-3159582d714e.png)
+![arch](https://user-images.githubusercontent.com/14982936/32721473-87ae2008-c85e-11e7-9534-b8bec5f3d955.png)
 
 
 # Angular Front End
