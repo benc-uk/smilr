@@ -17,7 +17,7 @@ routes
     
     switch(req.query.time) {
       case 'active': 
-        data.queryEvents(`d.start < '${today}' AND 'd.end' > '${today}'`) //`start le '${today}' and end ge '${today}'`
+        data.queryEvents(`d.start <= '${today}' AND 'd.end' >= '${today}'`) //`start le '${today}' and end ge '${today}'`
           .then(d => res.send(d))
           .catch(e => res.status(400).send(e));
         break;
