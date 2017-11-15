@@ -1,20 +1,47 @@
 # Microservices Demo App
 
-This is a simple app designed to showcase multiple microservices patterns & deployment architectures. It consists of a SPA written in Angular 4, and currently a single backend service, which provides all data to the client app via REST.  
-Currently the backend data store is Cosmos DB
+This is a multi component application designed to showcase microservices design patterns & deployment architectures. It consists of a front end single page application (SPA), two lightweight services, supporting database and back end data enrichment functions.
 
-The backend services are written in Node.js Express. They can be deployed directly to Azure Web or API apps (as Node.js is supported), however as the purpose of the app is to demonstrate microservices rather than PaaS, this deployment path is a side effect of the technology rather than a desired outcome.
+The application is called *'MicroSurvey'* and allows people to provide feedback on events or sessions they have attended via a simple web & mobile interface. The feedback consists of a rating (scored 1-5) and supporting comments.
 
-The two services have been containerized so can be run in a number of container hosting options. Simple deployment can be done in Azure Linux Web Apps, or Azure Container Instances.  
-Deployment to Azure Container Service (in AKS managed Kubernetes) has also been tested.
+The user interface is written in Angular (Angular 5) and is completely de-coupled from the back end, which it communicates with via REST. The UI is fully responsive and will work on on both web and mobile.
 
-### Simplified Architecture
+The two microservices are both written in Node.js using the Express framework. These have been containerized so can easily be deployed & run as containers
+
+The database is a NoSQL document store holding JSON, provided by *Azure Cosmos DB*
+
+The app has been designed to be deployed to Azure, but the flexible nature of the design & chosen technology stack results in a wide range of deployment options and compute scenarios, including:
+- Containers: *Azure Container Service (ACS or AKS)* or *Azure Container Instances* 
+- Platform services: Regular Windows *Azure App Service (Web Apps)* or Linux *Web App for Containers*
+- Serverless: *Azure Functions*
+- Virtual Machines: Sub-optimal but theoretically possible
+
+This application supports a range of demonstration, and learning scenarios, such as:
+ - A working example of microservices design
+ - Use of containers, Docker & Kubernetes
+ - No-SQL and document stores over traditional relational databases
+ - Development and deployment challenges of single page applications 
+ - Platform services for application hosting
+ - Using serverless technology to support or provide services
+ - Use of an open source application stack such as Angular and Node.js
+ - RESTful API design 
+
+
+# Architecture & Core App Components
 ![arch](https://user-images.githubusercontent.com/14982936/32730129-fb8583b2-c87d-11e7-94c4-547bfcbfca6b.png)
 
-# TODO - Restructure the docs, better explain the main components
+The main app components are:
+1) [Angular front end UI](#c1)
+1) [Frontend service](#c2)
+1) Backend data API service
+1) Database
+1) Optional serverless components 
 
-# Angular Front End
-This project was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0
+These will be each described in their own sections below. 
+
+
+# Component 1 - Angular Front End UI <a name="c1"></a>
+This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0
 
 ### Development Server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
@@ -25,12 +52,31 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ### API endpoint configuration
 ***IMPORTANT!*** The API endpoint for the backend data service must be set, there are two ways this is done, depending on if you are running in non production (e.g. from `ng serve`) or in production mode:
-- Non production: The API endpoint is set in [environment.ts](angular-src/environments/environment.ts), see comments in there. However in non-prod mode the value of this setting is ignored as the InMemoryDbService intercepts all calls
-- Production mode: The API endpoint is fetched from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular-src/app\/config.service.ts) which is loaded during app initialization. Note [environment.prod.ts](angular-src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
+- Non production: The API endpoint is set in [environment.ts](angular-src/environments/environment.ts), see comments in there for details. However in non-prod mode the value of this setting is ignored as the InMemoryDbService intercepts all calls
+- Production mode: The API endpoint is fetched dynamically at runtime, from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular-src/app\/config.service.ts) which is loaded during app initialization. Note. The static config file [environment.prod.ts](angular-src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
 
-### Screenshot
+### UI Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/32730539-4b85e806-c87f-11e7-89a5-a12543314a34.png)
 
+
+# Component 2 - Front end service <a name="c2"></a>
+This is held in [service-frontend](service-frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place. This service is stateless
+
+The Node.js server serves the static content from its root directory, this content comes from the output of `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([Dockerfile.frontend](Dockerfile.frontend)) carries out both these tasks
+
+The service listens on port 3000 and requires a single configuration variable to be set. This taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
+
+|Variable Name|Purpose|
+|-------------|-------|
+|API_ENDPOINT|The URL endpoint of the data service API, e.g. `https://myapi.azurewebsites.net/api`|
+
+### Front end server - config API
+The frontend server presents a special API located at `/.config` this API responds to GET requests and will return values of environmental variables from the server as JSON. This is a workaround to a well known configuration limitation of all client side JS apps (such as Angular, React and others)
+
+The API takes a comma separated list of variable names, and returns them in a single JSON object e.g.
+**GET `/.config/HOSTNAME,FOO`** will result in `{"HOSTNAME":"hostblah", "FOO":"Value of foo"}`
+
+This config API is used by the Angular app's **ConfigService** to get the API endpoint from the API_ENDPOINT env var.
 
 # Database - Cosmos DB 
 
@@ -76,26 +122,8 @@ All data is held in a single Cosmos DB database called `microserviceDb` and also
 The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
 Note. This may not be the best partitioning scheme but it serves our purposes.
 
-# Services 
 
-## Front end server 
-This is held in [service-frontend](service-frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place. This service is stateless
 
-The Node.js server serves the static content from its root directory, this content comes from the output of `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([Dockerfile.frontend](Dockerfile.frontend)) carries out both these tasks
-
-The service listens on port 3000 and requires a single configuration variable to be set. This taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
-
-|Variable Name|Purpose|
-|-------------|-------|
-|API_ENDPOINT|The URL endpoint of the data service API, e.g. `https://myapi.azurewebsites.net/api`|
-
-### Front end server - config API
-The frontend server presents a special API located at `/.config` this API responds to GET requests and will return values of environmental variables from the server as JSON. This is a workaround to a well known configuration limitation of all client side JS apps (such as Angular, React and others)
-
-The API takes a comma separated list of variable names, and returns them in a single JSON object e.g.
-**GET `/.config/HOSTNAME,FOO`** will result in `{"HOSTNAME":"hostblah", "FOO":"Value of foo"}`
-
-This config API is used by the Angular app's **ConfigService** to get the API endpoint from the API_ENDPOINT env var.
 
 
 ## Data API server 
