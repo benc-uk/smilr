@@ -39,8 +39,9 @@ The main app components are:
 
 These will be each described in their own sections below. 
 
+<a name="c1"></a>
 
-# Component 1 - Angular Front End UI <a name="c1"></a>
+# Component 1 - Angular Front End UI 
 This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0
 
 ### Development Server
@@ -58,8 +59,9 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ### UI Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/32730539-4b85e806-c87f-11e7-89a5-a12543314a34.png)
 
+<a name="c2"></a>
 
-# Component 2 - Front end service <a name="c2"></a>
+# Component 2 - Front end service
 This is held in [service-frontend](service-frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place. This service is stateless
 
 The Node.js server serves the static content from its root directory, this content comes from the output of `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([Dockerfile.frontend](Dockerfile.frontend)) carries out both these tasks
