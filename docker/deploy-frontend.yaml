@@ -1,5 +1,5 @@
 #
-# Deploy the front end service in Kubernetes
+# Deploy the front end Angular server microservice in Kubernetes
 #
 
 # ------------------- Deployment ------------------- #
@@ -7,7 +7,7 @@
 kind: Deployment
 apiVersion: apps/v1beta1
 metadata:
-  name: frontend-deploy
+  name: frontend
   labels:
     app: frontend
 spec:
@@ -22,12 +22,12 @@ spec:
     spec:
       containers:
       - name: frontend-pod
-        image: bcdemo.azurecr.io/microsvc/frontend
+        image: bcdemo.azurecr.io/microsvc/frontend # !CHANGE THIS!
         ports:
         - containerPort: 3000
         env:       
         - name: API_ENDPOINT
-          value: http://40.114.10.71/api        
+          value: http://microsurvey-api.democloud.org.uk/api # !CHANGE THIS!  
 
 ---
 # ------------------- Loadbalancer ------------------- #
@@ -36,6 +36,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: frontend-svc
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: microsurvey.democloud.org.uk # !CHANGE THIS!
 spec:
   type: LoadBalancer
   ports:

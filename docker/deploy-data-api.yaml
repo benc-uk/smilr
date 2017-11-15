@@ -1,37 +1,37 @@
 #
-# Deploy the back end service in Kubernetes
+# Deploy the back end data API microservice in Kubernetes
 #
 
 # ------------------- Deployment ------------------- #
 kind: Deployment
 apiVersion: apps/v1beta1
 metadata:
-  name: backend-deploy
+  name: data-api
   labels:
-    app: backend
+    app: data-api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: backend
+      app: data-api
   template:
     metadata:
       labels:
-        app: backend
+        app: data-api
     spec:
       containers:
-      - name: backend-pod
-        image: bcdemo.azurecr.io/microsvc/data-api
+      - name: data-api-pod
+        image: bcdemo.azurecr.io/microsvc/data-api # !CHANGE THIS!
         ports:
         - containerPort: 4000
         env:
         - name: COSMOS_KEY
           valueFrom:
             secretKeyRef:
-              name: azure-secrets
+              name: cosmos-secrets
               key: cosmosKeySecret        
         - name: COSMOS_ENDPOINT
-          value: https://microsurvey.documents.azure.com
+          value: https://microsurvey-cosmos.documents.azure.com # !CHANGE THIS!
 
 ---
 
@@ -39,7 +39,9 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: backend-svc
+  name: data-api-svc
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: microsurvey-api.democloud.org.uk # !CHANGE THIS!
 spec:
   type: LoadBalancer
   ports:
@@ -47,4 +49,4 @@ spec:
     port: 80
     targetPort: 4000
   selector:
-    app: backend
+    app: data-api

@@ -11,6 +11,7 @@ Deployment to Azure Container Service (in AKS managed Kubernetes) has also been 
 ### Simplified Architecture
 ![arch](https://user-images.githubusercontent.com/14982936/32730129-fb8583b2-c87d-11e7-94c4-547bfcbfca6b.png)
 
+# TODO - Restructure the docs, better explain the main components
 
 # Angular Front End
 This project was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0
@@ -29,6 +30,15 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ### Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/32730539-4b85e806-c87f-11e7-89a5-a12543314a34.png)
+
+
+# Database - Cosmos DB 
+
+> TODO. Blah something about Cosmos here
+
+```
+az cosmosdb create -g $resGroup -n $cosmosName
+```
 
 # Data Model
 Two main models exist, one for events and one for submitted feedback, Topics exist as simple objects nested in Events.
@@ -120,10 +130,9 @@ The server listens on port 4000 and requires two configuration variables to be s
 |COSMOS_KEY|Master key for the Cosmos DB account|
 
 
-# Kubernetes 
-Deployment YAML files for the front and backend services are held in the [docker](/docker) directory. Before deployment build the docker images and push to Azure Container Registry, the ACR name in the YAML will require modification. 
+# Docker & Kubernetes 
 
-More information on running the app in Kubernetes is contained in [kubernetes.md](docker/kubernetes.md)
+[See the docker section for full notes and guides on building the Docker images & running in Kubernetes](/docker)
 
 
 # Running A Secured Instance

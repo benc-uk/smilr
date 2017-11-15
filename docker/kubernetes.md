@@ -1,40 +1,36 @@
-# Azure Container Service (AKS)
-This doc covers some of the commands needed to setup Azure Container Service (AKS) and then deploy MicroSurvey app to it.  
-This assumes you are using WSL bash and have the latest Azure CLI installed (2.0.20+)
+# Kubernetes - Azure Container Service (AKS)
+This document covers setting up Kubernetes in Azure Container Service (AKS) and then deploying the MicroSurvey app to it.  
+This assumes you are using WSL bash and have the latest Azure CLI installed (2.0.21+)
 
-> NOTE. At the time of writing (13th Nov 2017) the only region where AKS is operational and functioning is **eastus**. UK West deploys unstable clusters, and the West US 2 is out of service due to capacity issues.
+### Set Variables
+Modify variables and run this snippet in bash, note **acrName** and **cosmosName** need to be globally DNS unique. The ACR name can not contain dashes
+
+```
+resGroup=Demo.MicroSurvey
+loc=eastus
+aksName=microsurvey-aks
+cosmosName=microsurvey-cosmos
+```
+
+> **NOTE.** At the time of writing (Nov 2017) the only region where AKS is operational and functioning is **eastus**. UK West and the West US 2 is have capacity issues with AKS. 
 
 ## Set up & Creation of AKS
 
-### Set Variables
-```
-resg=Temp.AKS
-loc=eastus
-name=microsurvey-aks
-```
-
-### Create Group
-```
-az group create -n $resg -l $loc
-```
-
 ### Create AKS 
-Run in WSL bash, uses your default **~/.ssh/id_rsa.pub** file
-Optional params:
-* `--generate-ssh-keys` 
-* `--ssh-key-value `
-* `-k 1.8.1` 
+Run in WSL bash, uses your default **~/.ssh/id_rsa.pub** file. If you have your own SSH keys you wish to replace the `--generate-ssh-keys` parameter with `--ssh-key-value`
 
+You can obviously change the number of agents (VMs that will host containers) and their size
+
+The command might take some time, so be patient 
 ```
-az aks create -g $resg -n $name --agent-count 2 --agent-vm-size Standard_A2_v2 -k 1.8.1 -l $loc
+az aks create -g $resGroup -n $aksName --agent-count 2 --agent-vm-size Standard_A2_v2 -k 1.8.1 -l $loc --generate-ssh-keys
 ```
 
 ---
 
 ### Get credentials
-**NOTE** Must run this
 ```
-az aks get-credentials -g $resg -n $name
+az aks get-credentials -g $resGroup -n $aksName
 ```
 
 ### Sanity Check Kubernetes and AKS
@@ -43,10 +39,10 @@ Optional, but recommended, don't panic, it can sometimes take 1-2 mins before an
 kubectl get all --all-namespaces
 ```
 
-### Access dashboard 
+### Access Kubernetes dashboard 
 Optional, then access [http://127.0.0.1:8001](http://127.0.0.1:8001)
 ```
-az aks browse -g $resg -n $name
+az aks browse -g $resGroup -n $aksName
 ```
 
 ---
@@ -54,9 +50,51 @@ az aks browse -g $resg -n $name
 ## Deploying MicroSurvey to AKS
 
 
-### Create secret
-Get your Cosmos DB master key beforehand
+### Create secret for Cosmos DB
+
+Get your Cosmos DB master key using 
 ```
-kubectl create secret generic azure-secrets --from-literal=cosmosKeySecret=1234changeme1234
-1s6D0t9KDLaWP8Dg5gFMilTBxVwgX41YfN938bf1zjnk2LrALTqGI2NhAlBIj3QFu3BY6EJIFagCQruY6AFC6A==
+cosmosKey=`az cosmosdb list-keys -g $resGroup -n $cosmosName --query "primaryMasterKey" -o tsv`
 ```
+Then run
+```
+kubectl create secret generic cosmos-secrets --from-literal=cosmosKeySecret=$cosmosKey
+```
+
+### OPTIONAL - Deploy External DNS
+These optional steps require you to have a DNS domain you own and that domain to be managed in Azure in a DNS Zone. You can skip this part and just use IP addresses
+
+Create a config file `azure.json`, see sample **azure.json.sample** file, and populate with real values. You will need your Azure sub-id, tenant-id and the client-id & secret of the AAD service principal that was created when you created your AKS instance. Find the service principal in the Azure portal under 'App Registrations' and create a new key and make a note of the secret.
+
+```
+kubectl create secret generic azure-config-file --from-file=azure.json
+```
+
+Edit `external-dns.yaml` and change the DNS zone & resource to match your domain configuration, then run
+```
+kubectl create -f external-dns.yaml
+```
+
+Edit both `deploy-frontend.yaml` and `deploy-data-api.yaml` and change the annotation called **external-dns.alpha.kubernetes.io&#8203;/&#8203;hostname** giving them a name each within your domain zone, e.g. `microsurvey.example.com` and `microsurvey-api.example.com`
+
+
+### Deploy pods & service: data-api
+Edit `deploy-data-api.yaml` and change the value of COSMOS_ENDPOINT to match the Cosmos instance you deployed earlier. Then deploy with: 
+```
+kubectl create -f deploy-data-api.yaml
+```
+Wait for the service to be assigned a public IP, you can check with 
+```
+kubectl get svc
+```
+And validate that **data-api-svc** has an external IP, this can sometimes take 5-10 mins. If you used external DNS, validate it has been assigned by using `nslookup` and checking the DNS Zone in Azure with `az network dns record-set list -g fooGroup --zone-name example.com -o table`
+
+
+### Deploy pods & service: frontend
+Edit `deploy-frontend-api.yaml` and change the value of API_ENDPOINT. If you used external DNS, then set it to the domain name you configured in `deploy-data-api.yaml`. If not using DNS, then use the external IP of **data-api-svc**. Don't forget the URL scheme and trailing **/api** path API_ENDPOINT will take the form `http://{dns-or-ip}/api`
+
+To deploy simply run: 
+```
+kubectl create -f deploy-frontend.yaml
+```
+Again wait for and validate that **frontend-svc** has an external IP and or DNS, then access this in your browser and follow the database init steps as detailed in the main readme.md

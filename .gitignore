@@ -47,3 +47,4 @@ Thumbs.db
 
 # VERY IMPORTANT!
 .env
+azure.json
