@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json.schemastore.org/proxies",
+    "proxies": {
+        "eventListProxy": {
+            "matchCondition": {
+                "route": "/api/events",
+                "methods": [
+                    "GET"
+                ]
+            },
+            "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI"
+        },
+        "eventGetProxy": {
+            "matchCondition": {
+                "route": "/api/events/{id}"
+            },
+            "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?id={id}"
+        },
+        "feedbackCreateProxy": {
+            "matchCondition": {
+                "route": "/api/feedback",
+                "methods": [
+                    "POST"
+                ]
+            },
+            "backendUri": "https://changeme.azurewebsites.net/api/feedbackAPI"
+        }
+    }
+}
