@@ -31,15 +31,17 @@ This application supports a range of demonstration, and learning scenarios, such
 ![arch](https://user-images.githubusercontent.com/14982936/32730129-fb8583b2-c87d-11e7-94c4-547bfcbfca6b.png)
 
 The main app components are:
-1) [Angular front end UI](#c1)
-1) [Frontend service](#c2)
-1) Backend data API service
-1) Database
-1) Optional serverless components 
+1) [Angular front end UI](#angular)
+1) [Frontend service](#front)
+1) [Backend data API service](#data-api)
+1) [Database](#db)
+1) [Optional serverless components](#serverless) 
 
 These will be each described in their own sections below. 
 
-<a name="c1"></a>
+
+
+<a name="angular"></a>
 
 # Component 1 - Angular Front End UI 
 This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0
@@ -59,9 +61,11 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ### UI Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/32730539-4b85e806-c87f-11e7-89a5-a12543314a34.png)
 
-<a name="c2"></a>
 
-# Component 2 - Front end service
+
+<a name="front"></a>
+
+# Component 2 - Frontend service
 This is held in [service-frontend](service-frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place. This service is stateless
 
 The Node.js server serves the static content from its root directory, this content comes from the output of `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([Dockerfile.frontend](Dockerfile.frontend)) carries out both these tasks
@@ -80,55 +84,11 @@ The API takes a comma separated list of variable names, and returns them in a si
 
 This config API is used by the Angular app's **ConfigService** to get the API endpoint from the API_ENDPOINT env var.
 
-# Database - Cosmos DB 
-
-> TODO. Blah something about Cosmos here
-
-```
-az cosmosdb create -g $resGroup -n $cosmosName
-```
-
-# Data Model
-Two main models exist, one for events and one for submitted feedback, Topics exist as simple objects nested in Events.
-
-```ts
-Event {
-  id: any           // Six character UID string or int
-  title: string     // Title of the event, 50 char max
-  type: string      // Type of event ['event', 'workshop', 'hack', 'lab']
-  start: Date       // Start date
-  end: Date         // End date
-  topics: Topic[];  // List of Topics, must be at least one
-}
-``` 
-```ts
-Topic {
-  id: number              // int
-  desc: string            // Short description 
-  feedback: Feedback[];   // Only populated when reporting
-}
-``` 
-```ts
-Feedback {
-  id: number        // Six character UID string or int
-  event: string     // Event id
-  topic: number     // Topic id
-  rating: number    // Feedback rating 1 to 5
-  comment: string   // Feedback comments
-  metadata: string  // Extra metadata from enrichment, e.g. sentiment
-}
-``` 
-## Data Model in Cosmos DB
-All data is held in a single Cosmos DB database called `microserviceDb` and also in single collection to save costs! This collection is called `alldata` :)  
-
-The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
-Note. This may not be the best partitioning scheme but it serves our purposes.
 
 
+<a name="data-api"></a>
 
-
-
-## Data API server 
+# Component 3 - Backend Data API Service
 This is held in [service-data-api](service-data-api) and is another Node.js Express app. It acts as the REST API endpoint for the Angular client app. This service is stateless
 
 The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` and currently are set up as follows:
@@ -160,12 +120,66 @@ The server listens on port 4000 and requires two configuration variables to be s
 |COSMOS_KEY|Master key for the Cosmos DB account|
 
 
+
+<a name="db"></a>
+
+# Component 4 - Database
+All data is held in a single Cosmos DB database called `microserviceDb` and also in single collection to save costs! This collection is called `alldata` :)  
+
+The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
+Note. This may not be the best partitioning scheme but it serves our purposes.
+
+> TODO. Blah something about Cosmos here, creating etc.
+
+```
+az cosmosdb create -g MicroSurveyRG -n microsurvey-cosmos
+```
+
+### Data Model
+Two main models exist, one for events and one for submitted feedback, Topics exist as simple objects nested in Events.
+
+```ts
+Event {
+  id: any           // Six character UID string or int
+  title: string     // Title of the event, 50 char max
+  type: string      // Type of event ['event', 'workshop', 'hack', 'lab']
+  start: Date       // Start date
+  end: Date         // End date
+  topics: Topic[];  // List of Topics, must be at least one
+}
+``` 
+```ts
+Topic {
+  id: number              // int
+  desc: string            // Short description 
+  feedback: Feedback[];   // Only populated when reporting
+}
+``` 
+```ts
+Feedback {
+  id: number        // Six character UID string or int
+  event: string     // Event id
+  topic: number     // Topic id
+  rating: number    // Feedback rating 1 to 5
+  comment: string   // Feedback comments
+  metadata: string  // Extra metadata from enrichment, e.g. sentiment
+}
+``` 
+
+
+<a name="serverless"></a>
+
+# Component 5 - Optional Serverless Components
+TODO
+
+
+
 # Docker & Kubernetes 
 
 [See the docker section for full notes and guides on building the Docker images & running in Kubernetes](/docker)
 
 
-# Running A Secured Instance
+# Appendix - Running A Secured Instance
 The application is designed to be deployed in a demo scenario, so access to the admin pages where you can create/edit events and view feedback is open to all, without login. 
 
 However should you want to run the app permanently in non-demo instance for real use, there is an option to secure it. In `environment.prod.ts` change the `secured` setting to `true`. The Angular app will now hide the admin and report sections behind a login prompt. Authentication is expected to be handled by Azure App Service authentication and AAD.
