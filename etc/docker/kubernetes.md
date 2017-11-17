@@ -7,12 +7,11 @@ Modify variables and run this snippet in bash, note **acrName** and **cosmosName
 
 ```
 resGroup=Demo.MicroSurvey
-loc=eastus
+loc=westeurope
 aksName=microsurvey-aks
-cosmosName=microsurvey-cosmos
 ```
 
-> **NOTE.** At the time of writing (Nov 2017) the only region where AKS is operational and functioning is **eastus**. UK West and the West US 2 is have capacity issues with AKS. 
+> **NOTE.** At the time of writing (Nov 2017) the only regions where AKS is operational and functioning are **westeurope**, **centralus** & **eastus**. UK West and the West US 2 are offline
 
 ## Set up & Creation of AKS
 
@@ -49,17 +48,9 @@ az aks browse -g $resGroup -n $aksName
 
 ## Deploying MicroSurvey to AKS
 
-
-### Create secret for Cosmos DB
-
-Get your Cosmos DB master key using 
-```
-cosmosKey=`az cosmosdb list-keys -g $resGroup -n $cosmosName --query "primaryMasterKey" -o tsv`
-```
-Then run
-```
-kubectl create secret generic cosmos-secrets --from-literal=cosmosKeySecret=$cosmosKey
-```
+### Pre-requisites 
+- Deploy Cosmos DB account and get the master key. [See main README for details](../#db)
+- Deploy Azure Container Registry (ACR), build docker images and push to ACR. [See docker.md for details](docker.md)
 
 ### OPTIONAL - Deploy External DNS
 These optional steps require you to have a DNS domain you own and that domain to be managed in Azure in a DNS Zone. You can skip this part and just use IP addresses
@@ -79,7 +70,16 @@ Edit both `deploy-frontend.yaml` and `deploy-data-api.yaml` and change the annot
 
 
 ### Deploy pods & service: data-api
-Edit `deploy-data-api.yaml` and change the value of COSMOS_ENDPOINT to match the Cosmos instance you deployed earlier. Then deploy with: 
+Edit `deploy-data-api.yaml` and change the value of COSMOS_ENDPOINT to match the Cosmos instance you deployed earlier. 
+
+Create secret which holds the Cosmos DB master key.  
+Get the Cosmos DB key into a bash variable with the following command, change the name and/or resource group as required. They key variable is then used to create the Kubernetes secret
+```
+cosmosKey=`az cosmosdb list-keys -g $resGroup -n cosmosname --query "primaryMasterKey" -o tsv`
+kubectl create secret generic cosmos-secrets --from-literal=$cosmosKey
+```
+
+Then deploy the service to Kubernetes with: 
 ```
 kubectl create -f deploy-data-api.yaml
 ```
@@ -97,4 +97,4 @@ To deploy simply run:
 ```
 kubectl create -f deploy-frontend.yaml
 ```
-Again wait for and validate that **frontend-svc** has an external IP and or DNS, then access this in your browser and follow the database init steps as detailed in the main readme.md
+Again wait for and validate that **frontend-svc** has an external IP and or DNS, then access this in your browser and follow the database init steps as detailed in the main [readme.md](../#db)

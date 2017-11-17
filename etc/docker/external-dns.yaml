@@ -15,9 +15,9 @@ spec:
         image: registry.opensource.zalan.do/teapot/external-dns:v0.4.7
         args:
         - --source=service
-        - --domain-filter=democloud.org.uk # !CHANGE THIS!
+        - --domain-filter=democloud.org.uk # !CHANGE THIS! To your DNS domain
         - --provider=azure
-        - --azure-resource-group=demo.misc # !CHANGE THIS!
+        - --azure-resource-group=demo.misc # !CHANGE THIS! To the resource group in Azure with your DNS Zone
         volumeMounts:
         - name: azure-config-file
           mountPath: /etc/kubernetes

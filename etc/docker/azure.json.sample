@@ -4,5 +4,4 @@
    "aadClientId":     "aad-service-principal-id",
    "aadClientSecret": "aad-service-principal-secret-key",
    "resourceGroup":   "resource-group-for-dns-zone"
- }
-
+}
