@@ -39,7 +39,7 @@ The main app components are:
 
 These will be each described in their own sections below. 
 
-
+-----------------------------------------------------------------------------------------------------
 
 <a name="angular"></a>
 
@@ -124,45 +124,47 @@ The server listens on port 4000 and requires two configuration variables to be s
 <a name="db"></a>
 
 # Component 4 - Database
-All data is held in a single Cosmos DB database called `microserviceDb` and also in single collection to save costs! This collection is called `alldata` :)  
+All data is held in a single Cosmos DB database called `microserviceDb` and also in single collection to save costs, this collection is called `alldata`
 
 The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
 Note. This may not be the best partitioning scheme but it serves our purposes.
 
-> TODO. Blah something about Cosmos here, creating etc.
+### Database Initialization 
+In order to create the database (microserviceDb) and the collection (alldata) you will need to use the data service API, and call `/api/dbinit`, before you do this the app will not function and you will get errors. This call will also load demo/seed data 
 
+### Deploying Cosmos DB
+Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it
 ```
 az cosmosdb create -g MicroSurveyRG -n microsurvey-cosmos
 ```
 
 ### Data Model
-Two main models exist, one for events and one for submitted feedback, Topics exist as simple objects nested in Events.
+There are two main models, one for holding an **Event** and one for submitted **Feedback**, there are also **Topics** which only exist as simple objects nested in Events.
 
 ```ts
 Event {
-  id: any           // Six character UID string or int
-  title: string     // Title of the event, 50 char max
-  type: string      // Type of event ['event', 'workshop', 'hack', 'lab']
-  start: Date       // Start date
-  end: Date         // End date
+  id:     any       // Six character UID string or int
+  title:  string    // Title of the event, 50 char max
+  type:   string    // Type of event ['event', 'workshop', 'hack', 'lab']
+  start:  Date      // Start date, an ISO 8601 string; YYYY-MM-DD
+  end:    Date      // End date, an ISO 8601 string; YYYY-MM-DD
   topics: Topic[];  // List of Topics, must be at least one
 }
 ``` 
 ```ts
 Topic {
-  id: number              // int
-  desc: string            // Short description 
-  feedback: Feedback[];   // Only populated when reporting
+  id:       number       // int (starting at 1)
+  desc:     string       // Short description 
+  feedback: Feedback[];  // Only populated when reporting
 }
 ``` 
 ```ts
 Feedback {
-  id: number        // Six character UID string or int
-  event: string     // Event id
-  topic: number     // Topic id
-  rating: number    // Feedback rating 1 to 5
-  comment: string   // Feedback comments
-  metadata: string  // Extra metadata from enrichment, e.g. sentiment
+  id:       number  // Six character UID string or int
+  event:    string  // Event id
+  topic:    number  // Topic id
+  rating:   number  // Feedback rating 1 to 5
+  comment:  string  // Feedback comments
 }
 ``` 
 
@@ -172,11 +174,14 @@ Feedback {
 # Component 5 - Optional Serverless Components
 TODO
 
-
+----------------------------------------------------------------------------------------------------
 
 # Docker & Kubernetes 
+[See the this section for full notes and guides on building the Docker images & running in Kubernetes](/etc/docker)
 
-[See the docker section for full notes and guides on building the Docker images & running in Kubernetes](/docker)
+
+# Azure Templates
+[Azure Resource Manager deployment templates are provided here](/etc/azure-templates)
 
 
 # Appendix - Running A Secured Instance

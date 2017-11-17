@@ -43,7 +43,7 @@ yarn-error.log
 Thumbs.db
 
 # Ignore any temp junk for App Service deployment script
-/deploy-appsvc/tmp*
+/etc/deploy-appsvc/tmp*
 
 # VERY IMPORTANT!
 .env

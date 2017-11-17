@@ -7,5 +7,4 @@ export class Feedback {
   topic: number;
   rating: number;
   comment: string;
-  metadata: string;
 }
