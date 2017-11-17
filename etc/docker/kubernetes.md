@@ -49,7 +49,7 @@ az aks browse -g $resGroup -n $aksName
 ## Deploying MicroSurvey to AKS
 
 ### Pre-requisites 
-- Deploy Cosmos DB account and get the master key. [See main README for details](../../#db)
+- Deploy Cosmos DB account and get the master key. [See main README for details](../../../../#db)
 - Deploy Azure Container Registry (ACR), build docker images and push to ACR. [See docker.md for details](docker.md)
 
 ### OPTIONAL - Deploy External DNS
@@ -97,4 +97,4 @@ To deploy simply run:
 ```
 kubectl create -f deploy-frontend.yaml
 ```
-Again wait for and validate that **frontend-svc** has an external IP and or DNS, then access this in your browser and follow the database init steps as detailed in the main [README](../../#db)
+Again wait for and validate that **frontend-svc** has an external IP and or DNS, then access this in your browser and follow the database init steps as detailed in the main [README](../../../../#db)
