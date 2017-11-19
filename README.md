@@ -4,11 +4,11 @@ This is a multi component application designed to showcase microservices design 
 
 The application is called *'MicroSurvey'* and allows people to provide feedback on events or sessions they have attended via a simple web & mobile interface. The feedback consists of a rating (scored 1-5) and supporting comments.
 
-The user interface is written in Angular (Angular 5) and is completely de-coupled from the back end, which it communicates with via REST. The UI is fully responsive and will work on on both web and mobile.
+- The user interface is written in Angular (Angular 5) and is completely de-coupled from the back end, which it communicates with via REST. The UI is fully responsive and will work on on both web and mobile.
 
-The two microservices are both written in Node.js using the Express framework. These have been containerized so can easily be deployed & run as containers
+- The two microservices are both written in Node.js using the Express framework. These have been containerized so can easily be deployed & run as containers
 
-The database is a NoSQL document store holding JSON, provided by *Azure Cosmos DB*
+- The database is a NoSQL document store holding JSON, provided by *Azure Cosmos DB*
 
 The app has been designed to be deployed to Azure, but the flexible nature of the design & chosen technology stack results in a wide range of deployment options and compute scenarios, including:
 - Containers: *Azure Container Service (ACS or AKS)* or *Azure Container Instances* 
@@ -44,19 +44,19 @@ These will be each described in their own sections below.
 <a name="angular"></a>
 
 # Component 1 - Angular Front End UI 
-This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0
+This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0. To build and run you will need Node.js installed (6.11 and 8.9 have been tested) and also NPM. To install the Angular CLI run `npm install @angular/cli -g`, v1.5.0 or higher will be needed. 
 
 ### Development Server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 When running in non production (or dev) mode, InMemoryDbService is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
 
 ### Build
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. You should use the `--prod` flag for a production build.
 
 ### API endpoint configuration
 ***IMPORTANT!*** The API endpoint for the backend data service must be set, there are two ways this is done, depending on if you are running in non production (e.g. from `ng serve`) or in production mode:
-- Non production: The API endpoint is set in [environment.ts](angular-src/environments/environment.ts), see comments in there for details. However in non-prod mode the value of this setting is ignored as the InMemoryDbService intercepts all calls
-- Production mode: The API endpoint is fetched dynamically at runtime, from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular-src/app\/config.service.ts) which is loaded during app initialization. Note. The static config file [environment.prod.ts](angular-src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
+- **Non production:** The API endpoint is set in [environment.ts](angular-src/environments/environment.ts), see comments in there for details. ***However in non-prod mode the value of this setting is always ignored*** as the InMemoryDbService intercepts all calls
+- **Production mode:** The API endpoint is fetched dynamically at runtime, from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular-src/app\/config.service.ts) which is loaded during app initialization. Note. The static config file [environment.prod.ts](angular-src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
 
 ### UI Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/32730539-4b85e806-c87f-11e7-89a5-a12543314a34.png)
@@ -106,10 +106,10 @@ The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` an
 
 #### Other. Admin & helper routes:
 - `GET /api/dbinit` - Reinit the database, delete and recreate Cosmos db & collection, then load seed data. Seed data is held in `seed-data.json` and can be modified as required.
-- `GET /api/info` - Provide some information about the backend service, including hostname (good for debuging loadbalanced containers)
+- `GET /api/info` - Provide some information about the backend service, including hostname (good for debuging & checking loadbalancing)
 
 ### Data access
-All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess* in `data-access.js`. Any Cosmos DB specific code and logic is encapsulated here
+All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess** in `data-access.js`. All Cosmos DB specific code and logic is encapsulated here
 
 ### Data API server - Config
 The server listens on port 4000 and requires two configuration variables to be set. These are taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
