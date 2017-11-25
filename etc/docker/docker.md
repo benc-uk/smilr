@@ -41,8 +41,8 @@ To build the images simply run `docker build`. If you are planning on testing & 
 Here we've used `microsvc` as the repository in the image tag, but you can pick anything you like.
 
 ```
-docker build . -f Dockerfile.data-api -t "$acrName.azurecr.io/microsvc/data-api"
-docker build . -f Dockerfile.frontend -t "$acrName.azurecr.io/microsvc/frontend"
+docker build . -f data-api.Dockerfile -t "$acrName.azurecr.io/microsvc/data-api"
+docker build . -f frontend.Dockerfile -t "$acrName.azurecr.io/microsvc/frontend"
 ```
 
 Assuming you want your images in ACR, you will need to login with the following command. When prompted enter the password you fetched from your ACR instance

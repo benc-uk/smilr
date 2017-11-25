@@ -16,7 +16,7 @@ COPY ${src}/ ./${src}/
 
 RUN node_modules/@angular/cli/bin/ng build --prod --build-optimizer=false
 
-######################################################
+######################## PART 2 ##############################
 
 #
 # Build Node.js frontend service, pulling in output from previous image
