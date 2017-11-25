@@ -11,6 +11,6 @@ export const environment = {
   // - config section is a simple sub-object of name=value pairs
   configServerVars: [],
   config: {
-    API_ENDPOINT: "never-used-in-devmode"
+    API_ENDPOINT: "http://dummy.notused/api"
   }
 };

@@ -1,11 +1,10 @@
 // Core stuff
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER  } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RoutingModule } from './routing.module';
-import { HttpClientModule }    from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-
 
 // My components
 import { AppComponent } from './app.component';
@@ -19,6 +18,7 @@ import { EventService } from './event.service';
 import { FeedbackService } from './feedback.service';
 import { ConfigService } from './config.service';
 import { InMemService } from './in-mem-api';
+import { environment } from '../environments/environment';
 
 // My components for admin
 import { ReportComponent } from './admin/report.component';
@@ -44,13 +44,14 @@ import { AppSvcLogin } from './admin/app-svc-login.component';
     FormsModule,
     RoutingModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemService, { passThruUnknownUrl: true, delay: 0 }),
+    //HttpClientInMemoryWebApiModule.forRoot(InMemService, { passThruUnknownUrl: true, delay: 0 })
+    !environment.production ? HttpClientInMemoryWebApiModule.forRoot(InMemService, { passThruUnknownUrl: true, delay: 0 }) : []
   ],
   providers: [
-    EventService, 
-    FeedbackService, 
+    EventService,
+    FeedbackService,
     ConfigService,
-    UserService, 
+    UserService,
     {
       provide: APP_INITIALIZER,
       useFactory: (config: any) => () => config.load(),
@@ -61,6 +62,6 @@ import { AppSvcLogin } from './admin/app-svc-login.component';
   bootstrap: [AppComponent]
 })
 
-export class AppModule { 
+export class AppModule {
 
 }
