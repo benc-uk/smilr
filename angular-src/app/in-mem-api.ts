@@ -3,7 +3,6 @@ import { environment } from '../environments/environment';
 
 export class InMemService implements InMemoryDbService {
 
-  //
   createDb() {
     let events = [
       { 
@@ -78,13 +77,6 @@ export class InMemService implements InMemoryDbService {
       }                  
     ];    
 
-    // This is important!
-    // Elegant way to bypass the in-mem API when in production mode
-    /*if(!environment.production) {
-      return {events, feedback};
-    } else {
-      return {};
-    }*/
     return {events, feedback};
   }
 }

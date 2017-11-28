@@ -3,10 +3,11 @@ var express = require('express');
 var app = express();
 var static_dir = __dirname;
 
-// Serve static content (js, css, assets, etc.)
+// Serve all Angular app static content (index.html, js, css, assets, etc.)
 app.use('/', express.static(static_dir));
 
 //
+// MICRO API allowing dynamic configuration of the client side Angular
 // Allow Angular to fetch a comma separated set of environmental vars from the server
 //
 app.get('/.config/:vars', function (req, res) {

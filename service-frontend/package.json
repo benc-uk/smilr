@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "engines": {
-    "node": "6.11.2"
+    "node": "^8.9.0"
   },
   "description": "Simple server for Angular apps",
   "scripts": {

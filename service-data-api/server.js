@@ -5,6 +5,7 @@ var app = express();
 var bodyParser = require('body-parser')
 var cors = require('cors');
 
+// Allow all CORS
 app.use(cors());
 
 // Parse application/json
@@ -17,6 +18,11 @@ if (app.get('env') === 'production') {
     app.use(logger('dev'));
 }
 console.log(`### Node environment mode is '${app.get('env')}'`);
+
+// To work with the Cosmos DB emulator, and self signed certs
+if (app.get('env') !== 'production') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
 
 // We need these set or it's impossible to continue!
 if(!process.env.COSMOS_ENDPOINT || !process.env.COSMOS_KEY) {

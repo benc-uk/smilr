@@ -27,7 +27,7 @@ public static void Run(IReadOnlyList<Document> docs, out dynamic[] outputDoc, Tr
             if(!String.IsNullOrEmpty(doc.GetPropertyValue<string>("sentiment"))) continue;
 
             log.Info("### Processing new/changed feedback: " + doc.GetPropertyValue<string>("comment"));
-            // C# is a terrible with anything to do with JSON 
+            // C# is terrible with anything to do with JSON :( 
             var analyticsRequestDocArray = new dynamic[] { 
                 new {
                     id = doc.Id,
@@ -45,7 +45,7 @@ public static void Run(IReadOnlyList<Document> docs, out dynamic[] outputDoc, Tr
         }
 
         // Can you believe I'm having to statically size an array!? C# is evil
-        // The Webjob SDK is super touchy about the output type, can't use a List
+        // The Webjob SDK is so touchy about the output type, can't use a dynamic List
         outputDoc = new dynamic[tempResults.Count];
         for(var t = 0; t < tempResults.Count; t++) {
             log.Info("### Creating new doc to update Cosmos DB with...");

@@ -11,7 +11,7 @@ export class ConfigService {
 
   constructor(private http: HttpClient) { }
 
-  load(): Promise<any> {
+  loadConfig(): Promise<any> {
     let varNames = environment.configServerVars.join(',');
 
     // When in prod-mode, fetch from server as environmental vars

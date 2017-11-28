@@ -6,7 +6,7 @@ import { RoutingModule } from './routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 
-// My components
+// My components & services
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home.component';
 import { EventHistoryComponent } from './event-history.component';
@@ -20,7 +20,7 @@ import { ConfigService } from './config.service';
 import { InMemService } from './in-mem-api';
 import { environment } from '../environments/environment';
 
-// My components for admin
+// My components & services for admin
 import { ReportComponent } from './admin/report.component';
 import { AdminComponent } from './admin/admin.component';
 import { UserService } from './admin/user.service';
@@ -44,17 +44,19 @@ import { AppSvcLogin } from './admin/app-svc-login.component';
     FormsModule,
     RoutingModule,
     HttpClientModule,
-    //HttpClientInMemoryWebApiModule.forRoot(InMemService, { passThruUnknownUrl: true, delay: 0 })
-    !environment.production ? HttpClientInMemoryWebApiModule.forRoot(InMemService, { passThruUnknownUrl: true, delay: 0 }) : []
+    // This is *SUPER* important & only enables the memory API off when not production mode
+    !environment.production ? HttpClientInMemoryWebApiModule.forRoot(InMemService, {delay: 0}) : []
   ],
   providers: [
     EventService,
     FeedbackService,
-    ConfigService,
     UserService,
+    // This bizzare code is the only way to have a service load at startup
+    // Only working example on the internet https://gist.github.com/fernandohu/122e88c3bcd210bbe41c608c36306db9
+    ConfigService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (config: any) => () => config.load(),
+      useFactory: cfg => () => cfg.loadConfig(),
       deps: [ConfigService],
       multi: true
     }
@@ -63,5 +65,4 @@ import { AppSvcLogin } from './admin/app-svc-login.component';
 })
 
 export class AppModule {
-
 }

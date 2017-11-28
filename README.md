@@ -47,7 +47,7 @@ These will be each described in their own sections below.
 This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0. To build and run you will need Node.js installed (6.11 and 8.9 have been tested) and also NPM. To install the Angular CLI run `npm install @angular/cli -g`, v1.5.0 or higher will be needed. 
 
 ### Development Server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+First install packages from NPM by running `npm install`. Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 When running in non production (or dev) mode, InMemoryDbService is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
 
 ### Build
@@ -68,7 +68,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 # Component 2 - Frontend service
 This is held in [service-frontend](service-frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place. This service is stateless
 
-The Node.js server serves the static content from its root directory, this content comes from the output of `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([frontend.Dockerfile](frontend.Dockerfile)) carries out both these tasks
+The Node.js server serves the static content from its root directory (i.e. where `server.js` is), this content comes from the output of the Angular command `ng build --prod` which outputs to `./dist` so this output must be copied in. The Dockerfile ([frontend.Dockerfile](frontend.Dockerfile)) carries out both these tasks
 
 The service listens on port 3000 and requires a single configuration variable to be set. This taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
 
@@ -83,6 +83,10 @@ The API takes a comma separated list of variable names, and returns them in a si
 **GET `/.config/HOSTNAME,FOO`** will result in `{"HOSTNAME":"hostblah", "FOO":"Value of foo"}`
 
 This config API is used by the Angular app's **ConfigService** to get the API endpoint from the API_ENDPOINT env var.
+
+### Running frontend service/server locally
+If you want to run the front-end service locally, it is advised to do this in a temporary runtime directory outside of this project, otherwise you will polute the source.  
+Copy `package.json` and `server.js` into this runtime directory, then run `npm install` in this directory to grab all the packages. Then copy in all of the contents of `dist` as described above, and start with `npm start`
 
 
 
@@ -119,18 +123,21 @@ The server listens on port 4000 and requires two configuration variables to be s
 |COSMOS_ENDPOINT|The URL endpoint of the Cosmos DB account, e.g. `https://foobar.documents.azure.com/`|
 |COSMOS_KEY|Master key for the Cosmos DB account|
 
+### Running Data API service locally
+Run `npm install` in the **service-data-api** folder, ensure the environment variables are set as described above, then run `npm start`
+
 
 
 <a name="db"></a>
 
 # Component 4 - Database
-All data is held in a single Cosmos DB database called `microserviceDb` and also in single collection to save costs, this collection is called `alldata`
+All data is held in a single Cosmos DB database called **microserviceDb** and also in single collection, this collection is called **alldata**
 
-The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
-Note. This may not be the best partitioning scheme but it serves our purposes.
+The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. Note. the `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
+Note. This may not be the best collection / partitioning scheme but it serves our purposes, and saves costs
 
 ### Database Initialization 
-In order to create the database (microserviceDb) and the collection (alldata) you will need to use the data service API, and call `/api/dbinit`, before you do this the app will not function and you will get errors. This call will also load demo/seed data 
+In order to create the database (**microserviceDb**) and the collection (**alldata**) you will need to use the data service API, and call `/api/dbinit`, before you do this the app will not function and you will get errors. This call will also load demo/seed data 
 
 ### Deploying Cosmos DB
 Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it
