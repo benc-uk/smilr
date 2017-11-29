@@ -17,11 +17,11 @@ iex "ng build --prod"
 echo "### Bundling Node server with Angular app"
 rmdir -fo -r $tempDir
 mkdir $tempDir
-cp -r ..\dist\* -Destination $tempDir
-cp ..\service-frontend\package.json -Destination $tempDir
-cp ..\service-frontend\package-lock.json -Destination $tempDir
-cp ..\service-frontend\server.js -Destination $tempDir
-cp ..\service-frontend\.deployment -Destination $tempDir
+cp -r ..\..\dist\* -Destination $tempDir
+cp ..\..\service-frontend\package.json -Destination $tempDir
+cp ..\..\service-frontend\package-lock.json -Destination $tempDir
+cp ..\..\service-frontend\server.js -Destination $tempDir
+cp ..\..\service-frontend\.deployment -Destination $tempDir
 
 echo "### Zipping everything ready for deployment"
 rmdir $zipName
