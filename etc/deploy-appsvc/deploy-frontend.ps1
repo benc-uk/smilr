@@ -4,7 +4,7 @@
 #
 
 # CHANGE THESE!
-$appService = "micro-survey"
+$appService = "smilr-demo"
 $appSvcUser = "bcdeployer"
 
 # Don't change these

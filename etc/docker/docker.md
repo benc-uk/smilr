@@ -38,11 +38,11 @@ az acr credential show -n $acrName -g $resGroup
 
 To build the images simply run `docker build`. If you are planning on testing & running in Docker locally rather than in Kubernetes you can tag the images anything you like and omit the ACR prefix. These commands must be run from the root of this project. 
 
-Here we've used `microsvc` as the repository in the image tag, but you can pick anything you like.
+Here we've used `smilr` as the repository in the image tag, but you can pick anything you like.
 
 ```
-docker build . -f data-api.Dockerfile -t "$acrName.azurecr.io/microsvc/data-api"
-docker build . -f frontend.Dockerfile -t "$acrName.azurecr.io/microsvc/frontend"
+docker build . -f data-api.Dockerfile -t "$acrName.azurecr.io/smilr/data-api"
+docker build . -f frontend.Dockerfile -t "$acrName.azurecr.io/smilr/frontend"
 ```
 
 Assuming you want your images in ACR, you will need to login with the following command. When prompted enter the password you fetched from your ACR instance

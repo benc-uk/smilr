@@ -1,5 +1,5 @@
 module.exports = function (context, req) {
-    context.log('JavaScript HTTP trigger function processed a request.');
+    context.log('### Serverless Smilr API received feedback data');
     const DataAccess = require('../data-access');
     const data = new DataAccess();
     let today = new Date().toISOString().substring(0, 10);
