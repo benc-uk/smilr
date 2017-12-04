@@ -2,7 +2,7 @@
 
 This is a multi component application designed to showcase microservices design patterns & deployment architectures. It consists of a front end single page application (SPA), two lightweight services, supporting database and back end data enrichment functions.
 
-The application is called *'MicroSurvey'* and allows people to provide feedback on events or sessions they have attended via a simple web & mobile interface. The feedback consists of a rating (scored 1-5) and supporting comments.
+The application is called *'Smilr'* and allows people to provide feedback on events or sessions they have attended via a simple web & mobile interface. The feedback consists of a rating (scored 1-5) and supporting comments.
 
 - The user interface is written in Angular (Angular 5) and is completely de-coupled from the back end, which it communicates with via REST. The UI is fully responsive and will work on on both web and mobile.
 
@@ -142,7 +142,7 @@ In order to create the database (**microserviceDb**) and the collection (**allda
 ### Deploying Cosmos DB
 Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it
 ```
-az cosmosdb create -g MicroSurveyRG -n microsurvey-cosmos
+az cosmosdb create -g SmilrRG -n smilr-cosmos
 ```
 
 ### Data Model

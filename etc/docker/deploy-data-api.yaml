@@ -22,7 +22,7 @@ spec:
       containers:
       - name: data-api-pod
         # !CHANGE THIS! To your real image reference for the data-api  
-        image: bcdemo.azurecr.io/microsvc/data-api 
+        image: bcdemo.azurecr.io/smilr/data-api 
         ports:
         - containerPort: 4000
         env:
@@ -33,7 +33,7 @@ spec:
               key: cosmosKeySecret        
         - name: COSMOS_ENDPOINT
           # !CHANGE THIS! To your running Azure Cosmos DB account
-          value: https://microsurvey.documents.azure.com 
+          value: https://smilr.documents.azure.com 
 
 ---
 
@@ -44,7 +44,7 @@ metadata:
   name: data-api-svc
   annotations:
     # !CHANGE THIS! To your real DNS domain, if not using external DNS just leave & ignore
-    external-dns.alpha.kubernetes.io/hostname: microsurvey-api.democloud.org.uk 
+    external-dns.alpha.kubernetes.io/hostname: smilr-api.democloud.org.uk 
 spec:
   type: LoadBalancer
   ports:

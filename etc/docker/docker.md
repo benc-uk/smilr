@@ -11,8 +11,8 @@ NOTE. These commands **should be run in PowerShell** rather than WSL bash. It is
 Run the following in PowerShell to set names we will be using in the commands.  
 Note the ACR name needs to be unique and not contain dashes
 ```
-$acrName = "microsurveyacr"
-$resGroup = "Demo.MicroSurvey"
+$acrName = "smilracr"
+$resGroup = "Demo.Smilr"
 ```
 
 # Create Azure Container Registry

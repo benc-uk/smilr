@@ -3,8 +3,8 @@
     {
       "type": "cosmosDBTrigger",
       "name": "docs",
-      "connectionStringSetting": "microsurvey_DOCUMENTDB",
-      "databaseName": "microserviceDb",
+      "connectionStringSetting": "smilr_DOCUMENTDB",
+      "databaseName": "smilrDb",
       "collectionName": "alldata",
       "leaseCollectionName": "leases",
       "createLeaseCollectionIfNotExists": true,
@@ -13,11 +13,11 @@
     {
       "type": "documentDB",
       "name": "outputDoc",
-      "databaseName": "microserviceDb",
+      "databaseName": "smilrDb",
       "collectionName": "alldata",
       "createIfNotExists": false,
       "partitionKey": "feedback",
-      "connection": "microsurvey_DOCUMENTDB",
+      "connection": "smilr_DOCUMENTDB",
       "direction": "out"
     }
   ],

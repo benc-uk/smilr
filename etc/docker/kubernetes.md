@@ -1,14 +1,14 @@
 # Kubernetes - Azure Container Service (AKS)
-This document covers setting up Kubernetes in Azure Container Service (AKS) and then deploying the MicroSurvey app to it.  
+This document covers setting up Kubernetes in Azure Container Service (AKS) and then deploying the Smilr app to it.  
 This assumes you are using WSL bash and have the latest Azure CLI installed (2.0.21+)
 
 ### Set Variables
 Modify variables and run this snippet in bash, note **acrName** and **cosmosName** need to be globally DNS unique. The ACR name can not contain dashes
 
 ```
-resGroup=Demo.MicroSurvey
+resGroup=Demo.Smilr
 loc=westeurope
-aksName=microsurvey-aks
+aksName=smilr-aks
 ```
 
 > **NOTE.** At the time of writing (Nov 2017) the only regions where AKS is operational and functioning are **westeurope**, **centralus** & **eastus**. UK West and the West US 2 are offline
@@ -46,7 +46,7 @@ az aks browse -g $resGroup -n $aksName
 
 ---
 
-## Deploying MicroSurvey to AKS
+## Deploying Smilr to AKS
 
 ### Pre-requisites 
 - Deploy Cosmos DB account and get the master key. [See main README for details](../../../../#db)
@@ -66,7 +66,7 @@ Edit `external-dns.yaml` and change the DNS zone & resource to match your domain
 kubectl create -f external-dns.yaml
 ```
 
-Edit both `deploy-frontend.yaml` and `deploy-data-api.yaml` and change the annotation called **external-dns.alpha.kubernetes.io&#8203;/&#8203;hostname** giving them a name each within your domain zone, e.g. `microsurvey.example.com` and `microsurvey-api.example.com`
+Edit both `deploy-frontend.yaml` and `deploy-data-api.yaml` and change the annotation called **external-dns.alpha.kubernetes.io&#8203;/&#8203;hostname** giving them a name each within your domain zone, e.g. `smilr.example.com` and `smilr-api.example.com`
 
 
 ### Deploy pods & service: data-api

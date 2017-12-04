@@ -4,7 +4,7 @@ class DataAccess {
 
   constructor() {
     // Unlikely you'll ever want to change these
-    this.DBNAME = 'microserviceDb';
+    this.DBNAME = 'smilrDb';
     this.COLLNAME = 'alldata';
     this.EVENT_PKEY = 'event';
     this.FEEDBACK_PKEY = 'feedback'; 
