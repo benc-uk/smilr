@@ -1,0 +1,56 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Smilr API",
+    "description": "REST API for data access middle tier of the Smilr microservices app",
+    "contact": {
+      "name": "Ben Coleman"
+    },
+    "license": {
+      "name": "Apache 2.0"
+    }
+  },
+  "basePath": "/api",
+  "schemes": [
+    "http", 
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/events": {
+      "get": {
+        "description": "Returns all events from the system in a given time window",
+        "operationId": "getEvents",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "time",
+            "in": "query",
+            "description": "Time frame to get events for (active, future or past)",
+            "required": true,
+            "type": "string",
+            "enum": ["active", "future", "past"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of events"
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+  }
+}
