@@ -1,6 +1,6 @@
 const express = require('express');
 const routes = express.Router();
-const DataAccess = require('./data-access');
+const DataAccess = require('../lib/data-access');
 const uuidv4 = require('uuid/v4');
 const os = require('os');
 const fs = require('fs');

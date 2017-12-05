@@ -1,17 +1,22 @@
 // Load .env file if it exists
 require('dotenv').config()
 
-var express = require('express');
-var logger = require('morgan');
-var app = express();
-var bodyParser = require('body-parser')
-var cors = require('cors');
+const express = require('express');
+const logger = require('morgan');
+const app = express();
+const bodyParser = require('body-parser')
+const cors = require('cors');
 
 // Allow all CORS
 app.use(cors());
 
 // Parse application/json
 app.use(bodyParser.json())
+
+// Enable Swagger UI
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true));
 
 // Set up logging
 if (app.get('env') === 'production') {
@@ -33,9 +38,9 @@ if(!process.env.COSMOS_ENDPOINT || !process.env.COSMOS_KEY) {
 }
 
 // Routing to controllers
-apiEvents = require('./api-events');
-apiFeedback = require('./api-feedback');
-apiOther = require('./api-other');
+apiEvents = require('./routes/api-events');
+apiFeedback = require('./routes/api-feedback');
+apiOther = require('./routes/api-other');
 app.use('/', apiEvents);
 app.use('/', apiFeedback);
 app.use('/', apiOther);
