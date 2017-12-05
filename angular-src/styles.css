@@ -7,6 +7,10 @@
    line-height: 40px;
    font-size: 25px;
 }
+nav {
+    min-height: 80px;
+    height: 80px;
+}
 main {
    margin: 0.5em;
 }
