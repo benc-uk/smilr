@@ -15,7 +15,7 @@ class DataAccess {
 
     // Connect to Azure Cosmos DB
     const documentClient = require("documentdb").DocumentClient;
-    console.log('### Connecting to Cosmos DB ', this.cosmosEndpoint);
+    console.log('### Connecting to Cosmos DB:', this.cosmosEndpoint);
     this.client = new documentClient(this.cosmosEndpoint, { "masterKey": cosmosKey });
     this.collectionUrl = `dbs/${this.DBNAME}/colls/${this.COLLNAME}`;
   }
@@ -157,5 +157,6 @@ class DataAccess {
   }
 }
 
-// export the class
-module.exports = DataAccess;
+// Create a singleton instance which is exported NOT the class 
+const self = new DataAccess();
+module.exports = self;

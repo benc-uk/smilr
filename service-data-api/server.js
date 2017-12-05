@@ -47,8 +47,7 @@ app.use('/', apiOther);
 
 // Start the server
 var port = process.env.PORT || 4000;
-var server = app.listen(port, function (){
-   var host = server.address().address;
+var server = app.listen(port, function () {
    var port = server.address().port;
-   console.log(`### Server listening at http://${host}:${port}`);
+   console.log(`### Server listening on ${server.address().port}`);
 });

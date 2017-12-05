@@ -34,8 +34,7 @@ app.use('*', function(req, res) {
 
 // Start the server
 var port = process.env.PORT || 3000;
-var server = app.listen(port, function (){
-   var host = server.address().address;
-   var port = server.address().port;
-   console.log(`### Server listening at http://${host}:${port}`);
-});
+var server = app.listen(port, function () {
+    var port = server.address().port;
+    console.log(`### Server listening on ${server.address().port}`);
+ });

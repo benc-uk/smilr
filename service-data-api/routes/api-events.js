@@ -1,12 +1,11 @@
 const express = require('express');
 const routes = express.Router();
-const DataAccess = require('../lib/data-access');
 const uuidv4 = require('uuid/v4');
 const os = require('os');
 const fs = require('fs');
-var data = new DataAccess();
 
 // Routes for events API 
+var dataAccess = require('../lib/data-access');
 
 routes
 .get('/api/events', function (req, res, next) {
@@ -17,17 +16,17 @@ routes
     
     switch(req.query.time) {
       case 'active': 
-        data.queryEvents(`event["start"] <= '${today}' AND event["end"] >= '${today}'`) //`start le '${today}' and end ge '${today}'`
+        dataAccess.queryEvents(`event["start"] <= '${today}' AND event["end"] >= '${today}'`) //`start le '${today}' and end ge '${today}'`
           .then(d => res.send(d))
           .catch(e => res.status(400).send(e));
         break;
       case 'future': 
-        data.queryEvents(`event["start"] > '${today}'`) //`start gt '${today}'`
+        dataAccess.queryEvents(`event["start"] > '${today}'`) //`start gt '${today}'`
           .then(d => res.send(d))
           .catch(e => res.status(400).send(e));
         break;
       case 'past': 
-        data.queryEvents(`event["end"] < '${today}'`) //`end lt '${today}'`
+        dataAccess.queryEvents(`event["end"] < '${today}'`) //`end lt '${today}'`
           .then(d => res.send(d))
           .catch(e => res.status(400).send(e));
         break;
@@ -37,7 +36,7 @@ routes
     }
   } else {
     // If time omitted, return all events
-    data.queryEvents('true')
+    dataAccess.queryEvents('true')
       .then(d => res.send(d))
       .catch(e => res.status(400).send(e));    
   }
@@ -45,7 +44,7 @@ routes
 
 .get('/api/events/:id', function (req, res, next) {
   res.type('application/json');
-  data.getEvent(req.params.id)
+  dataAccess.getEvent(req.params.id)
     // Return a single entity
     .then(d => res.send(d)) 
     .catch(e => res.status(400).send(e));
@@ -55,7 +54,7 @@ routes
   res.type('application/json');
   let event = req.body;
 
-  data.createOrUpdateEvent(event)
+  dataAccess.createOrUpdateEvent(event)
     .then(d => res.status(200).send(d))
     .catch(e => res.status(400).send(e));
 })
@@ -64,7 +63,7 @@ routes
   res.type('application/json');
   let event = req.body;
 
-  data.createOrUpdateEvent(event)
+  dataAccess.createOrUpdateEvent(event)
     .then(d => res.status(200).send(d))
     .catch(e => res.status(400).send(e));
 })
@@ -72,7 +71,7 @@ routes
 .delete('/api/events/:id', function (req, res, next) {
   res.type('application/json');
 
-  data.deleteEvent(req.params.id)
+  dataAccess.deleteEvent(req.params.id)
     .then(d => res.status(200).send(d))
     .catch(e => res.status(400).send(e));
 })
