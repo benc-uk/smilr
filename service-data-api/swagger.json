@@ -44,7 +44,7 @@
           "200": {
             "description": "Array of events"
           },
-          "default": {
+          "400": {
             "description": "Unexpected error"
           }
         }
