@@ -191,7 +191,7 @@ There is a CosmosDB local emulator available for Windows - see  https://docs.mic
 
 TheCosmosDB emulator listens on https://localhost:8081 and uses a predefined security key "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" that you will need to assign to COSMOS_ENDPOINT and COSMOS_KEY before running the data service API.
 
-In the browser go to http://localhost:4000/api/dninit and you should, if all is well, see a message saying the database is being initialised.
+In the browser go to http://localhost:4000/api/dbinit and you should, if all is well, see a message saying the database is being initialised.
 
 ### Run the Front End Service
 
