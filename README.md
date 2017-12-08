@@ -178,6 +178,32 @@ Feedback {
 
 <a name="serverless"></a>
 
+
+# Deploying Smilr locally
+
+If you are deploying Smilr for the first time, and still getting your head around the various moving pieces, you may want to deploy it initially locally on your desktop machine and set up each of the tiers and make sure they are working correctly, and debug locally if you hit issues.
+
+### Run the CosmosDB emulator 
+
+There is a CosmosDB local emulator available for Windows - see  https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator for details of how to set it up. Use the Data Explorer to ensure the emulator is up and running.
+
+### Run the Backend Data API Service
+
+TheCosmosDB emulator listens on https://localhost:8081 and uses a predefined security key "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" that you will need to assign to COSMOS_ENDPOINT and COSMOS_KEY before running the data service API.
+
+In the browser go to http://localhost:4000/api/dninit and you should, if all is well, see a message saying the database is being initialised.
+
+### Run the Front End Service
+
+Rememeber that you need to build a production version of the service, otherwise the Angular app defaults to the in-memory version and the back end version won't be called.
+Don't forget to set API_ENDPOINT to the URL endpoint of the data service API, http://localhost:4000/api.
+Check that the system works end to end by browsing to http://localhost:3000 and view the events and create new ones, etc. 
+
+# Deploying Smilr to Azure
+
+TODO
+
+
 # Component 5 - Optional Serverless Components
 TODO
 
