@@ -8,13 +8,13 @@ const fs = require('fs');
 var dataAccess = require('../lib/data-access');
 
 routes
-.get('/api/events', function (req, res, next) {
+.get('/api/events/:time*?', function (req, res, next) {
   res.type('application/json');
-
-  if(req.query.time) {
+  let time = req.params.time;
+  if(req.params.time) {
     let today = new Date().toISOString().substring(0, 10);
     
-    switch(req.query.time) {
+    switch(time) {
       case 'active': 
         dataAccess.queryEvents(`event["start"] <= '${today}' AND event["end"] >= '${today}'`) //`start le '${today}' and end ge '${today}'`
           .then(d => res.send(d))
