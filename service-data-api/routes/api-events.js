@@ -8,7 +8,7 @@ const fs = require('fs');
 var dataAccess = require('../lib/data-access');
 
 routes
-.get('/api/events/time/:time', function (req, res, next) {
+.get('/api/events/filter/:time', function (req, res, next) {
   res.type('application/json');
   let time = req.params.time;
   //if(req.params.time) {
