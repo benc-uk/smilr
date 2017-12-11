@@ -35,7 +35,7 @@ export class EventService {
 
     if(environment.production) {
       // Call real external REST API, return observable
-      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events/active`);
+      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events/time/active`);
     } else {
       // In mem API, return *all* events then filter 
       return this.http.get<Array<Event>>(`${this.apiEndpoint}/events`)
@@ -53,7 +53,7 @@ export class EventService {
 
     if(environment.production) {
       // Call real external REST API, return observable
-      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events/past`);
+      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events/time/past`);
     } else {
       // In mem API workaround, return *all* events then filter 
       return this.http.get<Array<Event>>(`${this.apiEndpoint}/events`)
@@ -71,7 +71,7 @@ export class EventService {
 
     if(environment.production) {
       // Call real external REST API, return observable
-      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events/future`);
+      return this.http.get<Array<Event>>(`${this.apiEndpoint}/events/time/future`);
     } else {
       // In mem API workaround, return *all* events then filter 
       return this.http.get<Array<Event>>(`${this.apiEndpoint}/events`)

@@ -8,10 +8,10 @@ const fs = require('fs');
 var dataAccess = require('../lib/data-access');
 
 routes
-.get('/api/events/:time*?', function (req, res, next) {
+.get('/api/events/time/:time', function (req, res, next) {
   res.type('application/json');
   let time = req.params.time;
-  if(req.params.time) {
+  //if(req.params.time) {
     let today = new Date().toISOString().substring(0, 10);
     
     switch(time) {
@@ -34,12 +34,20 @@ routes
         // If time not valid
         res.status(400).send({message:'Error. Supplied time not valid, must be one of: [active, future, past]'});      
     }
-  } else {
-    // If time omitted, return all events
-    dataAccess.queryEvents('true')
-      .then(d => res.send(d))
-      .catch(e => res.status(400).send(e));    
-  }
+  //} else {
+  //  // If time omitted, return all events
+  //  dataAccess.queryEvents('true')
+  //    .then(d => res.send(d))
+  //    .catch(e => res.status(400).send(e));    
+  //}
+})
+
+.get('/api/events', function (req, res, next) {
+  res.type('application/json');
+  dataAccess.queryEvents('true')
+    // Return a single entity
+    .then(d => res.send(d)) 
+    .catch(e => res.status(400).send(e));
 })
 
 .get('/api/events/:id', function (req, res, next) {

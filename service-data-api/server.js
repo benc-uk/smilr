@@ -13,7 +13,7 @@ app.use(cors());
 // Parse application/json
 app.use(bodyParser.json())
 
-// Enable Swagger UI
+// Enable Swagger UI, load in JSON definition doc
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true));

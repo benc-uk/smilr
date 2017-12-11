@@ -23,8 +23,9 @@
     "application/json"
   ],
   "paths": {
-    "/events": {
+    "/events/time/{time}": {
       "get": {
+        "tags": ["Events"],
         "description": "Returns all events from the system in a given time window",
         "operationId": "getEvents",
         "produces": [
@@ -33,7 +34,7 @@
         "parameters": [
           {
             "name": "time",
-            "in": "query",
+            "in": "path",
             "description": "Time frame to get events for (active, future or past)",
             "required": true,
             "type": "string",
@@ -48,9 +49,139 @@
             "description": "Unexpected error"
           }
         }
-      }
-    }
+      }        
+    },
+    "/events": {
+      "get": {
+        "tags": ["Events"],
+        "description": "Returns **all** events from the system, use with caution",
+        "operationId": "getAllEvents",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of events"
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      }    
+    },
+    "/events/{id}": {
+      "get": {
+        "tags": ["Events"],
+        "description": "Returns single event with given id",
+        "operationId": "getAllEvents",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the event, e.g. evt002",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of events"
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      }     
+    },
+    "/feedback/{eventId}/{topicId}": {
+      "get": {
+        "tags": ["Feedback"],
+        "description": "Get the feedback for given event and topic IDs",
+        "operationId": "getFeedback",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "Id of event you want feedback for",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "topicId",
+            "in": "path",
+            "description": "Numeric id of the topic",
+            "required": true,
+            "type": "integer"
+          }          
+        ],        
+        "responses": {
+          "200": {
+            "description": "Array of feedback"
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      }     
+    },
+    "/feedback": {
+      "post": {
+        "tags": ["Feedback"],
+        "description": "Send feedback",
+        "operationId": "sendFeedback",
+        "produces": [
+          "application/json"
+        ],        
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Feedback object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Feedback"
+            }            
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of feedback"
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      }     
+    }    
   },
   "definitions": {
+    "Feedback": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "type": "string",
+          "example": "evt001"
+        },
+        "topic": {
+          "type": "integer",
+          "example": 1
+        },
+        "rating": {
+          "type": "integer",
+          "enum": [1,2,3,4,5],
+          "example": 3
+        },
+        "comment": {
+          "type": "string",
+          "example": "This was a good session, I learned a lot"
+        } 
+      }
+    }    
   }
 }
