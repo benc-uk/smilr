@@ -23,11 +23,11 @@
     "application/json"
   ],
   "paths": {
-    "/events/time/{time}": {
+    "/events/filter/{time}": {
       "get": {
         "tags": ["Events"],
-        "description": "Returns all events from the system in a given time window",
-        "operationId": "getEvents",
+        "description": "Returns events filtered to a given time frame",
+        "operationId": "getFilteredEvents",
         "produces": [
           "application/json"
         ],
@@ -73,7 +73,7 @@
       "get": {
         "tags": ["Events"],
         "description": "Returns single event with given id",
-        "operationId": "getAllEvents",
+        "operationId": "getEvent",
         "produces": [
           "application/json"
         ],
