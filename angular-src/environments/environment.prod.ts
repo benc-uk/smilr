@@ -7,7 +7,7 @@ export const environment = {
   production: true,
   secured: false,
   
-  // In prod mode: config section is ignored and configServer must be an array of 
+  // In prod mode: config section is ignored and configServerVars must be an array of 
   // - environmental variables which will be fetched from the server
   configServerVars: ['API_ENDPOINT'],
   config: {}

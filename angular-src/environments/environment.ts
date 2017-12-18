@@ -7,7 +7,7 @@ export const environment = {
   production: false,
   secured: false,
 
-  // In dev mode: configServer is ignored and values are set in config section 
+  // In dev mode: configServerVars are ignored and values are set in config section 
   // - config section is a simple sub-object of name=value pairs
   configServerVars: [],
   config: {
