@@ -67,7 +67,61 @@
             "description": "Unexpected error"
           }
         }
-      }    
+      },
+      "post": {
+        "tags": ["Events"],
+        "description": "Create a new event",
+        "operationId": "createEvent",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Event object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }            
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Newly created event"
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Events"],
+        "description": "Update an existing event",
+        "operationId": "updateEvent",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Event object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }            
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated event"
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      } 
     },
     "/events/{id}": {
       "get": {
@@ -89,6 +143,31 @@
         "responses": {
           "200": {
             "description": "Array of events"
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Events"],
+        "description": "Delete an event",
+        "operationId": "deleteEvent",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the event, e.g. evt002",
+            "required": true,
+            "type": "string"            
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Confirmation message"
           },
           "400": {
             "description": "Unexpected error"
@@ -151,7 +230,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Array of feedback"
+            "description": "The new feedback object"
           },
           "400": {
             "description": "Unexpected error"
@@ -182,6 +261,39 @@
           "example": "This was a good session, I learned a lot"
         } 
       }
-    }    
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "eB60xQ",
+          "hidden": true
+        },
+        "title": {
+          "type": "string",
+          "example": "An event about an interesting thing"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["event", "workshop", "hack", "lab"],
+          "example": "workshop"
+        },
+        "start": {
+          "type": "string",
+          "example": "2018-02-17"
+        },
+        "end": {
+          "type": "string",
+          "example": "2018-02-19"
+        },
+        "topics": {
+          "type": "array",
+          "example": [
+            {"id": 1, "desc": "This is a topic"}
+          ]
+        }
+      }
+    }
   }
 }
