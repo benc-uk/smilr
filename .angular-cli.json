@@ -20,6 +20,7 @@
       "prefix": "app",
       "styles": [
         "styles.css",
+        "animations.css",
         "../node_modules/font-awesome/css/font-awesome.min.css",
         "../node_modules/bootswatch/paper/bootstrap.min.css"
       ],

@@ -20,10 +20,13 @@ export class FaceDirective {
 
   deselect() {
     this.selfEle.nativeElement.classList.add('unselected')
+    this.selfEle.nativeElement.classList.remove('tossing')
   }
 
   select() {
+    this.selfEle.nativeElement.classList.remove('fadeIn')
     this.selfEle.nativeElement.classList.remove('unselected')
+    this.selfEle.nativeElement.classList.add('tossing')
   }
 }
 
