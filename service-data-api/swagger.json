@@ -43,7 +43,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Array of events"
+            "description": "Array of events",
+            "schema": {
+              "$ref": "#/definitions/Events"
+            }            
           },
           "400": {
             "description": "Unexpected error"
@@ -61,7 +64,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Array of events"
+            "description": "Array of events",
+            "schema": {
+              "$ref": "#/definitions/Events"
+            }
           },
           "400": {
             "description": "Unexpected error"
@@ -142,7 +148,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Array of events"
+            "description": "Single event object",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
           },
           "400": {
             "description": "Unexpected error"
@@ -237,7 +246,46 @@
           }
         }
       }     
-    }    
+    },
+    "/info": {
+      "get": {
+        "tags": ["Other"],
+        "description": "Get system information, useful for debugging",
+        "operationId": "systemInfo",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "System info object",
+            "schema": {
+              "$ref": "#/definitions/SystemInfo"
+            }
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      }     
+    },
+    "/dbinit": {
+      "get": {
+        "tags": ["Other"],
+        "description": "Reset the database, and initialize with seed data",
+        "operationId": "dbInit",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Confirmation message"
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      }     
+    }     
   },
   "definitions": {
     "Feedback": {
@@ -267,8 +315,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "example": "eB60xQ",
-          "hidden": true
+          "example": "eB60xQ"
         },
         "title": {
           "type": "string",
@@ -294,6 +341,27 @@
           ]
         }
       }
-    }
+    },
+    "Events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Event"
+      }
+    },    
+    "SystemInfo": {
+      "type": "object",
+      "properties": {
+        "hostname":  { "type": "string",  "example": "myhost001" },
+        "container": { "type": "boolean", "example": true },
+        "osType":    { "type": "string",  "example": "Linux" },
+        "osRelease": { "type": "string",  "example": "4.4.0-43-Microsoft" },
+        "arch":      { "type": "string",  "example": "x64" },
+        "cpuModel":  { "type": "string",  "example": "Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz" },
+        "cpuCount":  { "type": "integer", "example": 4 },
+        "memory":    { "type": "integer", "example": 16310 },
+        "nodeVer":   { "type": "string",  "example": "v8.9.3" },
+        "cosmosDb":  { "type": "string",  "example": "https://localhost:8081/dbs/smilrDb/colls/alldata" }
+      }
+    }    
   }
 }

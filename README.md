@@ -112,6 +112,9 @@ The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` an
 - `GET /api/dbinit` - Reinit the database, delete and recreate Cosmos db & collection, then load seed data. Seed data is held in `seed-data.json` and can be modified as required.
 - `GET /api/info` - Provide some information about the backend service, including hostname (good for debuging & checking loadbalancing)
 
+### Swagger / OpenAPI
+There is a [Swagger definition file for the API](service-data-api/swagger.json) and Swagger UI is also available, **http://data-api-endpoint:4000/api-docs/**
+
 ### Data access
 All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess** in `data-access.js`. All Cosmos DB specific code and logic is encapsulated here
 
