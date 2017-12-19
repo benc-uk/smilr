@@ -109,14 +109,21 @@ The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` an
 - `POST /api/feedback` - Submit feedback
 
 #### Other. Admin & helper routes:
-- `GET /api/dbinit` - Reinit the database, delete and recreate Cosmos db & collection, then load seed data. Seed data is held in `seed-data.json` and can be modified as required.
+- `POST /api/dbinit` - Reinit the database, delete and recreate Cosmos db & collection, then load seed data. Seed data is held in `seed-data.json` and can be modified as required. See notes below on security for this API
 - `GET /api/info` - Provide some information about the backend service, including hostname (good for debuging & checking loadbalancing)
 
 ### Swagger / OpenAPI
-There is a [Swagger definition file for the API](service-data-api/swagger.json) and Swagger UI is also available, **http://data-api-endpoint:4000/api-docs/**
+There is a [Swagger definition file for the API](service-data-api/swagger.json) and Swagger UI is also available, just use `/api-docs` as the URL, e.g.  **http://localhost:4000/api-docs/**
+
+### DB Init Security (/api/dbinit)
+This API method is special in that it requires a secret key/password to be supplied, and it must be called with a POST. The secret value must be supplied in a HTTP header called **X-SECRET**.  
+The default secret is `secret123!` but can be set and changed with the environmental variable `DBINIT_SECRET` 
+
+It is recommend to use a tool such a [Postman](https://www.getpostman.com/) to call this API, however CLI tools such as curl can also be used, e.g.
+`curl -X POST "http://localhost:4000/api/dbinit" -H "accept: application/json" -H "X-SECRET: 123secret!"`
 
 ### Data access
-All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess** in `data-access.js`. All Cosmos DB specific code and logic is encapsulated here
+All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess** in [lib/data-access.js](service-data-api/lib/data-access.js). All Cosmos DB specific code and logic is encapsulated here
 
 ### Data API server - Config
 The server listens on port 4000 and requires two configuration variables to be set. These are taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
@@ -125,6 +132,7 @@ The server listens on port 4000 and requires two configuration variables to be s
 |-------------|-------|
 |COSMOS_ENDPOINT|The URL endpoint of the Cosmos DB account, e.g. `https://foobar.documents.azure.com/`|
 |COSMOS_KEY|Master key for the Cosmos DB account|
+|DBINIT_SECRET|Secret key used for DB init (optional, default value `secret123!`)|
 
 ### Running Data API service locally
 Run `npm install` in the **service-data-api** folder, ensure the environment variables are set as described above, then run `npm start`
@@ -140,7 +148,7 @@ The collection is partitioned on a key called `doctype`, when events and feedbac
 Note. This may not be the best collection / partitioning scheme but it serves our purposes, and saves costs
 
 ### Database Initialization 
-In order to create the database (**microserviceDb**) and the collection (**alldata**) you will need to use the data service API, and call `/api/dbinit`, before you do this the app will not function and you will get errors. This call will also load demo/seed data 
+In order to create the database (**microserviceDb**) and the collection (**alldata**) you will need to use the data service API, and call `/api/dbinit`, before you do this the app will not function and you will get errors. This call will also load demo/seed data. See notes above about how to call this API.
 
 ### Deploying Cosmos DB
 Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it

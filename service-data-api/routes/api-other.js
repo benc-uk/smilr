@@ -9,7 +9,20 @@ var dataAccess = require('../lib/data-access');
 // Admin and db maintenance routes
 
 routes
-.get('/api/dbinit', function (req, res, next) {
+.post('/api/dbinit', function (req, res, next) {
+  // Secret key in held in header called X-SECRET
+  let secretValue = req.headers['x-secret'];
+  let secret = process.env.DBINIT_SECRET || "123secret!";
+
+  if(!secretValue) {
+    res.status(401).send({msg: "Error! Secret not supplied. Please provide the secret in the X-SECRET header"});
+    return;
+  }
+  if(secretValue != secret) {
+    res.status(401).send({msg: "Error! Secret is incorrect"});
+    return;
+  }
+
   res.type('application/json');
   dataAccess.initDatabase()
     .then(d => res.send(d))
