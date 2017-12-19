@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "main": "server.js",
   "engines": {
-    "node": "^8.9.0"
+    "node": "^8.9.3"
   },
   "description": "Main microservice, REST data API",
   "scripts": {
