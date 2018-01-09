@@ -25,18 +25,6 @@
       "metadata": {
         "description": "Password for ACR"
       }
-    },
-    "cosmosDbName": {
-      "type": "string",
-      "metadata": {
-        "description": "Account name of Cosmos DB instance"
-      }
-    },
-    "cosmosDbKey": {
-      "type": "string",
-      "metadata": {
-        "description": "Account key of Cosmos DB instance"
-      }
     }
   },
   "variables": {
@@ -47,9 +35,20 @@
     "portFrontend": "3000",
     "portDataApi": "4000",
     "memory": 1.0,
-    "cpu": 1.0
+    "cpu": 1.0,
+    "cosmosName": "[concat('cosmos-', uniqueString(resourceGroup().id))]"
   },
   "resources": [
+    {
+      "name": "[variables('cosmosName')]",
+      "type": "Microsoft.DocumentDB/databaseAccounts",
+      "apiVersion": "2015-04-08",
+      "location": "[parameters('previewLocation')]",
+      "kind": "GlobalDocumentDB",
+      "properties": {
+        "databaseAccountOfferType": "Standard"
+      }
+    },
     {
       "name": "[variables('containerDataApi')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
@@ -75,11 +74,11 @@
               "environmentVariables": [
                 {
                   "name": "COSMOS_ENDPOINT",
-                  "value": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com')]"
+                  "value": "[concat('https://', variables('cosmosName'), '.documents.azure.com')]"
                 },
                 {
                   "name": "COSMOS_KEY",
-                  "value": "[parameters('cosmosDbKey')]"
+                  "value": "[listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey]"
                 }
               ]
             }
@@ -101,7 +100,9 @@
           ]
         }
       },
-      "dependsOn": []
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
+      ]
     },
     {
       "name": "[variables('containerFrontend')]",

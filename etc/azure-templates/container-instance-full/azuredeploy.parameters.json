@@ -10,12 +10,6 @@
     },
     "acrPassword": {
       "value": "changeme"
-    },
-    "cosmosDbName": {
-      "value": "smilr-demo"
-    },
-    "cosmosDbKey": {
-      "value": "changeme"
     }
   }
 }
