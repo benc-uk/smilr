@@ -14,7 +14,7 @@ COPY .angular-cli.json .
 COPY tsconfig.json .
 COPY ${src}/ ./${src}/
 
-RUN node_modules/@angular/cli/bin/ng build --prod --build-optimizer=false
+RUN node_modules/@angular/cli/bin/ng build --prod
 
 ######################## PART 2 ##############################
 

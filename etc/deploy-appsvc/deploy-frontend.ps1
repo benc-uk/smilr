@@ -4,7 +4,7 @@
 #
 
 # CHANGE THESE!
-$appService = "smilr-demo"
+$appService = "smilr-live"
 $appSvcUser = "bcdeployer"
 
 # Don't change these
