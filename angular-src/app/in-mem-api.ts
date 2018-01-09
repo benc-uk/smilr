@@ -7,20 +7,20 @@ export class InMemService implements InMemoryDbService {
     let events = [
       { 
         id: 1,
-        title: 'Azure App Dev Workshop', 
+        title: 'Test Workshop', 
         type: 'workshop', 
-        start: '2017-01-01', 
-        end: '2017-12-30',
+        start: '2018-01-01', 
+        end: '2018-12-04',
         topics: [
-          {id: 1, desc: 'General' }
+          {id: 1, desc: 'General Stuff' }
         ]
       },
       { 
         id: 2,
-        title: 'Introduction to PaaS', 
+        title: 'Test Event', 
         type: 'event', 
-        start: '2018-10-29', 
-        end: '2018-10-31',
+        start: '2018-12-05', 
+        end: '2018-12-06',
         topics: [
           {id: 1, desc: 'Morning Session'},
           {id: 2, desc: 'Afternoon Session'}
@@ -30,8 +30,8 @@ export class InMemService implements InMemoryDbService {
         id: 3,
         title: 'Goat Herding with Bill Oddie', 
         type: 'lab', 
-        start: '2017-02-07', 
-        end: '2017-02-07',
+        start: '2017-10-07', 
+        end: '2017-10-07',
         topics: [
           {id: 1, desc: 'Intro to Goats'},
           {id: 2, desc: 'More about Goats'}
@@ -44,7 +44,7 @@ export class InMemService implements InMemoryDbService {
         event: 1,
         topic: 1,
         rating: 5, 
-        comment: "Best workshop on Azure, I've been to this week!"
+        comment: "Best workshop, I've been to this week!"
       },
       { 
         id: 2, 
@@ -72,8 +72,8 @@ export class InMemService implements InMemoryDbService {
         id: 4, 
         event: 3,
         topic: 2,
-        rating: 3, 
-        comment: "The PaaS afternoon was ok"
+        rating: 1, 
+        comment: "Bill Oddie borrowed £5 from me in 1992 and has never given it back"
       }                  
     ];    
 

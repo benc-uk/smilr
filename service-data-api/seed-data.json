@@ -3,32 +3,54 @@
     {
       "id": "evt001",
       "doctype": "event",
-      "title": "Azure Compute Options Workshop",
-      "type": "workshop",
-      "start": "2017-10-26",
-      "end": "2019-12-30",
+      "title": "Test Demo Event",
+      "type": "event",
+      "start": "2018-01-09",
+      "end": "2018-01-20",
       "topics": [
         {
           "id": 1,
-          "desc": "General"
+          "desc": "Introduction"
+        },
+        {
+          "id": 2,
+          "desc": "Main Session"
         }
       ]
     },
     {
       "id": "evt002",
       "doctype": "event",
-      "title": "Introduction to PaaS",
-      "type": "event",
+      "title": "An Example Workshop",
+      "type": "workshop",
       "start": "2017-12-02",
       "end": "2017-12-08",
       "topics": [
         {
           "id": 1,
-          "desc": "Morning Session"
+          "desc": "Whiteboarding"
         },
         {
           "id": 2,
-          "desc": "Afternoon Session"
+          "desc": "Cloud Computing"
+        }
+      ]
+    },
+    {
+      "id": "evt003",
+      "doctype": "event",
+      "title": "How To Use A Mouse",
+      "type": "lab",
+      "start": "2018-09-25",
+      "end": "2018-09-29",
+      "topics": [
+        {
+          "id": 1,
+          "desc": "Left Clicking"
+        },
+        {
+          "id": 2,
+          "desc": "Advanced Session: Right Clicking"
         }
       ]
     }
@@ -37,17 +59,17 @@
     {
       "id": "o8b231",
       "doctype": "feedback",
-      "event": "evt001",
+      "event": "evt002",
       "topic": 1,
-      "rating": 5,
-      "comment": "Best workshop on Azure, I've been to this week!"
+      "rating": 4,
+      "comment": "Best workshop, I've been to this week!"
     },
     {
       "id": "u47ash",
       "doctype": "feedback",
       "event": "evt002",
       "topic": 1,
-      "rating": 5,
+      "rating": 3,
       "comment": "I loved the morning session! You guys are the best"
     },
     {
@@ -63,7 +85,7 @@
       "doctype": "feedback",
       "event": "evt002",
       "topic": 2,
-      "rating": 4,
+      "rating": 2,
       "comment": "The afternoon was ok, but I wasn't listening"
     }
   ]
