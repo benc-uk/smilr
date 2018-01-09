@@ -66,8 +66,8 @@ class DataAccess {
         });
       });
     } else {
-      // Create a random id for new events
-      event.id = this.makeId(6);
+      // Create a random short-code style id for new events, 
+      event.id = this.makeId(5);
       event.doctype = this.EVENT_PKEY;
       return new Promise((resolve, reject) => {
         this.client.createDocument(this.collectionUrl, event, (err, res) => {
@@ -93,7 +93,8 @@ class DataAccess {
   }
 
   createFeedback(feedback) {
-    feedback.id = this.makeId(6);
+    // Just discovered that Cosmos does this for us! Creates a GUID
+    //feedback.id = this.makeId(6);
     feedback.doctype = this.FEEDBACK_PKEY;
     return new Promise((resolve, reject) => {
       this.client.createDocument(this.collectionUrl, feedback, (err, res) => {

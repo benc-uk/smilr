@@ -10,8 +10,9 @@ import { Event } from '../models/event';
 })
 
 export class ReportComponent  {
-  events: Event[] = [];
+  events: Event[] = null;
   eventStats: any = {};
+  error: any;
 
   private feedbackService: FeedbackService;
   private eventService: EventService;
@@ -43,7 +44,8 @@ export class ReportComponent  {
         });
       },
       err => {
-        console.log('Unable to load events!');
+        console.log('### Unable to load events!');
+        this.error = err;//`Unable to retrieve events from the server. ${err.error.error} ${err.url}`;
       }
     );    
   }

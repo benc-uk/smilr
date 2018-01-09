@@ -13,17 +13,18 @@ import EventTypes from '../models/event';
 })
 
 export class AdminComponent  {
-  events: Event[] = [];
+  events: Event[] = null;
   editEvent : Event = null;
   eventTypes = EventTypes;
   topicError = false;
   dateError = false;
   @ViewChild('deleteDialog') deleteDialog;
+  error: any;
 
   constructor(private eventService: EventService, private router: Router) { 
     this.eventService.listAll().subscribe(
       data => { this.events = data; },
-      err => { console.log('Unable to load events!'); }
+      err => { this.error = err; console.log('Unable to load events!'); }
     );
   }
 

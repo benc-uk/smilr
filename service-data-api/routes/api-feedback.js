@@ -13,7 +13,7 @@ routes
   res.type('application/json');
   dataAccess.listFeedbackForEventTopic(req.params.eventid, parseInt(req.params.topicid))
     .then(d => res.send(d))
-    .catch(e => res.status(400).send(e));
+    .catch(e => sendError(res, e));
 })
 
 .post('/api/feedback', function (req, res, next) {
@@ -21,7 +21,18 @@ routes
   res.type('application/json');
   dataAccess.createFeedback(feedback)
     .then(d => res.send(d))
-    .catch(e => res.status(400).send(e));
+    .catch(e => sendError(res, e));
 })
+
+//
+// Try to send back the underlying error code and message
+//
+function sendError(res, err) {
+  console.log(`### Error with feedback API ${JSON.stringify(err)}`); 
+  let code = 500;
+  if(err.code > 1) code = err.code;
+  res.status(code).send(err);
+  return;
+}
 
 module.exports = routes;

@@ -26,9 +26,20 @@
         </tr>
     </table>
 
+    <!-- spinner while loading -->
+    <div *ngIf="!error && !events" class="loader"></div>
+
   </div>
 </div>
 
+<!-- display errors -->
+<div *ngIf="error" class="alert alert-warning error">
+  <h4>&#x26a0; Problem fetching events from the server</h4>
+  <div *ngIf="error.error">Error: {{ error.error | json }}</div>
+  <div *ngIf="error.name">Name: {{ error.name }}</div>
+  <div *ngIf="error.message">Message: {{ error.message }}</div>
+  <div *ngIf="error.url">URL: {{ error.url }}</div>
+</div>
 
 <!-- edit dialog, only shown when editEvent is active -->
 

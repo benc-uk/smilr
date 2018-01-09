@@ -9,13 +9,15 @@ import { Event } from './models/event';
 
 export class EventListComponent  {
   @Input() public time; // one of: current, past, future
-  events: Event[] = [];
+  events: Event[] = null;
+  error: any;
 
   constructor(private eventService: EventService) { 
   }
 
   // Can't use constructor as input properties will be defined there, dunno why 
   ngOnChanges() {
+    this.events = null;
     var eventObserver;
     
     if(this.time == "past") eventObserver = this.eventService.listPast();
@@ -27,7 +29,8 @@ export class EventListComponent  {
         this.events = data;
       },
       err => {
-        console.log('Unable to load events!');
+        console.log('### Unable to load events!');
+        this.error = err;
       }
     );
   }

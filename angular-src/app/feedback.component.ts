@@ -38,6 +38,7 @@ export class FeedbackComponent {
   public event: Event;
   public feedback: Feedback;
   public topic: Topic;
+  public error: string;
   @ViewChildren(FaceDirective) faces: QueryList<FaceDirective>;
   @ViewChild('subbut') submitButton;
   @ViewChild('confirmDialog') confirmDialog;
@@ -78,6 +79,10 @@ export class FeedbackComponent {
               this.goAwayDialog.show(); 
               return;
             }            
+          },
+          err => {
+            this.error = "Sorry! There was a problem fetching the event data";
+            console.log("### Error getting event!", JSON.stringify(err));            
           }
         )
       }
@@ -97,16 +102,19 @@ export class FeedbackComponent {
 
   submit() {
     this.feedbackService.create(this.feedback)
-      .subscribe(
-        data => { 
-          createCookie(`feedback_${this.event.id}_${this.topic.id}`, this.feedback.rating, 9999);
+    .subscribe(
+      data => { 
+        createCookie(`feedback_${this.event.id}_${this.topic.id}`, this.feedback.rating, 9999);
 
-          this.event = null; 
-          this.confirmDialog.okCallback = () => { this.router.navigate(['/home']); }; 
-          this.confirmDialog.show(); 
-        }, 
-        err => console.log("Error saving feedback!", err)
-      );
+        this.event = null; 
+        this.confirmDialog.okCallback = () => { this.router.navigate(['/home']); }; 
+        this.confirmDialog.show(); 
+      }, 
+      err => {
+        this.error = "Sorry! There was a problem submitting your feedback. You can try again.";
+        console.log("### Error saving feedback!", JSON.stringify(err));
+      }
+    );
   }
 }
 

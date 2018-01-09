@@ -1,9 +1,11 @@
+<!-- main panel listing events -->
 <div class="panel panel-primary simpleFadeIn" *ngFor="let event of events">
   <div class="panel-heading">
     <h2 class="panel-title"><img src="/assets/img/events/{{event.type}}.png" /> &nbsp; {{ event.title }}</h2>
   </div>
   
   <div class="panel-body">
+    
     <h4><span *ngIf="dayCount(event.start, event.end) > 1">{{event.start | date:'MMMM d' }} - </span>{{event.end | date:'MMMM d, yyyy' }}</h4>
     <!-- list all topics inside event -->
     <ul>
@@ -13,4 +15,16 @@
       </li>
     </ul>
   </div>
+</div>
+
+<!-- spinner while loading -->
+<div *ngIf="!error && !events" class="loader"></div>
+
+<!-- display errors -->
+<div *ngIf="error" class="alert alert-warning error">
+  <h4>&#x26a0; Problem fetching events from the server</h4>
+  <div *ngIf="error.error">Error: {{ error.error | json }}</div>
+  <div *ngIf="error.name">Name: {{ error.name }}</div>
+  <div *ngIf="error.message">Message: {{ error.message }}</div>
+  <div *ngIf="error.url">URL: {{ error.url }}</div>
 </div>
