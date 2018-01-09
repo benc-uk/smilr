@@ -4,7 +4,7 @@
   </div>
   
   <div class="panel-body">
-    <h4>{{event.start | date:'MMMM d' }} - {{event.end | date:'MMMM d, yyyy' }}</h4>
+    <h4><span *ngIf="dayCount(event.start, event.end) > 1">{{event.start | date:'MMMM d' }} - </span>{{event.end | date:'MMMM d, yyyy' }}</h4>
     <!-- list all topics inside event -->
     <ul>
       <li *ngFor="let topic of event.topics">

@@ -32,4 +32,11 @@ export class EventListComponent  {
     );
   }
 
+  dayCount(start: string, end: string): number {
+    let d1:any = new Date(start);
+    let d2:any = new Date(end);
+    let days = Math.round((d2-d1)/(1000*60*60*24));
+    return days + 1;
+  }
+
 }
