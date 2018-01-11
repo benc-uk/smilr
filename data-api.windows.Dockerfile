@@ -1,4 +1,4 @@
-FROM stefanscherer/node-windows:8
+FROM stefanscherer/node-windows:8.9.4-nanoserver-2016
 LABEL version="2.0.0" 
 ARG basedir="service-data-api"
 

@@ -1,7 +1,7 @@
 #
 # Build Angular app using @angular/cli
 #
-FROM stefanscherer/node-windows:8 as angularapp
+FROM stefanscherer/node-windows:8.9.4-nanoserver-2016 as angularapp
 LABEL version="2.0.0" 
 ARG src="angular-src"
 
@@ -21,7 +21,7 @@ RUN node node_modules/@angular/cli/bin/ng build --prod --build-optimizer=false
 #
 # Build Node.js frontend service, pulling in output from previous image
 #
-FROM stefanscherer/node-windows:8
+FROM stefanscherer/node-windows:8.9.4-nanoserver-2016
 LABEL version="2.0.0" 
 ARG basedir="service-frontend"
 
