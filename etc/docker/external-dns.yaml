@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: external-dns
-        image: registry.opensource.zalan.do/teapot/external-dns:v0.4.7
+        image: registry.opensource.zalan.do/teapot/external-dns:v0.4.8
         args:
         - --source=service
         - --domain-filter=democloud.org.uk # !CHANGE THIS! To your DNS domain
