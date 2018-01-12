@@ -1,13 +1,11 @@
 module.exports = function (context, req) {
     context.log('### Serverless Smilr API received feedback data');
-    const DataAccess = require('../data-access');
-    const data = new DataAccess();
+    const dataAccess = require('../lib/data-access');
     let today = new Date().toISOString().substring(0, 10);
-    let dataPromise;
-
+    
     if(req.body) {
         context.log(req.body);
-        data.createFeedback(req.body)
+        dataAccess.createFeedback(req.body)
         .then(data => {
             context.res = {status: 200, body: data, headers:{'Content-Type': 'application/json'}}
             context.done();

@@ -3,7 +3,7 @@
     {
       "type": "cosmosDBTrigger",
       "name": "docs",
-      "connectionStringSetting": "smilr_DOCUMENTDB",
+      "connectionStringSetting": "smilr-demo_DOCUMENTDB",
       "databaseName": "smilrDb",
       "collectionName": "alldata",
       "leaseCollectionName": "leases",
@@ -17,7 +17,7 @@
       "collectionName": "alldata",
       "createIfNotExists": false,
       "partitionKey": "feedback",
-      "connection": "smilr_DOCUMENTDB",
+      "connection": "smilr-demo_DOCUMENTDB",
       "direction": "out"
     }
   ],

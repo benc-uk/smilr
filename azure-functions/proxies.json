@@ -1,29 +1,38 @@
 {
-    "$schema": "http://json.schemastore.org/proxies",
-    "proxies": {
-        "eventListProxy": {
-            "matchCondition": {
-                "route": "/api/events",
-                "methods": [
-                    "GET"
-                ]
-            },
-            "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI"
-        },
-        "eventGetProxy": {
-            "matchCondition": {
-                "route": "/api/events/{id}"
-            },
-            "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?id={id}"
-        },
-        "feedbackCreateProxy": {
-            "matchCondition": {
-                "route": "/api/feedback",
-                "methods": [
-                    "POST"
-                ]
-            },
-            "backendUri": "https://changeme.azurewebsites.net/api/feedbackAPI"
-        }
+  "$schema": "http://json.schemastore.org/proxies",
+  "proxies": {
+    "Data API - Event Get": {
+      "matchCondition": {
+        "route": "api/events/{id}",
+        "methods": [
+          "GET"
+        ]
+      },
+      "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?code=72KxACwHfak/6cGl3YdEQkrklu5rsDxRdXfmGhxrE1abmOqf5x94yA==&id={id}"
+    },
+    "Data API - Events List": {
+      "matchCondition": {
+        "route": "/api/events",
+        "methods": [
+          "GET"
+        ]
+      },
+      "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?code=72KxACwHfak/6cGl3YdEQkrklu5rsDxRdXfmGhxrE1abmOqf5x94yA=="
+    },
+    "Data API - Feedback Create": {
+      "matchCondition": {
+        "route": "/api/feedback",
+        "methods": [
+          "POST"
+        ]
+      },
+      "backendUri": "https://changeme.azurewebsites.net/api/feedbackAPI?code=72KxACwHfak/6cGl3YdEQkrklu5rsDxRdXfmGhxrE1abmOqf5x94yA=="
+    },
+    "Data API - Events Filter": {
+      "matchCondition": {
+        "route": "/api/events/filter/{time}"
+      },
+      "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?code=72KxACwHfak/6cGl3YdEQkrklu5rsDxRdXfmGhxrE1abmOqf5x94yA==&time={time}"
     }
+  }
 }

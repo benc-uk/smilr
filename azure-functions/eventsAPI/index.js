@@ -1,25 +1,25 @@
 module.exports = function (context, req) {
     context.log('### Serverless Smilr API received request for event data');
-    const DataAccess = require('../data-access');
-    const data = new DataAccess();
+    const dataAccess = require('../lib/data-access');
     let today = new Date().toISOString().substring(0, 10);
     let dataPromise;
 
     if(req.query.id) {
-        dataPromise = data.queryEvents(`event.id = '${req.query.id}'`);
+        dataPromise = dataAccess.queryEvents(`event.id = '${req.query.id}'`);
     }
 
     switch(req.query.time) {
         case 'active':
-            dataPromise = data.queryEvents(`event["start"] <= '${today}' AND event["end"] >= '${today}'`);
+            dataPromise = dataAccess.queryEvents(`event["start"] <= '${today}' AND event["end"] >= '${today}'`);
             break;
         case 'future':
-            dataPromise = data.queryEvents(`event["start"] > '${today}'`);
+            dataPromise = dataAccess.queryEvents(`event["start"] > '${today}'`);
             break
         case 'past':
-            dataPromise = data.queryEvents(`event["end"] < '${today}'`);
+            dataPromise = dataAccess.queryEvents(`event["end"] < '${today}'`);
             break        
     }
+
     if(dataPromise) {
         dataPromise
         .then(data => {
@@ -36,7 +36,7 @@ module.exports = function (context, req) {
     }
 
     // Catch all
-    data.queryEvents('true')
+    dataAccess.queryEvents('true')
       .then(data => {
           context.res = {status: 200, body: data, headers:{'Content-Type': 'application/json'}}
           context.done();

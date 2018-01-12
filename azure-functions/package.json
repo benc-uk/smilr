@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "documentdb": "^1.14.1"
+    "documentdb": "^1.14.1",
+    "dotenv": "^4.0.0"
   }
 }
