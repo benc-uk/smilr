@@ -1,5 +1,5 @@
 #
-# Deploy the front end Angular server microservice in Kubernetes
+# Deploy the front end Angular UI microservice in Kubernetes
 #
 
 # ------------------- Deployment ------------------- #
@@ -9,16 +9,16 @@ apiVersion: apps/v1beta1
 metadata:
   name: frontend
   labels:
-    app: frontend
+    app: frontend-app
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: frontend
+      app: frontend-replicaset
   template:
     metadata:
       labels:
-        app: frontend
+        app: frontend-replicaset
     spec:
       containers:
       - name: frontend-pod
@@ -37,7 +37,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: frontend-svc
+  name: frontend-endpoint
   annotations:
     # !CHANGE THIS! To your real DNS domain, if not using external DNS just leave & ignore
     external-dns.alpha.kubernetes.io/hostname: smilr.democloud.org.uk 
@@ -48,4 +48,4 @@ spec:
     port: 80
     targetPort: 3000
   selector:
-    app: frontend
+    app: frontend-replicaset
