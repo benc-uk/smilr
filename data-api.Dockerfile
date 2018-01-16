@@ -15,5 +15,8 @@ RUN npm install --production --silent
 # NPM is done, now copy in the the whole project to the workdir
 COPY ${basedir}/ .
 
+# Install bash inside container as it's good for debugging 
+RUN apk update && apk add bash
+
 EXPOSE 4000
 CMD npm start

@@ -41,5 +41,8 @@ COPY ${basedir}/ .
 # Copy in Angular app, uses previous image in Dockerfile
 COPY --from=angularapp /build/dist .
 
+# Install bash inside container as it's good for debugging 
+RUN apk update && apk add bash
+
 EXPOSE 3000
 CMD npm start
