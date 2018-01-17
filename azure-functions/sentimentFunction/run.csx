@@ -22,12 +22,15 @@ public static void Run(IReadOnlyList<Document> docs, out dynamic[] outputDoc, Tr
         foreach(var doc in docs) {            
             // Skip over non-feedback docs
             if(doc.GetPropertyValue<string>("doctype") != "feedback") continue;
+            // Skip over feedback without comments
+            if(doc.GetPropertyValue<string>("comment").Length == 0) continue;
+
             // !!Very important!! This stops our updated docs from re-triggering this Function
             // and creating an infinite loop!
             if(!String.IsNullOrEmpty(doc.GetPropertyValue<string>("sentiment"))) continue;
 
             log.Info("### Processing new/changed feedback: " + doc.GetPropertyValue<string>("comment"));
-            // C# is terrible with anything to do with JSON :( 
+            // Using JSON with C# can be kind of ugly, but this works OK 
             var analyticsRequestDocArray = new dynamic[] { 
                 new {
                     id = doc.Id,
@@ -44,8 +47,8 @@ public static void Run(IReadOnlyList<Document> docs, out dynamic[] outputDoc, Tr
             tempResults.Add(new {apiResp = apiResp, origDoc = doc});
         }
 
-        // Can you believe I'm having to statically size an array!? C# is evil
-        // The Webjob SDK is so touchy about the output type, can't use a dynamic List
+        // This isn't nice - had to staticly size the output array
+        // The Webjob SDK is super touchy about the output type, can't use a List or dyanmic collection
         outputDoc = new dynamic[tempResults.Count];
         for(var t = 0; t < tempResults.Count; t++) {
             log.Info("### Creating new doc to update Cosmos DB with...");
