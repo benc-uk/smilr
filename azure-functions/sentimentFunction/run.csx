@@ -29,7 +29,7 @@ public static void Run(IReadOnlyList<Document> docs, out dynamic[] outputDoc, Tr
             // and creating an infinite loop!
             if(!String.IsNullOrEmpty(doc.GetPropertyValue<string>("sentiment"))) continue;
 
-            log.Info("### Processing new/changed feedback: " + doc.GetPropertyValue<string>("comment"));
+            log.Info("### Processing new comment: \"" + doc.GetPropertyValue<string>("comment") + "\"");
             // Using JSON with C# can be kind of ugly, but this works OK 
             var analyticsRequestDocArray = new dynamic[] { 
                 new {
@@ -48,9 +48,10 @@ public static void Run(IReadOnlyList<Document> docs, out dynamic[] outputDoc, Tr
         }
 
         // This isn't nice - had to staticly size the output array
-        // The Webjob SDK is super touchy about the output type, can't use a List or dyanmic collection
+        // The Webjob SDK is super touchy about the output type, can't use a List or dynamic collection
         outputDoc = new dynamic[tempResults.Count];
         for(var t = 0; t < tempResults.Count; t++) {
+            log.Info("### Comment has sentiment score: "+Double.Parse(tempResults[t].apiResp.documents[0].score.ToString()));
             log.Info("### Creating new doc to update Cosmos DB with...");
             outputDoc[t] = new {
                 id = tempResults[t].origDoc.Id,
