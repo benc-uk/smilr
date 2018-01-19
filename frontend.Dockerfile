@@ -9,8 +9,6 @@ WORKDIR /build
 
 COPY package.json .
 RUN npm install --silent
-# Temporary workaround to issue https://github.com/angular/angular-cli/issues/8767
-RUN npm install @angular-devkit/schematics@0.0.45 --no-save
 
 COPY .angular-cli.json .
 COPY tsconfig.json .
