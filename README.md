@@ -100,9 +100,9 @@ The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` an
 - `GET /api/events` - Return all events
 - `GET /api/events?time={active|future|past}` - Return events in given time frame
 - `GET /api/event/{id}` - Return just one topic, by id
-- `POST /api/events` - Create a new event
-- `PUT /api/events` - Update existing event
-- `DELETE /api/events/{id}` - Delete event
+- `POST /api/events` - Create a new event (*secured admin API call*)
+- `PUT /api/events` - Update existing event (*secured admin API call*)
+- `DELETE /api/events/{id}` - Delete event (*secured admin API call*)
 
 #### Feedback:
 - `GET /api/feedback/{eventid}/{topicid}` - Return all feedback for given event and topic
@@ -122,6 +122,19 @@ The default secret is `secret123!` but can be set and changed with the environme
 It is recommend to use a tool such a [Postman](https://www.getpostman.com/) to call this API, however CLI tools such as curl can also be used, e.g.
 `curl -X POST "http://localhost:4000/api/dbinit" -H "accept: application/json" -H "X-SECRET: 123secret!"`
 
+### Admin Calls Security
+The event PUT, POST and DELETE calls are considered sensitive, and are only called by the admin section of the Smilr app. Optionally these calls can be locked down to prevent people hitting the API directly. For demos it is suggested that the APIs are left open for ease of showing the API and the working app, however for a permanent or live instance it should be restricted.
+
+To switch on security for these three calls, set the `API_SECRET` environmental variable with a key you want to use, note the key can be any length but only contain the following characters: 
+`ABCDEFGHIJKLMNOPQRSTUVWXYZ234567`.  
+This key is used to generate Time-based One-time Passwords (TOTP), these passwords must be sent to the API in the HTTP request headers, in a header named **X-SECRET**. The password is validated against the key and is only valid for 30 seconds. Invalid passwords will result in a 401 response.
+
+Once enabled the Angular client will need to know this key so it can generate the TOTP to send with any requests to the event PUT, POST and DELETE calls. This is done by setting it in **environment.prod.ts** in the `dataApiKey` field. 
+
+Note. If `API_SECRET` is not set, any value sent in the X-SECRET header is not validated and is just ignored, the header can also be omitted.  
+Also Note. The GET methods of the event API are always open and not subject to TOTP validation, likewise the feedback API is left open by design
+
+
 ### Data access
 All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess** in [lib/data-access.js](service-data-api/lib/data-access.js). All Cosmos DB specific code and logic is encapsulated here
 
@@ -132,7 +145,8 @@ The server listens on port 4000 and requires two configuration variables to be s
 |-------------|-------|
 |COSMOS_ENDPOINT|The URL endpoint of the Cosmos DB account, e.g. `https://foobar.documents.azure.com/`|
 |COSMOS_KEY|Master key for the Cosmos DB account|
-|DBINIT_SECRET|Secret key used for DB init (optional, default value `secret123!`)|
+|DBINIT_SECRET|*Optional* secret key used for DB init (default value `secret123!`)|
+|API_SECRET|*Optional* secret key used for admin calls to the event API (setting this turns security on, see **Admin Calls Security** above for details)|
 
 ### Running Data API service locally
 Run `npm install` in the **service-data-api** folder, ensure the environment variables are set as described above, then run `npm start`
@@ -153,7 +167,7 @@ In order to create the database (**microserviceDb**) and the collection (**allda
 ### Deploying Cosmos DB
 Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it
 ```
-az cosmosdb create -g SmilrRG -n smilr-cosmos
+az cosmosdb create --resource-group SmilrRG --name smilr-cosmos
 ```
 
 ### Data Model

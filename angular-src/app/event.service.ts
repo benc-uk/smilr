@@ -128,7 +128,7 @@ export class EventService {
     let totp = jsotp.TOTP(environment.dataApiKey);
     let options = { headers: new HttpHeaders().set('X-SECRET', totp.now()) }
 
-    return this.http.delete(url, options);
+    return this.http.delete<any>(url, options);
   }
 
   //
