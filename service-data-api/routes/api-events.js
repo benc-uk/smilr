@@ -52,6 +52,8 @@ routes
 })
 
 .post('/api/events', function (req, res, next) {
+  if(!verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
+
   res.type('application/json');
   let event = req.body;
 
@@ -61,6 +63,8 @@ routes
 })
 
 .put('/api/events', function (req, res, next) {
+  if(!verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
+
   res.type('application/json');
   let event = req.body;
 
@@ -70,8 +74,9 @@ routes
 })
 
 .delete('/api/events/:id', function (req, res, next) {
-  res.type('application/json');
+  if(!verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
 
+  res.type('application/json');
   dataAccess.deleteEvent(req.params.id)
     .then(d => res.status(200).send(d))
     .catch(e => sendError(res, e));
@@ -86,6 +91,16 @@ function sendError(res, err) {
   if(err.code > 1) code = err.code;
   res.status(code).send(err);
   return;
+}
+
+//
+// A bit of security, using TOTP
+//
+function verifyCode(code) {
+  if(!process.env.API_SECRET) return true;
+  let jsotp = require('jsotp');
+  let totp = jsotp.TOTP(process.env.API_SECRET);
+  return totp.verify(code);
 }
 
 module.exports = routes;

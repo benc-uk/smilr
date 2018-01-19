@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ConfigService } from './config.service';
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/filter';
+import * as jsotp from 'jsotp';
 
 import { Event } from './models/event';
 import { environment } from '../environments/environment';
@@ -25,7 +26,6 @@ export class EventService {
   public listAll(): Observable<Array<Event>> {
     return this.http.get<Array<Event>>(`${this.apiEndpoint}/events`);
   }
-
 
   //
   // Get events which are active/running. GET /api/events?type=active
@@ -85,7 +85,7 @@ export class EventService {
   // Get single event. GET /api/events/{id}
   //
   public get(id: string): Observable<Event> {
-    var url = `${this.apiEndpoint}/events/${id}`
+    let url = `${this.apiEndpoint}/events/${id}`
     return this.http.get<Event>(url);
   }
 
@@ -96,24 +96,39 @@ export class EventService {
     if(!environment.production) {
       event.id = EventService.makeId(6);
     }
-    var url = `${this.apiEndpoint}/events`
-    return this.http.post<Event>(url, event);
+    let url = `${this.apiEndpoint}/events`;
+
+    // Use time based one-time passcodes with this API call
+    let totp = jsotp.TOTP(environment.dataApiKey);
+    let options = { headers: new HttpHeaders().set('X-SECRET', totp.now()) }
+
+    return this.http.post<Event>(url, event, options);
   }
 
   //
   // Update an existing event. PUT /api/events/{id}
   //
   public update(event: Event): Observable<Event> {
-    var url = `${this.apiEndpoint}/events`
-    return this.http.put<Event>(url, event);
+    let url = `${this.apiEndpoint}/events`;
+
+    // Use time based one-time passcodes with this API call
+    let totp = jsotp.TOTP(environment.dataApiKey);
+    let options = { headers: new HttpHeaders().set('X-SECRET', totp.now()) }
+
+    return this.http.put<Event>(url, event, options);
   }
 
   //
   // Delete an event. DELETE /api/events/{id}
   //
   public delete(event: Event): Observable<Event> {
-    var url = `${this.apiEndpoint}/events/${event.id}`
-    return this.http.delete<any>(url);
+    let url = `${this.apiEndpoint}/events/${event.id}`;
+
+    // Use time based one-time passcodes with this API call
+    let totp = jsotp.TOTP(environment.dataApiKey);
+    let options = { headers: new HttpHeaders().set('X-SECRET', totp.now()) }
+
+    return this.http.delete(url, options);
   }
 
   //

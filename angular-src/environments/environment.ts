@@ -6,6 +6,7 @@
 export const environment = {
   production: false,
   secured: false,
+  dataApiKey: 'REPLACETHISKEY567',
 
   // In dev mode: configServerVars are ignored and values are set in config section 
   // - config section is a simple sub-object of name=value pairs

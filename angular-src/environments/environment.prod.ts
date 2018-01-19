@@ -5,7 +5,8 @@
 
 export const environment = {
   production: true,
-  secured: false,
+  secured: true,
+  dataApiKey: 'REPLACETHISKEY567',
   
   // In prod mode: config section is ignored and configServerVars must be an array of 
   // - environmental variables which will be fetched from the server
