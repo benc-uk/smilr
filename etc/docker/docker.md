@@ -4,12 +4,12 @@ This covers the basic building of the app as Docker images and and pushing into 
 
 There are two Docker images; one for the frontend server which serves the Angular app out to users, and another image for the data API service
 
-NOTE. These commands **should be run in PowerShell** rather than WSL bash. It is possible to get the docker command working in WSL with the Docker engine on Windows 10 but that's outside of the scope of this exercise.
+NOTE. These commands **should be run in PowerShell** rather than WSL bash. It is possible to get the docker command working in WSL with the Docker engine on Windows 10 but that's outside of the scope of this exercise
 
 ### Set variables 
 
 Run the following in PowerShell to set names we will be using in the commands.  
-Note the ACR name needs to be unique and not contain dashes
+Note the ACR name needs to be unique and must not contain dashes or dots
 ```
 $acrName = "smilracr"
 $resGroup = "Demo.Smilr"
