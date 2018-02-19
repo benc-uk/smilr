@@ -22,13 +22,12 @@ It is assumed you will be placing the app images in Azure Container Registry (AC
 ```
 az acr create -n $acrName -g $resGroup --admin-enabled --sku Standard
 ```
-Then get the password, this will save the password to a variable `acrPwd`
+Then store the password, this will save the password to a variable `acrPwd` but not show it
 ```
-az acr credential show -n $acrName -g $resGroup
 $acrPwd = az acr credential show -n $acrName -g $resGroup --query "passwords[0].value" -o tsv
 ```
 
-If you want to get the password 
+If you want to see the password, run
 ```
 az acr credential show -n $acrName -g $resGroup
 ```
