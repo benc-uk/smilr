@@ -12,7 +12,7 @@ The sentiment score is added to the feedback document as property `sentiment` an
 # Deployment
 
 ### Pre Req - Cognitive Service
-Deploy a text analytics cognitive service in Azure, and make a note of the key
+Deploy a Text Analytics cognitive service in Azure, and make a note of the key
 
 ### Azure Function 
 Simply create a new Function App and new C# function, then upload the `function.json` and `run.csx` overwriting the existing files. Alternatively copy & paste the contents up, which also works!  

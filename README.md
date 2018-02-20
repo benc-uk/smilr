@@ -110,7 +110,7 @@ The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` an
 
 #### Other. Admin & helper routes:
 - `POST /api/dbinit` - Reinit the database, delete and recreate Cosmos db & collection, then load seed data. Seed data is held in `seed-data.json` and can be modified as required. See notes below on security for this API
-- `GET /api/info` - Provide some information about the backend service, including hostname (good for debuging & checking loadbalancing)
+- `GET /api/info` - Provide some information about the backend service, including hostname (good for debugging & checking loadbalancing)
 
 ### Swagger / OpenAPI
 There is a [Swagger definition file for the API](service-data-api/swagger.json) and Swagger UI is also available, just use `/api-docs` as the URL, e.g.  **http://localhost:4000/api-docs/**
@@ -156,13 +156,13 @@ Run `npm install` in the **service-data-api** folder, ensure the environment var
 <a name="db"></a>
 
 # Component 4 - Database
-All data is held in a single Cosmos DB database called **microserviceDb** and also in single collection, this collection is called **alldata**
+All data is held in a single Cosmos DB database called **smilrDb** and also in single collection, this collection is called **alldata**
 
 The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. Note. the `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
 Note. This may not be the best collection / partitioning scheme but it serves our purposes, and saves costs
 
 ### Database Initialization 
-In order to create the database (**microserviceDb**) and the collection (**alldata**) you will need to use the data service API, and call `/api/dbinit`, before you do this the app will not function and you will get errors. This call will also load demo/seed data. See notes above about how to call this API.
+In order to create the database (**smilrDb**) and the collection (**alldata**) you will need to use the data service API, and call `/api/dbinit`, before you do this the app will not function and you will get errors. This call will also load demo/seed data. See notes above about how to call this API.
 
 ### Deploying Cosmos DB
 Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it
@@ -203,8 +203,38 @@ Feedback {
 
 <a name="serverless"></a>
 
+# Component 5 - Optional Serverless Components
 
-# Deploying Smilr locally
+There are two serverless components to Smilr, and both are optional
+
+### Data Enrichment - Sentiment Analysis
+This optional component enriches data as feedback is sumbitted. It takes any comment text in the feedback and runs it through Azure Text Analytics  Cognitive Services. The resulting sentiment score (normalized 0.0 ~ 1.0) is added to the feedback document in the database.
+
+The is implemented in Azure Functions, using the Cosmos DB change trigger, so that when new items are added to the DB, the function runs and processes them. The Function has an output binding back to Cosmos DB to update the document. The Function is written in C#
+
+Further notes are [included with the code here](azure-functions/sentimentFunction/)
+
+### Data API Serverless Version
+The data-api service has been re-implemented in a serverless model, this is also using Azure Functions. This component is optional as functionally it is identical to the "normal" non-serverless version of the service. It has been created as a small proof of concept around the idea of using serverless design in a RESTful microservices app, such as Smilr.
+
+The complete API of data-api service has not been replicated, rather a minimum subset has been implemented, in order to get the front end functional and users can submit feedback. The admin part of the API and front end has been omitted.
+
+Azure Functions and Azure Functions Proxies are used to reproduce the same REST API as the regular Node service. There are two Functions, the [eventsAPI](azure-functions/eventsAPI/) and [feedbackAPI](azure-functions/feedbackAPI/), both written in JavaScript and ported from the Node.js code with very little change. 
+
+The exact same [data access library](service-data-api/lib/data-access.js) used by the Node service is used by the Functions version, meaning 100% code reuse without any change.
+
+#### Deploying Serverless Data API
+You can deploy the serverless data-api into any Functions App, simply copy the whole of the [azure-functions](azure-functions/) to the App Service, into `wwwroot`
+
+![](https://user-images.githubusercontent.com/14982936/36417631-5e5c4cca-1624-11e8-9e22-65e7ff2e31bd.png)
+
+The NPM packages used by the data-access library to connect to Cosmos DB will need to be installed. After copying all the files to your Function App (including package.json) go into the portal for your Function App, then into 'Platform Features' and 'Console', from there run `npm install`
+
+The [proxies.json](azure-functions/proxies.json) file will need to be modified and the `backendUri` values changed to point to your instance of Functions by altering the "changeme" part. You can also change this using the Functions web Portal in the Proxies section
+
+---
+
+# Deploying Smilr Locally
 
 If you are deploying Smilr for the first time, and still getting your head around the various moving pieces, you may want to deploy it initially locally on your desktop machine and set up each of the tiers and make sure they are working correctly, and debug locally if you hit issues.
 
@@ -214,33 +244,33 @@ There is a CosmosDB local emulator available for Windows - see  https://docs.mic
 
 ### Run the Backend Data API Service
 
-TheCosmosDB emulator listens on https://localhost:8081 and uses a predefined security key "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" that you will need to assign to COSMOS_ENDPOINT and COSMOS_KEY before running the data service API.
+The CosmosDB emulator listens on https://localhost:8081 and uses a predefined security key "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" that you will need to assign to COSMOS_ENDPOINT and COSMOS_KEY before running the data service API.
 
 In the browser go to http://localhost:4000/api/dbinit and you should, if all is well, see a message saying the database is being initialised.
 
 ### Run the Front End Service
 
-Rememeber that you need to build a production version of the service, otherwise the Angular app defaults to the in-memory version and the back end version won't be called.
+Remember that you need to build a production version of the service, otherwise the Angular app defaults to the in-memory version and the back end version won't be called.
 Don't forget to set API_ENDPOINT to the URL endpoint of the data service API, http://localhost:4000/api.
 Check that the system works end to end by browsing to http://localhost:3000 and view the events and create new ones, etc. 
 
+
+
 # Deploying Smilr to Azure
 
-TODO
+There a are many ways to host and deploy Smilr in Azure, the primary ones being:
 
 
-# Component 5 - Optional Serverless Components
-TODO
+## Docker & Kubernetes (AKS)
+[See the this section for full notes and guides on building the Docker images & running in Kubernetes via AKS](/etc/docker)
 
-----------------------------------------------------------------------------------------------------
+## Azure Container Instance
+[See ARM templates for deploying ACI + Cosmos](etc/azure-templates/) and also [building Docker images](etc/docker/docker.md)
 
-# Docker & Kubernetes 
-[See the this section for full notes and guides on building the Docker images & running in Kubernetes](/etc/docker)
+## Azure App Service
+See [PowerShell script](etc/deploy-appsvc/) to build the front end service and deploy to Azure App Service. The backend service can also be deployed as a regular Node app to App Service.
 
-
-# Azure Templates
-[Azure Resource Manager deployment templates are provided here](/etc/azure-templates)
-
+---
 
 # Appendix - Running A Secured Instance
 The application is designed to be deployed in a demo scenario, so access to the admin pages where you can create/edit events and view feedback is open to all, without login. 
