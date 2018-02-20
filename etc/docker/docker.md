@@ -4,12 +4,12 @@ This covers the basic building of the app as Docker images and and pushing into 
 
 There are two Docker images; one for the frontend server which serves the Angular app out to users, and another image for the data API service
 
-NOTE. These commands **should be run in PowerShell** rather than WSL bash. It is possible to get the docker command working in WSL with the Docker engine on Windows 10 but that's outside of the scope of this exercise.
+NOTE. These commands **should be run in PowerShell** rather than WSL bash. It is possible to get the docker command working in WSL with the Docker engine on Windows 10 but that's outside of the scope of this exercise
 
 ### Set variables 
 
 Run the following in PowerShell to set names we will be using in the commands.  
-Note the ACR name needs to be unique and not contain dashes
+Note the ACR name needs to be unique and must not contain dashes or dots
 ```
 $acrName = "smilracr"
 $resGroup = "Demo.Smilr"
@@ -22,13 +22,12 @@ It is assumed you will be placing the app images in Azure Container Registry (AC
 ```
 az acr create -n $acrName -g $resGroup --admin-enabled --sku Standard
 ```
-Then get the password, this will save the password to a variable `acrPwd`
+Then store the password, this will save the password to a variable `acrPwd` but not show it
 ```
-az acr credential show -n $acrName -g $resGroup
 $acrPwd = az acr credential show -n $acrName -g $resGroup --query "passwords[0].value" -o tsv
 ```
 
-If you want to get the password 
+If you want to see the password, run
 ```
 az acr credential show -n $acrName -g $resGroup
 ```
