@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  api:
+    image: api
+    ports:
+      - "5000:80"
+    build:
+      context: .
+      dockerfile: API/Dockerfile
+  silo:
+    image: silo
+    build:
+      context: .
+      dockerfile: Silo/Dockerfile
