@@ -40,8 +40,8 @@ To build the images simply run `docker build`. If you are planning on testing & 
 Here we've used `smilr` as the repository in the image tag, but you can pick anything you like.
 
 ```
-docker build . -f data-api.Dockerfile -t "$acrName.azurecr.io/smilr/data-api"
-docker build . -f frontend.Dockerfile -t "$acrName.azurecr.io/smilr/frontend"
+docker build . -f .\service-data-api\Dockerfile -t "$acrName.azurecr.io/smilr/data-api"
+docker build . -f .\service-frontend\Dockerfile -t "$acrName.azurecr.io/smilr/frontend"
 ```
 
 Assuming you want your images in ACR, you will need to login with the following command. When prompted enter the password you fetched from your ACR instance
@@ -54,3 +54,6 @@ Then push the images with the following, standard docker push command
 docker push "$acrName.azurecr.io/microsvc/data-api"
 docker push "$acrName.azurecr.io/microsvc/frontend"
 ```
+
+# Windows Containers
+Docker build files for creating Windows containers are also provided, with the filename `windows.Dockerfile` these are using the [Node on Windows base images from Stefan Scherer](https://hub.docker.com/r/stefanscherer/node-windows/). Currently the Dockerfile is set to use the `nanoserver-2016` tag however this can be changed to any of the *many* tags available for this image
