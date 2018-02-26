@@ -5,18 +5,29 @@ using System.Threading.Tasks;
 
 namespace Grains
 {
-    public class ValueGrain : Grain, IValueGrain
+    public class GrainState
     {
-        private string value = "none";
+        public string value { get; set; } = "grain-not-set";
+    }
+
+    [Orleans.Providers.StorageProvider(ProviderName="grain-store")]
+    public class ValueGrain : Grain<GrainState>, IValueGrain
+    {
+        // Moved to GrainState, for persistence
+        // I have no idea what I'm doing...
+        //private string value = "none";
 
         public Task<string> GetValue()
         {
-            return Task.FromResult(this.value);
+            // Getting it from GrainState, is that bad? I don't think so unless I call base.ReadStateAsync();
+            base.ReadStateAsync();
+            return Task.FromResult( State.value );
         }
 
         public Task SetValue(string value)
         {
-            this.value = value;
+            State.value = value;
+            base.WriteStateAsync();
             return Task.CompletedTask;
         }
     }
