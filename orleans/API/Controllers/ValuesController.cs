@@ -41,12 +41,12 @@ namespace API.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody]string value)
+        public async Task Put(int id, [FromBody]dynamic value)
         {
             logger.LogInformation($"PUT {id} = {value}");
             await ConnectClientIfNeeded();
             var grain = this.client.GetGrain<IValueGrain>(id);
-            await grain.SetValue(value);
+            await grain.SetValue(value.ToString());
         }
 
         private async Task ConnectClientIfNeeded()
