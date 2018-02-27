@@ -52,7 +52,10 @@ namespace API.Controllers
         private async Task ConnectClientIfNeeded()
         {
             if (!this.client.IsInitialized)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5));
                 await this.client.Connect();
+            }
         }
     }
 }

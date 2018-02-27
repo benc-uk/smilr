@@ -1,8 +1,10 @@
 ﻿using Grains;
 using Microsoft.Extensions.Logging;
 using Orleans;
+using Orleans.Configuration;
 using Orleans.Hosting;
 using Orleans.Runtime.Configuration;
+using Orleans.Persistence.AzureStorage;
 using System;
 using System.Net;
 using System.Runtime.Loader;
@@ -20,7 +22,7 @@ namespace Silo
     static void Main(string[] args)
     {
       // TODO This will not be needed in RC
-      var config = new ClusterConfiguration();
+      //var config = new ClusterConfiguration();
 
       // Added BC - Get the config from appsettings.json
       var appSettingsBuilder = new ConfigurationBuilder()
@@ -29,7 +31,7 @@ namespace Silo
           .AddEnvironmentVariables();
       IConfigurationRoot appSettings = appSettingsBuilder.Build();
 
-      config.Globals.DataConnectionString = appSettings["Orleans:ConnectionString"];
+      /*config.Globals.DataConnectionString = appSettings["Orleans:ConnectionString"];
       config.Globals.ClusterId = appSettings["Orleans:ClusterId"];
 
       config.Globals.LivenessType = GlobalConfiguration.LivenessProviderType.AzureTable;
@@ -38,9 +40,14 @@ namespace Silo
       config.Defaults.Port = 11111;
       config.Defaults.ProxyGatewayEndpoint = new IPEndPoint(IPAddress.Any, 30000);
       config.AddAzureBlobStorageProvider("grain-store", appSettings["Orleans:ConnectionString"], "grains", false, true);
+      */
 
       silo = new SiloHostBuilder()
-          .UseConfiguration(config)
+          .Configure(options => options.ClusterId = appSettings["Orleans:ClusterId"])
+          .UseAzureStorageClustering(options => options.ConnectionString = appSettings["Orleans:ConnectionString"])
+          .UseAzureTableReminderService(options => options.ConnectionString = appSettings["Orleans:ConnectionString"])
+          .AddAzureTableGrainStorage("grain-store", options => options.ConnectionString = appSettings["Orleans:ConnectionString"])
+          .ConfigureEndpoints(siloPort: 11111, gatewayPort: 30000)
           .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ValueGrain).Assembly).WithReferences())
           .ConfigureLogging(builder => builder.SetMinimumLevel((LogLevel)appSettings.GetValue<int>("Orleans:LogLevel")).AddConsole())
           .Build();
@@ -59,13 +66,13 @@ namespace Silo
     private static async Task StartSilo()
     {
       await silo.StartAsync();
-      Console.WriteLine("Silo started");
+      Console.WriteLine("### Silo started!");
     }
 
     private static async Task StopSilo()
     {
       await silo.StopAsync();
-      Console.WriteLine("Silo stopped");
+      Console.WriteLine("### Silo started!");
       siloStopped.Set();
     }
   }
