@@ -50,9 +50,10 @@ namespace API
             
             var client = new ClientBuilder()
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IValueGrain).Assembly))
-                .ConfigureClusterClient(options => options.ClusterId = this.Configuration["Orleans:ClusterId"])
-                .UseAzureTableGatewayListProvider(options => options.ConnectionString = this.Configuration["Orleans:ConnectionString"])
+                .ConfigureCluster(options => options.ClusterId = this.Configuration["Orleans:ClusterId"])
+                .UseAzureStorageClustering(options => options.ConnectionString = this.Configuration["Orleans:ConnectionString"])
                 .Build();
+
             return client;
         }
     }

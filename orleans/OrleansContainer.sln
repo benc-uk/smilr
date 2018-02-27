@@ -9,6 +9,8 @@ EndProject
 #EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrainInterfaces", "GrainInterfaces\GrainInterfaces.csproj", "{21023A72-1417-4B24-AECF-53FC43C8551F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrainModels", "GrainModels\GrainModels.csproj", "{21023A72-1417-4B24-AECF-53FC43C8551F}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grains", "Grains\Grains.csproj", "{C9C75B82-4399-425A-9800-4AE0EF5E6D56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silo", "Silo\Silo.csproj", "{3C38E1F6-2628-47D5-A90B-E2636F4CF456}"
