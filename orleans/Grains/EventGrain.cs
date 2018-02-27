@@ -6,18 +6,6 @@ using System.Threading.Tasks;
 
 namespace Grains
 {
-  /*public class EventGrainState
-  {
-    id:     any       // Six character UID string or int
-    title:  string    // Title of the event, 50 char max
-    type:   string    // Type of event ['event', 'workshop', 'hack', 'lab']
-    start:  Date      // Start date, an ISO 8601 string; YYYY-MM-DD
-    end:    Date      // End date, an ISO 8601 string; YYYY-MM-DD
-    topics: Topic[];  // List of Topics, must be at least one
-
-    public string value { get; set; } = "grain-not-set";
-  }*/
-
   [Orleans.Providers.StorageProvider(ProviderName = "grain-store")]
   public class EventGrain : Grain<GrainModels.Event>, IEventGrain
   {
