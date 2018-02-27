@@ -19,7 +19,6 @@ namespace API
     {
         public Startup(IConfiguration configuration)
         {
-            Console.WriteLine($"#################");
             Configuration = configuration;
         }
 

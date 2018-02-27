@@ -11,5 +11,6 @@ namespace GrainInterfaces
         Task<string> GetTitle();
 
         Task SetTitle(string title);
+
     }
 }
