@@ -45,11 +45,11 @@ Thumbs.db
 # Ignore any temp junk for App Service deployment script
 /etc/deploy-appsvc/tmp*
 
-# VERY IMPORTANT!
+# These contain secrets! 
 .env
 azure.json
-.vscode/
 azuredeploy.myparam.json
+appsettings.json
 
 # C# Dotnet Core Stuff
 *.swp
@@ -58,8 +58,8 @@ project.lock.json
 .DS_Store
 *.pyc
 
-# Visual Studio Code
-.vscode
+# Visual Studio Code - BC changed my mind, allowed this in the repo
+#.vscode
 
 # User-specific files
 *.suo
@@ -85,5 +85,3 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
-
-appsettings.json
