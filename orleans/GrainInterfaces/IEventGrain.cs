@@ -8,9 +8,7 @@ namespace GrainInterfaces
 {
     public interface IEventGrain : IGrainWithStringKey
     {
-        Task<string> GetTitle();
-
-        Task SetTitle(string title);
+        Task Launch(string title, string type, string start, string end);
 
     }
 }
