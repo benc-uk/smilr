@@ -1,0 +1,69 @@
+{
+   // See https://go.microsoft.com/fwlink/?LinkId=733558
+   // for the documentation about the tasks.json format
+   "version": "2.0.0",
+"tasks": [
+    {
+        "label": "Docker Build Smilr images",
+        "type": "shell",        
+        // You will need to change this task to point to your container registry!
+        "command": "export DOCKER_HOST=tcp://0.0.0.0:2375 && docker build . -f service-data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api && docker build . -f service-frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend",
+        "problemMatcher": []
+    },
+    {
+        "label": "Docker Push Smilr images",
+        "type": "shell",
+        // You will need to change this task to point to your container registry!
+        "command": "export DOCKER_HOST=tcp://0.0.0.0:2375 && docker push bcdemo.azurecr.io/smilr/data-api && docker push bcdemo.azurecr.io/smilr/frontend",
+        "problemMatcher": []
+    },
+    {
+        "label": "Azure App Service Deploy",
+        "type": "shell",
+        "command": "\\etc\\deploy-appsvc\\deploy-frontend.ps1",
+        "problemMatcher": []
+    },
+    {
+        "label": "Dotnet Build Orleans - API",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+            "build",
+            "${workspaceFolder}/orleans/API/API.csproj"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        }
+    },
+    {
+        "label": "Dotnet Build Orleans - Silo",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+            "build",
+            "${workspaceFolder}/orleans/Silo/Silo.csproj"
+        ],
+        "problemMatcher": "$msCompile",
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        }
+    },    
+    {
+        "label": "Publish Orleans Project",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+            "publish",
+            "${workspaceFolder}/orleans/OrleansContainer.sln",
+            "-c",
+            "Release",
+            "-o",
+            "pub"
+        ],
+        "problemMatcher": "$msCompile"
+    }
+]
+}

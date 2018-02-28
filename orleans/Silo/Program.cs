@@ -21,26 +21,12 @@ namespace Silo
 
     static void Main(string[] args)
     {
-      // TODO This will not be needed in RC
-      //var config = new ClusterConfiguration();
-
-      // Added BC - Get the config from appsettings.json
+      // BC - Get the config from appsettings.json, maybe a better way?
       var appSettingsBuilder = new ConfigurationBuilder()
           .SetBasePath(System.IO.Directory.GetCurrentDirectory())
           .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
           .AddEnvironmentVariables();
       IConfigurationRoot appSettings = appSettingsBuilder.Build();
-
-      /*config.Globals.DataConnectionString = appSettings["Orleans:ConnectionString"];
-      config.Globals.ClusterId = appSettings["Orleans:ClusterId"];
-
-      config.Globals.LivenessType = GlobalConfiguration.LivenessProviderType.AzureTable;
-      config.Globals.ReminderServiceType = GlobalConfiguration.ReminderServiceProviderType.AzureTable;
-      config.Globals.FastKillOnCancelKeyPress = true;
-      config.Defaults.Port = 11111;
-      config.Defaults.ProxyGatewayEndpoint = new IPEndPoint(IPAddress.Any, 30000);
-      config.AddAzureBlobStorageProvider("grain-store", appSettings["Orleans:ConnectionString"], "grains", false, true);
-      */
 
       silo = new SiloHostBuilder()
           .Configure(options => options.ClusterId = appSettings["Orleans:ClusterId"])
