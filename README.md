@@ -97,9 +97,9 @@ This is held in [service-data-api](service-data-api) and is another Node.js Expr
 
 The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` and currently are set up as follows:
 #### Events:
-- `GET /api/events` - Return all events
-- `GET /api/events?time={active|future|past}` - Return events in given time frame
-- `GET /api/event/{id}` - Return just one topic, by id
+- `GET /api/events` - Return a list of all events
+- `GET /api/events/filter/{active|future|past}` - Return list of events filtered to a given time frame
+- `GET /api/event/{id}` - Return just one event, by id
 - `POST /api/events` - Create a new event (*secured admin API call*)
 - `PUT /api/events` - Update existing event (*secured admin API call*)
 - `DELETE /api/events/{id}` - Delete event (*secured admin API call*)
