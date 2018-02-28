@@ -3,28 +3,63 @@
    // for the documentation about the tasks.json format
    "version": "2.0.0",
 "tasks": [
+
+    //
+    // Check the .vscode/settings.json file for config values
+    //
     {
-        "label": "Docker Build Smilr images",
+        "label": "Docker Build - Node images",
         "type": "shell",        
-        // You will need to change this task to point to your container registry!
-        "command": "export DOCKER_HOST=tcp://0.0.0.0:2375 && docker build . -f service-data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api && docker build . -f service-frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend",
+        "command": "docker build . -f service-data-api/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/data-api && docker build . -f service-frontend/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/frontend",
+        "windows": {
+            "command": "docker build . -f service-data-api/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/data-api ; docker build . -f service-frontend/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/frontend"
+        },
         "problemMatcher": []
     },
     {
-        "label": "Docker Push Smilr images",
+        "label": "Docker Push - Node images",
         "type": "shell",
-        // You will need to change this task to point to your container registry!
-        "command": "export DOCKER_HOST=tcp://0.0.0.0:2375 && docker push bcdemo.azurecr.io/smilr/data-api && docker push bcdemo.azurecr.io/smilr/frontend",
+        "command": "docker push ${config:docker-registry}/${config:docker-repo}/data-api && docker push ${config:docker-registry}/${config:docker-repo}/frontend",
+        "windows": {
+            "command": "docker push ${config:docker-registry}/${config:docker-repo}/data-api ; docker push ${config:docker-registry}/${config:docker-repo}/frontend"
+        },        
         "problemMatcher": []
     },
+
+    {
+        "label": "Docker Build - Orleans images",
+        "type": "shell",   
+        "options": {
+            "cwd": "orleans"
+        },   
+        "command": "docker build . -f API/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/orleans-api && docker build . -f Silo/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/orleans-silo",
+        "windows": {
+            "command": "docker build . -f API/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/orleans-api ; docker build . -f Silo/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/orleans-silo"
+        },
+        "problemMatcher": []
+    },
+    {
+        "label": "Docker Push - Orleans images",
+        "type": "shell",
+        "command": "docker push ${config:docker-registry}/${config:docker-repo}/orleans-api && docker push ${config:docker-registry}/${config:docker-repo}/orleans-silo",
+        "windows": {
+            "command": "docker push ${config:docker-registry}/${config:docker-repo}/orleans-api ; docker push ${config:docker-registry}/${config:docker-repo}/orleans-silo"
+        },   
+        "problemMatcher": []
+    },    
+
     {
         "label": "Azure App Service Deploy",
         "type": "shell",
-        "command": "\\etc\\deploy-appsvc\\deploy-frontend.ps1",
+        "options": {
+            "cwd": "${workspaceFolder}/etc/deploy-appsvc"
+        },
+        "command": "powershell.exe ./deploy-frontend.ps1 -appService ${config:appservice-site} -deployUser ${config:appservice-user}",    
         "problemMatcher": []
     },
+
     {
-        "label": "Dotnet Build Orleans - API",
+        "label": "Dotnet Build - Orleans API",
         "command": "dotnet",
         "type": "process",
         "args": [
@@ -38,7 +73,7 @@
         }
     },
     {
-        "label": "Dotnet Build Orleans - Silo",
+        "label": "Dotnet Build - Orleans Silo",
         "command": "dotnet",
         "type": "process",
         "args": [
@@ -51,6 +86,7 @@
             "isDefault": true
         }
     },    
+
     {
         "label": "Publish Orleans Project",
         "command": "dotnet",
