@@ -26,6 +26,13 @@ This application supports a range of demonstration, and learning scenarios, such
  - Use of an open source application stack such as Angular and Node.js
  - RESTful API design 
 
+---
+
+# :boom: March 3rd 2018 :boom:
+**This repo has undergone a major restructure, with the entire folder layout being modified - this readme is yet to be updated, most links to files and folders will be incorrect**
+
+---
+
 
 # Architecture & Core App Components
 ![arch](https://user-images.githubusercontent.com/14982936/32730129-fb8583b2-c87d-11e7-94c4-547bfcbfca6b.png)
