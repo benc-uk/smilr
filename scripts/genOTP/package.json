@@ -1,0 +1,13 @@
+{
+  "name": "genOTP",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "Create a one time password from given key",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "jsotp": "~1.0.2"
+  }
+}
