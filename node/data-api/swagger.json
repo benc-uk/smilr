@@ -274,30 +274,7 @@
           }
         }
       }     
-    },
-    "/dbinit": {
-      "post": {
-        "tags": ["Other"],
-        "description": "Reset the database, and initialize with seed data",
-        "operationId": "dbInit",
-        "security": [
-          {
-            "X-Secret": []
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Confirmation message"
-          },
-          "400": {
-            "description": "Unexpected error"
-          }
-        }
-      }     
-    }     
+    }   
   },
   "definitions": {
     "Feedback": {
