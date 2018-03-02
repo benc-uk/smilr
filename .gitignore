@@ -1,12 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# compiled output
-/dist
-/tmp
-/out-tsc
-
 # dependencies
-/node_modules
+node_modules/
 
 # IDEs and editors
 /.idea
@@ -16,13 +11,6 @@
 *.launch
 .settings/
 *.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 # misc
 /.sass-cache
@@ -41,15 +29,6 @@ yarn-error.log
 # System Files
 .DS_Store
 Thumbs.db
-
-# Ignore any temp junk for App Service deployment script
-/etc/deploy-appsvc/tmp*
-
-# These contain secrets! 
-.env
-azure.json
-azuredeploy.myparam.json
-appsettings.json
 
 # C# Dotnet Core Stuff
 *.swp
@@ -85,3 +64,17 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+
+# Ignore any temp junk for App Service deployment script
+/etc/deploy-appsvc/tmp*
+
+# These contain secrets! 
+.env
+azure.json
+azuredeploy.myparam.json
+appsettings.json
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
