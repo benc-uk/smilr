@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  data-api:
+    image: smilr/data-api
+    build: 
+      context: .
+      dockerfile: node/data-api/Dockerfile
+    ports: 
+      - "4000:4000"
+    env_file: node/data-api/.env
+
+  frontend:
+    image: smilr/frontend
+    build: 
+      context: .
+      dockerfile: node/frontend/Dockerfile
+    ports: 
+      - "3000:3000"
+    env_file: node/frontend/.env

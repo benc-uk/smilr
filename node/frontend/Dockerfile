@@ -3,19 +3,19 @@
 #
 FROM node:8-alpine as angularapp
 LABEL version="2.0.0" 
-ARG src="angular-src"
+ARG angular_root="angular"
 
 WORKDIR /build
 
-COPY package.json .
+COPY ${angular_root}/package.json .
 RUN npm install --silent
 
-COPY .angular-cli.json .
-COPY tsconfig.json .
-COPY ${src}/ ./${src}/
+COPY ${angular_root}/.angular-cli.json .
+COPY ${angular_root}/tsconfig.json .
+COPY ${angular_root}/src ./src
 
 # Run Angular CLI build & bundle in prod mode, and output to ./dist
-RUN node_modules/@angular/cli/bin/ng build --prod
+RUN node node_modules/@angular/cli/bin/ng build --prod
 
 ######################## PART 2 ##############################
 
@@ -24,7 +24,7 @@ RUN node_modules/@angular/cli/bin/ng build --prod
 #
 FROM node:8-alpine
 LABEL version="2.0.0" 
-ARG basedir="service-frontend"
+ARG basedir="node/frontend"
 
 # Node.js setup for the frontend
 ENV NODE_ENV production
