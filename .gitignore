@@ -75,6 +75,5 @@ azuredeploy.myparam.json
 appsettings.json
 
 # Compiled output
-/dist
-/tmp
-/out-tsc
+dist/
+tmp/
