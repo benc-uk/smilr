@@ -71,3 +71,4 @@ appsettings.json
 # Compiled output
 dist/
 tmp/
+tmp.zip
