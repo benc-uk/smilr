@@ -10,7 +10,7 @@
     "start": "node server.js"
   },
   "license": "Apache-2.0",
-  "repository": "https://github.com/benc-uk/angular-server-azure",
+  "repository": "https://github.com/benc-uk/microservices-demoapp",
   "dependencies": {
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",

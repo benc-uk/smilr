@@ -1,0 +1,14 @@
+{
+  "name": "initdb",
+  "version": "1.0.0",
+  "main": "initdb.js",
+  "description": "Init the Smilr CosmosDB database",
+  "scripts": {
+    "start": "node initdb.js"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "documentdb": "^1.14.1",
+    "dotenv": "^4.0.0"
+  }
+}
