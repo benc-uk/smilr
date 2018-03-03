@@ -22,17 +22,15 @@ if((Test-Path "azure") -And (Test-Path "angular")) {
     exit
 }
 
-try {
-    #Start-Process -FilePath "node" -ArgumentList "c:\dev\microservices-demoapp\angular\node_modules\@angular\cli\bin\ng build","--prod" -WorkingDirectory $angularDir
-} catch {
-    echo "### Error running Angular build, likely you don't have Angular CLI installed"
-}
-
 if(Test-Path $angularDir\dist) {
     echo "### I found a dist folder in the project root, so will carry on and use that!"    
 } else {
-    echo "### Wasn't able to ``run ng`` build and no dist folder was found, I can't carry on, sorry bye!"  
-    exit  
+    try {
+        Start-Process -FilePath "node" -ArgumentList "c:\dev\microservices-demoapp\angular\node_modules\@angular\cli\bin\ng build","--prod" -WorkingDirectory $angularDir
+    } catch {
+        echo "### Wasn't able to ``run ng`` build and no dist folder was found, I can't carry on, sorry bye!"  
+        exit  
+    }  
 }
 
 echo "### Bundling Node server with Angular app"
