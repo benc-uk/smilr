@@ -177,6 +177,14 @@ Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a sin
 az cosmosdb create --resource-group SmilrRG --name smilr-cosmos
 ```
 
+### Emulator Notes
+!TODO!
+Notes here about running emulator and configuring so containers can access
+.\CosmosDB.Emulator.exe /AllowNetworkAccess /Key=<YOURKEY>
+https://www.base64encode.org/
+COSMOS_ENDPOINT=https://192.168.0.53:8081
+
+
 ### Data Model
 There are two main models, one for holding an **Event** and one for submitted **Feedback**, there are also **Topics** which only exist as simple objects nested in Events.
 
