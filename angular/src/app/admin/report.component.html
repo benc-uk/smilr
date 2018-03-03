@@ -5,7 +5,7 @@
   <div class="panel-body">
     <div class="form-group">
       <select class="form-control" [(ngModel)]="event" (change)="doReport()">
-        <option *ngFor="let event of events" [ngValue]="event">{{ event.title }}</option>
+        <option *ngFor="let event of events" [ngValue]="event">&nbsp;&nbsp;{{ event.title }}</option>
       </select>
       <br/>
       <button class="btn btn-success" (click)="doReport()">Refresh Report</button>
