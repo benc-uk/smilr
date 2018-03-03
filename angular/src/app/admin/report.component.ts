@@ -18,7 +18,7 @@ export class ReportComponent  {
   private feedbackService: FeedbackService;
   private eventService: EventService;
   
-  private doReport() {
+  public doReport() {
     let totalRating: number = 0;
     let feedbackCount: number = 0;          
     this.event.topics.forEach(topic => {
