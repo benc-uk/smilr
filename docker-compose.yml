@@ -3,7 +3,7 @@ version: '3'
 services:
 
   data-api:
-    image: smilr/data-api
+    image: ${DOCKER_REG}smilr/data-api
     build: 
       context: .
       dockerfile: node/data-api/Dockerfile
@@ -12,7 +12,7 @@ services:
     env_file: node/data-api/.env
 
   frontend:
-    image: smilr/frontend
+    image: ${DOCKER_REG}smilr/frontend
     build: 
       context: .
       dockerfile: node/frontend/Dockerfile
