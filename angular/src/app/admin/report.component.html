@@ -1,4 +1,19 @@
-<div class="panel panel-primary simpleFadeIn" *ngFor="let event of events">
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <h2 class="panel-title"><i class="fa fa-file-text"></i> Report On Event</h2>
+  </div>
+  <div class="panel-body">
+    <div class="form-group">
+      <select class="form-control" [(ngModel)]="event" (change)="doReport()">
+        <option *ngFor="let event of events" [ngValue]="event">{{ event.title }}</option>
+      </select>
+      <br/>
+      <button class="btn btn-success" (click)="doReport()">Refresh Report</button>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-primary simpleFadeIn" *ngIf="event">
   <div class="panel-heading">
     <h2 class="panel-title">Feedback for '{{ event.title }}'</h2>
   </div>

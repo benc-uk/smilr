@@ -13,39 +13,41 @@ export class ReportComponent  {
   events: Event[] = null;
   eventStats: any = {};
   error: any;
+  event: Event;
 
   private feedbackService: FeedbackService;
   private eventService: EventService;
   
+  private doReport() {
+    let totalRating: number = 0;
+    let feedbackCount: number = 0;          
+    this.event.topics.forEach(topic => {
+      this.feedbackService.listForEventTopic(this.event.id, ''+topic.id).subscribe(
+        // This will load all feedback into the topic, and fully inflate the event object
+        // And calc stats on rating
+        feedbackdata => { 
+          feedbackdata.forEach(f => {totalRating += +f.rating; feedbackCount++});
+          topic.feedback = feedbackdata; 
+
+          let avg = totalRating / feedbackCount;
+          this.eventStats[`_${this.event.id}`] = {avg: avg, count: feedbackCount, avgFloor: Math.round(avg)}                       
+        }
+      );             
+    });     
+  }
+
   constructor(private fs: FeedbackService, private es: EventService) { 
     this.feedbackService = fs;
     this.eventService = es;
     
+    // Load all events on load, to populate the dropdown select
     this.eventService.listAll().subscribe(
       eventdata => {
         this.events = eventdata;
-
-        this.events.forEach(event => {
-          let totalRating: number = 0;
-          let feedbackCount: number = 0;          
-          event.topics.forEach(topic => {
-            this.feedbackService.listForEventTopic(event.id, ''+topic.id).subscribe(
-              // This will load all feedback into the topic, and fully inflate the event object
-              // And calc stats on rating
-              feedbackdata => { 
-                feedbackdata.forEach(f => {totalRating += +f.rating; feedbackCount++});
-                topic.feedback = feedbackdata; 
-
-                let avg = totalRating / feedbackCount;
-                this.eventStats[`_${event.id}`] = {avg: avg, count: feedbackCount, avgFloor: Math.round(avg)}                       
-              }
-            );             
-          });     
-        });
       },
       err => {
         console.log('### Unable to load events!');
-        this.error = err;//`Unable to retrieve events from the server. ${err.error.error} ${err.url}`;
+        this.error = err;
       }
     );    
   }
