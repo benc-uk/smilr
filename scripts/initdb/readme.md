@@ -1,6 +1,6 @@
 # InitDB Script
 
-In order to create the Cosmos DB database (**smilrDb**) and the collection (**alldata**) a [helper script is provided](scripts/initdb). This is a Node script, and takes two positional parameters, the Cosmos endpoint and the Cosmos key, example to run this script:
+In order to create the Cosmos DB database (**smilrDb**) and the collection (**alldata**) this helper script is provided. This is a Node.js script, and takes two positional parameters, the Cosmos endpoint and the Cosmos key, example to run this script:
 ```
 node initdb.js https://foo.documents.azure.com 1234567890BLAHBLAH
 ```
