@@ -1,10 +1,14 @@
 require('dotenv').config()
 var express = require('express');
 var app = express();
-var static_dir = __dirname;
+
+// Serve static content from working directory (or '.') by default
+// - Optional parameter can specify different location, use when debugging & running locally 
+var staticContentDir = process.argv[2] || __dirname;
+console.log(`### Content dir = '${staticContentDir}'`);
 
 // Serve all Angular app static content (index.html, js, css, assets, etc.)
-app.use('/', express.static(static_dir));
+app.use('/', express.static(staticContentDir));
 
 //
 // MICRO API allowing dynamic configuration of the client side Angular
@@ -29,7 +33,7 @@ app.get('/.auth/*', function (req, res) {
 // Redirect all other requests to index.html, 
 // - see https://angular.io/guide/deployment#server-configuration
 app.use('*', function(req, res) {
-   res.sendFile(`${static_dir}/index.html`);
+   res.sendFile(`${staticContentDir}/index.html`);
 });
 
 // Start the server
