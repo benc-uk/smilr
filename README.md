@@ -51,6 +51,13 @@ The main levels of the repository directory tree are laid out as follows
 └── servicefabric      Service Fabric implementation of the services - WIP
 ```
 
+# Dev Tools & Pre-Reqs
+If you are looking to build & work with the Smilr app locally, either as a learning exercise or to run demos, there are a small number of pre-reqs:
+
+- [Node.js](https://nodejs.org/en/download/) installed, if using Windows then [installing Node under WSL is also an option](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
+- [Docker CE](https://store.docker.com/search?offering=community&type=edition). Required if building the Docker images to run locally, or in Azure or Kubernetes. Note. A remote Docker host can be set-up & used (e.g. via Docker Machine) rather that installing Docker locally. The process of setting this up are outside the scope of this readme
+- [VS Code](https://code.visualstudio.com/) This project has been developed entirely using VS Code. However you can use any editor/IDE you wish, but VS Code is highly recommended. Various task & debug configurations for VS Code are provided.
+
 # Architecture & Core App Components
 ![arch]https://user-images.githubusercontent.com/14982936/32730129-fb8583b2-c87d-11e7-94c4-547bfcbfca6b.png)
 
@@ -92,7 +99,11 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 # Component 2 - Frontend service
 This is held in [node/frontend](node/frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place. This service is stateless
 
-The Node.js server serves the static content from its root directory (i.e. where `server.js` is), this content comes from the output of the Angular command `ng build --prod` which outputs to `angular/dist` so this output must be copied in. The [Dockerfile](node/frontend/Dockerfile) carries out both these tasks
+By default the Express server serves the static content using `express.static()` from its root directory (i.e. where `server.js` is), this content should be the output of the Angular build & bundle process `ng build --prod` which outputs to `angular/dist` directory.  
+So to package a working frontend service these files must be copied (recursively) across. Note. Do not copy the `dist` directory, only the *contents under it*. You must overwrite the **index.html** file which is just a placeholder.  
+The [Dockerfile](node/frontend/Dockerfile) carries out both the Angular build and the copy step so will always create a fully packaged frontend
+
+When running locally you can skip this copy step (see below)
 
 The service listens on port 3000 and requires a single configuration variable to be set. This taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
 
@@ -106,11 +117,14 @@ The frontend server presents a special API located at `/.config` this API respon
 The API takes a comma separated list of variable names, and returns them in a single JSON object e.g.
 **GET `/.config/HOSTNAME,FOO`** will result in `{"HOSTNAME":"hostblah", "FOO":"Value of foo"}`
 
-This config API is used by the Angular app's **ConfigService** to get the API endpoint from the API_ENDPOINT env var.
+This config API is used only once and at startup by the Angular app's **ConfigService** to get the API endpoint from the API_ENDPOINT environment var. The ConfigService is injected in using Angular's APP_INITIALIZER token which suffers from non-existent documentation, however [this blog post](https://www.intertech.com/Blog/angular-4-tutorial-run-code-during-app-initialization/) is a good source of information. This approach allows dynamic configuration of the endpoint address without needing to re-build the Angular app
 
 ### Running frontend service/server locally
-If you want to run the front-end service locally, it is advised to do this in a temporary runtime directory outside of this project, otherwise you will polute the source.  
-Copy `package.json` and `server.js` into this runtime directory, then run `npm install` in this directory to grab all the packages. Then copy in all of the contents of `dist` as described above, and start with `npm start`
+If you want to run the front-end service locally, you can point the server at a directory containing the static content you want to serve, i.e. the bundled output of `ng build --prod`. To do this pass the directory as a parameter to the `server.js` e.g.
+```
+node server.js C:\Dev\microservices-demoapp\angular\dist
+```
+This saves you copying the Angular dist content to same folder as the Node **server.js** file. The path must be fully qualified and not relative.
 
 
 
@@ -164,7 +178,7 @@ The server listens on port 4000 and requires two configuration variables to be s
 |API_SECRET|*Optional* secret key used for admin calls to the event API (setting this turns security on, see **Admin Calls Security** above for details)|
 
 ### Running Data API service locally
-Run `npm install` in the **service-data-api** folder, ensure the environment variables are set as described above, then run `npm start`
+Run `npm install` in the **data-api** folder, ensure the environment variables are set as described above, then run `npm start`
 
 
 
