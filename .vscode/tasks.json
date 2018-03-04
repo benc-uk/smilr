@@ -10,19 +10,13 @@
     {
         "label": "Docker Build - Node images",
         "type": "shell",        
-        "command": "docker build . -f service-data-api/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/data-api && docker build . -f service-frontend/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/frontend",
-        "windows": {
-            "command": "docker build . -f service-data-api/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/data-api ; docker build . -f service-frontend/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/frontend"
-        },
+        "command": "docker-compose build",
         "problemMatcher": []
     },
     {
         "label": "Docker Push - Node images",
         "type": "shell",
-        "command": "docker push ${config:docker-registry}/${config:docker-repo}/data-api && docker push ${config:docker-registry}/${config:docker-repo}/frontend",
-        "windows": {
-            "command": "docker push ${config:docker-registry}/${config:docker-repo}/data-api ; docker push ${config:docker-registry}/${config:docker-repo}/frontend"
-        },        
+        "command": "docker-compose push",      
         "problemMatcher": []
     },
 
@@ -32,29 +26,23 @@
         "options": {
             "cwd": "orleans"
         },   
-        "command": "docker build . -f API/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/orleans-api && docker build . -f Silo/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/orleans-silo",
-        "windows": {
-            "command": "docker build . -f API/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/orleans-api ; docker build . -f Silo/Dockerfile -t ${config:docker-registry}/${config:docker-repo}/orleans-silo"
-        },
+        "command": "docker-compose build",
         "problemMatcher": []
     },
     {
         "label": "Docker Push - Orleans images",
         "type": "shell",
-        "command": "docker push ${config:docker-registry}/${config:docker-repo}/orleans-api && docker push ${config:docker-registry}/${config:docker-repo}/orleans-silo",
-        "windows": {
-            "command": "docker push ${config:docker-registry}/${config:docker-repo}/orleans-api ; docker push ${config:docker-registry}/${config:docker-repo}/orleans-silo"
-        },   
+        "options": {
+            "cwd": "orleans"
+        },         
+        "command": "docker-compose push",   
         "problemMatcher": []
     },    
 
     {
         "label": "Azure App Service Deploy",
         "type": "shell",
-        "options": {
-            "cwd": "${workspaceFolder}/etc/deploy-appsvc"
-        },
-        "command": "powershell.exe ./deploy-frontend.ps1 -appService ${config:appservice-site} -deployUser ${config:appservice-user}",    
+        "command": "powershell.exe ./azure/appservice/deploy-frontend.ps1 -appService ${config:appservice-site} -deployUser ${config:appservice-user}",    
         "problemMatcher": []
     },
 
@@ -100,6 +88,31 @@
             "pub"
         ],
         "problemMatcher": "$msCompile"
-    }
+    },
+
+    {
+        "label": "NPM Install - Node API",
+        "command": "npm",
+        "type": "shell",
+        "options": {
+            "cwd": "node/data-api"
+        },
+        "args": [
+            "install"
+        ],
+        "problemMatcher": []        
+    },
+    {
+        "label": "NPM Install - Node Frontend",
+        "command": "npm",
+        "type": "shell",
+        "options": {
+            "cwd": "node/frontend"
+        },
+        "args": [
+            "install"
+        ],
+        "problemMatcher": []        
+    }    
 ]
 }

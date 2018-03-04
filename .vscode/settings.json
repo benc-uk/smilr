@@ -2,8 +2,6 @@
   //
   // You will need to change these as required!
   //
-  "docker-registry": "bcdemo.azurecr.io",
-  "docker-repo": "smilr",
   "appservice-site": "smilr-live",
   "appservice-user": "bcdeployer"
 }
