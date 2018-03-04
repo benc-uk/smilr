@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
+import { isDevMode } from '@angular/core';
 
 import { environment } from '../environments/environment';
 import { XHRConnection } from '@angular/http/src/backends/xhr_backend';
@@ -19,9 +20,10 @@ export class ConfigService {
     // See `service-frontend\server.js` for details on this API
     if(environment.production) {
       return this.http.get(`/.config/${varNames}`)
-      .map(data => {this._config = data})
+      .map(data => {
+        this._config = data;
+      })
       .toPromise();
-
     } else {
       // When in dev-mode, fetch from local hardcoded environment.config object
       return new Promise((resolve, reject) => {
@@ -33,5 +35,14 @@ export class ConfigService {
 
   get values(): any {
     return this._config;
+  }
+
+  startUpNotice(): void {
+    console.log(`### Smilr single page Angular app starting...`);
+    if(isDevMode()) 
+      console.log(`### Running in DEV mode`);
+    else
+      console.log(`### Running in PROD mode`);
+
   }
 }
