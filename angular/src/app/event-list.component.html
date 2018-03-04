@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<div *ngIf="events.length == 0">
+<div *ngIf="events && events.length == 0">
   <div class="alert alert-warning grey simpleFadeIn" role="alert"><h4>Sorry, no scheduled events in given time range</h4></div>
 </div>
 

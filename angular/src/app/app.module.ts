@@ -56,7 +56,7 @@ import { AppSvcLogin } from './admin/app-svc-login.component';
     ConfigService,
     {
       provide: APP_INITIALIZER,
-      useFactory: cfg => () => cfg.loadConfig(),
+      useFactory: cfg => () => cfg.loadConfig().then(cfg.startUpNotice()),
       deps: [ConfigService],
       multi: true
     }

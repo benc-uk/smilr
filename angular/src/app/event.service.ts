@@ -18,6 +18,8 @@ export class EventService {
     this.apiEndpoint = config.values.API_ENDPOINT;
     if(!this.apiEndpoint) 
       console.error(`### ERROR! API endpoint is not set! Configure the API_ENDPOINT in the config section of environment.ts or set on the server as environmental variable`)
+    else
+      console.log(`### EventService configured with API_ENDPOINT=${this.apiEndpoint}`)
   }
 
   //
