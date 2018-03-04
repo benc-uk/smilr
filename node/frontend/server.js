@@ -3,7 +3,8 @@ var express = require('express');
 var app = express();
 
 // Serve static content from working directory (or '.') by default
-// - Optional parameter can specify different location, use when debugging & running locally 
+// - Optional parameter can specify different location, use when debugging & running locally
+// - e.g. `node server.js ../angular/dist/`
 var staticContentDir = process.argv[2] || __dirname;
 console.log(`### Content dir = '${staticContentDir}'`);
 
