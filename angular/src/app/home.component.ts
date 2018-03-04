@@ -7,14 +7,20 @@ import { Event } from './models/event';
 
 @Component({
   template: `
-  <div style="width:80%; margin: 0 auto">
-    <h3>&nbsp; Active Events</h3>
-    <event-list time="active"></event-list>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h3>&nbsp; Active Events</h3>
+      <event-list time="active">
+      </event-list>
+    </div>
+
+    <hr/>
     
-    <div style="height:20px;"></div>
-    
-    <h3>&nbsp; Upcoming Events</h3>
-    <event-list time="future"></event-list> 
+    <div class="col-md-10 col-md-offset-1">
+      <h3>&nbsp; Upcoming Events</h3>
+      <event-list time="future">
+      </event-list> 
+    </div>
   </div> 
   `
 })

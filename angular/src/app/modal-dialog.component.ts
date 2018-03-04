@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
           <div class="modal-header">
             <h4 class="modal-title alert alert-info"> {{ dialogTitle }} </h4>
           </div>
-          <div class="modal-body" style="font-size: 120%" [innerHTML]="dialogBody">
+          <div class="modal-body" [innerHTML]="dialogBody">
             
           </div>
           <div class="modal-footer">

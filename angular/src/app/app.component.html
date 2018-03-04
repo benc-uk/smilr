@@ -15,7 +15,7 @@
       </div>
 
       <!-- logo -->
-      <a class="navbar-brand" [routerLink]="['/home']"><img src='/assets/img/logo-white.svg' style="width:60px; display: inline-block; margin-top:-10px"> <span style="display: inline-block">Smilr</span> </a>
+      <a class="navbar-brand" [routerLink]="['/home']"><img src='/assets/img/logo-white.svg' class="navlogo"> <span class="navlogotext">Smilr</span> </a>
 
       <!-- left hand buttons (hidden when mobile) -->
       <ul class="nav navbar-nav navbar-left hidden-xs">
@@ -47,8 +47,8 @@
 
       <!-- toggle sidenav menu button (only shown on mobile) -->
       <div class="nav navbar-nav pull-right visible-xs" >
-        <button type="button" class="btn btn-primary" (click)="toggleNav()">
-          <i class="fa fa-bars" style="font-size:40px"></i>
+        <button type="button" class="btn btn-primary menubars" (click)="toggleNav()">
+          <i class="fa fa-bars"></i>
         </button>
         &nbsp;
       </div>
