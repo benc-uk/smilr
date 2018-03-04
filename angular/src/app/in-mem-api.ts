@@ -10,7 +10,7 @@ export class InMemService implements InMemoryDbService {
         title: 'Test Workshop', 
         type: 'workshop', 
         start: '2018-01-01', 
-        end: '2018-12-04',
+        end: '2018-02-04',
         topics: [
           {id: 1, desc: 'General Stuff' }
         ]
