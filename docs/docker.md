@@ -1,5 +1,10 @@
 # Docker Containers
 
+# :boom: :pencil: March 2018
+**:warning: This doc needs updating/re-writing due to new folder structure and use of Docker Compose**
+
+---
+
 This covers the basic building of the app as Docker images and and pushing into Azure Container Registry.
 
 There are two Docker images; one for the frontend server which serves the Angular app out to users, and another image for the data API service
