@@ -164,6 +164,14 @@
     "apiURL": {
       "value": "[concat('http://', reference(variables('containerDataApi')).ipAddress.ip, ':', reference(variables('containerDataApi')).ipAddress.ports[0].port)]",
       "type": "string"
-    }
+    },
+    "cosmosEndpoint": {
+      "value": "[concat('https://', variables('cosmosName'), '.documents.azure.com')]",
+      "type": "string"
+    },
+    "cosmosKey": {
+      "value": "[listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey]",
+      "type": "string"
+    }        
   }
 }
