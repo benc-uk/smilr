@@ -70,7 +70,7 @@ There are numerous ways to set & override environmental variables; in the operat
 
 The main app components are:
 1) [Angular front end UI](#component-1---angular-front-end-ui)
-1) [Frontend service](##component-2---frontend-service)
+1) [Frontend service](#component-2---frontend-service)
 1) [Backend data API service](#component-3---backend-data-api-service)
 1) [Database](#component-4---database)
 1) [Optional serverless components](#component-5---optional-serverless-components) 
@@ -162,21 +162,20 @@ This key is used to generate Time-based One-time Passwords (TOTP), these passwor
 
 Once enabled the Angular client will need to know this key so it can generate the TOTP to send with any requests to the event PUT, POST and DELETE calls. This is done by setting it in **environment.prod.ts** in the `dataApiKey` field. 
 
-Note. If `API_SECRET` is not set, any value sent in the X-SECRET header is not validated and is just ignored, the header can also be omitted.  
-Also Note. The GET methods of the event API are always open and not subject to TOTP validation, likewise the feedback API is left open by design
+:exclamation::speech_balloon: **Note.** If `API_SECRET` is not set (which is the default), any value sent in the X-SECRET header is not validated and is just ignored, the header can also be omitted. Also the GET methods of the event API are always open and not subject to TOTP validation, likewise the feedback API is left open by design
 
 
 ### Data access
 All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess** in [lib/data-access.js](node/data-api/lib/data-access.js). All Cosmos DB specific code and logic is encapsulated here
 
 ### Data API server - Config
-The server listens on port 4000 and requires two configuration variables to be set. These are taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
+The server listens on port 4000 and requires two configuration environmental variables to be set. 
 
 |Variable Name|Purpose|
 |-------------|-------|
 |COSMOS_ENDPOINT|The URL endpoint of the Cosmos DB account, e.g. `https://foobar.documents.azure.com/`|
 |COSMOS_KEY|Master key for the Cosmos DB account|
-|API_SECRET|*Optional* secret key used for admin calls to the event API (setting this turns security on, see **Admin Calls Security** above for details)|
+|API_SECRET|***Optional*** secret key used for admin calls to the event API (setting this turns security on, see [Admin Calls Security](#admin-calls-security) above for details)|
 
 ### Running Data API service locally
 Run `npm install` in the **data-api** folder, ensure the environment variables are set as described above, then run `npm start`
@@ -186,13 +185,17 @@ Run `npm install` in the **data-api** folder, ensure the environment variables a
 # Component 4 - Database
 All data is held in a single Cosmos DB database called **smilrDb** and also in single collection, this collection is called **alldata**
 
-The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. Note. the `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored.  
-Note. This may not be the best collection / partitioning scheme but it serves our purposes, and saves costs
+The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. 
+
+### :exclamation::speech_balloon: Notes & Gotchas
+- The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored, you never include doctype when POSTing entities to the API, it is added automatically by the data-api service before storing in Cosmos.
+- This may seem unorthodox with a mixture of different document types held in a single collection, but is a perfectly valid approach for a NoSQL database such as Cosmos DB.  
+- Do not confuse the `doctype` with the property `type` on events. The event `type` property is a textual description of the type of event, e.g. "Workshop", "Lab" or "Hack" and is used by the UI
 
 ### Deploying Cosmos DB
 Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it
 ```
-az cosmosdb create --resource-group SmilrRG --name smilr-cosmos
+az cosmosdb create --resource-group {res_group} --name changeme
 ```
 
 ### Database Initialization 
@@ -274,15 +277,6 @@ There is a Cosmos DB local emulator available for Windows - see  https://docs.mi
 The CosmosDB emulator listens on https://localhost:8081 and uses a predefined security key "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" that you will need to assign to COSMOS_ENDPOINT and COSMOS_KEY before running the data service API.
 
 Initialize the database using the **initdb.js** helper script - [full documentation](scripts/initdb)
-
-**Note.** If want to run the the data-api locally but in a container (e.g. in Docker CE for Windows 10), the Cosmos DB emulator will not allow the connection (you will see connection refused errors) this is because the emulator only binds to loopback (127.0.0.1). The fix is to run the emulator the `AllowNetworkAccess` and `Key` switches, e.g.
-
-```
-"C:\Program Files\Azure Cosmos DB Emulator\CosmosDB.Emulator.exe" /AllowNetworkAccess /Key=<YOURKEY>
-```
-The key needs to be a base64 encoded value of 64 bytes (characters). You can use https://www.base64encode.org/ to create a valid key, or simply re-use the pre-defined key.  
-The Cosmos endpoint you specify in the data-api container will no longer be localhost, you will need to use your real local IP, e.g. `COSMOS_ENDPOINT=https://192.168.0.53:8081`
-
 
 ### Run the Front End Service
 
