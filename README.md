@@ -51,28 +51,33 @@ The main levels of the repository directory tree are laid out as follows
 └── servicefabric      Service Fabric implementation of the services - WIP
 ```
 
-# Dev Tools & Pre-Reqs
+# :computer: Dev Tools & Pre-Reqs
 If you are looking to build & work with the Smilr app locally, either as a learning exercise or to run demos, there are a small number of pre-reqs:
 
 - [Node.js](https://nodejs.org/en/download/) installed, if using Windows then [installing Node under WSL is also an option](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
 - [Docker CE](https://store.docker.com/search?offering=community&type=edition). Required if building the Docker images to run locally, or in Azure or Kubernetes. Note. A remote Docker host can be set-up & used (e.g. via Docker Machine) rather that installing Docker locally. The process of setting this up are outside the scope of this readme
 - [VS Code](https://code.visualstudio.com/) This project has been developed entirely using VS Code. However you can use any editor/IDE you wish, but VS Code is highly recommended. Various task & debug configurations for VS Code are provided.
 
-# Architecture & Core App Components
+
+# :wrench: Runtime Configuration & Settings
+The primary configuration mechanism for this project is system environmental variables (or env vars). These env vars are used with the Node.js services, container runtime, Docker tools and helper scripts is . This gives us a flexible and cross platform way to inject runtime settings, it is also widely supported in Azure (e.g. Azure App Service Settings)
+
+There are numerous ways to set & override environmental variables; in the operating system, the user profile or from command line tools. For local development purposes it is strongly recommended you create & use `.env` files. These are simple text files containing `var=value` pairs. Sample files named `.env.sample` are provided with the project, which you can rename and use. *Note.* `.env` files normally contain secrets so they are prevented from being committed to Git
+
+
+# :star: Architecture & Core App Components
 ![arch]https://user-images.githubusercontent.com/14982936/32730129-fb8583b2-c87d-11e7-94c4-547bfcbfca6b.png)
 
 The main app components are:
-1) [Angular front end UI](#angular)
-1) [Frontend service](#front)
-1) [Backend data API service](#data-api)
-1) [Database](#db)
-1) [Optional serverless components](#serverless) 
+1) [Angular front end UI](#component-1---angular-front-end-ui)
+1) [Frontend service](##component-2---frontend-service)
+1) [Backend data API service](#component-3---backend-data-api-service)
+1) [Database](#component-4---database)
+1) [Optional serverless components](#component-5---optional-serverless-components) 
 
 These will be each described in their own sections below. 
 
 ---
-
-<a name="angular"></a>
 
 # Component 1 - Angular Front End UI 
 This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0. To build and run you will need Node.js installed (6.11 and 8.9 have been tested) and also NPM. To install the Angular CLI run `npm install @angular/cli -g`, v1.5.0 or higher will be needed. 
@@ -92,9 +97,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ### UI Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/32730539-4b85e806-c87f-11e7-89a5-a12543314a34.png)
 
-
-
-<a name="front"></a>
+---
 
 # Component 2 - Frontend service
 This is held in [node/frontend](node/frontend) and is an extremely simple Node.js Express app. It simply serves up the static content of the Angular app (e.g. index.html, JS files, CSS and images). Once the client browser has loaded the app, no further interaction with this service takes place. This service is stateless
@@ -105,7 +108,7 @@ The [Dockerfile](node/frontend/Dockerfile) carries out both the Angular build an
 
 When running locally you can skip this copy step (see below)
 
-The service listens on port 3000 and requires a single configuration variable to be set. This taken from the OS environmental variables. A `.env` file [can also be used](https://www.npmjs.com/package/dotenv) if present.
+The service listens on port 3000 and requires a single environmental configuration variable to be set.
 
 |Variable Name|Purpose|
 |-------------|-------|
@@ -126,9 +129,7 @@ node server.js C:\Dev\microservices-demoapp\angular\dist
 ```
 This saves you copying the Angular dist content to same folder as the Node **server.js** file. The path must be fully qualified and not relative.
 
-
-
-<a name="data-api"></a>
+---
 
 # Component 3 - Backend Data API Service
 This is held in [node/data-api](node/data-api) and is another Node.js Express app. It acts as the REST API endpoint for the Angular client app. This service is stateless
@@ -180,9 +181,7 @@ The server listens on port 4000 and requires two configuration variables to be s
 ### Running Data API service locally
 Run `npm install` in the **data-api** folder, ensure the environment variables are set as described above, then run `npm start`
 
-
-
-<a name="db"></a>
+---
 
 # Component 4 - Database
 All data is held in a single Cosmos DB database called **smilrDb** and also in single collection, this collection is called **alldata**
@@ -229,8 +228,7 @@ Feedback {
 }
 ``` 
 
-
-<a name="serverless"></a>
+---
 
 # Component 5 - Optional Serverless Components
 
