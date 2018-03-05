@@ -1,9 +1,12 @@
 # Azure Templates
 
-These ARM templates allow you to deploy the complete app to Azure.  
-Most templates use containers, so Azure Container Registry is a pre-req for these and it is expected that the two service images are build and pushed to the registry before deploying, see [the instructions here](/etc/docker/docker.md)
+These ARM templates allow you to deploy the complete app to Azure.
 
-## Deploy to Azure Container Instance
+Most templates use containers, so a Azure Container Registry instance populated with the Smilr images is a pre-req before deploying. Please refer to [these instructions](/docs/containers.md) for how to deploy ACR, build and push your images to it. 
+
+:exclamation::speech_balloon: **Note.** It would not be helpful to deploy Azure Container Registry as part of these templates, as it would simply result in an empty registry!
+
+## Template 1 - Deploy to Azure Container Instance
 Deploy the app using Azure Container Instances & Cosmos DB
 
 #### Deployed Resources
@@ -12,14 +15,14 @@ Deploy the app using Azure Container Instances & Cosmos DB
 
 #### Parameters
 - `previewLocation`: During preview, only available in these regions: **westeurope**, **westus** & **eastus**
-- `acrName`: Name of ACR instance
-- `acrPasswrod`: Password for ACR
+- `acrName`: Name of your ACR instance
+- `acrPassword`: Password for ACR
 
 #### Outputs
 - `frontendURL`: URL to access frontend
 - `apiURL`: URL to access the API
 
 #### Quick Deploy
-[![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fmicroservices-demoapp%2Fmaster%2Fetc%2Fazure-templates%2Fcontainer-instance-cosmos%2Fazuredeploy.json)  
+[![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fmicroservices-demoapp%2Fmaster%2Fetc%2Fazure%2Ftemplates%2Faci-cosmos%2Fazuredeploy.json)  
 
 

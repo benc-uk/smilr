@@ -11,12 +11,12 @@ var FEEDBACK_PKEY = 'feedback';
 // To work with the Cosmos DB emulator, and self signed certs
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-// Load Cosmos config from env vars / app settings
+// Cosmos settings from commandline params or from env vars 
 var cosmosEndpoint = process.argv[2] || process.env.COSMOS_ENDPOINT;
 var cosmosKey = process.argv[3] || process.env.COSMOS_KEY;
 if(!cosmosEndpoint || !cosmosKey) {
   console.log("### COSMOS_ENDPOINT and COSMOS_KEY must be specified");
-  console.log("### This can be done via env vars, creating .env file or passing as parameters");
+  console.log("### This can be done via env vars, creating a .env file or passing as parameters");
   process.exit(0);
 }
 
@@ -28,7 +28,7 @@ let collectionUrl = `dbs/${DBNAME}/colls/${COLLNAME}`;
 
 // Do the magic...
 initDb()
-.catch(err => { console.log(`### Bad thing ${err}`) });
+.catch(err => { console.log(`### Bad thing ${err.body}`); });
 
 async function initDb() {
   // Create DB and collection
@@ -59,7 +59,7 @@ async function initDb() {
 
 function createDbPromise() {
   return new Promise(function(resolve, reject) {
-    client.createDatabase({id: DBNAME}, (err, res) => { if(err) reject(err); resolve(res) });
+    client.createDatabase(DBNAME, (err, res) => { if(err) reject(err); resolve(res) });
   });
 }
 

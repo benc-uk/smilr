@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  data-api:
+    image: ${DOCKER_REG}smilr/data-api:windows
+    build: 
+      context: .
+      dockerfile: node/data-api/windows.Dockerfile
+    ports: 
+      - "4000:4000"
+    env_file: node/data-api/.env
+
+  frontend:
+    image: ${DOCKER_REG}smilr/frontend:windows
+    build: 
+      context: .
+      dockerfile: node/frontend/windows.Dockerfile
+    ports: 
+      - "3000:3000"
+    env_file: node/frontend/.env
