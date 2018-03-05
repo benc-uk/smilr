@@ -21,8 +21,11 @@ Deploy the app using Azure Container Instances & Cosmos DB
 #### Outputs
 - `frontendURL`: URL to access frontend
 - `apiURL`: URL to access the API
+- `cosmosEndpoint`: Endpoint of new Cosmos DB instance
+- `cosmosKey`: Key needed to access Cosmos DB
 
 #### Quick Deploy
 [![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fmicroservices-demoapp%2Fmaster%2Fazure%2Ftemplates%2Faci-cosmos%2Fazuredeploy.json)  
 
-
+#### Notes
+After deployment you will need to initialize the database, use the [initdb script](/scripts/initdb/) and pass the template output values `cosmosEndpoint` and `cosmosKey`

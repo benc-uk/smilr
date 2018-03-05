@@ -295,10 +295,15 @@ Containers provide a perfect environment for running microservices, as such docu
 > **[:arrow_right: Full details on running in Kubernetes](kubernetes/readme.md)**
 
 ## Azure Container Instance
-[See ARM templates for deploying ACI + Cosmos](/azure/templates/) and also [building Docker images](docs/containers.md)
+[See ARM templates for deploying to Azure Container Instance](/azure/templates/) and also [building Docker images](docs/containers.md)
 
 ## Azure App Service
-See [PowerShell script](etc/deploy-appsvc/) to build the front end service and deploy to Azure App Service. The backend service can also be deployed as a regular Node app to App Service.
+Provided [PowerShell script](/azure/appservice/) will build the front end service and deploy to Azure App Service. 
+
+The backend service can also be deployed as a regular Node app to App Service, just deploy the **node/data-api** folder using [Kudu zipdeploy](https://github.com/projectkudu/kudu/wiki/Deploying-from-a-zip-file) or other means (FTP, Git etc). If using zipdeploy you can omit the **node_modules** directory as the `.deployment` file instructs Kudu to run npm install after deployment.
+
+#### :exclamation::speech_balloon: Note.
+Remember to set the required configuration environmental vars on the deployed web apps, this can be done with regular [App Service App Settings](https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#app-settings)
 
 ## Service Fabric
 Coming soon
