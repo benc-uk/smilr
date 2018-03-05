@@ -1,11 +1,16 @@
-# Docker Containers
+# Containers & Docker
 
-This covers the basic building of the app as Docker images and and pushing into Azure Container Registry.
+This covers the building of the app as Docker images and running as containers, using Docker Compose and and pushing into Azure Container Registry.
 
-There are two Docker images; one for the frontend server which serves the Angular app to users, and another image for the data API REST service
+# Docker Images (Node.js)
+The Dockerfiles for both services are based on Alpine Linux and Node.js v8, the Dockerfiles are in the corresponding node services directories. There are two Docker images, one for each micro service:
+ - [node/data-api/Dockerfile](/node/data-api/Dockerfile) For the data API REST service
+ - [node/frontend/Dockerfile](/node/frontend/Dockerfile) For the frontend server which serves the Angular app to users, 
 
-# Docker Build Files
-The Dockerfiles for both services are based on Alpine Linux and Node.js v8, the Dockerfiles are in the corrisponding node sevice directory, e.g. [node/data-api/Dockerfile](/node/data-api/Dockerfile) and [/node/frontend/Dockerfile](node/frontend/Dockerfile)
+The frontend Dockerfile is multi-stage and will carry out the entire Angular build process without needing the Angular CLI installed on the local machine
+
+### :exclamation::speech_balloon: Gotcha
+If you want to build the images directly, rather than using Docker Compose, you must do so with the build context set to the root of the project, and point to the Dockerfile, e.g. run `docker build . -f /node/frontend/Dockerfile` from project root (the **microservices-demoapp** directory).
 
 # Docker Registry - ACR
 It is assumed that your images will be stored in Azure Container Registry (ACR) rather than a public repo (i.e. Dockerhub).  
@@ -19,7 +24,6 @@ The compose file is fairly simple, so even if you are unfamiliar with Docker Com
 - The compose file is setup to build and tag the images (see the `build` section)
 - The `env_file` parameter for each service is pointing to a `.env` config file. This file is exactly the same as the one discussed in the [main readme docs](/README.md#wrench-runtime-configuration--settings). This saves us declaring & passing lots of environmental variables (e.g. `API_KEY`, `COSMOS_ENDPOINT` & `COSMOS_KEY`) to the containers.  
 This setting is pointing to the `.env` file in each of the Node service sub-directories (node/data-api/ and node/frontend/) . ***By default these `.env` files will not exist*** so it suggested you create them by renaming and editing the `.env.sample` files provided
-
 
 ## Docker Compose - Building Images
 
@@ -40,12 +44,12 @@ Fully tagged images with registry prefix:
 - `myregistry.azurecr.io/smilr/frontend`
 
 
-## Docker Compose - Running Images
+## Docker Compose - Running Containers
 To run both both containers and configure them with the settings held in the `.env` files simply run:
 ```
 docker-compose up
 ```
-This will start the containers and you will see some of the console output as the services start. To run detached and not tie up your terminal, run with `docker-compose up -d`
+This will start both the containers and you will see some of the console output as the services start. To run detached and not tie up your terminal, run with `docker-compose up -d`
 
 You can then access the Smilr app UI at [`http://localhost:3000`](http://localhost:3000) and the API at [`http://localhost:4000/api`](http://localhost:4000/api)
 
@@ -55,9 +59,21 @@ If using the Cosmos DB emulator with the data-api running locally in a container
 ```
 & "C:\Program Files\Azure Cosmos DB Emulator\CosmosDB.Emulator.exe" /AllowNetworkAccess /Key={YOUR_KEY}
 ```
-The key needs to be a base64 encoded value of 64 bytes (characters). You can use https://www.base64encode.org/ to create a valid key, or simply re-use the pre-defined key. A [helper PowerShell script](../scripts/cosmosEmu) is provided to run the emulator with **AllowNetworkAccess** and the default key
+The key needs to be a base64 encoded value of 64 bytes (characters). You can use https://www.base64encode.org/ to create a valid key, or simply re-use the pre-defined key. A [helper PowerShell script](/scripts/cosmosEmu) is provided to run the emulator with **AllowNetworkAccess** and the default key
 
 The Cosmos endpoint you specify in the data-api container will no longer be localhost, you will need to use your real local IP, e.g. `COSMOS_ENDPOINT=https://192.168.0.53:8081`
 
+## Docker Compose - Push to ACR
+If you've tagged your images with an ACR prefix as described above, simply run
+```
+docker-compose push
+```
+This will push the latest images to the registry.
+
+---
+
 # Windows Containers
-Docker build files for creating Windows containers are also provided, with the filename `windows.Dockerfile` these are using the [Node on Windows base images from Stefan Scherer](https://hub.docker.com/r/stefanscherer/node-windows/). Currently the Dockerfile is set to use the `nanoserver-2016` tag however this can be changed to any of the *many* tags available for this image
+Docker build files for creating Windows containers are also provided, with the filename `windows.Dockerfile`.  
+These are using the [Node on Windows base images from Stefan Scherer](https://hub.docker.com/r/stefanscherer/node-windows/). Currently the Dockerfile is set to use the `nanoserver-2016` tag however this can be changed to any of the *many* tags available for this image (for example 1709)
+
+A Docker Compose file `docker-compose-windows.yml` has been created to build and run the Windows containers. The images will be tagged with a `:windows` tag. Add the `-f docker-compose-windows.yml` switch to the compose commands to point Docker Compose at the Windows version.

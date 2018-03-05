@@ -286,14 +286,16 @@ Check that the system works end to end by browsing to http://localhost:3000 and 
 
 ---
 
-# Deploying to Azure
-There are many ways to host and deploy Smilr in Azure, the primary ones being:
+# Deployment
+## Deploying as Containers
+Containers provide a perfect environment for running microservices, as such documentation and supporting files are provided to run Smilr in both Linux and Windows containers
+> **[:arrow_right: Full details on Containers & Docker](docs/containers.md)**
 
-## Docker & Kubernetes (AKS)
-[See the this section for full notes and guides on building the Docker images & running in Kubernetes via AKS](/kubernetes)
+## Kubernetes (AKS)
+> **[:arrow_right: Full details on running in Kubernetes](kubernetes/readme.md)**
 
 ## Azure Container Instance
-[See ARM templates for deploying ACI + Cosmos](/azure/templates/) and also [building Docker images](docs/docker.md)
+[See ARM templates for deploying ACI + Cosmos](/azure/templates/) and also [building Docker images](docs/containers.md)
 
 ## Azure App Service
 See [PowerShell script](etc/deploy-appsvc/) to build the front end service and deploy to Azure App Service. The backend service can also be deployed as a regular Node app to App Service.

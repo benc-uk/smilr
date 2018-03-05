@@ -3,18 +3,19 @@
 #
 FROM stefanscherer/node-windows:8.9.4-nanoserver-2016 as angularapp
 LABEL version="2.0.0" 
-ARG src="angular-src"
+ARG angular_root="angular"
 
 WORKDIR /build
 
-COPY package.json .
+COPY ${angular_root}/package.json .
 RUN npm install --silent
 
-COPY .angular-cli.json .
-COPY tsconfig.json .
-COPY ${src}/ ./${src}/
+COPY ${angular_root}/.angular-cli.json .
+COPY ${angular_root}/tsconfig.json .
+COPY ${angular_root}/src ./src
 
-RUN node node_modules/@angular/cli/bin/ng build --prod --build-optimizer=false
+# Run Angular CLI build & bundle in prod mode, and output to ./dist
+RUN node node_modules/@angular/cli/bin/ng build --prod
 
 ######################## PART 2 ##############################
 
@@ -23,7 +24,7 @@ RUN node node_modules/@angular/cli/bin/ng build --prod --build-optimizer=false
 #
 FROM stefanscherer/node-windows:8.9.4-nanoserver-2016
 LABEL version="2.0.0" 
-ARG basedir="service-frontend"
+ARG basedir="node/frontend"
 
 # Node.js setup for the frontend
 ENV NODE_ENV production
