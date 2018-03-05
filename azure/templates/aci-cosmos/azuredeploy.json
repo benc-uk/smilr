@@ -172,6 +172,10 @@
     "cosmosKey": {
       "value": "[listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey]",
       "type": "string"
-    }        
+    },
+    "initDbCommand": {
+      "value": "[concat('node initdb.js https://', variables('cosmosName'), '.documents.azure.com', ' ', listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey)]",
+      "type": "string"
+    }     
   }
 }

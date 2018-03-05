@@ -1,0 +1,176 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "frontendAppName": {
+      "type": "string",
+      "metadata": {
+        "description": "Web app site name for frontend, must be unique"
+      }
+    },
+    "apiAppName": {
+      "type": "string",
+      "metadata": {
+        "description": "Web app site name for data-api, must be unique"
+      }
+    },
+    "acrName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of ACR instance holding your images"
+      }
+    },
+    "acrPassword": {
+      "type": "string",
+      "metadata": {
+        "description": "Password for ACR"
+      }
+    },
+    "servicePlanSize": {
+      "type": "string",
+      "defaultValue": "B1",
+      "allowedValues": [
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3"
+      ]
+    }
+  },
+  "variables": {
+    "imageFrontend": "[concat(parameters('acrName'), '.azurecr.io/smilr/frontend')]",
+    "imageDataApi": "[concat(parameters('acrName'), '.azurecr.io/smilr/data-api')]",
+    "cosmosName": "[concat('cosmos-', uniqueString(resourceGroup().id))]",
+    "servicePlanName": "app-plan"
+  },
+  "resources": [
+    {
+      "name": "[variables('cosmosName')]",
+      "type": "Microsoft.DocumentDB/databaseAccounts",
+      "apiVersion": "2015-04-08",
+      "location": "[resourceGroup().location]",
+      "kind": "GlobalDocumentDB",
+      "properties": {
+        "databaseAccountOfferType": "Standard"
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "sku": {
+        "name": "[parameters('servicePlanSize')]",
+        "capacity": 1
+      },
+      "properties": {
+        "reserved": true
+      },
+      "kind": "linux",
+      "name": "[variables('servicePlanName')]",
+      "apiVersion": "2015-08-01",
+      "location": "[resourceGroup().location]"
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "kind": "app",
+      "name": "[parameters('frontendAppName')]",
+      "apiVersion": "2016-03-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "DOCKER_REGISTRY_SERVER_URL",
+              "value": "[concat('https://', parameters('acrName'), '.azurecr.io')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+              "value": "[parameters('acrName')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+              "value": "[parameters('acrPassword')]"
+            },
+            {
+              "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+              "value": "false"
+            },
+            {
+              "name": "API_ENDPOINT",
+              "value": "[concat('https://', parameters('apiAppName'), '.azurewebsites.net/api')]"
+            }
+          ],
+          "linuxFxVersion": "[concat('DOCKER|', variables('imageFrontend'))]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "kind": "app",
+      "name": "[parameters('apiAppName')]",
+      "apiVersion": "2016-03-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "DOCKER_REGISTRY_SERVER_URL",
+              "value": "[concat('https://', parameters('acrName'), '.azurecr.io')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+              "value": "[parameters('acrName')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+              "value": "[parameters('acrPassword')]"
+            },
+            {
+              "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+              "value": "false"
+            },
+            {
+              "name": "COSMOS_ENDPOINT",
+              "value": "[concat('https://', variables('cosmosName'), '.documents.azure.com')]"
+            },
+            {
+              "name": "COSMOS_KEY",
+              "value": "[listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey]"
+            }                        
+          ],
+          "linuxFxVersion": "[concat('DOCKER|', variables('imageDataApi'))]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "frontendURL": {
+      "value": "[concat('https://', parameters('frontendAppName'), '.azurewebsites.net/')]",
+      "type": "string"
+    },
+    "apiURL": {
+      "value": "[concat('https://', parameters('apiAppName'), '.azurewebsites.net/api')]",
+      "type": "string"
+    },
+    "cosmosEndpoint": {
+      "value": "[concat('https://', variables('cosmosName'), '.documents.azure.com')]",
+      "type": "string"
+    },
+    "cosmosKey": {
+      "value": "[listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey]",
+      "type": "string"
+    },
+    "initDbCommand": {
+      "value": "[concat('node initdb.js https://', variables('cosmosName'), '.documents.azure.com', ' ', listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey)]",
+      "type": "string"
+    }
+  }
+}
