@@ -23,6 +23,6 @@ Deploy the app using Azure Container Instances & Cosmos DB
 - `apiURL`: URL to access the API
 
 #### Quick Deploy
-[![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fmicroservices-demoapp%2Fmaster%2Fetc%2Fazure%2Ftemplates%2Faci-cosmos%2Fazuredeploy.json)  
+[![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fmicroservices-demoapp%2Fmaster%2Fazure%2Ftemplates%2Faci-cosmos%2Fazuredeploy.json)  
 
 
