@@ -59,7 +59,7 @@ async function initDb() {
 
 function createDbPromise() {
   return new Promise(function(resolve, reject) {
-    client.createDatabase(DBNAME, (err, res) => { if(err) reject(err); resolve(res) });
+    client.createDatabase({id: DBNAME}, (err, res) => { if(err) reject(err); resolve(res) });
   });
 }
 
