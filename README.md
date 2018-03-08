@@ -82,19 +82,20 @@ These will be each described in their own sections below.
 # Component 1 - Angular Front End UI 
 This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0. To build and run you will need Node.js installed (6.11 and 8.9 have been tested) and also NPM. To install the Angular CLI run `npm install @angular/cli -g`, v1.5.0 or higher will be needed. 
 
-### Development Server
+## Development Server
 First install packages from NPM by running `npm install`. Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 When running in non production (or dev) mode, InMemoryDbService is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
 
-### Build
+## Build
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. You should use the `--prod` flag for a production build.
 
-### API endpoint configuration
-***IMPORTANT!*** The API endpoint for the backend data service must be set, there are two ways this is done, depending on if you are running in non production (e.g. from `ng serve`) or in production mode:
+## API endpoint configuration
+:exclamation::speech_balloon: **Note.** The API endpoint for the backend data service must be set, there are two ways this is done, depending on if you are running in non production (e.g. from `ng serve`) or in production mode:
+
 - **Non production:** The API endpoint is set in [environment.ts](angular/src/environments/environment.ts), see comments in there for details. ***However in non-prod mode the value of this setting is always ignored*** as the InMemoryDbService intercepts all calls
 - **Production mode:** The API endpoint is fetched dynamically at runtime, from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular-src/app\/config.service.ts) which is loaded during app initialization. Note. The static config file [environment.prod.ts](angular/src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
 
-### UI Screenshot
+## UI Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/32730539-4b85e806-c87f-11e7-89a5-a12543314a34.png)
 
 ---
@@ -114,15 +115,15 @@ The service listens on port 3000 and requires a single environmental configurati
 |-------------|-------|
 |API_ENDPOINT|The URL endpoint of the data service API, e.g. `https://myapi.azurewebsites.net/api`|
 
-### Front end server - config API
-The frontend server presents a special API located at `/.config` this API responds to GET requests and will return values of environmental variables from the server as JSON. This is a workaround to a well known configuration limitation of all client side JS apps (such as Angular, React and others)
+## Front end server - config API
+The frontend server presents a special API located at `/.config` this API responds to GET requests and will return values of any environmental variable on the server as JSON. This is a workaround to a well known configuration limitation of all client side JS apps (such as Angular, React and others)
 
 The API takes a comma separated list of variable names, and returns them in a single JSON object e.g.
 **GET `/.config/HOSTNAME,FOO`** will result in `{"HOSTNAME":"hostblah", "FOO":"Value of foo"}`
 
 This config API is used only once and at startup by the Angular app's **ConfigService** to get the API endpoint from the API_ENDPOINT environment var. The ConfigService is injected in using Angular's APP_INITIALIZER token which suffers from non-existent documentation, however [this blog post](https://www.intertech.com/Blog/angular-4-tutorial-run-code-during-app-initialization/) is a good source of information. This approach allows dynamic configuration of the endpoint address without needing to re-build the Angular app
 
-### Running frontend service/server locally
+## Running frontend service/server locally
 If you want to run the front-end service locally, you can point the server at a directory containing the static content you want to serve, i.e. the bundled output of `ng build --prod`. To do this pass the directory as a parameter to the `server.js` e.g.
 ```
 node server.js C:\Dev\microservices-demoapp\angular\dist
@@ -135,7 +136,8 @@ This saves you copying the Angular dist content to same folder as the Node **ser
 This is held in [node/data-api](node/data-api) and is another Node.js Express app. It acts as the REST API endpoint for the Angular client app. This service is stateless
 
 The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` and currently are set up as follows:
-#### Events:
+
+**Events:**  
 - `GET /api/events` - Return a list of all events
 - `GET /api/events/filter/{active|future|past}` - Return list of events filtered to a given time frame
 - `GET /api/event/{id}` - Return just one event, by id
@@ -143,17 +145,17 @@ The API routes are held in `api_events.js`, `api_feedback.js`, `api_other.js` an
 - `PUT /api/events` - Update existing event (*secured admin API call*)
 - `DELETE /api/events/{id}` - Delete event (*secured admin API call*)
 
-#### Feedback:
+**Feedback:**  
 - `GET /api/feedback/{eventid}/{topicid}` - Return all feedback for given event and topic
 - `POST /api/feedback` - Submit feedback
 
-#### Other helper routes:
+**Other routes:**  
 - `GET /api/info` - Provide some information about the backend service, including hostname (good for debugging & checking loadbalancing)
 
-### Swagger / OpenAPI
+## Swagger / OpenAPI
 There is a [Swagger definition file for the API](node/data-api/swagger.json) and Swagger UI is also available, just use `/api-docs` as the URL, e.g.  **http://localhost:4000/api-docs/**
 
-### Admin Calls Security
+## Security
 The event PUT, POST and DELETE calls are considered sensitive, and are only called by the admin section of the Smilr app. Optionally these calls can be locked down to prevent people hitting the API directly. For demos it is suggested that the APIs are left open for ease of showing the API and the working app, however for a permanent or live instance it should be restricted.
 
 To switch on security for these three calls, set the `API_SECRET` environmental variable with a key you want to use, note the key can be any length but only contain the following characters: 
@@ -162,13 +164,12 @@ This key is used to generate Time-based One-time Passwords (TOTP), these passwor
 
 Once enabled the Angular client will need to know this key so it can generate the TOTP to send with any requests to the event PUT, POST and DELETE calls. This is done by setting it in **environment.prod.ts** in the `dataApiKey` field. 
 
-:exclamation::speech_balloon: **Note.** If `API_SECRET` is not set (which is the default), any value sent in the X-SECRET header is not validated and is just ignored, the header can also be omitted. Also the GET methods of the event API are always open and not subject to TOTP validation, likewise the feedback API is left open by design
+:exclamation::speech_balloon: **Note.** If `API_SECRET` is not set (which is the default), any value sent in the X-SECRET header is not validated and is simply ignored, the header can also be omitted. Also the GET methods of the event API are always open and not subject to TOTP validation, likewise the feedback API is left open by design
 
-
-### Data access
+## Data access
 All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess** in [lib/data-access.js](node/data-api/lib/data-access.js). All Cosmos DB specific code and logic is encapsulated here
 
-### Data API server - Config
+## Data API server - Config
 The server listens on port 4000 and requires two configuration environmental variables to be set. 
 
 |Variable Name|Purpose|
@@ -177,7 +178,7 @@ The server listens on port 4000 and requires two configuration environmental var
 |COSMOS_KEY|Master key for the Cosmos DB account|
 |API_SECRET|***Optional*** secret key used for admin calls to the event API (setting this turns security on, see [Admin Calls Security](#admin-calls-security) above for details)|
 
-### Running Data API service locally
+## Running Data API service locally
 Run `npm install` in the **data-api** folder, ensure the environment variables are set as described above, then run `npm start`
 
 ---
@@ -187,21 +188,21 @@ All data is held in a single Cosmos DB database called **smilrDb** and also in s
 
 The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. 
 
-### :exclamation::speech_balloon: Notes & Gotchas
+## :exclamation::speech_balloon: Notes & Gotchas
 - The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored, you never include doctype when POSTing entities to the API, it is added automatically by the data-api service before storing in Cosmos.
 - This may seem unorthodox with a mixture of different document types held in a single collection, but is a perfectly valid approach for a NoSQL database such as Cosmos DB.  
 - Do not confuse the `doctype` with the property `type` on events. The event `type` property is a textual description of the type of event, e.g. "Workshop", "Lab" or "Hack" and is used by the UI
 
-### Deploying Cosmos DB
+## Deploying Cosmos DB
 Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it
 ```
 az cosmosdb create --resource-group {res_group} --name changeme
 ```
 
-### Database Initialization 
+## Database Initialization 
 This has been removed from the API and is now done with the **initdb.js** helper script - [full documentation](scripts/initdb)
 
-### Data Model
+## Data Model
 There are two main models, one for holding an **Event** and one for submitted **Feedback**, there are also **Topics** which only exist as simple objects nested in Events. **Topics** as entities only exist logically client side, from the perspective of the API and database, there are only **Events** & **Feedback**, so events are always stored & retrieved with a simple serialized JSON array of topics within them
 
 ```ts
@@ -237,14 +238,14 @@ Feedback {
 
 There are two serverless components to Smilr, and both are optional
 
-### Data Enrichment - Sentiment Analysis
+## Data Enrichment - Sentiment Analysis
 This optional component enriches data as feedback is sumbitted. It takes any comment text in the feedback and runs it through Azure Text Analytics  Cognitive Services. The resulting sentiment score (normalized 0.0 ~ 1.0) is added to the feedback document in the database.
 
 The is implemented in Azure Functions, using the Cosmos DB change trigger, so that when new items are added to the DB, the function runs and processes them. The Function has an output binding back to Cosmos DB to update the document. The Function is written in C#
 
 Further notes are [included with the code here](azure/functions/sentimentFunction)
 
-### Data API Serverless Version
+## Data API Serverless Version
 The data-api service has been re-implemented in a serverless model, this is also using Azure Functions. This component is optional as functionally it is identical to the "normal" non-serverless version of the service. It has been created as a small proof of concept around the idea of using serverless design in a RESTful microservices app, such as Smilr.
 
 The complete API of data-api service has not been replicated, rather a minimum subset has been implemented, in order to get the front end functional and users can submit feedback. The admin part of the API and front end has been omitted.
@@ -253,7 +254,7 @@ Azure Functions and Azure Functions Proxies are used to reproduce the same REST 
 
 The exact same [data access library](node/data-api/lib/data-access.js) used by the Node service is used by the Functions version, meaning 100% code reuse without any change.
 
-#### Deploying Serverless Data API
+## Deploying Serverless Data API
 You can deploy the serverless data-api into any Functions App, simply copy the whole of the [azure-functions](azure/functions/) to the App Service, into `wwwroot`
 
 ![](https://user-images.githubusercontent.com/14982936/36417631-5e5c4cca-1624-11e8-9e22-65e7ff2e31bd.png)
@@ -268,17 +269,17 @@ The [proxies.json](azure/functions/proxies.json) file will need to be modified a
 
 If you are deploying Smilr for the first time, and still getting your head around the various moving pieces, you may want to deploy it initially locally on your desktop machine and set up each of the tiers and make sure they are working correctly, and debug locally if you hit issues.
 
-### Run the Cosmos DB emulator 
+## Run the Cosmos DB emulator 
 
 There is a Cosmos DB local emulator available for Windows - see  https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator for details of how to set it up. Use the Data Explorer to ensure the emulator is up and running.
 
-### Run the Backend Data API Service
+## Run the Backend Data API Service
 
 The CosmosDB emulator listens on https://localhost:8081 and uses a predefined security key "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" that you will need to assign to COSMOS_ENDPOINT and COSMOS_KEY before running the data service API.
 
 Initialize the database using the **initdb.js** helper script - [full documentation](scripts/initdb)
 
-### Run the Front End Service
+## Run the Front End Service
 
 Remember that you need to build a production version of the service, otherwise the Angular app defaults to the in-memory version and the back end version won't be called.
 Don't forget to set API_ENDPOINT to the URL endpoint of the data service API, http://localhost:4000/api.
@@ -286,7 +287,7 @@ Check that the system works end to end by browsing to http://localhost:3000 and 
 
 ---
 
-# Deployment
+# Deployment in Azure
 ## Deploying as Containers
 Containers provide a perfect environment for running microservices, as such documentation and supporting files are provided to run Smilr in both Linux and Windows containers
 > **[:arrow_right: Full details on Containers & Docker](docs/containers.md)**
@@ -302,7 +303,7 @@ Provided [PowerShell script](/azure/appservice/) will build the front end servic
 
 The backend service can also be deployed as a regular Node app to App Service, just deploy the **node/data-api** folder using [Kudu zipdeploy](https://github.com/projectkudu/kudu/wiki/Deploying-from-a-zip-file) or other means (FTP, Git etc). If using zipdeploy you can omit the **node_modules** directory as the `.deployment` file instructs Kudu to run npm install after deployment.
 
-#### :exclamation::speech_balloon: Note.
+:exclamation::speech_balloon: **Note.**  
 Remember to set the required configuration environmental vars on the deployed web apps, this can be done with regular [App Service App Settings](https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#app-settings)
 
 ## Service Fabric
