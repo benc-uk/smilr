@@ -1,5 +1,5 @@
 /* The side navigation menu */
-.sidenav {
+div {
    height: 100%; /* 100% Full-height */
    width: 0; /* 0 width - change this with JavaScript */
    position: fixed; /* Stay in place */
@@ -14,7 +14,7 @@
 }
 
 /* The navigation menu links */
-.sidenav a {
+div a {
    padding: 8px 8px 8px 32px;
    text-decoration: none;
    font-size: 25px;
@@ -24,15 +24,23 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidenav a:hover, .offcanvas a:focus{
+div a:hover, .offcanvas a:focus{
    color: #444444;
 }
 
 /* Position and style the close button (top right corner) */
-.sidenav .closebtn {
+.closebtn {
    position: absolute;
    top: 0;
    right: 25px;
    font-size: 36px;
    margin-left: 50px;
+}
+
+.open {
+  width: 50%;
+}
+
+.closed {
+  width: 0%;
 }
