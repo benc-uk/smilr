@@ -4,15 +4,7 @@
     <div class="container-fluid">
 
       <!-- sidebar only show when toggled/opened -->
-      <div id="mobileNav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-        <a [routerLink]="['/events']" (click)="closeNav()"><i class="fa fa-book"></i> Events</a>
-        <a *ngIf="!env.secured || userService.isLoggedIn()" [routerLink]="['/admin/report']" (click)="closeNav()"><i class="fa fa-bar-chart"></i> Reports</a>
-        <a *ngIf="!env.secured || userService.isLoggedIn()" [routerLink]="['/admin/events']" (click)="closeNav()"><i class="fa fa-wrench"></i> Admin</a>
-        <a *ngIf="!env.secured || userService.isLoggedIn()" href='/.auth/logout/aad' (click)="closeNav()"><i class="fa fa-user-circle"></i> Logout</a>
-        <a *ngIf="env.secured && !userService.isLoggedIn()" href='/.auth/login/aad?post_login_redirect_uri=/logincomplete'><i class="fa fa-user"></i> Login</a>
-        <a (click)="closeNav(); aboutDialog.show()"><i class="fa fa-info-circle"></i> About</a>
-      </div>
+      <side-nav #sideNav [env]="env" [userService]="userService" [aboutDialog]="aboutDialog"></side-nav>
 
       <!-- logo -->
       <a class="navbar-brand" [routerLink]="['/home']"><img src='/assets/img/logo-white.svg' class="navlogo"> <span class="navlogotext">Smilr</span> </a>
@@ -47,7 +39,7 @@
 
       <!-- toggle sidenav menu button (only shown on mobile) -->
       <div class="nav navbar-nav pull-right visible-xs" >
-        <button type="button" class="btn btn-primary menubars" (click)="toggleNav()">
+        <button type="button" class="btn btn-primary menubars" (click)="sideNav.toggle()">
           <i class="fa fa-bars"></i>
         </button>
         &nbsp;

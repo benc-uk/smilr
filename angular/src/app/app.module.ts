@@ -8,6 +8,7 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 
 // My components & services
 import { AppComponent } from './app.component';
+import { SideNavComponent } from './side-nav.component';
 import { HomeComponent } from './home.component';
 import { EventHistoryComponent } from './event-history.component';
 import { EventListComponent } from './event-list.component';
@@ -30,6 +31,7 @@ import { AppSvcLogin } from './admin/app-svc-login.component';
   declarations: [
     FaceDirective,
     AppComponent,
+    SideNavComponent,
     HomeComponent,
     EventListComponent,
     EventHistoryComponent,
