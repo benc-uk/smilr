@@ -15,19 +15,19 @@ routes
   
   switch(time) {
     case 'active': 
-      dataAccess.queryEvents(`event["start"] <= '${today}' AND event["end"] >= '${today}'`) 
-        .then(d => res.send(d))
-        .catch(e => sendError(res, e));
+      res.app.get('data').queryEvents({$and: [{start: {$lte: today}}, {end: {$gte: today}}]})
+        .then(data => sendData(res, data))
+        .catch(err => sendError(res, err));
       break;
     case 'future': 
-      dataAccess.queryEvents(`event["start"] > '${today}'`) 
-        .then(d => res.send(d))
-        .catch(e => sendError(res, e));
+      res.app.get('data').queryEvents({start: {$gt: today}})
+        .then(data => sendData(res, data))
+        .catch(err => sendError(res, err));
       break;
     case 'past': 
-      dataAccess.queryEvents(`event["end"] < '${today}'`) 
-        .then(d => res.send(d))
-        .catch(e => sendError(res, e));
+      res.app.get('data').queryEvents({end: {$lt: today}})
+        .then(data => sendData(res, data))
+        .catch(err => sendError(res, err));
       break;
     default:
       // If time not valid
@@ -39,8 +39,11 @@ routes
   res.type('application/json');
   res.app.get('data').queryEvents({})
     .then(data => {
-      if(!data) res.sendStatus(404);
-      else sendData(res, data)
+      if(!data) sendData(res, [])
+      else {
+        let unMongoData = data.map(e => {e.id = e._id; delete(e._id); return e});
+        sendData(res, unMongoData)
+      }
     })
     .catch(err => { res.status(500).send(err)})
 })
@@ -91,7 +94,7 @@ routes
 
   res.type('application/json');
   res.app.get('data').deleteEvent(req.params.id)
-    .then(data => sendData(res, event))
+    .then(data => sendData(res, {msg:`Deleted doc ${req.params.id} ok`}))
     .catch(err => sendError(res, err));
 })
 
