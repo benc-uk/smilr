@@ -9,4 +9,8 @@
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-rc1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GrainModels\GrainModels.csproj" />
+  </ItemGroup>
+
 </Project>

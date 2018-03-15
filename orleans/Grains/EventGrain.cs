@@ -1,4 +1,4 @@
-﻿using GrainInterfaces;
+using GrainInterfaces;
 using GrainModels;
 using Orleans;
 using System;
@@ -6,39 +6,27 @@ using System.Threading.Tasks;
 
 namespace Grains
 {
-    public class EventGrainState
-    {
-        public string title { get; set; }
-        public string type { get; set; }
-        public string start { get; set; }
-        public string end { get; set; }
-        public Topic[] topics { get; set; }
-    }
+  
+  // main event grain
 
-    public class TopicGrainState
-    {
-        public string id { get; set; }
-        public string desc { get; set; }        
-    }
-
-
-    public class FeedbackGrainState
-    {
-        public string rating { get; set; }
-        public string comment { get; set; }        
-    }
-
-
-  // we will us auto persist for event grains
-  [Orleans.Providers.StorageProvider(ProviderName = "grain-store")]
-  public class EventGrain : Grain<GrainModels.Event>, IEventGrain
+  [Orleans.Providers.StorageProvider(ProviderName = "grain-store")]  // we will us auto persist for event grains
+  public class EventGrain : Grain<EventGrainState>, IEventGrain
   {
-    public async Task Launch(string title, string type, string start, string end)
+
+
+    // create / update an event
+    //  the system doesn't really distinguish between the two, just to keep the logic simple
+    //  scenarios include chnaging the start or endd date, changing the list of topics for that event, etc
+
+    public async Task Update(string title, string type, string start, string end, TopicAPI[] topics)
     {
+        // store state
         State.title = title;
         State.type = type;
         State.start = start;
         State.end = end;
+        State.topics = topics;
+
           
         return; 
     }

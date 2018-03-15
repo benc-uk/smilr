@@ -4,18 +4,19 @@
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\"/>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5"/>
-    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-rc1"/>
-    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="2.0.0-rc1"/>
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-rc1"/>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-rc1" />
+    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="2.0.0-rc1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-rc1" />
   </ItemGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2"/>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GrainInterfaces\GrainInterfaces.csproj"/>
+    <ProjectReference Include="..\GrainInterfaces\GrainInterfaces.csproj" />
+    <ProjectReference Include="..\GrainModels\GrainModels.csproj" />
   </ItemGroup>
 </Project>

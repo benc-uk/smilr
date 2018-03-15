@@ -1,4 +1,5 @@
-﻿using Orleans;
+using GrainModels;
+using Orleans;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace GrainInterfaces
 {
+
+  // event grain interface
     public interface IEventGrain : IGrainWithStringKey
     {
-        Task Launch(string title, string type, string start, string end);
+        // initialise a grain with the info needed to set up an actual event
+        Task Update(string title, string type, string start, string end, TopicAPI[] topics);
 
     }
 }
