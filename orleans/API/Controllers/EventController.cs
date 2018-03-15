@@ -6,27 +6,82 @@ using GrainInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Orleans;
 using Microsoft.Extensions.Logging;
+using GrainModels;
+
 
 namespace API.Controllers
 {
+
+  // this is API that handles all calls to grains 
+
+
   [Route("api/[controller]")]
   public class EventsController : Controller
   {
     private IClusterClient client;
     private readonly ILogger logger;
 
-    public EventsController(IClusterClient client, ILogger<ValuesController> logger)
+
+    public EventsController(IClusterClient client, ILogger<EventsController> logger)
     {
       this.client = client;
       this.logger = logger;
     }
 
-    // GET api/events - Return all events. Ummm somehow...
+
+    // Create new event
+    [HttpPost("")]
+    public async Task Post([FromBody] EventAPI body)  // dynamic ??
+    {
+      logger.LogInformation($"POST incoming body = {body}");
+
+      // create new event code, which we tend to keep short to be more memorable
+      string eventCode = makeId(6);
+      logger.LogInformation($"POST event code created = {eventCode}");
+
+      // initialise grain with event info
+      await ConnectClientIfNeeded();
+      var grain = this.client.GetGrain<IEventGrain>(eventCode);
+      await grain.Update(body.title, body.type, body.start, body.end, body.topics);
+
+      return;
+    }
+
+
+
+
+    // GET api/events - 
     [HttpGet]
     public IEnumerable<string> Get()
     {
       logger.LogInformation("GET ALL");
       return new string[] { "value1", "value2" };
+    }
+
+
+
+    // Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
+    private string makeId(int len)
+    {
+      var text = "";
+      Random rand = new Random();
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+      for (var i = 0; i < len; i++)
+        text += possible[rand.Next(0, possible.Length - 1)];
+
+      return text;
+    }
+
+
+    // Orleans helper function 
+    private async Task ConnectClientIfNeeded()
+    {
+      if (!this.client.IsInitialized)
+      {
+        await Task.Delay(TimeSpan.FromSeconds(5));
+        await this.client.Connect();
+      }
     }
   }
 }
