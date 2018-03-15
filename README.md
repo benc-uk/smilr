@@ -20,7 +20,7 @@ This application supports a range of demonstration, and learning scenarios, such
  - A working example of microservices design
  - Use of containers, Docker & Kubernetes
  - No-SQL and document stores over traditional relational databases
- - CQRS (Command & Query Responsibility Segregation) to seprate read and write stores 
+ - CQRS (Command & Query Responsibility Segregation) as a possible pattern to separate read and write actions and stores 
  - Development and deployment challenges of single page applications 
  - Platform services for application hosting
  - Using serverless technology to support or provide services
