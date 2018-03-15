@@ -66,7 +66,7 @@ There are numerous ways to set & override environmental variables; in the operat
 
 
 # :star: Architecture & Core App Components
-![arch]https://user-images.githubusercontent.com/14982936/32730129-fb8583b2-c87d-11e7-94c4-547bfcbfca6b.png)
+![arch](https://user-images.githubusercontent.com/14982936/32730129-fb8583b2-c87d-11e7-94c4-547bfcbfca6b.png)
 
 The main app components are:
 1) [Angular front end UI](#component-1---angular-front-end-ui)
