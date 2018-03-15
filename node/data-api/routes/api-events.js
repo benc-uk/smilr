@@ -35,9 +35,7 @@ routes
 .get('/api/events', function (req, res, next) {
   res.type('application/json');
   res.app.get('data').queryEvents({})
-    .then(data => {
-      console.log(data);
-      
+    .then(data => {   
       if(!data) utils.sendData(res, [])
       else utils.sendData(res, data)
     })
