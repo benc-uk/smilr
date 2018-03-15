@@ -13,8 +13,6 @@ namespace API.Controllers
 {
 
   // this is API that handles all calls to grains 
-
-
   [Route("api/[controller]")]
   public class EventsController : Controller
   {
@@ -30,10 +28,11 @@ namespace API.Controllers
 
 
     // Create new event
+    // POST /api/events
     [HttpPost("")]
-    public async Task Post([FromBody] EventAPI body)  // dynamic ??
+    public async Task<EventAPI> Post([FromBody] EventAPI body)  
     {
-      logger.LogInformation($"POST incoming body = {body}");
+      logger.LogInformation($"POST /api/events: incoming body = {body}");
 
       // create new event code, which we tend to keep short to be more memorable
       string eventCode = makeId(6);
@@ -44,19 +43,29 @@ namespace API.Controllers
       var grain = this.client.GetGrain<IEventGrain>(eventCode);
       await grain.Update(body.title, body.type, body.start, body.end, body.topics);
 
-      return;
+      // return body with event code added
+      body.id = eventCode;
+      return body;
     }
 
 
-
-
-    // GET api/events - 
-    [HttpGet]
-    public IEnumerable<string> Get()
+    // Get specific event info
+    // GET api/events/{id}
+    [HttpGet("{id}")]
+    public async Task<EventAPI> Get(string id)
     {
-      logger.LogInformation("GET ALL");
-      return new string[] { "value1", "value2" };
+      logger.LogInformation($"GET api/events/id: id = {id}");
+
+      // call grain
+      EventAPI info = new EventAPI();
+      await ConnectClientIfNeeded();
+      var grain = this.client.GetGrain<IEventGrain>(id);
+      info = await grain.Info();
+
+      return info;
     }
+
+
 
 
 
