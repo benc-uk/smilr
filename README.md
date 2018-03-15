@@ -20,11 +20,13 @@ This application supports a range of demonstration, and learning scenarios, such
  - A working example of microservices design
  - Use of containers, Docker & Kubernetes
  - No-SQL and document stores over traditional relational databases
+ - CQRS (Command & Query Responsibility Segregation) to seprate read and write stores 
  - Development and deployment challenges of single page applications 
  - Platform services for application hosting
  - Using serverless technology to support or provide services
  - Use of an open source application stack such as Angular and Node.js
  - RESTful API design 
+ - The Actor model as an alternative to a traditonal data model
 
 ---
 
@@ -56,7 +58,7 @@ If you are looking to build & work with the Smilr app locally, either as a learn
 
 - [Node.js](https://nodejs.org/en/download/) installed, if using Windows then [installing Node under WSL is also an option](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
 - [Docker CE](https://store.docker.com/search?offering=community&type=edition). Required if building the Docker images to run locally, or in Azure or Kubernetes. Note. A remote Docker host can be set-up & used (e.g. via Docker Machine) rather that installing Docker locally. The process of setting this up are outside the scope of this readme
-- [VS Code](https://code.visualstudio.com/) This project has been developed entirely using VS Code. However you can use any editor/IDE you wish, but VS Code is highly recommended. Various task & debug configurations for VS Code are provided.
+- [VS Code](https://code.visualstudio.com/) This project has been developed almost entirely using VS Code. The one area where Visual Studio was used was for some of the C# work, for its templates and the new Docker container support. However you can use any editor/IDE you wish, but VS Code is highly recommended. Various task & debug configurations for VS Code are provided.
 
 
 # :wrench: Runtime Configuration & Settings
