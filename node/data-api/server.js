@@ -29,7 +29,6 @@ if (app.get('env') === 'production') {
 }
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
-process.env.MONGO_URL = "mongodb://smilr-mongo:kCZKUM9cDlRcP2I1YeJpkPJg59JXPV1YCoBISjO8KhorrpbuCJAjHhg5gzqeHL1qMtczBFcVgdqOHj9n3TTpMQ%3D%3D@smilr-mongo.documents.azure.com:10255/?ssl=true&replicaSet=globaldb";
 // We need this set or it's impossible to continue!
 if(!process.env.MONGO_URL) {
   console.error("### !ERROR! Missing env variable MONGO_URL. Exiting!");
