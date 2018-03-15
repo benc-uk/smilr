@@ -1,4 +1,5 @@
 require('dotenv').config()
+const utils = require('./utils');
 
 class DataAccess {
 
@@ -52,8 +53,7 @@ class DataAccess {
       return this.db.collection(this.EVENT_COLLECTION).updateOne({_id:event._id}, {$set:event});
     } else {
       // Create a random short-code style id for new events, 
-      event._id = this.makeId(5);
-      event.doctype = this.EVENT_PKEY;
+      event._id = utils.makeId(5);
       return this.db.collection(this.EVENT_COLLECTION).insertOne(event);
     }
   }
@@ -63,38 +63,12 @@ class DataAccess {
   //
 
   listFeedbackForEventTopic(eventid, topicid) {
-    return new Promise((resolve, reject) => {
-      let q = `SELECT * FROM d WHERE d.doctype='${this.FEEDBACK_PKEY}' AND d.event = '${eventid}' AND d.topic = ${topicid}`;
-      this.client.queryDocuments(this.collectionUrl, q).toArray((err, res) => {
-        if (err) { reject(err) }
-        else { resolve(res) };
-      });
-    });
+    return this.db.collection(this.FEEDBACK_COLLECTION).find({$and: [{event: eventid}, {topic: topicid}]}).toArray();
   }
 
   createFeedback(feedback) {
-    // Just discovered that Cosmos does this for us! Creates a GUID
-    //feedback.id = this.makeId(6);
-    feedback.doctype = this.FEEDBACK_PKEY;
-    return new Promise((resolve, reject) => {
-      this.client.createDocument(this.collectionUrl, feedback, (err, res) => {
-        if (err) reject(err)
-        else resolve(res);
-      });
-    });
+    return this.db.collection(this.FEEDBACK_COLLECTION).insertOne(feedback)
   }
-
-  // Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
-  makeId(len) {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (var i = 0; i < len; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-  }
-
 }
 
 // Create a singleton instance which is exported NOT the class 
