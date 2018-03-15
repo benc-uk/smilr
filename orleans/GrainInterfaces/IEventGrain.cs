@@ -14,5 +14,8 @@ namespace GrainInterfaces
         // initialise a grain with the info needed to set up an actual event
         Task Update(string title, string type, string start, string end, TopicAPI[] topics);
 
+        // return event info 
+        Task<EventAPI> Info();
+
     }
 }
