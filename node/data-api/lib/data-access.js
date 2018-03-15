@@ -44,14 +44,7 @@ class DataAccess {
   }
 
   deleteEvent(id) {
-    let docUrl = `${this.collectionUrl}/docs/${id}` 
-    return new Promise((resolve, reject) => {
-      // The partitionKey part is poorly documented required magic
-      this.client.deleteDocument(docUrl, { partitionKey: this.EVENT_PKEY }, (err, res) => {
-        if (err) { reject(err) }
-        else { resolve({msg:`Deleted doc ${id} ok`}) };
-      });
-    });
+    return this.db.collection(this.EVENT_COLLECTION).deleteOne({_id:id})
   }
 
   createOrUpdateEvent(event) {
