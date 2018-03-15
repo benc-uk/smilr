@@ -37,18 +37,22 @@ routes
 
 .get('/api/events', function (req, res, next) {
   res.type('application/json');
-  dataAccess.queryEvents('true')
-    // Return a single entity
-    .then(d => res.send(d)) 
-    .catch(e => sendError(res, e));
+  res.app.get('data').queryEvents({})
+    .then(data => {
+      if(!data) res.sendStatus(404);
+      else res.send(data);
+    })
+    .catch(err => { res.status(500).send(err)})
 })
 
 .get('/api/events/:id', function (req, res, next) {
   res.type('application/json');
-  dataAccess.getEvent(req.params.id)
-    // Return a single entity
-    .then(d => res.send(d)) 
-    .catch(e => sendError(res, e));
+  res.app.get('data').getEvent(req.params.id)
+    .then(data => {
+      if(!data) res.sendStatus(404);
+      else res.send(data);
+    })
+    .catch(err => { res.status(500).send(err)})
 })
 
 .post('/api/events', function (req, res, next) {

@@ -5,19 +5,30 @@ class DataAccess {
   constructor() {
     // Unlikely you'll ever want to change these
     this.DBNAME = 'smilrDb';
-    this.COLLNAME = 'alldata';
-    this.EVENT_PKEY = 'event';
-    this.FEEDBACK_PKEY = 'feedback'; 
+    //this.COLLNAME = 'alldata';
+    this.EVENT_COLLECTION = 'events';
+    this.FEEDBACK_COLLECTION= 'feedback'; 
+    this.MongoClient = require('mongodb').MongoClient;
+  }
 
-    // Load Cosmos config from env vars / app settings
-    this.cosmosEndpoint = process.env.COSMOS_ENDPOINT;
-    let cosmosKey = process.env.COSMOS_KEY;
-
-    // Connect to Azure Cosmos DB
-    const documentClient = require("documentdb").DocumentClient;
-    console.log('### Will use Cosmos DB instance:', this.cosmosEndpoint);
-    this.client = new documentClient(this.cosmosEndpoint, { "masterKey": cosmosKey });
-    this.collectionUrl = `dbs/${this.DBNAME}/colls/${this.COLLNAME}`;
+  // Only called once
+  async connectMongo() {
+    let err
+    if(!this.db) {
+      await this.MongoClient.connect(process.env.MONGO_URL)
+      .then(client => {
+        this.client = client;
+        this.db = client.db(this.DBNAME)
+      })
+      .catch(e => {
+        err = e
+      });
+    }
+    
+    return new Promise((resolve, reject) => {
+      if(this.db) { resolve(this.db) }
+      else { reject(err) }
+    });
   }
 
   //
@@ -25,24 +36,11 @@ class DataAccess {
   //
 
   queryEvents(query) {
-    return new Promise((resolve, reject) => {
-      let q = `SELECT * FROM event WHERE event.doctype='${this.EVENT_PKEY}' AND ${query}`;
-      this.client.queryDocuments(this.collectionUrl, q).toArray((err, res) => {
-        if (err) { reject(err) }
-        else { resolve(res) };
-      });
-    });
+    return this.db.collection(this.EVENT_COLLECTION).find(query).toArray();
   }
 
   getEvent(id) {
-    let docUrl = `${this.collectionUrl}/docs/${id}` 
-    return new Promise((resolve, reject) => {
-      // The partitionKey part is poorly documented required magic
-      this.client.readDocument(docUrl, { partitionKey: this.EVENT_PKEY }, (err, res) => {
-        if (err) { reject(err) }
-        else { resolve(res) };
-      });
-    });
+    return this.db.collection(this.EVENT_COLLECTION).findOne({_id:id})
   }
 
   deleteEvent(id) {
@@ -57,24 +55,13 @@ class DataAccess {
   }
 
   createOrUpdateEvent(event) {
-    if (event.id) {
-      return new Promise((resolve, reject) => {
-        let docUrl = `${this.collectionUrl}/docs/${event.id}` 
-        this.client.replaceDocument(docUrl, event, (err, res) => {
-          if (err) reject(err)
-          else resolve(res);
-        });
-      });
+    if (event._id) {
+      return this.db.collection(this.EVENT_COLLECTION).updateOne({_id:event._id}, {$set:event});
     } else {
       // Create a random short-code style id for new events, 
-      event.id = this.makeId(5);
+      event._id = this.makeId(5);
       event.doctype = this.EVENT_PKEY;
-      return new Promise((resolve, reject) => {
-        this.client.createDocument(this.collectionUrl, event, (err, res) => {
-          if (err) reject(err)
-          else resolve(res);
-        });
-      });
+      return this.db.collection(this.EVENT_COLLECTION).insertOne(event);
     }
   }
 
@@ -115,11 +102,8 @@ class DataAccess {
     return text;
   }
 
-  getCosmosInfo() {
-    return this.cosmosEndpoint+'/'+this.collectionUrl;
-  }
 }
 
 // Create a singleton instance which is exported NOT the class 
 const self = new DataAccess();
-module.exports = self;
+module.exports = self; //DataAccess;

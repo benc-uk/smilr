@@ -9,6 +9,7 @@ const fs = require('fs');
 routes
 .get('/api/info', function (req, res, next) {
   res.type('application/json');
+  
   var info = { 
     hostname: os.hostname(), 
     container: fs.existsSync('/.dockerenv'), 
@@ -19,6 +20,8 @@ routes
     cpuCount: os.cpus().length, 
     memory: Math.round(os.totalmem() / 1048576),
     nodeVer: process.version,
+    mongoServer: req.app.get('data').client.s.options.servers,
+    mongoConnected: req.app.get('data').client.isConnected()
   }  
   res.send(info);
 })
