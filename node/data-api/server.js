@@ -7,6 +7,9 @@ const app = express();
 const bodyParser = require('body-parser')
 const cors = require('cors');
 
+// Our dataAccess library
+var dataAccess = require('./lib/data-access');
+
 // Allow all CORS
 app.use(cors());
 
@@ -26,12 +29,10 @@ if (app.get('env') === 'production') {
 }
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
-// To work with the Cosmos DB emulator, and self signed certs
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-// We need these set or it's impossible to continue!
-if(!process.env.COSMOS_ENDPOINT || !process.env.COSMOS_KEY) {
-  console.error("### !ERROR! Missing env variables `COSMOS_ENDPOINT` or `COSMOS_KEY`. Exiting!");
+process.env.MONGO_URL = "mongodb://smilr-mongo:kCZKUM9cDlRcP2I1YeJpkPJg59JXPV1YCoBISjO8KhorrpbuCJAjHhg5gzqeHL1qMtczBFcVgdqOHj9n3TTpMQ%3D%3D@smilr-mongo.documents.azure.com:10255/?ssl=true&replicaSet=globaldb";
+// We need this set or it's impossible to continue!
+if(!process.env.MONGO_URL) {
+  console.error("### !ERROR! Missing env variable MONGO_URL. Exiting!");
   process.exit(1)
 }
 
@@ -43,9 +44,22 @@ app.use('/', apiEvents);
 app.use('/', apiFeedback);
 app.use('/', apiOther);
 
-// Start the server
+// Default port
 var port = process.env.PORT || 4000;
-var server = app.listen(port, function () {
-   var port = server.address().port;
-   console.log(`### Server listening on ${server.address().port}`);
-});
+
+// Connect to Mongo 
+dataAccess.connectMongo()
+.then(() => {
+  // This is important, pass our connected dataAccess 
+  app.set('data', dataAccess);
+
+  var server = app.listen(port, function () {
+    var port = server.address().port;
+    console.log(`### Server listening on ${server.address().port}`);
+  });
+})
+.catch(err => {
+  console.error(`### ERROR! Unable to connect to MongoDB!, URL=${process.env.MONGO_URL}`);
+  console.error(err.message);
+  process.exit(-1);
+})
