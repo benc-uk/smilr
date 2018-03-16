@@ -8,7 +8,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "documentdb": "^1.14.1",
+    "mongodb": "^3.0.4",
     "dotenv": "^4.0.0"
   }
 }
