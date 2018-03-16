@@ -30,8 +30,8 @@ if (app.get('env') === 'production') {
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
 // We need this set or it's impossible to continue!
-if(!process.env.MONGO_URL) {
-  console.error("### !ERROR! Missing env variable MONGO_URL. Exiting!");
+if(!process.env.MONGO_CONNSTR) {
+  console.error("### !ERROR! Missing env variable MONGO_CONNSTR. Exiting!");
   process.exit(1)
 }
 
@@ -47,7 +47,7 @@ app.use('/', apiOther);
 var port = process.env.PORT || 4000;
 
 // Connect to Mongo 
-dataAccess.connectMongo()
+dataAccess.connectMongo(process.env.MONGO_CONNSTR)
 .then(() => {
   // This is important, pass our connected dataAccess 
   app.set('data', dataAccess);
@@ -58,7 +58,7 @@ dataAccess.connectMongo()
   });
 })
 .catch(err => {
-  console.error(`### ERROR! Unable to connect to MongoDB!, URL=${process.env.MONGO_URL}`);
+  console.error(`### ERROR! Unable to connect to MongoDB!, URL=${process.env.MONGO_CONNSTR}`);
   console.error(err.message);
   process.exit(-1);
 })

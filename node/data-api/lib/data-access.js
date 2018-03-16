@@ -6,17 +6,16 @@ class DataAccess {
   constructor() {
     // Unlikely you'll ever want to change these
     this.DBNAME = 'smilrDb';
-    //this.COLLNAME = 'alldata';
     this.EVENT_COLLECTION = 'events';
     this.FEEDBACK_COLLECTION= 'feedback'; 
     this.MongoClient = require('mongodb').MongoClient;
   }
 
   // Only called once
-  async connectMongo() {
+  async connectMongo(connectionString) {
     let err
     if(!this.db) {
-      await this.MongoClient.connect(process.env.MONGO_URL)
+      await this.MongoClient.connect(connectionString)
       .then(client => {
         this.client = client;
         this.db = client.db(this.DBNAME)

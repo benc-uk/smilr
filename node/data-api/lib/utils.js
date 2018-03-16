@@ -11,10 +11,12 @@ class Utils {
   }
 
   //
-  // This sends data back un-Mongo-fied
+  // This sends data back in JSON un-Mongo-fied
   //
   sendData(res, data) {
     // This lets us pretend we're not using Mongo
+    // It simply swaps the '_id' field for 'id' in all data returned
+    // This way we don't need to change the front-end, which is expecting 'id'
     if(Array.isArray(data)) {
       let unMongoData = data.map(d => {d.id = d._id; delete(d._id); return d});
       res.status(200).send(unMongoData)

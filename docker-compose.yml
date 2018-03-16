@@ -2,6 +2,15 @@ version: '3'
 
 services:
 
+  frontend:
+    image: ${DOCKER_REG}smilr/frontend
+    build: 
+      context: .
+      dockerfile: node/frontend/Dockerfile
+    ports: 
+      - "3000:3000"
+    env_file: node/frontend/.env
+
   data-api:
     image: ${DOCKER_REG}smilr/data-api
     build: 
@@ -11,11 +20,7 @@ services:
       - "4000:4000"
     env_file: node/data-api/.env
 
-  frontend:
-    image: ${DOCKER_REG}smilr/frontend
-    build: 
-      context: .
-      dockerfile: node/frontend/Dockerfile
+  mongodb:
+    image: mongo
     ports: 
-      - "3000:3000"
-    env_file: node/frontend/.env
+      - "27017:27017"
