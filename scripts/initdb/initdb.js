@@ -1,4 +1,4 @@
-#!/bin/node
+#!/usr/bin/node
 require('dotenv').config()
 console.log(`### DB init script starting...`);
 
@@ -26,7 +26,7 @@ initDb()
   console.log(`### Done! Exiting`);
   process.exit(0);
 })
-.catch(err => { console.log(`### Bad thing ${err.body}`); });
+.catch(err => { console.log(`### Bad thing ${err}`); });
 
 //
 // Worker function
@@ -49,7 +49,7 @@ async function initDb() {
   let feedbackData = seedData.feedback;  
   for(let event of eventData) {        
     var e = await dataAccess.createOrUpdateEvent(event);
-    console.log(`### Created event ${e.result.upserted[0]._id}`);
+    console.log(`### Created event ${e.result}`);
   }
   for(let feedback of feedbackData) {        
     var f = await dataAccess.createFeedback(feedback);
