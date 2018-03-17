@@ -49,6 +49,10 @@ class Utils {
 
     return text;
   }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }  
 }
 
 module.exports = new Utils();

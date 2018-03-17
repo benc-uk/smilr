@@ -1,6 +1,5 @@
 const express = require('express');
 const routes = express.Router();
-const uuidv4 = require('uuid/v4');
 const os = require('os');
 const fs = require('fs');
 
@@ -20,9 +19,14 @@ routes
     cpuCount: os.cpus().length, 
     memory: Math.round(os.totalmem() / 1048576),
     nodeVer: process.version,
-    mongoServer: req.app.get('data').client.s.options.servers,
-    mongoConnected: req.app.get('data').client.isConnected()
+    mongoDb: {
+      connected: req.app.get('data').db.serverConfig.isConnected(),
+      host: req.app.get('data').db.serverConfig.host,
+      port: req.app.get('data').db.serverConfig.port,
+      client: req.app.get('data').db.serverConfig.clientInfo
+    }
   }  
+
   res.send(info);
 })
 

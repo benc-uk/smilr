@@ -46,8 +46,10 @@ app.use('/', apiOther);
 // Default port
 var port = process.env.PORT || 4000;
 
-// Connect to Mongo 
-dataAccess.connectMongo(process.env.MONGO_CONNSTR)
+//
+// Connect to Mongo and start server
+//
+dataAccess.connectMongo(process.env.MONGO_CONNSTR, (process.env.MONGO_RETRIES || 5))
 .then(() => {
   // This is important, pass our connected dataAccess 
   app.set('data', dataAccess);

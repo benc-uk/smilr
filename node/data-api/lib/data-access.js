@@ -1,5 +1,6 @@
 require('dotenv').config()
 const utils = require('./utils');
+const URL = require('url');
 
 class DataAccess {
 
@@ -11,24 +12,43 @@ class DataAccess {
     this.MongoClient = require('mongodb').MongoClient;
   }
 
-  // Only called once
-  async connectMongo(connectionString) {
+  //
+  // Connect to mongo, with retry logic
+  //
+  async connectMongo(connectionString, retries) {
     let err
-    if(!this.db) {
-      await this.MongoClient.connect(connectionString)
-      .then(client => {
-        this.client = client;
-        this.db = client.db(this.DBNAME)
-      })
-      .catch(e => {
-        err = e
+    let retry = 0;
+    let mongoHost = URL.parse(connectionString).host;
+
+    while(true) {
+      console.log(`### Connection attempt ${retry+1} to MongoDB server ${mongoHost}`)
+
+      if(!this.db) {
+        await this.MongoClient.connect(connectionString)
+        .then(db => {
+          // Switch DB and create if it doesn't exist
+          this.db = db.db(this.DBNAME);
+          console.log(`### Yay! Connected to MongoDB server`)
+        })
+        .catch(e => {
+          err = e
+        });
+      }
+
+      if(!this.db) {
+        retry++;        
+        if(retry < retries) {
+          console.log(`### MongoDB connection attempt failed, retying in 2 seconds`);
+          await utils.sleep(2000);
+          continue;
+        }
+      }
+      
+      return new Promise((resolve, reject) => {
+        if(this.db) { resolve(this.db) }
+        else { reject(err) }
       });
     }
-    
-    return new Promise((resolve, reject) => {
-      if(this.db) { resolve(this.db) }
-      else { reject(err) }
-    });
   }
 
   //
@@ -49,7 +69,7 @@ class DataAccess {
 
   createOrUpdateEvent(event) {
     if (event._id) {
-      return this.db.collection(this.EVENT_COLLECTION).updateOne({_id:event._id}, {$set:event});
+      return this.db.collection(this.EVENT_COLLECTION).updateOne({_id:event._id}, {$set:event}, {upsert:true});
     } else {
       // Create a random short-code style id for new events, 
       event._id = utils.makeId(5);
