@@ -1,4 +1,3 @@
-require('dotenv').config()
 const utils = require('./utils');
 const URL = require('url');
 
@@ -86,6 +85,8 @@ class DataAccess {
   }
 
   createFeedback(feedback) {
+    // We have to create our own id as a string, because Azure Functions can't handle mongo's self generated ids
+    feedback._id = utils.makeId(12);
     return this.db.collection(this.FEEDBACK_COLLECTION).insertOne(feedback)
   }
 }
