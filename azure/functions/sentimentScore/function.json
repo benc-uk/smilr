@@ -1,0 +1,15 @@
+{
+  "bindings": [
+    {
+      "type": "cosmosDBTrigger",
+      "name": "documents",
+      "direction": "in",
+      "leaseCollectionName": "leases",
+      "connectionStringSetting": "",
+      "databaseName": "smilrDb",
+      "collectionName": "feedback",
+      "createLeaseCollectionIfNotExists": true
+    }
+  ],
+  "disabled": false
+}
