@@ -4,79 +4,55 @@ console.log(`### DB init script starting...`);
 
 // Unlikely you'll ever want to change these
 var DBNAME = 'smilrDb';
-var COLLNAME = 'alldata';
-var EVENT_PKEY = 'event';
-var FEEDBACK_PKEY = 'feedback'; 
-
-// To work with the Cosmos DB emulator, and self signed certs
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+var EVENT_COLLECTION = 'events';
+var FEEDBACK_COLLECTION= 'feedback'; 
+var MongoClient = require('mongodb').MongoClient;
 
 // Cosmos settings from commandline params or from env vars 
-var cosmosEndpoint = process.argv[2] || process.env.COSMOS_ENDPOINT;
-var cosmosKey = process.argv[3] || process.env.COSMOS_KEY;
-if(!cosmosEndpoint || !cosmosKey) {
-  console.log("### COSMOS_ENDPOINT and COSMOS_KEY must be specified");
-  console.log("### This can be done via env vars, creating a .env file or passing as parameters");
+var monogUrl = process.argv[2] || process.env.MONGO_CONNSTR;
+// Default is to drop the db, pass in this value to override
+var dropDb = process.argv[3] || process.env.MONGO_DROPDB || 1;
+if(!monogUrl) {
+  console.log("### MONGO_CONNSTR must be specified");
+  console.log("### This can be done via env vars, creating a .env file or passing as parameter to the sctipt");
   process.exit(0);
 }
 
-// Connect to Azure Cosmos DB
-const documentClient = require("documentdb").DocumentClient;
-console.log('### Will use Cosmos DB instance:', cosmosEndpoint);
-var client = new documentClient(cosmosEndpoint, { "masterKey": cosmosKey });
-let collectionUrl = `dbs/${DBNAME}/colls/${COLLNAME}`;
-
-// Do the magic...
+//
+// Start the process
+//
 initDb()
+.then(() => {
+  console.log(`### Done! Exiting`);
+  process.exit(0);
+})
 .catch(err => { console.log(`### Bad thing ${err.body}`); });
 
+//
+// Worker function
+//
 async function initDb() {
-  // Create DB and collection
-  await createDbPromise()
-        .then(console.log("### Database created, wow!") )
-        .catch(err => { console.log("### Database exists, ok meh whatever") });
-  await deleteCollPromise()
-        .catch(err => { /* expected */ });
-  await createCollPromise();
+  var dataAccess = require('../../node/data-api/lib/data-access');
+
+  // Connect to Mongo 
+  await dataAccess.connectMongo(monogUrl);
+
+  // Drop database unless we don't!
+  if(dropDb == 1) {
+    console.log(`### Dropping Smilr database! ...`);
+    dataAccess.db.dropDatabase();
+  }
 
   // Load seed data
   let seedData = JSON.parse(require('fs').readFileSync('seed-data.json', 'utf8'));
   let eventData = seedData.events;   
   let feedbackData = seedData.feedback;  
   for(let event of eventData) {        
-    await createDocPromise(event);
-    console.log(`### Loaded event ${event.id}`);
+    var e = await dataAccess.createOrUpdateEvent(event);
+    console.log(`### Created event ${e.result.upserted[0]._id}`);
   }
   for(let feedback of feedbackData) {        
-    await createDocPromise(feedback);
-    console.log(`### Loaded feedback ${feedback.id}`);
+    var f = await dataAccess.createFeedback(feedback);
+    console.log(`### Created feedback ${f.ops[0]._id}`);
   }
-}
-
-// ===============================================================================
-// Promise wrappers, because the Cosmos SDK for Node was written in the dark ages
-// ===============================================================================
-
-function createDbPromise() {
-  return new Promise(function(resolve, reject) {
-    client.createDatabase({id: DBNAME}, (err, res) => { if(err) reject(err); resolve(res) });
-  });
-}
-
-function deleteCollPromise() {
-  return new Promise(function(resolve, reject) {
-    client.deleteCollection(collectionUrl, (err, res) => { if(err) reject(err); resolve(res) });
-  });
-}
-
-function createCollPromise() {
-  return new Promise(function(resolve, reject) {
-    client.createCollection(`dbs/${DBNAME}`, { id: COLLNAME, partitionKey : { paths: ["/doctype"], kind: "Hash" } }, (err, res) => { if(err) reject(err); resolve(res) });
-  });
-}
-
-function createDocPromise(doc) {
-  return new Promise(function(resolve, reject) {
-    client.createDocument(collectionUrl, doc, (err, res) => { if(err) reject(err); resolve(res) });
-  });
 }
