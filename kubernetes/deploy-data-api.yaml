@@ -25,15 +25,9 @@ spec:
         image: bcdemo.azurecr.io/smilr/data-api 
         ports:
         - containerPort: 4000
-        env:
-        - name: COSMOS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: cosmos-secrets
-              key: cosmosKeySecret        
-        - name: COSMOS_ENDPOINT
-          # !CHANGE THIS! To your running Azure Cosmos DB account
-          value: https://smilr-demo.documents.azure.com 
+        env:     
+        - name: MONGO_CONNSTR
+          value: mongodb://mongodb-endpoint.default
 
 ---
 
