@@ -1,0 +1,42 @@
+#
+# Deploy the back end databse in Kubernetes
+#
+
+# ------------------- Deployment ------------------- #
+kind: Deployment
+apiVersion: apps/v1beta1
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-spec
+  template:
+    metadata:
+      labels:
+        app: mongodb-spec
+    spec:
+      containers:
+      - name: mongodb-pods
+        image: mongo:3.4-jessie
+        ports:
+        - containerPort: 27017
+
+---
+
+# ------------------- Internal Cluster IP ------------------- #
+kind: Service
+apiVersion: v1
+metadata:
+  name: mongodb-endpoint
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+  selector:
+    app: mongodb-spec
