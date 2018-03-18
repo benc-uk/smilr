@@ -14,7 +14,7 @@ class DataAccess {
   //
   // Connect to mongo, with retry logic
   //
-  async connectMongo(connectionString, retries) {
+  async connectMongo(connectionString, retries, delay) {
     let err
     let retry = 0;
     let mongoHost = URL.parse(connectionString).host;
@@ -37,8 +37,8 @@ class DataAccess {
       if(!this.db) {
         retry++;        
         if(retry < retries) {
-          console.log(`### MongoDB connection attempt failed, retying in 2 seconds`);
-          await utils.sleep(2000);
+          console.log(`### MongoDB connection attempt failed, retying in ${delay} seconds`);
+          await utils.sleep(delay * 1000);
           continue;
         }
       }
