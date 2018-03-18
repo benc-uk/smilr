@@ -4,6 +4,8 @@ This assumes you are using WSL bash and have the latest Azure CLI installed (2.0
 
 > :exclamation::speech_balloon: **Note.** At the time of writing (Mar 2018) the only regions where AKS is deployed are; westeurope, westus2, eastus, centralus, canadacentral & canadaeast
 
+> # TODO - !!! UPDATE FOR MONGO CHANGES !!!
+
 # Set-up & Creation of AKS
 
 ## Create AKS cluster

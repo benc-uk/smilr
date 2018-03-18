@@ -10,40 +10,36 @@ metadata:
   labels:
     app: data-api-app
 spec:
-  replicas: 5
+  replicas: 4
   selector:
     matchLabels:
-      app: data-api-spec
+      app: data-api-replicaset
   template:
     metadata:
       labels:
-        app: data-api-spec
+        app: data-api-replicaset
     spec:
       containers:
       - name: data-api-pods
+
         # !CHANGE THIS! To your real image reference for the data-api  
         image: bcdemo.azurecr.io/smilr/data-api 
+
         ports:
         - containerPort: 4000
+
         env:     
         - name: MONGO_CONNSTR
           value: mongodb://mongodb-endpoint.default
 
----
+        livenessProbe:
+          httpGet:
+            path: /api/info
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 20
 
-# ------------------- Loadbalancer ------------------- #
-kind: Service
-apiVersion: v1
-metadata:
-  name: data-api-endpoint
-  annotations:
-    # !CHANGE THIS! To your real DNS domain, if not using external DNS just leave & ignore
-    external-dns.alpha.kubernetes.io/hostname: smilr-api.democloud.org.uk 
-spec:
-  type: LoadBalancer
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 4000
-  selector:
-    app: data-api-spec
+        resources:
+          requests:
+            memory: "256M"
+            cpu: 0.25
