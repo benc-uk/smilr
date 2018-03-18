@@ -185,11 +185,23 @@ Run `npm install` in the **data-api** folder, ensure the environment variables a
 ---
 
 # Component 4 - Database
-All data is held in a single MongoDB database called **smilrDb** across two collections `events` and `feedback`
+All data is held in a single MongoDB database called **smilrDb** across two collections `events` and `feedback`.
+The app has been developed and tested again MongoDB versions 3.6 and 3.4, however only very standard Mongo API functionality is used, so it is expected that other 3.x versions will be compatible.
+
+The choice of MongoDB allows us to explore several deployment architectures, the main two being 
+- Running MongoDB as a containerised microservice
+- Using cloud platform service, namely *Azure Cosmos DB*
+
+Switching between the two options is simply a matter of changing the MongoDB connection string used by the data API, this can be done to highlight or demonstrate the compatibility of Cosmos DB
+
+## MongoDB as a containerised microservice
+If you don't want to use platform services or have any external dependencies, then running MongoDB in a container along side our two other microservices is an option. This represents a more "pure microservices" scenario 
+
+The provided [Docker Compose](docs/containers.md) and [Kubernetes](kubernetes/) configurations and documentation are already set up for this scenario.
 
 ## Deploying with Cosmos DB
-As Azure Cosmos DB fully supports the MonogDB API, you can use Cosmos DB to deploy Smilr.  
-Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it
+As *Azure Cosmos DB* fully supports the MonogDB API, you can use Cosmos DB to deploy Smilr. This provides a number of benefits, such as near global scale, geo-replication and a range of consistency models.
+Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be globally unique so you will have to change it
 ```
 az cosmosdb create --resource-group {res_group} --name changeme --kind MongoDB
 ```
@@ -203,7 +215,7 @@ az cosmosdb list-connection-strings --resource-group {res_group} --name changeme
 This has been removed from the API and is now done with the **initdb.js** helper script - [full documentation](scripts/initdb)
 
 ## Data Model
-There are two main models, one for holding an **Event** and one for submitted **Feedback**, there are also **Topics** which only exist as simple objects nested in Events. **Topics** as entities only exist logically client side, from the perspective of the API and database, there are only **Events** & **Feedback**, so events are always stored & retrieved with a simple serialized JSON array of topics within them
+There are two main models, one for holding an **Event** and one for submitted **Feedback**, there are also **Topics** which only exist as simple objects nested inside **Events**. **Topics** as entities only exist logically client side, from the perspective of the API and database, there are only **Events** & **Feedback**, this means events are always stored & retrieved with a simple serialized JSON array of topics within them
 
 ```ts
 Event {
@@ -267,7 +279,7 @@ The [proxies.json](azure/functions/proxies.json) file will need to be modified a
 
 # Deploying Locally
 If you are deploying Smilr for the first time, and still getting your head around the various moving pieces, you may want to deploy it initially locally on your desktop machine and set up each of the tiers and make sure they are working correctly, and debug locally if you hit issues.  
-We assume you are using Windows 10, however as all of the steps can be applied to MacOS or Linux, using Windows 10 is not a hard requirement.
+It is assumed you are using Windows 10, however as all of the steps can be applied to MacOS or Linux, using Windows 10 is not a hard requirement.
 
 ## Run MongoDB Locally
 You have three options when it comes to running MongoDB locally:
