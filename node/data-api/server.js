@@ -7,7 +7,7 @@
 // Load .env file if it exists
 require('dotenv').config()
 
-// Load in modules
+// Load in modules, and create Express app 
 const express = require('express');
 const logger = require('morgan');
 const app = express();
