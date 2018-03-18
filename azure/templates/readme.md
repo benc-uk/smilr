@@ -6,6 +6,8 @@ Most templates use containers, so a Azure Container Registry instance populated 
 
 :exclamation::speech_balloon: **Note.** It would not be helpful to deploy Azure Container Registry as part of these templates, as it would simply result in an empty registry!
 
-## [Template 1 - Azure Container Instance](aci-cosmos/)
+## [Template 1 - Azure Container Instance](aci-mongo/)
+
+## [Template 1 - Azure Container Instance & Cosmos DB](aci-cosmos/)
 
 ## [Template 2 - Azure Web App for Containers (Linux App Service)](web-app-containers/)
