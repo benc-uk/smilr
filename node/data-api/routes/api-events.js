@@ -1,11 +1,8 @@
 const express = require('express');
 const routes = express.Router();
-const uuidv4 = require('uuid/v4');
-const os = require('os');
-const fs = require('fs');
+const utils = require('../lib/utils');
 
-// Routes for events API 
-var dataAccess = require('../lib/data-access');
+// Routes for event API
 
 routes
 .get('/api/events/filter/:time', function (req, res, next) {
@@ -15,19 +12,19 @@ routes
   
   switch(time) {
     case 'active': 
-      dataAccess.queryEvents(`event["start"] <= '${today}' AND event["end"] >= '${today}'`) 
-        .then(d => res.send(d))
-        .catch(e => sendError(res, e));
+      res.app.get('data').queryEvents({$and: [{start: {$lte: today}}, {end: {$gte: today}}]})
+        .then(data => utils.sendData(res, data))
+        .catch(err => utils.sendError(res, err));
       break;
     case 'future': 
-      dataAccess.queryEvents(`event["start"] > '${today}'`) 
-        .then(d => res.send(d))
-        .catch(e => sendError(res, e));
+      res.app.get('data').queryEvents({start: {$gt: today}})
+        .then(data => utils.sendData(res, data))
+        .catch(err => utils.sendError(res, err));
       break;
     case 'past': 
-      dataAccess.queryEvents(`event["end"] < '${today}'`) 
-        .then(d => res.send(d))
-        .catch(e => sendError(res, e));
+      res.app.get('data').queryEvents({end: {$lt: today}})
+        .then(data => utils.sendData(res, data))
+        .catch(err => utils.sendError(res, err));
       break;
     default:
       // If time not valid
@@ -37,70 +34,65 @@ routes
 
 .get('/api/events', function (req, res, next) {
   res.type('application/json');
-  dataAccess.queryEvents('true')
-    // Return a single entity
-    .then(d => res.send(d)) 
-    .catch(e => sendError(res, e));
+  res.app.get('data').queryEvents({})
+    .then(data => {   
+      if(!data) utils.sendData(res, [])
+      else utils.sendData(res, data)
+    })
+    .catch(err => { res.status(500).send(err)})
 })
 
 .get('/api/events/:id', function (req, res, next) {
   res.type('application/json');
-  dataAccess.getEvent(req.params.id)
-    // Return a single entity
-    .then(d => res.send(d)) 
-    .catch(e => sendError(res, e));
+  res.app.get('data').getEvent(req.params.id)
+    .then(data => {
+      // Return 404 if data empty
+      if(!data) res.sendStatus(404);
+      // Otherwise return the event data
+      else utils.sendData(res, data)
+    })
+    .catch(err => { res.status(500).send(err)})
 })
 
 .post('/api/events', function (req, res, next) {
-  if(!verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
+  if(!utils.verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
 
   res.type('application/json');
   let event = req.body;
 
-  dataAccess.createOrUpdateEvent(event)
-    .then(d => res.status(200).send(d))
-    .catch(e => sendError(res, e));
+  if(event._id || event.id) utils.sendError(res, {message: "Should not POST events with id"});
+
+  // We send back the new record, which has the new id
+  res.app.get('data').createOrUpdateEvent(event)
+    .then(data => utils.sendData(res, data.ops[0]))
+    .catch(err => utils.sendError(res, err));
 })
 
 .put('/api/events', function (req, res, next) {
-  if(!verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
+  if(!utils.verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
 
   res.type('application/json');
   let event = req.body;
+  event._id = event.id;
 
-  dataAccess.createOrUpdateEvent(event)
-    .then(d => res.status(200).send(d))
-    .catch(e => sendError(res, e));
+  if(!event._id) utils.sendError(res, {message: "Should not PUT events without id"});
+
+  // Note we send back the same event object we receive, Monogo doesn't return it
+  res.app.get('data').createOrUpdateEvent(event)
+    .then(data => utils.sendData(res, event))
+    .catch(err => utils.sendError(res, err));
 })
 
 .delete('/api/events/:id', function (req, res, next) {
-  if(!verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
+  if(!utils.verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
 
   res.type('application/json');
-  dataAccess.deleteEvent(req.params.id)
-    .then(d => res.status(200).send(d))
-    .catch(e => sendError(res, e));
+  res.app.get('data').deleteEvent(req.params.id)
+    .then(data => {
+      if(data.deletedCount == 0) res.sendStatus(404);
+      else utils.sendData(res, {msg:`Deleted doc ${req.params.id} ok`})
+    })
+    .catch(err => utils.sendError(res, err));
 })
-
-//
-// Try to send back the underlying error code and message
-//
-function sendError(res, err) {
-  console.log(`### Error with events API ${JSON.stringify(err)}`); 
-  let code = 500;
-  if(err.code > 1) code = err.code;
-  res.status(code).send(err);
-  return;
-}
-
-//
-// A bit of security, using TOTP
-//
-function verifyCode(code) {
-  if(!process.env.API_SECRET) return true;
-  let jsotp = require('jsotp');
-  let totp = jsotp.TOTP(process.env.API_SECRET);
-  return totp.verify(code);
-}
 
 module.exports = routes;

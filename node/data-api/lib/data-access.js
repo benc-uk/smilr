@@ -1,23 +1,53 @@
-require('dotenv').config()
+const utils = require('./utils');
+const URL = require('url');
 
 class DataAccess {
 
   constructor() {
     // Unlikely you'll ever want to change these
     this.DBNAME = 'smilrDb';
-    this.COLLNAME = 'alldata';
-    this.EVENT_PKEY = 'event';
-    this.FEEDBACK_PKEY = 'feedback'; 
+    this.EVENT_COLLECTION = 'events';
+    this.FEEDBACK_COLLECTION= 'feedback'; 
+    this.MongoClient = require('mongodb').MongoClient;
+  }
 
-    // Load Cosmos config from env vars / app settings
-    this.cosmosEndpoint = process.env.COSMOS_ENDPOINT;
-    let cosmosKey = process.env.COSMOS_KEY;
+  //
+  // Connect to mongo, with retry logic
+  //
+  async connectMongo(connectionString, retries, delay) {
+    let err
+    let retry = 0;
+    let mongoHost = URL.parse(connectionString).host;
 
-    // Connect to Azure Cosmos DB
-    const documentClient = require("documentdb").DocumentClient;
-    console.log('### Will use Cosmos DB instance:', this.cosmosEndpoint);
-    this.client = new documentClient(this.cosmosEndpoint, { "masterKey": cosmosKey });
-    this.collectionUrl = `dbs/${this.DBNAME}/colls/${this.COLLNAME}`;
+    while(true) {
+      console.log(`### Connection attempt ${retry+1} to MongoDB server ${mongoHost}`)
+
+      if(!this.db) {
+        await this.MongoClient.connect(connectionString)
+        .then(db => {
+          // Switch DB and create if it doesn't exist
+          this.db = db.db(this.DBNAME);
+          console.log(`### Yay! Connected to MongoDB server`)
+        })
+        .catch(e => {
+          err = e
+        });
+      }
+
+      if(!this.db) {
+        retry++;        
+        if(retry < retries) {
+          console.log(`### MongoDB connection attempt failed, retying in ${delay} seconds`);
+          await utils.sleep(delay * 1000);
+          continue;
+        }
+      }
+      
+      return new Promise((resolve, reject) => {
+        if(this.db) { resolve(this.db) }
+        else { reject(err) }
+      });
+    }
   }
 
   //
@@ -25,56 +55,24 @@ class DataAccess {
   //
 
   queryEvents(query) {
-    return new Promise((resolve, reject) => {
-      let q = `SELECT * FROM event WHERE event.doctype='${this.EVENT_PKEY}' AND ${query}`;
-      this.client.queryDocuments(this.collectionUrl, q).toArray((err, res) => {
-        if (err) { reject(err) }
-        else { resolve(res) };
-      });
-    });
+    return this.db.collection(this.EVENT_COLLECTION).find(query).toArray();
   }
 
   getEvent(id) {
-    let docUrl = `${this.collectionUrl}/docs/${id}` 
-    return new Promise((resolve, reject) => {
-      // The partitionKey part is poorly documented required magic
-      this.client.readDocument(docUrl, { partitionKey: this.EVENT_PKEY }, (err, res) => {
-        if (err) { reject(err) }
-        else { resolve(res) };
-      });
-    });
+    return this.db.collection(this.EVENT_COLLECTION).findOne({_id:id})
   }
 
   deleteEvent(id) {
-    let docUrl = `${this.collectionUrl}/docs/${id}` 
-    return new Promise((resolve, reject) => {
-      // The partitionKey part is poorly documented required magic
-      this.client.deleteDocument(docUrl, { partitionKey: this.EVENT_PKEY }, (err, res) => {
-        if (err) { reject(err) }
-        else { resolve({msg:`Deleted doc ${id} ok`}) };
-      });
-    });
+    return this.db.collection(this.EVENT_COLLECTION).deleteOne({_id:id})
   }
 
   createOrUpdateEvent(event) {
-    if (event.id) {
-      return new Promise((resolve, reject) => {
-        let docUrl = `${this.collectionUrl}/docs/${event.id}` 
-        this.client.replaceDocument(docUrl, event, (err, res) => {
-          if (err) reject(err)
-          else resolve(res);
-        });
-      });
+    if (event._id) {
+      return this.db.collection(this.EVENT_COLLECTION).updateOne({_id:event._id}, {$set:event}, {upsert:true});
     } else {
       // Create a random short-code style id for new events, 
-      event.id = this.makeId(5);
-      event.doctype = this.EVENT_PKEY;
-      return new Promise((resolve, reject) => {
-        this.client.createDocument(this.collectionUrl, event, (err, res) => {
-          if (err) reject(err)
-          else resolve(res);
-        });
-      });
+      event._id = utils.makeId(5);
+      return this.db.collection(this.EVENT_COLLECTION).insertOne(event);
     }
   }
 
@@ -83,43 +81,16 @@ class DataAccess {
   //
 
   listFeedbackForEventTopic(eventid, topicid) {
-    return new Promise((resolve, reject) => {
-      let q = `SELECT * FROM d WHERE d.doctype='${this.FEEDBACK_PKEY}' AND d.event = '${eventid}' AND d.topic = ${topicid}`;
-      this.client.queryDocuments(this.collectionUrl, q).toArray((err, res) => {
-        if (err) { reject(err) }
-        else { resolve(res) };
-      });
-    });
+    return this.db.collection(this.FEEDBACK_COLLECTION).find({$and: [{event: eventid}, {topic: topicid}]}).toArray();
   }
 
   createFeedback(feedback) {
-    // Just discovered that Cosmos does this for us! Creates a GUID
-    //feedback.id = this.makeId(6);
-    feedback.doctype = this.FEEDBACK_PKEY;
-    return new Promise((resolve, reject) => {
-      this.client.createDocument(this.collectionUrl, feedback, (err, res) => {
-        if (err) reject(err)
-        else resolve(res);
-      });
-    });
-  }
-
-  // Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
-  makeId(len) {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (var i = 0; i < len; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-  }
-
-  getCosmosInfo() {
-    return this.cosmosEndpoint+'/'+this.collectionUrl;
+    // We have to create our own id as a string, because Azure Functions can't handle mongo's self generated ids
+    feedback._id = utils.makeId(12);
+    return this.db.collection(this.FEEDBACK_COLLECTION).insertOne(feedback)
   }
 }
 
 // Create a singleton instance which is exported NOT the class 
 const self = new DataAccess();
-module.exports = self;
+module.exports = self; //DataAccess;

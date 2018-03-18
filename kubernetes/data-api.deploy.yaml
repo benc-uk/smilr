@@ -1,0 +1,45 @@
+#
+# Deploy the back end data API microservice in Kubernetes
+#
+
+# ------------------- Deployment ------------------- #
+kind: Deployment
+apiVersion: apps/v1beta1
+metadata:
+  name: data-api
+  labels:
+    app: data-api-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: data-api-replicaset
+  template:
+    metadata:
+      labels:
+        app: data-api-replicaset
+    spec:
+      containers:
+      - name: data-api-pods
+
+        # !CHANGE THIS! To your real image reference for the data-api  
+        image: bcdemo.azurecr.io/smilr/data-api 
+
+        ports:
+        - containerPort: 4000
+
+        env:     
+        - name: MONGO_CONNSTR
+          value: mongodb://mongodb-endpoint.default
+
+        livenessProbe:
+          httpGet:
+            path: /api/info
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+        resources:
+          requests:
+            memory: "256M"
+            cpu: 0.25
