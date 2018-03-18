@@ -8,6 +8,6 @@ Most templates use containers, so a Azure Container Registry instance populated 
 
 ## [Template 1 - Azure Container Instance](aci-mongo/)
 
-## [Template 1 - Azure Container Instance & Cosmos DB](aci-cosmos/)
+## [Template 2 - Azure Container Instance & Cosmos DB](aci-cosmos/)
 
-## [Template 2 - Azure Web App for Containers (Linux App Service)](web-app-containers/)
+## [Template 3 - Azure Web App for Containers (Linux App Service)](web-app-containers/)
