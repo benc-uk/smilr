@@ -36,28 +36,18 @@
   },
   "variables": {
     "containerFrontend": "smilr-frontend",
-    "containerDataApi": "smilr-data-api",
+    "containerDataApi": "smilr-data",
     "imageFrontend": "[concat(parameters('acrName'), '.azurecr.io/smilr/frontend')]",
     "imageDataApi": "[concat(parameters('acrName'), '.azurecr.io/smilr/data-api')]",
+    "imageMongo": "mongo:3.4-jessie",
     "portFrontend": "3000",
     "portDataApi": "4000",
     "memory": 1.0,
     "cpu": 1.0,
-    "cosmosName": "[concat('cosmos-', uniqueString(resourceGroup().id))]",
     "dnsLabelFrontend": "[concat(parameters('dnsPrefix'), '-frontend')]",
     "dnsLabelDataApi": "[concat(parameters('dnsPrefix'), '-api')]"
   },
   "resources": [
-    {
-      "name": "[variables('cosmosName')]",
-      "type": "Microsoft.DocumentDB/databaseAccounts",
-      "apiVersion": "2015-04-08",
-      "location": "[parameters('previewLocation')]",
-      "kind": "MongoDB",
-      "properties": {
-        "databaseAccountOfferType": "Standard"
-      }
-    },
     {
       "name": "[variables('containerDataApi')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
@@ -66,7 +56,7 @@
       "properties": {
         "containers": [
           {
-            "name": "[variables('containerDataApi')]",
+            "name": "[concat(variables('containerDataApi'), '-api')]",
             "properties": {
               "image": "[variables('imageDataApi')]",
               "ports": [
@@ -83,11 +73,23 @@
               "environmentVariables": [
                 {
                   "name": "MONGO_CONNSTR",
-                  "value": "[listConnectionStrings(variables('cosmosName'), '2015-04-08').connectionStrings[0].connectionString]"
+                  "value": "mongodb://localhost"
                 }
               ]
             }
-          }
+          },
+          {
+            "name": "[concat(variables('containerDataApi'), '-mongo')]",
+            "properties": {
+              "image": "[variables('imageMongo')]",
+              "resources": {
+                "requests": {
+                  "cpu": "[variables('cpu')]",
+                  "memoryInGb": "[variables('memory')]"
+                }
+              }
+            }
+          }          
         ],
         "imageRegistryCredentials": [{
           "server": "[concat(parameters('acrName'), '.azurecr.io')]",
@@ -105,10 +107,7 @@
           ],
           "dnsNameLabel": "[variables('dnsLabelDataApi')]"
         }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
-      ]
+      }
     },
     {
       "name": "[variables('containerFrontend')]",
@@ -171,10 +170,6 @@
     "apiURL": {
       "value": "[concat('http://', variables('dnsLabelDataApi'), '.', parameters('previewLocation'), '.azurecontainer.io', ':', variables('portDataApi'), '/api')]",
       "type": "string"
-    },
-    "mongoConnStr": {
-      "value": "[listConnectionStrings(variables('cosmosName'), '2015-04-08').connectionStrings[0].connectionString]",
-      "type": "string"
-    }   
+    }
   }
 }
