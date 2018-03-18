@@ -42,6 +42,7 @@ The main levels of the repository directory tree are laid out as follows
 │   └── templates         Example ARM templates
 ├── docs               Documentation
 ├── dotnet             .NET Core ASP implementation of the services - WIP
+├── etc                Supporting files, pictures and other artefacts 
 ├── kubernetes         Docs and files to support deployment to Kubernetes & AKS
 ├── node               Main microservices, written in Node.js
 │   ├── data-api          Data API service source code

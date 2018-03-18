@@ -1,19 +1,30 @@
+//
+// Main Express server for Smilr Data API
+// ----------------------------------------------
+// Ben C, March 2018
+//
+
 // Load .env file if it exists
 require('dotenv').config()
 
+// Load in modules
 const express = require('express');
 const logger = require('morgan');
 const app = express();
 const bodyParser = require('body-parser')
 const cors = require('cors');
 
-// Our dataAccess library
+// Include our data-access library for MongoDB
 var dataAccess = require('./lib/data-access');
 
-// Allow all CORS
-app.use(cors());
+// We need this set or it's impossible to continue!
+if(!process.env.MONGO_CONNSTR) {
+  console.error("### !ERROR! Missing env variable MONGO_CONNSTR. Exiting!");
+  process.exit(1)
+}
 
-// Parse application/json
+// Allow all CORS and parse any JSON we receive
+app.use(cors());
 app.use(bodyParser.json())
 
 // Enable Swagger UI, load in JSON definition doc
@@ -29,19 +40,16 @@ if (app.get('env') === 'production') {
 }
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
-// We need this set or it's impossible to continue!
-if(!process.env.MONGO_CONNSTR) {
-  console.error("### !ERROR! Missing env variable MONGO_CONNSTR. Exiting!");
-  process.exit(1)
-}
-
 // Routing to controllers
-apiEvents = require('./routes/api-events');
-apiFeedback = require('./routes/api-feedback');
-apiOther = require('./routes/api-other');
-app.use('/', apiEvents);
-app.use('/', apiFeedback);
-app.use('/', apiOther);
+app.use('/', require('./routes/api-events'));
+app.use('/', require('./routes/api-feedback'));
+app.use('/', require('./routes/api-other'));
+
+// Global catch all for all requests not caught by other routes
+// Just return a HTTP 400
+app.use('*', function (req, res, next) {
+  res.sendStatus(400);
+})
 
 // Get values from env vars or defaults where not provided
 var port = process.env.PORT || 4000;

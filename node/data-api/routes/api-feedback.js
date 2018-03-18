@@ -1,9 +1,16 @@
+//
+// Routing controllers for the feedback API
+// ----------------------------------------------
+// Ben C, March 2018
+//
+
 const express = require('express');
 const routes = express.Router();
 const utils = require('../lib/utils');
 
-// Routes for feedback API 
-
+//
+// GET feedback - return array of feedback for specific eventid and topicid
+//
 routes
 .get('/api/feedback/:eventid/:topicid', function (req, res, next) {
   res.type('application/json');
@@ -12,6 +19,10 @@ routes
     .catch(err => utils.sendError(res, err));
 })
 
+//
+// POST feedback - submit feedback, body should include: event, topic, rating & comment
+//
+routes
 .post('/api/feedback', function (req, res, next) {
   let feedback = req.body;
   res.type('application/json');
