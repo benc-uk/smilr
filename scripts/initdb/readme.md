@@ -19,13 +19,13 @@ COSMOS_KEY=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnq
 
 # Running InitDB when using Kubernetes
 
-When running Smilr in Kubernetes we don't expose MongoDB externally outside the cluster as it is only accessed from pods in the cluster (the data-api). In order to run the initdb script against MongoDB you will need to use a forwarded port. This creates a tunnel into the cluster between localhost and a port on a pod
+When running Smilr in Kubernetes we don't expose MongoDB externally outside the cluster as it is only accessed from pods in the cluster (i.e. only the data-api). In order to run the initdb script against MongoDB you will need to use a forwarded port. This creates a TCP tunnel into the cluster between localhost and a listening port on one of the pods
 
 Run the following two commands, then run the script against localhost e.g. `node initdb.js mongodb://localhost`. 
 
 > :exclamation::speech_balloon: **Tip:** The `kubectl port-forward` command will not exit, it will stay running to keep the tunnel open, so it is best to run this in another terminal or window
 
 ```
-mongopodname=`kubectl get pods -l app=mongodb-replicaset -o jsonpath='{.items[0].metadata.name}'`
-kubectl port-forward $mongopodname 27017:27017 
+podname=`kubectl get pods -l app=mongodb-replicaset -o jsonpath='{.items[0].metadata.name}'`
+kubectl port-forward $podname 27017:27017 
 ```

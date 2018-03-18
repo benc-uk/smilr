@@ -8,7 +8,7 @@ The application is called *'Smilr'* and allows people to provide feedback on eve
 
 - The two microservices are both written in Node.js using the Express framework. These have been containerized so can easily be deployed & run as containers
 
-- The database is a NoSQL document store holding JSON, provided by *Azure Cosmos DB*
+- The database is a NoSQL document store holding JSON, provided by MongoDB and/or *Azure Cosmos DB*
 
 The app has been designed to be deployed to Azure, but the flexible nature of the design & chosen technology stack results in a wide range of deployment options and compute scenarios, including:
 - Containers: *Azure Container Service (ACS or AKS)* or *Azure Container Instances* 
@@ -68,14 +68,14 @@ There are numerous ways to set & override environmental variables; in the operat
 
 
 # :star: Architecture & Core App Components
-![arch](https://user-images.githubusercontent.com/14982936/32730129-fb8583b2-c87d-11e7-94c4-547bfcbfca6b.png)
+![arch](https://user-images.githubusercontent.com/14982936/37564863-730baed2-2a96-11e8-85c5-cdaeb13d595d.png)
 
 The main app components are:
-1) [Angular front end UI](#component-1---angular-front-end-ui)
-1) [Frontend service](#component-2---frontend-service)
-1) [Backend data API service](#component-3---backend-data-api-service)
-1) [Database](#component-4---database)
-1) [Optional serverless components](#component-5---optional-serverless-components) 
+1. [Angular front end UI](#component-1---angular-front-end-ui)
+2. [Frontend service](#component-2---frontend-service)
+3. [Backend data API service](#component-3---backend-data-api-service)
+4. [Database](#component-4---database)
+5. [Optional serverless components](#component-5---optional-serverless-components) 
 
 These will be each described in their own sections below. 
 
@@ -169,15 +169,14 @@ Once enabled the Angular client will need to know this key so it can generate th
 :exclamation::speech_balloon: **Note.** If `API_SECRET` is not set (which is the default), any value sent in the X-SECRET header is not validated and is simply ignored, the header can also be omitted. Also the GET methods of the event API are always open and not subject to TOTP validation, likewise the feedback API is left open by design
 
 ## Data access
-All data is held in Cosmos DB, the data access layer is a plain ES6 class **DataAccess** in [lib/data-access.js](node/data-api/lib/data-access.js). All Cosmos DB specific code and logic is encapsulated here
+All data is held in MongoDB, the data access layer is a plain ES6 class **DataAccess** in [lib/data-access.js](node/data-api/lib/data-access.js). This is a singleton which encapsulates all MongoDB specific code and logic (e.g. connecting and creating the database, collections etc) and also operations on the event and feedback entities. See [Database component](#component-4---database) below for more details.
 
 ## Data API server - Config
-The server listens on port 4000 and requires two configuration environmental variables to be set. 
+The server listens on port 4000 and requires just one configuration environmental variable to be set. 
 
 |Variable Name|Purpose|
 |-------------|-------|
-|COSMOS_ENDPOINT|The URL endpoint of the Cosmos DB account, e.g. `https://foobar.documents.azure.com/`|
-|COSMOS_KEY|Master key for the Cosmos DB account|
+|MONGO_CONNSTR|A valid [MongoDB connection string](https://docs.mongodb.com/v3.4/reference/connection-string/), e.g. `mongodb://localhost`. When using Azure Cosmos DB, obtain the full Mongo connection string from the Cosmos instance in the portal, which will include the username & password.
 |API_SECRET|***Optional*** secret key used for admin calls to the event API (setting this turns security on, see [Admin Calls Security](#admin-calls-security) above for details)|
 
 ## Running Data API service locally
@@ -186,19 +185,18 @@ Run `npm install` in the **data-api** folder, ensure the environment variables a
 ---
 
 # Component 4 - Database
-All data is held in a single Cosmos DB database called **smilrDb** and also in single collection, this collection is called **alldata**
+All data is held in a single MongoDB database called **smilrDb** across two collections `events` and `feedback`
 
-The collection is partitioned on a key called `doctype`, when events and feedback are stored the partition key is added as an additional property on all entities/docs, e.g. `doctype: 'event'` or `doctype: 'feedback'`. 
-
-## :exclamation::speech_balloon: Notes & Gotchas
-- The `doctype` property only exists in Cosmos DB, the Angular model has no need for it so it is ignored, you never include doctype when POSTing entities to the API, it is added automatically by the data-api service before storing in Cosmos.
-- This may seem unorthodox with a mixture of different document types held in a single collection, but is a perfectly valid approach for a NoSQL database such as Cosmos DB.  
-- Do not confuse the `doctype` with the property `type` on events. The event `type` property is a textual description of the type of event, e.g. "Workshop", "Lab" or "Hack" and is used by the UI
-
-## Deploying Cosmos DB
+## Deploying with Cosmos DB
+As Azure Cosmos DB fully supports the MonogDB API, you can use Cosmos DB to deploy Smilr.  
 Deployment of a new Cosmos DB account is simple, using the Azure CLI it is a single command. Note the account name must be unique so you will have to change it
 ```
-az cosmosdb create --resource-group {res_group} --name changeme
+az cosmosdb create --resource-group {res_group} --name changeme --kind MongoDB
+```
+
+You can then obtain the MongoDB connection string using the Azure portal or the following command:
+```
+az cosmosdb list-connection-strings --resource-group {res_group} --name changeme 
 ```
 
 ## Database Initialization 
@@ -241,11 +239,11 @@ Feedback {
 There are two serverless components to Smilr, and both are optional
 
 ## Data Enrichment - Sentiment Analysis
-This optional component enriches data as feedback is sumbitted. It takes any comment text in the feedback and runs it through Azure Text Analytics  Cognitive Services. The resulting sentiment score (normalized 0.0 ~ 1.0) is added to the feedback document in the database.
+This optional component enriches data as feedback is submitted. It takes any comment text in the feedback and runs it through Azure Text Analytics Cognitive Services. The resulting sentiment score (normalized 0.0 ~ 1.0) is added to the feedback document in the database.
 
-The is implemented in Azure Functions, using the Cosmos DB change trigger, so that when new items are added to the DB, the function runs and processes them. The Function has an output binding back to Cosmos DB to update the document. The Function is written in C#
+The is implemented in Azure Functions, using the Cosmos DB change trigger, so that when new items are added to the DB, the function runs and processes them. The Function then writes the document back to Cosmos DB via the Node.js MonogDB driver to update the document. The update was done this way as you can not use the Functions output bindings for Cosmos with MongoDB. The Function is written in Node.js
 
-Further notes are [included with the code here](azure/functions/sentimentFunction)
+Further notes are [included with the code here](azure/functions/sentimentScore)
 
 ## Data API Serverless Version
 The data-api service has been re-implemented in a serverless model, this is also using Azure Functions. This component is optional as functionally it is identical to the "normal" non-serverless version of the service. It has been created as a small proof of concept around the idea of using serverless design in a RESTful microservices app, such as Smilr.
@@ -261,28 +259,61 @@ You can deploy the serverless data-api into any Functions App, simply copy the w
 
 ![](https://user-images.githubusercontent.com/14982936/36417631-5e5c4cca-1624-11e8-9e22-65e7ff2e31bd.png)
 
-The NPM packages used by the data-access library to connect to Cosmos DB will need to be installed. After copying all the files to your Function App (including package.json) go into the portal for your Function App, then into 'Platform Features' and 'Console', from there run `npm install`
+The NPM packages used by the data-access library to connect to MongoDB will need to be installed. After copying all the files to your Function App (including package.json) go into the portal for your Function App, then into 'Platform Features' and 'Console', from there run `npm install`
 
 The [proxies.json](azure/functions/proxies.json) file will need to be modified and the `backendUri` values changed to point to your instance of Functions by altering the "changeme" part. You can also change this using the Functions web Portal in the Proxies section
 
 ---
 
 # Deploying Locally
+If you are deploying Smilr for the first time, and still getting your head around the various moving pieces, you may want to deploy it initially locally on your desktop machine and set up each of the tiers and make sure they are working correctly, and debug locally if you hit issues.  
+We assume you are using Windows 10, however as all of the steps can be applied to MacOS or Linux, using Windows 10 is not a hard requirement.
 
-If you are deploying Smilr for the first time, and still getting your head around the various moving pieces, you may want to deploy it initially locally on your desktop machine and set up each of the tiers and make sure they are working correctly, and debug locally if you hit issues.
+## Run MongoDB Locally
+You have three options when it comes to running MongoDB locally:
 
-## Run the Cosmos DB emulator 
+### Use Windows Subsystem For Linux (WSL) - Ubuntu
+Using Windows Subsystem For Linux (WSL) is probably the easiest way to run MongoDB on a Windows 10 machine. If you haven't already enabled WSL and installed a Linux distribution, [then do so](https://docs.microsoft.com/en-us/windows/wsl/install-win10). I strongly recommend picking Ubuntu as the distribution to run.
 
-There is a Cosmos DB local emulator available for Windows - see  https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator for details of how to set it up. Use the Data Explorer to ensure the emulator is up and running.
+Open an Ubuntu bash terminal and install MonogDB with the following:
+```
+sudo apt update
+sudo apt install -y mongodb
+sudo mkdir /data/db
+```
+
+Then start the server with:
+```
+sudo mongod
+```
+MonogDB server will start and be listening on all IPs by default, there is no authentication or SSL so you can simply connect with `mongodb://localhost` as the connection string
+
+### Run as Docker Container
+If you have [Docker CE for Windows 10 installed](https://docs.docker.com/docker-for-windows/install/), you can very easily run MongoDB in a container on you local machine. Just run:
+```
+docker run -it --rm -p 27017:27017 mongo 
+```
+
+It my be better to run it detached and with a name so you can link it to other containers
+```
+docker run -d --rm -p 27017:27017 --name localmongo mongo 
+```
+
+If you are running the data API directly on your machine using Node (e.g. running `node server.js` or `npm start`), then you can connect to the MongoDB container simply using `mongodb://localhost` as the connection string. 
+ 
+:exclamation::speech_balloon: **Note.**  If you are running the data API ***also in local container***, you must link the two containers together using either a network or `--link`. When doing so the connection string will need to point to the name of the linked mongo container **not localhost** e.g. `mongodb://localmongo` in the example above.
+
+
+### Install MongoDB for Windows
+[Install MongoDB Community Edition on Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/). This has not been tested but should work. 
+
 
 ## Run the Backend Data API Service
-
-The CosmosDB emulator listens on https://localhost:8081 and uses a predefined security key "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" that you will need to assign to COSMOS_ENDPOINT and COSMOS_KEY before running the data service API.
+The connection string for MongoDB on the local machine is `mongodb://localhost` this will need to be passed to the data api as the `MONGO_CONNSTR` env var. 
 
 Initialize the database using the **initdb.js** helper script - [full documentation](scripts/initdb)
 
 ## Run the Front End Service
-
 Remember that you need to build a production version of the service, otherwise the Angular app defaults to the in-memory version and the back end version won't be called.
 Don't forget to set API_ENDPOINT to the URL endpoint of the data service API, http://localhost:4000/api.
 Check that the system works end to end by browsing to http://localhost:3000 and view the events and create new ones, etc. 
