@@ -43,13 +43,16 @@ app.use('/', apiEvents);
 app.use('/', apiFeedback);
 app.use('/', apiOther);
 
-// Default port
+// Get values from env vars or defaults where not provided
 var port = process.env.PORT || 4000;
+var monogUrl = process.env.MONGO_CONNSTR;  // Note. NO DEFAULT!
+var retries = process.env.MONGO_RETRIES || 5;
+var retryDelay = process.env.MONGO_RETRY_DELAY || 30;
 
 //
 // Connect to Mongo and start server
 //
-dataAccess.connectMongo(process.env.MONGO_CONNSTR, (process.env.MONGO_RETRIES || 5))
+dataAccess.connectMongo(monogUrl, retries, retryDelay)
 .then(() => {
   // This is important, pass our connected dataAccess 
   app.set('data', dataAccess);
