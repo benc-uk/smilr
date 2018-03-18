@@ -51,7 +51,7 @@
       "type": "Microsoft.DocumentDB/databaseAccounts",
       "apiVersion": "2015-04-08",
       "location": "[resourceGroup().location]",
-      "kind": "GlobalDocumentDB",
+      "kind": "MongoDB",
       "properties": {
         "databaseAccountOfferType": "Standard"
       }
@@ -135,13 +135,9 @@
               "value": "false"
             },
             {
-              "name": "COSMOS_ENDPOINT",
-              "value": "[concat('https://', variables('cosmosName'), '.documents.azure.com')]"
-            },
-            {
-              "name": "COSMOS_KEY",
-              "value": "[listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey]"
-            }                        
+              "name": "MONGO_CONNSTR",
+              "value": "[listConnectionStrings(variables('cosmosName'), '2015-04-08').connectionStrings[0].connectionString]"
+            }                       
           ],
           "linuxFxVersion": "[concat('DOCKER|', variables('imageDataApi'))]"
         }
@@ -160,17 +156,9 @@
       "value": "[concat('https://', parameters('apiAppName'), '.azurewebsites.net/api')]",
       "type": "string"
     },
-    "cosmosEndpoint": {
-      "value": "[concat('https://', variables('cosmosName'), '.documents.azure.com')]",
+    "mongoConnStr": {
+      "value": "[listConnectionStrings(variables('cosmosName'), '2015-04-08').connectionStrings[0].connectionString]",
       "type": "string"
-    },
-    "cosmosKey": {
-      "value": "[listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey]",
-      "type": "string"
-    },
-    "initDbCommand": {
-      "value": "[concat('node initdb.js https://', variables('cosmosName'), '.documents.azure.com', ' ', listKeys(variables('cosmosName'), '2015-04-08').primaryMasterKey)]",
-      "type": "string"
-    }
+    }  
   }
 }

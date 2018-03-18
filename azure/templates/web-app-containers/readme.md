@@ -1,5 +1,6 @@
 # ARM Template - Web App for Containers
-Deploy the app using Azure Web App for Containers (aka App Service Linux) & Cosmos DB
+Deploy the Smilr app using Azure Web App for Containers (aka App Service Linux) & Cosmos DB.  
+A new Cosmos DB account will be created, so this template takes around 5 minutes to deploy
 
 ## Deployed Resources
 - Microsoft.DocumentDB/databaseAccounts
@@ -16,12 +17,10 @@ Deploy the app using Azure Web App for Containers (aka App Service Linux) & Cosm
 ## Outputs
 - `frontendURL`: URL to access frontend
 - `apiURL`: URL to access the API
-- `cosmosEndpoint`: Endpoint of new Cosmos DB instance
-- `cosmosKey`: Key needed to access Cosmos DB
-- `initDbCommand`: Helpful to copy and paste to run the initdb script
+- `mongoConnStr`: Connection string for Cosmos DB Mongo API
 
 ## Quick Deploy
 [![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fmicroservices-demoapp%2Fmaster%2Fazure%2Ftemplates%2Fweb-app-containers%2Fazuredeploy.json)  
 
 ## Notes
-After deployment you will need to initialize the database, use the [initdb script](/scripts/initdb/), the `initDbCommand` output can be copy and pasted to help
+After deployment you will need to initialize the database, use the [initdb script](/scripts/initdb/), the `mongoConnStr` output will provide the connection string you need to pass in.
