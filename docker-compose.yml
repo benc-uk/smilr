@@ -22,18 +22,25 @@ services:
     ports: 
       - 4000:4000
     depends_on:
-      - database     
+      - smilrdb     
     environment:
-      - MONGO_CONNSTR=mongodb://database
-
-  database:
+      - MONGO_CONNSTR=mongodb://smilrdb
+    networks: 
+      - smilr-net
+  
+  smilrdb:
     image: mongo:3.4-jessie
     ports: 
       - 27017:27017
     volumes:
       - db-data:/data/db
       - db-config:/data/configdb
-      
+    networks: 
+      - smilr-net
+  
 volumes:
   db-data:
   db-config:
+
+networks:
+  smilr-net:
