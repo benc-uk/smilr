@@ -1,10 +1,17 @@
+//
+// Routing controllers for other API routes
+// ----------------------------------------------
+// Ben C, March 2018
+//
+
 const express = require('express');
 const routes = express.Router();
 const os = require('os');
 const fs = require('fs');
 
-// Misc routes
-
+//
+// GET info - Return system info and other debugging details 
+//
 routes
 .get('/api/info', function (req, res, next) {
   res.type('application/json');
@@ -30,10 +37,5 @@ routes
   res.send(info);
 })
 
-// Global catch all for all requests not caught by other routes
-// Just return a HTTP 400
-.get('*', function (req, res, next) {
-  res.sendStatus(400);
-})
 
 module.exports = routes;

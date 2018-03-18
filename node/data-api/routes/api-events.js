@@ -1,9 +1,16 @@
+//
+// Routing controllers for the event API
+// ----------------------------------------------
+// Ben C, March 2018
+//
+
 const express = require('express');
 const routes = express.Router();
 const utils = require('../lib/utils');
 
-// Routes for event API
-
+//
+// GET events - return array of events; with time range filter (active, future, past)
+//
 routes
 .get('/api/events/filter/:time', function (req, res, next) {
   res.type('application/json');
@@ -32,6 +39,10 @@ routes
   }
 })
 
+//
+// GET events - return array of all events, probably should have pagination at some point
+//
+routes
 .get('/api/events', function (req, res, next) {
   res.type('application/json');
   res.app.get('data').queryEvents({})
@@ -42,6 +53,10 @@ routes
     .catch(err => { res.status(500).send(err)})
 })
 
+//
+// GET event - return a single event by ID
+//
+routes
 .get('/api/events/:id', function (req, res, next) {
   res.type('application/json');
   res.app.get('data').getEvent(req.params.id)
@@ -54,6 +69,10 @@ routes
     .catch(err => { res.status(500).send(err)})
 })
 
+//
+// POST event - create a new event, call with event body with no id
+//
+routes
 .post('/api/events', function (req, res, next) {
   if(!utils.verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
 
@@ -68,6 +87,10 @@ routes
     .catch(err => utils.sendError(res, err));
 })
 
+//
+// PUT event - update an existing event, call with event body with id
+//
+routes
 .put('/api/events', function (req, res, next) {
   if(!utils.verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
 
@@ -83,6 +106,10 @@ routes
     .catch(err => utils.sendError(res, err));
 })
 
+//
+// DELETE event - delete single event by ID
+//
+routes
 .delete('/api/events/:id', function (req, res, next) {
   if(!utils.verifyCode(req.headers['x-secret'])) { res.sendStatus(401); return; }
 

@@ -1,39 +1,51 @@
+//
+// Data access layer, does all MongoDB operations
+// ----------------------------------------------
+// Ben C, March 2018
+//
+
 const utils = require('./utils');
-const URL = require('url');
 
 class DataAccess {
 
+  //
+  // Initialize
+  //
   constructor() {
-    // Unlikely you'll ever want to change these
+    // Unlikely you'll ever want to change these, but you probably could
     this.DBNAME = 'smilrDb';
     this.EVENT_COLLECTION = 'events';
     this.FEEDBACK_COLLECTION= 'feedback'; 
+
     this.MongoClient = require('mongodb').MongoClient;
   }
 
   //
-  // Connect to mongo, with retry logic
+  // Connect to MongoDB server, with retry logic
   //
   async connectMongo(connectionString, retries, delay) {
-    let err
+    let mongoErr
     let retry = 0;
-    let mongoHost = URL.parse(connectionString).host;
+    let mongoHost = require('url').parse(connectionString).host;
 
     while(true) {
       console.log(`### Connection attempt ${retry+1} to MongoDB server ${mongoHost}`)
 
       if(!this.db) {
+
+        // Use await and connect to Mongo
         await this.MongoClient.connect(connectionString)
         .then(db => {
-          // Switch DB and create if it doesn't exist
+          // Switch DB to smilr, which will create it, if it doesn't exist
           this.db = db.db(this.DBNAME);
           console.log(`### Yay! Connected to MongoDB server`)
         })
-        .catch(e => {
-          err = e
+        .catch(err => {
+          mongoErr = err
         });
       }
 
+      // If we don't have a db object, we've not connected - retry
       if(!this.db) {
         retry++;        
         if(retry < retries) {
@@ -43,6 +55,7 @@ class DataAccess {
         }
       }
       
+      // Return promise, if we have a db, resolve with it, otherwise reject with error
       return new Promise((resolve, reject) => {
         if(this.db) { resolve(this.db) }
         else { reject(err) }
@@ -85,6 +98,7 @@ class DataAccess {
   }
 
   createFeedback(feedback) {
+    // IMPORTANT!
     // We have to create our own id as a string, because Azure Functions can't handle mongo's self generated ids
     feedback._id = utils.makeId(12);
     return this.db.collection(this.FEEDBACK_COLLECTION).insertOne(feedback)
@@ -93,4 +107,4 @@ class DataAccess {
 
 // Create a singleton instance which is exported NOT the class 
 const self = new DataAccess();
-module.exports = self; //DataAccess;
+module.exports = self;
