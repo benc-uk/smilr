@@ -21,31 +21,27 @@ spec:
         app: frontend-replicaset
     spec:
       containers:
-      - name: frontend-pod
+      - name: frontend-pods
+
         # !CHANGE THIS! To your real image reference for the frontend 
         image: bcdemo.azurecr.io/smilr/frontend 
+
         ports:
         - containerPort: 3000
+
         env:       
         - name: API_ENDPOINT
           # !CHANGE THIS! To your real API endpoint DNS name or IP address
           value: http://smilr-api.democloud.org.uk/api 
 
----
-# ------------------- Loadbalancer ------------------- #
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 20
 
-kind: Service
-apiVersion: v1
-metadata:
-  name: frontend-endpoint
-  annotations:
-    # !CHANGE THIS! To your real DNS domain, if not using external DNS just leave & ignore
-    external-dns.alpha.kubernetes.io/hostname: smilr.democloud.org.uk 
-spec:
-  type: LoadBalancer
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000
-  selector:
-    app: frontend-replicaset
+        resources:
+          requests:
+            memory: "64M"
+            cpu: 0.125
