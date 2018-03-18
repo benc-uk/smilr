@@ -7,9 +7,11 @@ ARG angular_root="angular"
 
 WORKDIR /build
 
+# Install all the Angular dev tools & CLI
 COPY ${angular_root}/package.json .
 RUN npm install --silent
 
+# Copy in the Angular source
 COPY ${angular_root}/.angular-cli.json .
 COPY ${angular_root}/tsconfig.json .
 COPY ${angular_root}/src ./src
@@ -17,7 +19,7 @@ COPY ${angular_root}/src ./src
 # Run Angular CLI build & bundle in prod mode, and output to ./dist
 RUN node node_modules/@angular/cli/bin/ng build --prod
 
-######################## PART 2 ##############################
+# ===================================================================== #
 
 #
 # Build Node.js frontend service, pulling in output from previous image
