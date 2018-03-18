@@ -37,7 +37,7 @@ class DataAccess {
       if(!this.db) {
         retry++;        
         if(retry < retries) {
-          console.log(`### MongoDB connection attempt failed, retying in ${delay} seconds`);
+          console.log(`### MongoDB connection attempt failed, retrying in ${delay} seconds`);
           await utils.sleep(delay * 1000);
           continue;
         }
