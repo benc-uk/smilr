@@ -7,6 +7,9 @@ const app = express();
 const bodyParser = require('body-parser')
 const cors = require('cors');
 
+// Our dataAccess library
+var dataAccess = require('./lib/data-access');
+
 // Allow all CORS
 app.use(cors());
 
@@ -26,12 +29,9 @@ if (app.get('env') === 'production') {
 }
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
-// To work with the Cosmos DB emulator, and self signed certs
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-// We need these set or it's impossible to continue!
-if(!process.env.COSMOS_ENDPOINT || !process.env.COSMOS_KEY) {
-  console.error("### !ERROR! Missing env variables `COSMOS_ENDPOINT` or `COSMOS_KEY`. Exiting!");
+// We need this set or it's impossible to continue!
+if(!process.env.MONGO_CONNSTR) {
+  console.error("### !ERROR! Missing env variable MONGO_CONNSTR. Exiting!");
   process.exit(1)
 }
 
@@ -43,9 +43,27 @@ app.use('/', apiEvents);
 app.use('/', apiFeedback);
 app.use('/', apiOther);
 
-// Start the server
+// Get values from env vars or defaults where not provided
 var port = process.env.PORT || 4000;
-var server = app.listen(port, function () {
-   var port = server.address().port;
-   console.log(`### Server listening on ${server.address().port}`);
-});
+var monogUrl = process.env.MONGO_CONNSTR;  // Note. NO DEFAULT!
+var retries = process.env.MONGO_RETRIES || 5;
+var retryDelay = process.env.MONGO_RETRY_DELAY || 30;
+
+//
+// Connect to Mongo and start server
+//
+dataAccess.connectMongo(monogUrl, retries, retryDelay)
+.then(() => {
+  // This is important, pass our connected dataAccess 
+  app.set('data', dataAccess);
+
+  var server = app.listen(port, function () {
+    var port = server.address().port;
+    console.log(`### Server listening on ${server.address().port}`);
+  });
+})
+.catch(err => {
+  console.error(`### ERROR! Unable to connect to MongoDB!, URL=${process.env.MONGO_CONNSTR}`);
+  console.error(err.message);
+  process.exit(-1);
+})

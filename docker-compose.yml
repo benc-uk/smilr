@@ -1,6 +1,18 @@
 version: '3'
 
+# This file is intended for local testing and development
+# Not for use with Docker Swarm or for scaling to multiple containers per service
+
 services:
+  frontend:
+    image: ${DOCKER_REG}smilr/frontend
+    build: 
+      context: .
+      dockerfile: node/frontend/Dockerfile
+    ports: 
+      - 3000:3000
+    environment:
+      - API_ENDPOINT=http://localhost:4000/api
 
   data-api:
     image: ${DOCKER_REG}smilr/data-api
@@ -8,14 +20,20 @@ services:
       context: .
       dockerfile: node/data-api/Dockerfile
     ports: 
-      - "4000:4000"
-    env_file: node/data-api/.env
+      - 4000:4000
+    depends_on:
+      - database     
+    environment:
+      - MONGO_CONNSTR=mongodb://database
 
-  frontend:
-    image: ${DOCKER_REG}smilr/frontend
-    build: 
-      context: .
-      dockerfile: node/frontend/Dockerfile
+  database:
+    image: mongo:3.4-jessie
     ports: 
-      - "3000:3000"
-    env_file: node/frontend/.env
+      - 27017:27017
+    volumes:
+      - db-data:/data/db
+      - db-config:/data/configdb
+      
+volumes:
+  db-data:
+  db-config:
