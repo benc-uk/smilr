@@ -1,22 +1,22 @@
 # Kubernetes - Azure Container Service (AKS)
 This document covers setting up Kubernetes in Azure Container Service (AKS) and then deploying the Smilr app to it.  
-This assumes you are using WSL bash and have the latest Azure CLI installed (2.0.21+)
+This assumes you have the latest Azure CLI installed (2.0.21+)
 
 > :exclamation::speech_balloon: **Note.** At the time of writing (Mar 2018) the only regions where AKS is deployed are; westeurope, westus2, eastus, centralus, canadacentral & canadaeast
-
-> # TODO - !!! UPDATE FOR MONGO CHANGES !!!
 
 # Set-up & Creation of AKS
 
 ## Create AKS cluster
-Running in WSL bash, the `az aks create` command uses your default **~/.ssh/id_rsa.pub** file. If you have your own SSH keys you wish to use, then replace the `--generate-ssh-keys` parameter with `--ssh-key-value` and provide the key public contents as a string
+Using the Azure CLI creating an AKS cluster is easy. 
 
-You can obviously change the number of agents (VMs that will host containers) and their size
+The command might take some time, in some cases up to an hour 
+```
+az aks create -g {res_group} -n {aks_name} -l {location} --node-count 3 --node-vm-size Standard_B4ms -k 1.9.1
+```
+You can obviously change the number of nodes (VMs that will host containers) and their size. Here we are using the B-series VMs with 4 cores and 16GB memory and we build three of them
 
-The command might take some time, so be patient 
-```
-az aks create -g {res_group} -n {aks_name} -l {location} --agent-count 2 --agent-vm-size Standard_A2_v2 -k 1.8.1 --generate-ssh-keys
-```
+Running in WSL bash, the `az aks create` command uses your default **~/.ssh/id_rsa.pub** file to provision the cluster. If you have your own SSH keys you wish to use, then add the `--ssh-key-value` parameter and provide the key public contents as a string
+
 
 ## Get Kubectl and Credentials
 To access the Kubernetes system you will be using the standard Kubernetes `kubectl` command line tool. To download the `kubectl` binary run:
@@ -47,55 +47,78 @@ Then access [http://127.0.0.1:8001](http://127.0.0.1:8001) in your browser. Note
 # Deploying Smilr to AKS
 
 ## Pre-requisites 
-- Deploy Azure Container Registry (ACR), build docker images and push to ACR. [See container docs for details](/docs/containers.md)
+Before starting deploying Smilr into Kubernetes you will need to Deploy Azure Container Registry (ACR), build the Docker images and push them up to ACR.  
 
-## OPTIONAL - Deploy External DNS
-These optional steps require you to have a DNS domain you own and that domain to be managed in Azure in a DNS Zone. This part is not for the faint of heart, so you can skip this part and just use IP addresses
+:page_with_curl: [Refer to the complete container guide for details](/docs/containers.md)
 
-Create a config file called `azure.json`, take a copy & rename sample '[**azure.json.sample**](azure.json.sample)' file, and populate with real values. You will need your Azure subscription-id, tenant-id and the client-id & secret of the AAD service principal that was created when you created your AKS instance. Find the service principal in the Azure portal under 'App Registrations' and create a new key and make a note of the secret.
+Notes on Smilr Kubernetes deployment:
+- When deploying to Kubernetes use of the `default` namespace is assumed.
+- The deployment files are split into separate `.deploy` and `.svc` files. This allows us to modify and deploy them separately. In many cases you might want to re-deploy the pods (in the `.deploy` file) but leave the load-balancer in place (in the `.svc` file).
+- Kuberenetes version 1.9 is assumed, if you are using 1.8 or older the API version in the deployment YAML may require changing e.g. to `apiVersion: apps/v1beta1`
+
+
+## Deploy MongoDB
+Deploy the MongoDB pod to Kubernetes with the following: 
+```
+kubectl create -f mongodb.all.yaml
+```
+This will run as a single pod, and the be exposed only inside the cluster (with ClusterIP), the default hostname to access it from within the cluster is `mongodb-endpoint.default`. This is the name of the ClusterIP service we create followed by the namespace name 
+
+> :exclamation::speech_balloon: **Note.** Currently Mongo is **not** configured as a StatefulSet, so you can only have a single pod running. This simplifies things significantly for most demos
+
+## Deploy Smilr Microservice - Data API 
+Then deploy the data-api containers to Kubernetes with: 
+```
+kubectl create -f data-api.deploy.yaml
+```
+Check the pods all start using the dashboard or with `kubectl get pods`  
+There should be four pods created and running
+
+Then deploy the data-api loadbalanced public IP and endpoint to Kubernetes with: 
+```
+kubectl create -f data-api.svc.yaml
+```
+Check the status with `kubectl get svc`, and wait for the **EXTERNAL-IP** to get assigned to **data-api-endpoint**, this will take about 5-10 minutes so be patient. It is advised in a demo to create this ahead of time and not delete it. 
+
+Make of note of this IP as will need it in the next step
+
+
+## Deploy Smilr Microservice - Frontend
+Edit [**frontend.deploy.yaml**](frontend.deploy.yaml) and change the value of `API_ENDPOINT`. If you used external DNS, then set it to the domain name you configured in **data-api.deploy.yaml**. If not using DNS, then your need the external IP of **data-api-endpoint** you fetched in the previous step, this means you need to wait for that to deploy.
+
+:exclamation::speech_balloon: **Note.** Don't forget the URL scheme and trailing **/api** path, so `API_ENDPOINT` will take the form `http://{dns-or-ip}/api`
+
+Then deploy the frontend containers to Kubernetes with: 
+```
+kubectl create -f frontend.deploy.yaml
+```
+
+Then deploy the frontend loadbalanced public IP and endpoint to Kubernetes with: 
+```
+kubectl create -f frontend.svc.yaml
+```
+Again wait for and validate that **frontend-endpoint** has an external IP and or DNS (same process and delay as the **data-api-endpoint**), then access this in your browser :)
+
+---
+
+# Optional Appendix - Deploy External DNS
+These optional steps require you to have a DNS domain you own and that domain to be managed in Azure in a DNS Zone.  
+:exclamation::speech_balloon: **Note.** This part is not for the faint of heart, so you can skip this section and just use IP addresses
+
+Using DNS simplifies configuration, as you don't need to edit the `frontend.deploy.yaml` file to update it with the **data-api-endpoint** IP
+
+Create a config file called `azure.json`, take a copy & rename the sample [azure.json.sample](azure.json.sample) file, and populate with real values. You will need your Azure subscription-id, tenant-id and the client-id & secret of the AAD service principal that was created when you created your AKS instance (it has the same name as the AKS instance). 
+
+Find the service principal in the Azure portal under 'App Registrations' and manually create a new key and make a note of the secret.
 
 ```
 kubectl create secret generic azure-config-file --from-file=azure.json
 ```
 
-Edit `external-dns.yaml` and change the DNS zone & resource to match your domain configuration, then run
+Edit `external-dns.deploy.yaml` and change the DNS zone & resource group to match your configuration in Azure, then run
 ```
-kubectl create -f external-dns.yaml
-```
-
-Edit both `deploy-frontend.yaml` and `deploy-data-api.yaml` and change the annotation called **external-dns.alpha.kubernetes.io&#8203;/&#8203;hostname** giving them a name each within your domain zone, e.g. `smilr.example.com` and `smilr-api.example.com`
-
-
-## Deploy pods & service: data-api
-Unfortunately Kubernetes deployment YAML files don't currently support injecting variables at deployment time like Docker Compose. The only solution is editing the files.
-
-Edit [**deploy-data-api.yaml**](deploy-data-api.yaml) and change the value of `COSMOS_ENDPOINT` to match the Cosmos instance you deployed earlier. 
-
-Create secret which holds the Cosmos DB master key.  
-Get the Cosmos DB key into a bash variable with the following command, change the name and/or resource group as required. They key variable is then used to create the Kubernetes secret. You only need to do this once, even after removing and re-deploying the pods
-```
-cosmosKey=`az cosmosdb list-keys -g $resGroup -n cosmosname --query "primaryMasterKey" -o tsv`
-kubectl create secret generic cosmos-secrets --from-literal=$cosmosKey
+kubectl create -f external-dns.deploy.yaml
 ```
 
-Then deploy the data-api service to Kubernetes with: 
-```
-kubectl create -f deploy-data-api.yaml
-```
-Wait for the service to be assigned a public IP, you can check with 
-```
-kubectl get svc
-```
-And validate that **data-api-svc** has an external IP, this can sometimes take 5-10 mins. If you used external DNS, validate it has been assigned by using `nslookup` and checking the DNS Zone in Azure with `az network dns record-set list -g {dns_res_group} --zone-name {mydomain.com} -o table`
+Edit both `frontend.svc.yaml` and `data-api.svc.yaml` and uncomment the annotation called **external-dns.alpha.kubernetes.io&#8203;/&#8203;hostname** giving them a name each within your domain zone, e.g. `smilr.example.com` and `smilr-api.example.com`
 
-
-## Deploy pods & service: frontend
-Edit [**deploy-frontend-api.yaml**](deploy-frontend-api.yaml) and change the value of `API_ENDPOINT`. If you used external DNS, then set it to the domain name you configured in **deploy-data-api.yaml**. If not using DNS, then your need the external IP of **data-api-svc** you fetched earlier, this means you need to wait for that to deploy.
-
-:exclamation::speech_balloon: **Note.** Don't forget the URL scheme and trailing **/api** path, so `API_ENDPOINT` will take the form `http://{dns-or-ip}/api`
-
-To deploy the frontend pods now run: 
-```
-kubectl create -f deploy-frontend.yaml
-```
-Again wait for and validate that **frontend-svc** has an external IP and or DNS, then access this in your browser :)
