@@ -8,11 +8,11 @@ class Utils {
   //
   // Try to send back the underlying error code and message
   //
-  sendError(res, err) {
+  sendError(res, err, code = 500) {
     console.log(`### Error with events API ${JSON.stringify(err)}`); 
-    let code = 500;
-    if(err.code > 1) code = err.code;
-    res.status(code).send(err);
+    let statuscode = code;
+    if(err.code > 1) statuscode = err.code;
+    res.status(statuscode).send(err);
     return;
   }
 
