@@ -47,7 +47,6 @@ Then access [http://127.0.0.1:8001](http://127.0.0.1:8001) in your browser. Note
 # Deploying Smilr to AKS
 
 ## Pre-requisites 
-- Deploy Cosmos DB account and get the master key. [See main README for details](/readme.md#component-4---database)
 - Deploy Azure Container Registry (ACR), build docker images and push to ACR. [See container docs for details](/docs/containers.md)
 
 ## OPTIONAL - Deploy External DNS

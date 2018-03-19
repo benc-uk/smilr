@@ -26,7 +26,7 @@ This application supports a range of demonstration, and learning scenarios, such
  - Using serverless technology to support or provide services
  - Use of an open source application stack such as Angular and Node.js
  - RESTful API design 
- - The Actor model as an alternative to a traditonal data model
+ - The Actor model as an alternative to a traditional data model
 
 ---
 
@@ -50,7 +50,7 @@ The main levels of the repository directory tree are laid out as follows
 ├── orleans            Orleans actor model implementation of the services  - WIP
 ├── scripts            Supporting helper scripts
 │   ├── genOTP            Generate one time passwords for API testing
-│   └── initdb            Initialize the Cosmos database and populate with demo data
+│   └── demoData          Load the database with demo data
 └── servicefabric      Service Fabric implementation of the services - WIP
 ```
 
@@ -187,6 +187,7 @@ Run `npm install` in the **data-api** folder, ensure the environment variables a
 
 # Component 4 - Database
 All data is held in a single MongoDB database called **smilrDb** across two collections `events` and `feedback`.
+If they don't exist, the database and collections will be created by the data API on first access, so there is no need to initialize the database.  
 The app has been developed and tested again MongoDB versions 3.6 and 3.4, however only very standard Mongo API functionality is used, so it is expected that other 3.x versions will be compatible.
 
 The choice of MongoDB allows us to explore several deployment architectures, the main two being 
@@ -212,8 +213,9 @@ You can then obtain the MongoDB connection string using the Azure portal or the 
 az cosmosdb list-connection-strings --resource-group {res_group} --name changeme 
 ```
 
-## Database Initialization 
-This has been removed from the API and is now done with the **initdb.js** helper script - [full documentation](scripts/initdb)
+## Loading Demo Data
+The database requires no initialization, however a helper script is provided to populate the system with demo data:
+- **:page_with_curl: [Helper Script: demoData](scripts/demoData)**
 
 ## Data Model
 There are two main models, one for holding an **Event** and one for submitted **Feedback**, there are also **Topics** which only exist as simple objects nested inside **Events**. **Topics** as entities only exist logically client side, from the perspective of the API and database, there are only **Events** & **Feedback**, this means events are always stored & retrieved with a simple serialized JSON array of topics within them
@@ -324,7 +326,7 @@ If you are running the data API directly on your machine using Node (e.g. runnin
 ## Run the Backend Data API Service
 The connection string for MongoDB on the local machine is `mongodb://localhost` this will need to be passed to the data api as the `MONGO_CONNSTR` env var. 
 
-Initialize the database using the **initdb.js** helper script - [full documentation](scripts/initdb)
+Optional - Load the database using the **demoData** helper script - [full documentation](scripts/demoData)
 
 ## Run the Front End Service
 Remember that you need to build a production version of the service, otherwise the Angular app defaults to the in-memory version and the back end version won't be called.
@@ -336,13 +338,14 @@ Check that the system works end to end by browsing to http://localhost:3000 and 
 # Deployment in Azure
 ## Deploying as Containers
 Containers provide a perfect environment for running microservices, as such documentation and supporting files are provided to run Smilr in both Linux and Windows containers
-> **[:arrow_right: Full details on Containers & Docker](docs/containers.md)**
+
+### :page_with_curl: [Guide on Containers & Docker](docs/containers.md)
 
 ## Kubernetes (AKS)
-> **[:arrow_right: Full details on running in Kubernetes](kubernetes/readme.md)**
+### :page_with_curl: [Guide for running in Kubernetes](kubernetes/readme.md)
 
 ## Azure Container Instance
-[See ARM templates for deploying to Azure Container Instance](/azure/templates/) and also [building Docker images](docs/containers.md)
+### :page_with_curl: [ARM Templates for ACI](/azure/templates/)
 
 ## Azure App Service
 Provided [PowerShell script](/azure/appservice/) will build the front end service and deploy to Azure App Service. 

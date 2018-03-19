@@ -18,4 +18,4 @@ Deploy the Smilr app using just Azure Container Instances with MongoDB running i
 [![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fmicroservices-demoapp%2Fmaster%2Fazure%2Ftemplates%2Faci-mongo%2Fazuredeploy.json)  
 
 ## Notes
-The Mongo server is not exposed to the internet so you can not run the initdb script against it to load demo data, but you can create events using the admin pages of the frontend
+The Mongo server is not exposed to the internet so you can not run the **demoData** script against it to load demo data, but you can create events using the admin pages of the frontend

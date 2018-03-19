@@ -7,8 +7,8 @@ docker-compose*
 .dockerignore
 .git
 .gitignore
-README.md
-**/README.md
+readme.md
+**/readme.md
 **/LICENSE
 .vscode
 **/.env
