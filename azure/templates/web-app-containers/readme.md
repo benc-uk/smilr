@@ -23,4 +23,3 @@ A new Cosmos DB account will be created, so this template takes around 5 minutes
 [![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fmicroservices-demoapp%2Fmaster%2Fazure%2Ftemplates%2Fweb-app-containers%2Fazuredeploy.json)  
 
 ## Notes
-After deployment you will need to initialize the database, use the [initdb script](/scripts/initdb/), the `mongoConnStr` output will provide the connection string you need to pass in.

@@ -14,15 +14,15 @@ If you want to build the images individually, rather than using Docker Compose, 
 
 # Docker Registry - ACR
 It is assumed that your images will be stored in Azure Container Registry (ACR) rather than a public repo (i.e. Dockerhub).  
-As a pre-req, [create and set-up an ACR instance](acr.md), if you have an existing ACR instance, you can simply re-use it.
+As a pre-req, create and set-up an ACR instance using the :page_with_curl: **[ACR Guide](acr.md)**, if you have an existing ACR instance, you can simply re-use it.
 
 # Docker Compose
-Docker Compose allows us to simplify the building and running of the two images, so a [docker-compose.yml](../docker-compose.yml) file has been created.  
+Docker Compose allows us to simplify the building and running of the two images, so a [docker-compose.yml](/docker-compose.yml) file has been created.  
 The compose file is relatively simple, so even if you are unfamiliar with Docker Compose I recommend taking a look at it. Some notes:
 - The compose file is setup to build and tag the images (see the `build` section)
 - The Smilr frontend, Smilr data API and MonogDB services are defined
 - The Smilr containers will expose their default ports (3000 and 4000), you can map these to something else (with the syntax `<external_port>:<container_port>`)
-- MongoDB will expose port 27017 externally. Note this is only to allow the initdb helper script to be run against it
+- MongoDB will expose port 27017 externally. Note this is only to allow the **demoData** helper script to be run against it
 - The Smilr data API and MonogDB containers will internally communicate via a network called **smilr-net**
 - Volumes will be created to persist the MongoDB data
 
