@@ -72,16 +72,17 @@ class DataAccess {
   }
 
   getEvent(id) {
-    return this.db.collection(this.EVENT_COLLECTION).findOne({_id:id})
+    return this.db.collection(this.EVENT_COLLECTION).findOne({_id: id})
   }
 
   deleteEvent(id) {
-    return this.db.collection(this.EVENT_COLLECTION).deleteOne({_id:id})
+    return this.db.collection(this.EVENT_COLLECTION).deleteOne({_id: id})
   }
 
-  createOrUpdateEvent(event) {
+  // Used to both create and update events. NOTE doUpsert=true is only used by demoData loading script
+  createOrUpdateEvent(event, doUpsert) {
     if (event._id) {
-      return this.db.collection(this.EVENT_COLLECTION).updateOne({_id:event._id}, {$set:event}, {upsert:true});
+      return this.db.collection(this.EVENT_COLLECTION).updateOne({_id: event._id}, {$set: event}, {upsert: doUpsert});
     } else {
       // Create a random short-code style id for new events, 
       event._id = utils.makeId(5);
