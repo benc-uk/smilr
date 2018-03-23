@@ -10,7 +10,7 @@ export class InMemService implements InMemoryDbService {
         title: 'Test Workshop', 
         type: 'workshop', 
         start: '2018-01-01', 
-        end: '2018-02-04',
+        end: '2018-12-03',
         topics: [
           {id: 1, desc: 'General Stuff' }
         ]
@@ -19,8 +19,8 @@ export class InMemService implements InMemoryDbService {
         id: 2,
         title: 'Test Event', 
         type: 'event', 
-        start: '2018-12-05', 
-        end: '2018-12-06',
+        start: '2018-12-19', 
+        end: '2018-12-22',
         topics: [
           {id: 1, desc: 'Morning Session'},
           {id: 2, desc: 'Afternoon Session'}
