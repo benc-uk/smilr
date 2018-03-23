@@ -3,7 +3,7 @@
   "version": "2.1.1",
   "main": "server.js",
   "engines": {
-    "node": "^8.9.3"
+    "node": "^8.10.0"
   },
   "description": "Main microservice, REST data API",
   "scripts": {
@@ -14,7 +14,7 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
-    "dotenv": "^4.0.0",
+    "dotenv": "^5.0.0",
     "express": "^4.16.2",
     "jsotp": "^1.0.2",
     "mongodb": "~2.2.0",
