@@ -43,3 +43,11 @@ spec:
           requests:
             memory: "256M"
             cpu: 0.25
+            
+      initContainers:
+        - name: init-demodata
+          image: bcdemo.azurecr.io/smilr/data-api
+          command: ['sh', '-c', 'cd demoData && node demoData.js']
+          env:
+            - name: MONGO_CONNSTR
+              value: mongodb://mongodb-svc.default
