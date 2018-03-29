@@ -83,11 +83,11 @@ These will be each described in their own sections below.
 ---
 
 # Component 1 - Angular Front End UI 
-This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0. To build and run you will need Node.js installed (6.11 and 8.9 have been tested) and also NPM. To install the Angular CLI run `npm install @angular/cli -g`, v1.5.0 or higher will be needed. 
+This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0. To build and run you will need Node.js installed (6.11 and 8.9 have been tested) and also NPM. To install the Angular CLI run `npm install @angular/cli -g`, v1.7.0 or higher will be needed. 
 
 ## Development Server
 First install packages from NPM by running `npm install`. Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-When running in non production (or dev) mode, InMemoryDbService is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
+When running in non production (or dev) mode, **InMemoryDbService** is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
 
 ## Build
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. You should use the `--prod` flag for a production build.
