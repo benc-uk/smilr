@@ -16,6 +16,7 @@ module.exports = function (context, documents) {
             var docId = docValue._id.$v;
             if(docValue.hasOwnProperty('sentiment')) continue;
             context.log(`### Triggered on changed/new feedback document: ${docId}`);
+            context.log(`### Comment: "${comment}"`);
             docsToSend.push({id: docId, text: comment});
         }
 
@@ -25,20 +26,16 @@ module.exports = function (context, documents) {
             return;
         }
 
-        var congnitiveBody = {
-            documents: docsToSend
-        }
-
-        let congnitiveReq = {
+        let congnitiveRequest = {
             url: COGNITIVE_URL,
             headers: {'content-type': 'application/json', 'Ocp-Apim-Subscription-Key': COGNITIVE_API_KEY},
-            body: JSON.stringify(congnitiveBody)
+            body: JSON.stringify({documents: docsToSend})
         }
 
-        request.post(congnitiveReq)
-        .then(rawResult => {
-            congnitiveResult = JSON.parse(rawResult);
-            context.log("### Results ", rawResult);
+        request.post(congnitiveRequest)
+        .then(cogResultRaw => {
+            congnitiveResult = JSON.parse(cogResultRaw);
+            context.log("### Results ", cogResultRaw);
 
             // Now connect to MongoDB - Note we can not use the native Functions bindings :(
             MongoClient.connect(MONGO_CONNSTR)
@@ -46,20 +43,24 @@ module.exports = function (context, documents) {
                 context.log("### Connected to Mongo OK");
                 let smilrDb = db.db('smilrDb');
                 let feedback = smilrDb.collection('feedback');
-                for(let res of congnitiveResult.documents) {
+                var proms = [];
+                for(let res of congnitiveResult.documents) {    
                     feedback.updateOne({_id:res.id}, {$set:{sentiment:res.score}})
-                    .then(() => context.log(`### Updated doc '${res.id}' with score '${res.score}'`))
+                    .then(updateRes => proms.push(updateRes))
                     .catch(err => context.log("### Error performing update: ", err))
                 }
+                Promise.all(proms).then(() => {
+                    context.log(`### Done updating docs`)
+                    db.close();
+                    context.done();
+                })
             })
             .catch(err => {
-                context.log("### MongoDB error", err);
+                context.log("### MongoDB error", err); context.done();
             })   
         })
         .catch(err => {
-            context.log(err);
+            context.log(err); context.done();
         })
     }
-
-    context.done();
 }

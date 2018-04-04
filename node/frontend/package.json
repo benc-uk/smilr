@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "main": "server.js",
   "engines": {
-    "node": "^8.9.3"
+    "node": "^8.10.0"
   },
   "description": "Simple server for Angular apps",
   "scripts": {
@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/benc-uk/microservices-demoapp",
   "dependencies": {
-    "dotenv": "^4.0.0",
+    "dotenv": "^5.0.0",
     "express": "^4.16.2"
   }
 }

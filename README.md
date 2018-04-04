@@ -83,11 +83,11 @@ These will be each described in their own sections below.
 ---
 
 # Component 1 - Angular Front End UI 
-This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0. To build and run you will need Node.js installed (6.11 and 8.9 have been tested) and also NPM. To install the Angular CLI run `npm install @angular/cli -g`, v1.5.0 or higher will be needed. 
+This app was generated with the [Angular CLI](https://github.com/angular/angular-cli) and uses Angular 5.0. To build and run you will need Node.js installed (6.11 and 8.9 have been tested) and also NPM. To install the Angular CLI run `npm install @angular/cli -g`, v1.7.0 or higher will be needed. 
 
 ## Development Server
 First install packages from NPM by running `npm install`. Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-When running in non production (or dev) mode, InMemoryDbService is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
+When running in non production (or dev) mode, **InMemoryDbService** is used to provide a mock HTTP API and datastore, this will intercept all HTTP calls made by the app and act as both the API and DB.
 
 ## Build
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. You should use the `--prod` flag for a production build.
@@ -261,6 +261,9 @@ The is implemented in Azure Functions, using the Cosmos DB change trigger, so th
 Further notes are [included with the code here](azure/functions/sentimentScore)
 
 ## Data API Serverless Version
+
+***SECTION NEEDS UPDATING***
+
 The data-api service has been re-implemented in a serverless model, this is also using Azure Functions. This component is optional as functionally it is identical to the "normal" non-serverless version of the service. It has been created as a small proof of concept around the idea of using serverless design in a RESTful microservices app, such as Smilr.
 
 The complete API of data-api service has not been replicated, rather a minimum subset has been implemented, in order to get the front end functional and users can submit feedback. The admin part of the API and front end has been omitted.
@@ -270,7 +273,9 @@ Azure Functions and Azure Functions Proxies are used to reproduce the same REST 
 The exact same [data access library](node/data-api/lib/data-access.js) used by the Node service is used by the Functions version, meaning 100% code reuse without any change.
 
 ## Deploying Serverless Data API
-You can deploy the serverless data-api into any Functions App, simply copy the whole of the [azure-functions](azure/functions/) to the App Service, into `wwwroot`
+You can deploy the serverless data-api any v2 Functions App, simply copy the whole of the [azure-functions](azure/functions/) to the App Service, into `wwwroot`. 
+
+:exclamation::speech_balloon: **Note.** Version 2 of Functions is required along with Node v8+ due to the use of Promises and async/await in the data access library
 
 ![](https://user-images.githubusercontent.com/14982936/36417631-5e5c4cca-1624-11e8-9e22-65e7ff2e31bd.png)
 
