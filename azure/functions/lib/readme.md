@@ -1,2 +1,2 @@
 # Note
-The **data-access.js** file here is an exact copy of the file found in the node/data-api sub-project
+The **data-access.js** & **utils.js** files here are an exact copies of the files found in the **node/data-api** sub-project

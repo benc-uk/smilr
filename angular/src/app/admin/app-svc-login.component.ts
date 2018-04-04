@@ -13,7 +13,7 @@ export class AppSvcLogin {
 
   constructor(userSvc : UserService, private http: HttpClient, private router: Router) { 
     this.http.get('/.auth/me').subscribe(
-      data => { userSvc.accessTokens = data; console.log(userSvc.accessTokens); router.navigate(['/home']) } ,
+      data => { userSvc.accessTokens = data; router.navigate(['/home']) },
       err => console.log(err)
     );
   }
