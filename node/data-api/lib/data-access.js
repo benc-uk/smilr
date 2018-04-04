@@ -23,7 +23,7 @@ class DataAccess {
   //
   // Connect to MongoDB server, with retry logic
   //
-  async connectMongo(connectionString, retries, delay) {
+  async connectMongo(connectionString, retries, delay, force = false) {
     let mongoErr
     let retry = 0;
     let mongoHost = require('url').parse(connectionString).host;
@@ -31,7 +31,7 @@ class DataAccess {
     while(true) {
       console.log(`### Connection attempt ${retry+1} to MongoDB server ${mongoHost}`)
 
-      if(!this.db) {
+      if(!this.db || force) {
 
         // Use await and connect to Mongo
         await this.MongoClient.connect(connectionString)

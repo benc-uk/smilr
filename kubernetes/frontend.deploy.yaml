@@ -9,22 +9,22 @@ apiVersion: apps/v1
 metadata:
   name: frontend
   labels:
-    app: frontend-app
+    app: frontend
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: frontend-replicaset
+      app: frontend
   template:
     metadata:
       labels:
-        app: frontend-replicaset
+        app: frontend
     spec:
       containers:
       - name: frontend-pods
 
         # !CHANGE THIS! To your real image reference for the frontend 
-        image: bcdemo.azurecr.io/smilr/frontend 
+        image: bcdemo.azurecr.io/smilr/frontend
 
         ports:
         - containerPort: 3000

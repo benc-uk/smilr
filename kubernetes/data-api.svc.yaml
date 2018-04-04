@@ -7,7 +7,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: data-api-endpoint
+  name: data-api-svc
   annotations:
     # !CHANGE THIS! To your real DNS domain, if not using external DNS just leave & ignore
     external-dns.alpha.kubernetes.io/hostname: smilr-api.democloud.org.uk 
@@ -18,4 +18,4 @@ spec:
     port: 80
     targetPort: 4000
   selector:
-    app: data-api-replicaset
+    app: data-api

@@ -261,6 +261,9 @@ The is implemented in Azure Functions, using the Cosmos DB change trigger, so th
 Further notes are [included with the code here](azure/functions/sentimentScore)
 
 ## Data API Serverless Version
+
+***SECTION NEEDS UPDATING***
+
 The data-api service has been re-implemented in a serverless model, this is also using Azure Functions. This component is optional as functionally it is identical to the "normal" non-serverless version of the service. It has been created as a small proof of concept around the idea of using serverless design in a RESTful microservices app, such as Smilr.
 
 The complete API of data-api service has not been replicated, rather a minimum subset has been implemented, in order to get the front end functional and users can submit feedback. The admin part of the API and front end has been omitted.
@@ -270,7 +273,9 @@ Azure Functions and Azure Functions Proxies are used to reproduce the same REST 
 The exact same [data access library](node/data-api/lib/data-access.js) used by the Node service is used by the Functions version, meaning 100% code reuse without any change.
 
 ## Deploying Serverless Data API
-You can deploy the serverless data-api into any Functions App, simply copy the whole of the [azure-functions](azure/functions/) to the App Service, into `wwwroot`
+You can deploy the serverless data-api any v2 Functions App, simply copy the whole of the [azure-functions](azure/functions/) to the App Service, into `wwwroot`. 
+
+:exclamation::speech_balloon: **Note.** Version 2 of Functions is required along with Node v8+ due to the use of Promises and async/await in the data access library
 
 ![](https://user-images.githubusercontent.com/14982936/36417631-5e5c4cca-1624-11e8-9e22-65e7ff2e31bd.png)
 
