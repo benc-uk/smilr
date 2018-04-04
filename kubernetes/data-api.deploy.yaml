@@ -3,21 +3,22 @@
 #
 
 # ------------------- Deployment ------------------- #
+
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: data-api
   labels:
-    app: data-api-app
+    app: data-api
 spec:
-  replicas: 4
+  replicas: 3
   selector:
     matchLabels:
-      app: data-api-replicaset
+      app: data-api
   template:
     metadata:
       labels:
-        app: data-api-replicaset
+        app: data-api
     spec:
       containers:
       - name: data-api-pods
@@ -30,7 +31,7 @@ spec:
 
         env:     
         - name: MONGO_CONNSTR
-          value: mongodb://mongodb-endpoint.default
+          value: mongodb://mongodb-svc.default
 
         livenessProbe:
           httpGet:
@@ -43,3 +44,14 @@ spec:
           requests:
             memory: "256M"
             cpu: 0.25
+            
+      # Wipe & initialize the database with demo data, remove if unwanted
+      initContainers:
+        - name: init-demodata
+          image: bcdemo.azurecr.io/smilr/data-api
+          command: ['sh', '-c', 'cd demoData && node demoData.js']
+          env:
+            - name: MONGO_CONNSTR
+              value: mongodb://mongodb-svc.default
+            - name: WIPE_DB
+              value: "1"

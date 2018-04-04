@@ -15,6 +15,11 @@ RUN npm install --production --silent
 # NPM is done, now copy in the the whole project to the workdir
 COPY ${basedir}/ .
 
+# Copy in demoData script in case we need it, all of this is a nice to have
+COPY scripts/demoData/demoData.js ./demoData/
+COPY scripts/demoData/source-data.json ./demoData/
+RUN sed -i 's/..\/node\/data-api\///g' -i ./demoData/demoData.js
+
 # Install bash inside container as it's good for debugging 
 RUN apk update && apk add bash
 
