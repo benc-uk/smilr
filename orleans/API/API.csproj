@@ -2,15 +2,16 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>920ac032-4a55-43c1-9e93-e1fdb2f37377</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-rc1" />
-    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="2.0.0-rc1" />
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-rc1" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />

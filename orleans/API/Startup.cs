@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Orleans;
 using Orleans.Hosting;
+using Orleans.Configuration;
 
 namespace API
 {
@@ -46,12 +47,14 @@ namespace API
         {
             Console.WriteLine($"Using ClusterId = {this.Configuration["Orleans:ClusterId"]}");
             Console.WriteLine($"Using ConnectionString = {this.Configuration["Orleans:ConnectionString"]}");
-            
-            // don't forget you need to set the ClusterId and ConnectionString in the config, via
-            //  appsettings.json or envirinment variable 
-            var client = new ClientBuilder()
+
+      // don't forget you need to set the ClusterId and ConnectionString in the config, via
+      //  appsettings.json or envirinment variable
+      // see https://dotnet.github.io/orleans/Documentation/Deployment-and-Operations/Configuration-Guide/Client-Configuration.html
+      var client = new ClientBuilder()
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IValueGrain).Assembly))
-                .ConfigureCluster(options => options.ClusterId = this.Configuration["Orleans:ClusterId"])
+                //.ConfigureCluster(options => options.ClusterId = this.Configuration["Orleans:ClusterId"])
+                .Configure<ClusterOptions>(options => options.ClusterId = this.Configuration["Orleans:ClusterId"])
                 .UseAzureStorageClustering(options => options.ConnectionString = this.Configuration["Orleans:ConnectionString"])
                 .Build();
 

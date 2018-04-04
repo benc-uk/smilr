@@ -49,6 +49,30 @@ namespace API.Controllers
     }
 
 
+    // Update existing event
+    // PUT api/events
+    [HttpPut("")]
+    public async Task Put([FromBody] EventAPI body)
+    {
+      logger.LogInformation($"PUT /api/events: incoming body = {body}");
+
+      string eventCode = body.id;
+      if (eventCode == "")
+      {
+        Response.StatusCode = 204;
+        return;
+      }
+
+      // update grain
+      await ConnectClientIfNeeded();
+      var grain = this.client.GetGrain<IEventGrain>(eventCode);
+      await grain.Update(body.title, body.type, body.start, body.end, body.topics);
+
+      return;
+    }
+
+
+
     // Get specific event info
     // GET api/events/{id}
     [HttpGet("{id}")]
