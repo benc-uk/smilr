@@ -124,6 +124,7 @@ namespace DataGateway.Controllers
 
     // PUT api/values
     [HttpPut]
+    [HttpPost]
     public async Task<IActionResult> PutAsync([FromBody] SmilrEvent smilrEvent)
     {
       int partitionKey;
