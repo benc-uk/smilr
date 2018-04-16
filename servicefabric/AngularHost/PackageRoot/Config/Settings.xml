@@ -2,6 +2,5 @@
 <Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Section Name="AngularHostConfigSection">
     <Parameter Name="API_ENDPOINT" Value="http://localhost:8080/api" />
-    <Parameter Name="API_ENDPOINT2" Value="http://rosmith.westeurope.cloudapp.azure.com:19081/Smilr/DataGateway/api" />
   </Section>
 </Settings>
