@@ -109,15 +109,15 @@ Using DNS simplifies configuration, as you don't need to edit the `frontend.depl
 
 Create a config file called `azure.json`, take a copy & rename the sample [azure.json.sample](azure.json.sample) file, and populate with real values. You will need your Azure subscription-id, tenant-id and the client-id & secret of the AAD service principal that was created when you created your AKS instance (it has the same name as the AKS instance). 
 
-Find the service principal in the Azure portal under 'App Registrations' and manually create a new key and make a note of the secret.
+Most of this information is held in `~/.azure/aksServicePrincipal.json`, the key to each object in the JSON is the Azure subscription id
 
 ```
-kubectl create secret generic azure-config-file --from-file=azure.json
+kubectl create secret generic azure-config-file --from-file=azure.json -n azure-system
 ```
 
-Edit `external-dns.deploy.yaml` and change the DNS zone & resource group to match your configuration in Azure, then run
+Edit `external-dns/deploy.yaml` and change the DNS zone & resource group to match your configuration in Azure, then run
 ```
-kubectl create -f external-dns.deploy.yaml
+kubectl create -f external-dns/deploy.yaml -n azure-system
 ```
 
 Edit both `frontend.svc.yaml` and `data-api.svc.yaml` and uncomment the annotation called **external-dns.alpha.kubernetes.io&#8203;/&#8203;hostname** giving them a name each within your domain zone, e.g. `smilr.example.com` and `smilr-api.example.com`

@@ -1,0 +1,21 @@
+#
+# Deploy the front end Angular UI microservice in Kubernetes
+#
+
+# ------------------- Loadbalancer ------------------- #
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-svc
+  annotations:
+    # !CHANGE THIS! To your real DNS domain, if not using external DNS just leave & ignore
+    external-dns.alpha.kubernetes.io/hostname: smilr.democloud.org.uk 
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  selector:
+    app: frontend
