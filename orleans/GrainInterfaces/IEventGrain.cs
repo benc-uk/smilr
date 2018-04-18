@@ -11,11 +11,17 @@ namespace GrainInterfaces
   // event grain interface
     public interface IEventGrain : IGrainWithStringKey
     {
-        // initialise a grain with the info needed to set up an actual event
+        // initialise/update a grain with the core event info 
         Task Update(string title, string type, string start, string end, TopicAPI[] topics);
 
         // return event info 
         Task<EventAPI> Info();
 
-    }
+        // submit event + topic feedback 
+        Task SubmitFeedback(int topic, int rating, string comment);
+
+        // get all feedback for specific topic
+        Task<FeedbackAPI> GetFeedback(int topicid);
+
+  }
 }
