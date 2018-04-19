@@ -12,7 +12,7 @@ using GrainModels;
 namespace API.Controllers
 {
 
-  // this is API that handles all calls to grains 
+  // the API that handles all calls to grains 
   [Route("api/[controller]")]
   public class EventsController : Controller
   {
@@ -54,21 +54,21 @@ namespace API.Controllers
     [HttpPut("")]
     public async Task Put([FromBody] EventAPI body)
     {
-      logger.LogInformation($"PUT /api/events: incoming body = {body}");
+        logger.LogInformation($"PUT /api/events: incoming body = {body}");
 
-      string eventCode = body.id;
-      if (eventCode == "")
-      {
-        Response.StatusCode = 204;
+        string eventCode = body.id;
+        if (eventCode == "")
+        {
+          Response.StatusCode = 204;
+          return;
+        }
+
+        // update grain
+        await ConnectClientIfNeeded();
+        var grain = this.client.GetGrain<IEventGrain>(eventCode);
+        await grain.Update(body.title, body.type, body.start, body.end, body.topics);
+
         return;
-      }
-
-      // update grain
-      await ConnectClientIfNeeded();
-      var grain = this.client.GetGrain<IEventGrain>(eventCode);
-      await grain.Update(body.title, body.type, body.start, body.end, body.topics);
-
-      return;
     }
 
 
@@ -78,20 +78,18 @@ namespace API.Controllers
     [HttpGet("{id}")]
     public async Task<EventAPI> Get(string id)
     {
-      logger.LogInformation($"GET api/events/id: id = {id}");
+        logger.LogInformation($"GET api/events/id: id = {id}");
 
-      // call grain
-      EventAPI info = new EventAPI();
-      await ConnectClientIfNeeded();
-      var grain = this.client.GetGrain<IEventGrain>(id);
-      info = await grain.Info();
+        // call grain
+        EventAPI info = new EventAPI();
+        await ConnectClientIfNeeded();
+        var grain = this.client.GetGrain<IEventGrain>(id);
+        info = await grain.Info();
 
-      return info;
+        return info;
     }
 
-
-
-
+    
 
     // Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
     private string makeId(int len)

@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0" />
     <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="2.0.0" />
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />

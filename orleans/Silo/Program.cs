@@ -38,7 +38,7 @@ namespace Silo
           .UseAzureTableReminderService(options => options.ConnectionString = appSettings["Orleans:ConnectionString"])
           .AddAzureTableGrainStorage("grain-store", options => options.ConnectionString = appSettings["Orleans:ConnectionString"])
           .ConfigureEndpoints(siloPort: 11111, gatewayPort: 30000)
-          .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ValueGrain).Assembly).WithReferences())
+          .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(EventGrain).Assembly).WithReferences())
           .ConfigureLogging(builder => builder.SetMinimumLevel((LogLevel)appSettings.GetValue<int>("Orleans:LogLevel")).AddConsole())
           .Build();
 
