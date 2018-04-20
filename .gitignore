@@ -62,7 +62,7 @@ msbuild.wrn
 # These contain secrets! 
 .env
 azure.json
-azuredeploy.myparam.json
+*.myparam.json
 appsettings.json
 environment.live.ts
 
