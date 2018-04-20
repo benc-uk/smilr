@@ -40,8 +40,6 @@
     "imageFrontend": "[concat(parameters('acrName'), '.azurecr.io/smilr/frontend')]",
     "imageDataApi": "[concat(parameters('acrName'), '.azurecr.io/smilr/data-api')]",
     "imageMongo": "mongo:3.4-jessie",
-    "portFrontend": "3000",
-    "portDataApi": "4000",
     "memory": 1.0,
     "cpu": 1.0,
     "dnsLabelFrontend": "[concat(parameters('dnsPrefix'), '-frontend')]",
@@ -61,9 +59,9 @@
               "image": "[variables('imageDataApi')]",
               "ports": [
                 {
-                  "port": "[variables('portDataApi')]"
+                  "port": "80"
                 }
-              ],
+              ],              
               "resources": {
                 "requests": {
                   "cpu": "[variables('cpu')]",
@@ -74,7 +72,11 @@
                 {
                   "name": "MONGO_CONNSTR",
                   "value": "mongodb://localhost"
-                }
+                },
+                {
+                  "name": "PORT",
+                  "value": "80"
+                }                
               ]
             }
           },
@@ -99,13 +101,13 @@
         "osType": "Linux",
         "ipAddress": {
           "type": "Public",
+          "dnsNameLabel": "[variables('dnsLabelDataApi')]",
           "ports": [
             {
               "protocol": "tcp",
-              "port": "[variables('portDataApi')]"
+              "port": "80"
             }
-          ],
-          "dnsNameLabel": "[variables('dnsLabelDataApi')]"
+          ]            
         }
       }
     },
@@ -122,9 +124,9 @@
               "image": "[variables('imageFrontend')]",
               "ports": [
                 {
-                  "port": "[variables('portFrontend')]"
+                  "port": "80"
                 }
-              ],
+              ],              
               "resources": {
                 "requests": {
                   "cpu": "[variables('cpu')]",
@@ -134,8 +136,12 @@
               "environmentVariables": [
                 {
                   "name": "API_ENDPOINT",
-                  "value": "[concat('http://', variables('dnsLabelDataApi'), '.', parameters('previewLocation'), '.azurecontainer.io', ':', variables('portDataApi'), '/api')]"
-                }
+                  "value": "[concat('http://', variables('dnsLabelDataApi'), '.', parameters('previewLocation'), '.azurecontainer.io/api')]"
+                },
+                {
+                  "name": "PORT",
+                  "value": "80"
+                }                
               ]
             }
           }
@@ -148,13 +154,13 @@
         "osType": "Linux",
         "ipAddress": {
           "type": "Public",
+          "dnsNameLabel": "[variables('dnsLabelFrontend')]",
           "ports": [
             {
               "protocol": "tcp",
-              "port": "[variables('portFrontend')]"
+              "port": "80"
             }
-          ],
-          "dnsNameLabel": "[variables('dnsLabelFrontend')]"
+          ]          
         }
       },
       "dependsOn": [
@@ -164,11 +170,11 @@
   ],
   "outputs": {
     "frontendURL": {
-      "value": "[concat('http://', variables('dnsLabelFrontend'), '.', parameters('previewLocation'), '.azurecontainer.io', ':', variables('portFrontend'))]",
+      "value": "[concat('http://', variables('dnsLabelFrontend'), '.', parameters('previewLocation'), '.azurecontainer.io')]",
       "type": "string"
     },
     "apiURL": {
-      "value": "[concat('http://', variables('dnsLabelDataApi'), '.', parameters('previewLocation'), '.azurecontainer.io', ':', variables('portDataApi'), '/api')]",
+      "value": "[concat('http://', variables('dnsLabelDataApi'), '.', parameters('previewLocation'), '.azurecontainer.io/api')]",
       "type": "string"
     }
   }
