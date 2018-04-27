@@ -4,7 +4,7 @@
   "parameters": {
     "location": {
       "type": "string",
-      "defaultValue": "eastus",
+      "defaultValue": "eastus"
     },
     "acrName": {
       "type": "string"
@@ -21,7 +21,7 @@
     },
     "storageAccountKey": {
       "type": "string"
-    }  
+    }       
   },
   "resources": [
     {
@@ -36,16 +36,16 @@
         "ingressConfig": {
           "layer4": [
             {
-              "publicPort": "8080",
-              "applicationName": "smilrApp",
-              "serviceName": "smilrApiService",
-              "endpointName": "smilrApiListener"
-            },
-            {
               "publicPort": "80",
               "applicationName": "smilrApp",
               "serviceName": "smilrFrontendService",
               "endpointName": "smilrFrontendListener"
+            },
+            {
+              "publicPort": "8080",
+              "applicationName": "smilrApp",
+              "serviceName": "smilrApiService",
+              "endpointName": "smilrApiListener"
             }
           ]
         }
@@ -84,11 +84,16 @@
             "name": "smilrFrontendService",
             "properties": {
               "description": "Smilr Angular Frontend",
-              "osType": "linux",
+              "osType": "windows",
               "codePackages": [
                 {
                   "name": "smilrFrontendContainer",
-                  "image": "smilr/frontend:prod",
+                  "image": "smilr/frontend:windows-1709",
+                  "imageRegistryCredential": {
+                    "server": "[concat(parameters('acrName'), '.azurecr.io')]",
+                    "username": "[parameters('acrName')]",
+                    "password": "[parameters('acrPassword')]"
+                  },                  
                   "endpoints": [
                     {
                       "name": "smilrFrontendListener",
@@ -102,13 +107,13 @@
                     },
                     {
                       "name": "API_ENDPOINT",
-                      "value": "xxxx[concat('http://', reference('smilrNetwork').ingressConfig.publicIPAddress, ':8080/api')]"
+                      "value": "[concat('http://', reference('smilrNetwork').ingressConfig.publicIPAddress, ':8080/api')]"
                     }                    
                   ],
                   "resources": {
                     "requests": {
-                      "cpu": "0.5",
-                      "memoryInGB": "0.25"
+                      "cpu": "1",
+                      "memoryInGB": "1.5"
                     }
                   }
                 }
@@ -127,11 +132,16 @@
             "name": "smilrApiService",
             "properties": {
               "description": "Smilr Data API",
-              "osType": "linux",
+              "osType": "windows",
               "codePackages": [
                 {
                   "name": "smilrApiContainer",
-                  "image": "smilr/data-api:prod",
+                  "image": "smilr/data-api:windows-1709",
+                  "imageRegistryCredential": {
+                    "server": "[concat(parameters('acrName'), '.azurecr.io')]",
+                    "username": "[parameters('acrName')]",
+                    "password": "[parameters('acrPassword')]"
+                  },                        
                   "endpoints": [
                     {
                       "name": "smilrApiListener",
@@ -146,23 +156,15 @@
                     {
                       "name": "MONGO_CONNSTR",
                       "value": "mongodb://smilrDbService"
-                    },
-                    {
-                      "name": "MONGO_RETRIES",
-                      "value": "50"
-                    },
-                    {
-                      "name": "MONGO_RETRY_DELAY",
-                      "value": "10"
-                    }                                        
+                    }
                   ],
                   "resources": {
                     "requests": {
-                      "cpu": "0.5",
-                      "memoryInGB": "0.25"
+                      "cpu": "1",
+                      "memoryInGB": "1.5"
                     }
                   }
-                }         
+                }                     
               ],
               "replicaCount": "1",
               "networkRefs": [
@@ -178,21 +180,32 @@
             "name": "smilrDbService",
             "properties": {
               "description": "MongoDB",
-              "osType": "linux",
+              "osType": "windows",
               "codePackages": [
                 {
                   "name": "smilrDbContainer",
-                  "image": "mongo:3.4-jessie",             
+                  "image": "mongo:windows-nano1709",
+                  "imageRegistryCredential": {
+                    "server": "[concat(parameters('acrName'), '.azurecr.io')]",
+                    "username": "[parameters('acrName')]",
+                    "password": "[parameters('acrPassword')]"
+                  },               
                   "endpoints": [
                     {
                       "name": "smilrDbListener",
                       "port": "27017"
                     }
                   ],
+                  "volumeRefs": [
+                    {
+                      "name": "[resourceId('Microsoft.ServiceFabric/volumes', 'smilrVolume')]",
+                      "destinationPath": "C:\\data\\db"
+                    }
+                  ],
                   "resources": {
                     "requests": {
-                      "cpu": "0.5",
-                      "memoryInGB": "0.5"
+                      "cpu": "1",
+                      "memoryInGB": "1.5"
                     }
                   }
                 }                     
@@ -211,7 +224,7 @@
   ],
   "outputs": {
     "networkIp": {
-      "value": "xxx[reference('smilrNetwork').ingressConfig.publicIPAddress]",
+      "value": "[reference('smilrNetwork').ingressConfig.publicIPAddress]",
       "type": "string"
     }
   }

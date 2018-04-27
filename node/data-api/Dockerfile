@@ -7,7 +7,7 @@ ENV NODE_ENV production
 WORKDIR /home/app
 
 # For efficient layer caching with NPM, this *really* speeds things up
-COPY ${basedir}/package.json .
+COPY ${basedir}/package*.json ./
 
 # NPM install for the server packages
 RUN npm install --production --silent
