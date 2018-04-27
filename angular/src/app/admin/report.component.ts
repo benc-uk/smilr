@@ -11,7 +11,7 @@ import { Event } from '../models/event';
 
 export class ReportComponent  {
   events: Event[] = null;
-  eventStats: any = {};
+  topicStats: any = {};
   error: any;
   event: Event;
 
@@ -19,18 +19,18 @@ export class ReportComponent  {
   private eventService: EventService;
   
   public doReport() {
-    let totalRating: number = 0;
-    let feedbackCount: number = 0;          
     this.event.topics.forEach(topic => {
       this.feedbackService.listForEventTopic(this.event.id, ''+topic.id).subscribe(
         // This will load all feedback into the topic, and fully inflate the event object
         // And calc stats on rating
         feedbackdata => { 
+          let totalRating: number = 0;
+          let feedbackCount: number = 0;       
           feedbackdata.forEach(f => {totalRating += +f.rating; feedbackCount++});
           topic.feedback = feedbackdata; 
 
           let avg = totalRating / feedbackCount;
-          this.eventStats[`_${this.event.id}`] = {avg: avg, count: feedbackCount, avgFloor: Math.round(avg)}                       
+          this.topicStats[topic.id] = {avg: avg, count: feedbackCount, avgFloor: Math.round(avg)}                       
         }
       );             
     });     
