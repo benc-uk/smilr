@@ -11,10 +11,7 @@
     },
     "acrPassword": {
       "type": "string"
-    },
-    "mongoConnString": {
-      "type": "string"
-    }        
+    }      
   },
   "resources": [
     {
@@ -29,16 +26,16 @@
         "ingressConfig": {
           "layer4": [
             {
-              "publicPort": "8080",
-              "applicationName": "smilrApp",
-              "serviceName": "smilrApiService",
-              "endpointName": "smilrApiListener"
-            },
-            {
               "publicPort": "80",
               "applicationName": "smilrApp",
               "serviceName": "smilrFrontendService",
               "endpointName": "smilrFrontendListener"
+            },
+            {
+              "publicPort": "8080",
+              "applicationName": "smilrApp",
+              "serviceName": "smilrApiService",
+              "endpointName": "smilrApiListener"
             }
           ]
         }
@@ -89,8 +86,8 @@
                   ],
                   "resources": {
                     "requests": {
-                      "cpu": "0.5",
-                      "memoryInGB": "0.25"
+                      "cpu": "1",
+                      "memoryInGB": "1.5"
                     }
                   }
                 }
@@ -132,16 +129,54 @@
                     },
                     {
                       "name": "MONGO_CONNSTR",
-                      "value": "[parameters('mongoConnString')]"
+                      "value": "mongodb://smilrDbService"
                     }
                   ],
                   "resources": {
                     "requests": {
-                      "cpu": "0.5",
-                      "memoryInGB": "0.25"
+                      "cpu": "1",
+                      "memoryInGB": "1.5"
                     }
                   }
-                }                            
+                }                     
+              ],
+              "replicaCount": "1",
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabric/networks', 'smilrNetwork')]"
+                }
+              ]
+            }
+          },
+          {
+            "type": "Microsoft.ServiceFabric/services",
+            "location": "[parameters('location')]",
+            "name": "smilrDbService",
+            "properties": {
+              "description": "MongoDB",
+              "osType": "windows",
+              "codePackages": [
+                {
+                  "name": "smilrDbContainer",
+                  "image": "mongo:windows-nano1709",
+                  "imageRegistryCredential": {
+                    "server": "[concat(parameters('acrName'), '.azurecr.io')]",
+                    "username": "[parameters('acrName')]",
+                    "password": "[parameters('acrPassword')]"
+                  },               
+                  "endpoints": [
+                    {
+                      "name": "smilrDbListener",
+                      "port": "27017"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "1",
+                      "memoryInGB": "1.5"
+                    }
+                  }
+                }                     
               ],
               "replicaCount": "1",
               "networkRefs": [

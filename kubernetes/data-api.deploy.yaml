@@ -24,7 +24,7 @@ spec:
       - name: data-api-pods
 
         # !CHANGE THIS! To your real image reference for the data-api  
-        image: bcdemo.azurecr.io/smilr/data-api
+        image: bcdemo.azurecr.io/smilr/data-api:stable
 
         ports:
         - containerPort: 4000
@@ -32,7 +32,7 @@ spec:
         env:     
         - name: MONGO_CONNSTR
           value: mongodb://mongodb-svc.default
-          #value: mongodb://smilr-demo:HeP2pYim0aqACPzsG9DGpqzuKWqAXNJMsF2bTrp03g2ovuJqDG0zd9rgg4C1FOwjhvdxVMHqVOYnqbgu8rWGpA==@smilr-demo.documents.azure.com:10255/?ssl=true&replicaSet=globaldb #mongodb://mongodb-svc.default
+          #value: mongodb://smilr-demo:blah@smilr-demo.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
 
         livenessProbe:
           httpGet:

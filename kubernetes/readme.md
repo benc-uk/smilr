@@ -62,9 +62,9 @@ Deploy the MongoDB pod to Kubernetes with the following:
 ```
 kubectl create -f mongodb.all.yaml
 ```
-This will run as a single pod, and the be exposed only inside the cluster (with ClusterIP), the default hostname to access it from within the cluster is `mongodb-endpoint.default`. This is the name of the ClusterIP service we create followed by the namespace name 
+This will run as a single pod, and the be exposed only inside the cluster (with ClusterIP), the default hostname to access it from within the cluster is `mongodb-svc`. This is the name of the ClusterIP service we created, as Kubernetes provides internal DNS for all services
 
-> :exclamation::speech_balloon: **Note.** Currently Mongo is **not** configured as a StatefulSet, so you can only have a single pod running. This simplifies things significantly for most demos
+> :exclamation::speech_balloon: **Note.** Currently Mongo is configured as a StatefulSet, however it is not replication aware so you can only have a single replica running. This simplifies things significantly for most demos. Replicating Mongo across multiple pods is outside of the scope of this doc.
 
 ## Deploy Smilr Microservice - Data API 
 Then deploy the data-api containers to Kubernetes with: 

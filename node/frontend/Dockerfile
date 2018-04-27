@@ -1,7 +1,7 @@
 #
-# Build Angular app using @angular/cli
+# Build and bundle the Angular app with Angular-CLI
 #
-FROM node:8-alpine as angularapp
+FROM node:8-alpine as angularbuild
 LABEL version="2.0.0" 
 ARG angular_root="angular"
 ARG build_mode="prod"
@@ -9,7 +9,7 @@ ARG build_mode="prod"
 WORKDIR /build
 
 # Install all the Angular dev tools & CLI
-COPY ${angular_root}/package.json .
+COPY ${angular_root}/package*.json ./
 RUN npm install --silent
 
 # Copy in the Angular source
@@ -23,7 +23,7 @@ RUN node node_modules/@angular/cli/bin/ng build --${build_mode}
 # ===================================================================== #
 
 #
-# Build Node.js frontend service, pulling in output from previous image
+# Build Node.js frontend service, pulling in bundled output from previous step
 #
 FROM node:8-alpine
 LABEL version="2.0.0" 
@@ -34,7 +34,7 @@ ENV NODE_ENV production
 WORKDIR /home/app
 
 # For efficient layer caching with NPM, this *really* speeds things up
-COPY ${basedir}/package.json .
+COPY ${basedir}/package*.json ./
 
 # NPM install for the server packages
 RUN npm install --production --silent
@@ -43,7 +43,7 @@ RUN npm install --production --silent
 COPY ${basedir}/ .
 
 # Copy in Angular app, uses previous image in Dockerfile
-COPY --from=angularapp /build/dist .
+COPY --from=angularbuild /build/dist .
 
 # Install bash inside container as it's good for debugging 
 RUN apk update && apk add bash
