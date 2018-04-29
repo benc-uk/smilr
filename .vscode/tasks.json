@@ -1,118 +1,115 @@
 {
-   // See https://go.microsoft.com/fwlink/?LinkId=733558
-   // for the documentation about the tasks.json format
-   "version": "2.0.0",
-"tasks": [
-
-    //
-    // Check the .vscode/settings.json file for config values
-    //
-    {
-        "label": "Docker Build - Node images",
-        "type": "shell",        
-        "command": "docker-compose build",
-        "problemMatcher": []
-    },
-    {
-        "label": "Docker Push - Node images",
-        "type": "shell",
-        "command": "docker-compose push",      
-        "problemMatcher": []
-    },
-
-    {
-        "label": "Docker Build - Orleans images",
-        "type": "shell",   
-        "options": {
-            "cwd": "orleans"
-        },   
-        "command": "docker-compose build",
-        "problemMatcher": []
-    },
-    {
-        "label": "Docker Push - Orleans images",
-        "type": "shell",
-        "options": {
-            "cwd": "orleans"
-        },         
-        "command": "docker-compose push",   
-        "problemMatcher": []
-    },    
-
-    {
-        "label": "Azure App Service Deploy",
-        "type": "shell",
-        "command": "powershell.exe ./azure/appservice/deploy-frontend.ps1 -appService ${config:appservice-site} -deployUser ${config:appservice-user}",    
-        "problemMatcher": []
-    },
-
-    {
-        "label": "Dotnet Build - Orleans API",
-        "command": "dotnet",
-        "type": "process",
-        "args": [
-            "build",
-            "${workspaceFolder}/orleans/API/API.csproj"
-        ],
-        "problemMatcher": "$msCompile",
-        "group": {
-            "kind": "build",
-            "isDefault": true
-        }
-    },
-    {
-        "label": "Dotnet Build - Orleans Silo",
-        "command": "dotnet",
-        "type": "process",
-        "args": [
-            "build",
-            "${workspaceFolder}/orleans/Silo/Silo.csproj"
-        ],
-        "problemMatcher": "$msCompile",
-        "group": {
-            "kind": "build",
-            "isDefault": true
-        }
-    },    
-
-    {
-        "label": "Dotnet Publish - Orleans Project",
-        "command": "dotnet",
-        "type": "process",
-        "args": [
-            "publish",
-            "${workspaceFolder}/orleans/OrleansContainer.sln",
-            "-c",
-            "Release",
-            "-o",
-            "pub"
-        ],
-        "problemMatcher": "$msCompile"
-    },
-
-    {
-        "label": "NPM Install - Node API",
-        "command": "npm",
-        "type": "shell",
-        "options": {
-            "cwd": "node/data-api"
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        //
+        // Check the .vscode/settings.json file for config values
+        //
+        {
+            "label": "Docker Build - Node images",
+            "type": "shell",
+            "command": "docker-compose build",
+            "problemMatcher": []
         },
-        "args": [
-            "install"
-        ],
-        "problemMatcher": []        
-    },
-    {
-        "label": "NPM Install - Node Frontend",
-        "command": "npm",
-        "type": "shell",
-        "options": {
-            "cwd": "node/frontend"
+        {
+            "label": "Docker Push - Node images",
+            "type": "shell",
+            "command": "docker-compose push",
+            "problemMatcher": []
         },
-        "args": [
-            "install"
-        ],
-        "problemMatcher": []        
-    }    
-]
+        {
+            "label": "Docker Build - Orleans images",
+            "type": "shell",
+            "options": {
+                "cwd": "orleans"
+            },
+            "command": "docker-compose build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker Push - Orleans images",
+            "type": "shell",
+            "options": {
+                "cwd": "orleans"
+            },
+            "command": "docker-compose push",
+            "problemMatcher": []
+        },
+        {
+            "label": "Azure App Service Deploy",
+            "type": "shell",
+            "command": "powershell.exe ./azure/appservice/deploy-frontend.ps1 -appService ${config:appservice-site} -deployUser ${config:appservice-user}",
+            "problemMatcher": []
+        },
+        {
+            "label": "Dotnet Build - Orleans API",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/orleans/API/API.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Dotnet Build - Orleans Silo",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/orleans/Silo/Silo.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Dotnet Publish - Orleans Project",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/orleans/OrleansContainer.sln",
+                "-c",
+                "Release",
+                "-o",
+                "pub"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+
+        {
+            "label": "NPM Install - Node API",
+            // VSCode has bugs when NPM is installed in both WSL & Windows. Hardcode path to NPM
+            // Change as required.
+            "command": "npm",
+            "type": "shell",
+            "options": {
+                "cwd": "node/data-api"
+            },
+            "args": [
+                "install"
+            ],
+            "problemMatcher": []        
+        },
+        {
+            "label": "NPM Install - Node Frontend",
+            "command": "npm",
+            "type": "shell",
+            "options": {
+                "cwd": "node/frontend"
+            },
+            "args": [
+                "install"
+            ],
+            "problemMatcher": []        
+        }  
+    ]
 }

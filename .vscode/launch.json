@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Debug Node - Frontend",
       "cwd": "${workspaceFolder}/node/frontend",
-      "preLaunchTask": "NPM Install - Node Frontend",
+      //"preLaunchTask": "NPM Install - Node Frontend",
       "program": "${workspaceFolder}/node/frontend/server.js",
       "args": [
         "${workspaceFolder}/angular/dist"
@@ -19,7 +19,7 @@
       "type": "node",
       "request": "launch",
       "name": "Debug Node - API",
-      "preLaunchTask": "NPM Install - Node API",
+      //"preLaunchTask": "NPM Install - Node API",
       "cwd": "${workspaceFolder}/node/data-api",
       "program": "${workspaceFolder}/node/data-api/server.js"
     },    
