@@ -8,6 +8,7 @@ const express = require('express');
 const routes = express.Router();
 const os = require('os');
 const fs = require('fs');
+const utils = require('../lib/utils');
 
 //
 // GET info - Return system info and other debugging details 
@@ -34,8 +35,15 @@ routes
     }
   }  
 
-  res.send(info);
+  utils.sendData(res, info)
 })
 
+//
+// Catch annoying favicon.ico requests
+//
+routes
+.get('/favicon.ico', function (req, res, next) {
+  res.status(204);
+})
 
 module.exports = routes;

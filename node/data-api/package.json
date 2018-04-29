@@ -1,9 +1,9 @@
 {
   "name": "service-data-api",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "main": "server.js",
   "engines": {
-    "node": "^8.10.0"
+    "node": "^8.11.1"
   },
   "description": "Main microservice, REST data API",
   "scripts": {
@@ -12,6 +12,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/benc-uk/microservices-demoapp",
   "dependencies": {
+    "applicationinsights": "^1.0.2",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "dotenv": "^5.0.0",
