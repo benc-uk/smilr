@@ -44,6 +44,7 @@ The main levels of the repository directory tree are laid out as follows
 ├── dotnet             .NET Core ASP implementation of the services - WIP
 ├── etc                Supporting files, pictures and other artefacts 
 ├── kubernetes         Docs and files to support deployment to Kubernetes & AKS
+│   └── smilr          Helm chart for deploying Smilr with Helm
 ├── node               Main microservices, written in Node.js
 │   ├── data-api          Data API service source code
 │   └── frontend          Frontend service source code

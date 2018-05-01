@@ -1,0 +1,22 @@
+#
+# Default values for Smilr Helm chart
+#
+
+# Change to blank string to pull from Docker Hub
+registryPrefix: bcdemo.azurecr.io/
+
+# Need to be using external DNS
+domainSuffix: democloud.org.uk
+
+dataApi:
+  imageTag: stable
+  replicas: 1
+  # Leave blank to use the internal service, override if using external database
+  mongoConnStr: 
+
+frontend:
+  imageTag: stable
+  replicas: 1
+
+mongo:
+  usePersistence: false
