@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: "{{ template "smilr.fullname" . }}-data-api"
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "{{ template "smilr.fullname" . }}-api.{{ .Values.domainSuffix }}"
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4000
+  selector:
+    app: "{{ template "smilr.name" . }}-data-api"
+    release: {{ .Release.Name }}
