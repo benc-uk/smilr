@@ -26,26 +26,23 @@ RUN node node_modules/@angular/cli/bin/ng build --${build_mode}
 # Build Node.js frontend service, pulling in bundled output from previous step
 #
 FROM node:8-alpine
-LABEL version="2.0.0" 
-ARG basedir="node/frontend"
 
-# Node.js setup for the frontend
+LABEL version="1.1.0" 
+ARG basedir="node/frontend"
 ENV NODE_ENV production
 WORKDIR /home/app
 
-# For efficient layer caching with NPM, this *really* speeds things up
+# NPM install packages
 COPY ${basedir}/package*.json ./
-
-# NPM install for the server packages
 RUN npm install --production --silent
 
 # NPM is done, now copy in the the whole project to the workdir
 COPY ${basedir}/ .
 
-# Copy in Angular app, uses previous image in Dockerfile
+# Copy in Angular app, uses previous build step 'angularbuild' as source
 COPY --from=angularbuild /build/dist .
 
-# Install bash inside container as it's good for debugging 
+# Install bash inside container just for debugging 
 RUN apk update && apk add bash
 
 EXPOSE 3000
