@@ -19,7 +19,7 @@ export class ConfigService {
     // We have a fixed dependency on the server to present the /.config route as an API to us
     // See `service-frontend\server.js` for details on this API
     if(environment.production) {
-      return this.http.get(`/.config/${varNames}`)
+      return this.http.get(`.config/${varNames}`)
       .map(data => {
         this._config = data;
       })
