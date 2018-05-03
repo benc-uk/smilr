@@ -46,7 +46,7 @@
           <div *ngIf="!error && !topic.feedback" class="loader"></div>
           <tr *ngFor="let feedback of topic.feedback">
             <td width="15%">
-              <img src="/assets/img/face-{{ feedback.rating }}.svg" width="40px"/> &nbsp;&nbsp; <span>{{ feedback.rating }}</span>
+              <img src="assets/img/face-{{ feedback.rating }}.svg" width="40px"/> &nbsp;&nbsp; <span>{{ feedback.rating }}</span>
             </td>
             <td width="65%">
               <span *ngIf="!feedback.comment"><i>No comment</i></span>
