@@ -56,9 +56,9 @@ if (app.get('env') === 'production') {
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
 // Routing to controllers
-app.use('/', require('./routes/api-events'));
-app.use('/', require('./routes/api-feedback'));
-app.use('/', require('./routes/api-other'));
+app.use(require('./routes/api-events'));
+app.use(require('./routes/api-feedback'));
+app.use(require('./routes/api-other'));
 
 // Global catch all for all requests not caught by other routes
 // Just return a HTTP 400

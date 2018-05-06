@@ -3,20 +3,22 @@
 #
 
 # Change to blank string to pull from Docker Hub
-registryPrefix: bcdemo.azurecr.io/
+registryPrefix: 
 
-# Need to be using external DNS
-domainSuffix: democloud.org.uk
+# Leave blank if not using DNS with your ingress
+domainSuffix: 
 
 dataApi:
-  imageTag: stable
+  imageTag: latest
   replicas: 1
   # Leave blank to use the internal service, override if using external database
   mongoConnStr: 
+  imagePullPolicy: Always
 
 frontend:
-  imageTag: stable
+  imageTag: latest
   replicas: 1
+  imagePullPolicy: Always
 
 mongo:
   usePersistence: false

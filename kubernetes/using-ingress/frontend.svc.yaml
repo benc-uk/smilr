@@ -8,11 +8,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: frontend-svc
-  annotations:
-    # !CHANGE THIS! To your real DNS domain, if not using external DNS just leave & ignore
-    external-dns.alpha.kubernetes.io/hostname: smilr.democloud.org.uk 
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - protocol: TCP
     port: 80

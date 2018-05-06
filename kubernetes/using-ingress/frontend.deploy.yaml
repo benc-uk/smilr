@@ -11,7 +11,7 @@ metadata:
   labels:
     app: frontend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: frontend
@@ -31,8 +31,7 @@ spec:
 
         env:       
         - name: API_ENDPOINT
-          # !CHANGE THIS! To your real API endpoint DNS name or IP address
-          value: http://smilr-api.democloud.org.uk/api 
+          value: /smilr/api 
 
         livenessProbe:
           httpGet:

@@ -1,35 +1,39 @@
+{{- $fullName := (printf "%s-frontend" (include "smilr.fullname" .)) -}}
+{{- $name := (printf "%s-frontend" (include "smilr.name" .)) -}}
+
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: "{{ template "smilr.fullname" . }}-frontend"
+  name: {{ $fullName }}
   labels:
-    app: "{{ template "smilr.name" . }}-frontend"
+    app: {{ $name }}
     chart: {{ template "smilr.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.frontend.replicas }}
+  replicas: {{ .Values.dataApi.replicas }}
   selector:
     matchLabels:
-      app: "{{ template "smilr.name" . }}-frontend"
+      app: {{ $name }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: "{{ template "smilr.name" . }}-frontend"
+        app: {{ $name }}
         release: {{ .Release.Name }}
     spec:
       containers:
-      - name: "{{ .Chart.Name }}-frontend"
+      - name: {{ $name }}
 
         image: "{{ .Values.registryPrefix }}smilr/frontend:{{ .Values.frontend.imageTag }}"
+        imagePullPolicy: {{ .Values.frontend.imagePullPolicy }}
 
         ports:
         - containerPort: 3000
 
         env:
         - name: API_ENDPOINT
-          value: "http://{{ template "smilr.fullname" . }}-api.{{ .Values.domainSuffix }}/api"
+          value: {{ if .Values.domainSuffix }} "/api"  {{ else }} "/{{ .Release.Name }}/api" {{ end }}
 
         livenessProbe:
           httpGet:

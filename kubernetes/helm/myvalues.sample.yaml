@@ -1,0 +1,13 @@
+registryPrefix: bcdemo.azurecr.io/
+domainSuffix: democloud.org.uk
+dataApi:
+  imageTag: stable
+  replicas: 1
+  mongoConnStr: 
+  imagePullPolicy: Always
+frontend:
+  imageTag: stable
+  replicas: 1
+  imagePullPolicy: Always
+mongo:
+  usePersistence: false

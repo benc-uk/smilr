@@ -11,7 +11,7 @@ metadata:
   labels:
     app: data-api
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: data-api
@@ -24,15 +24,27 @@ spec:
       - name: data-api-pods
 
         # !CHANGE THIS! To your real image reference for the data-api  
-        image: bcdemo.azurecr.io/smilr/data-api:windows-1709
+        image: bcdemo.azurecr.io/smilr/data-api:stable
 
         ports:
         - containerPort: 4000
 
         env:     
         - name: MONGO_CONNSTR
-          value: mongodb://10.0.80.219
-          #value: mongodb://smilr-demo:HeP2pYim0aqACPzsG9DGpqzuKWqAXNJMsF2bTrp03g2ovuJqDG0zd9rgg4C1FOwjhvdxVMHqVOYnqbgu8rWGpA==@smilr-demo.documents.azure.com:10255/?ssl=true&replicaSet=globaldb #mongodb://mongodb-svc.default
+          value: mongodb://mongodb-svc.default
+          #value: mongodb://smilr-demo:blah@smilr-demo.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
+
+        livenessProbe:
+          httpGet:
+            path: /api/info
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+        resources:
+          requests:
+            memory: "256M"
+            cpu: 0.25
             
       # Wipe & initialize the database with demo data, remove if unwanted
       #initContainers:
