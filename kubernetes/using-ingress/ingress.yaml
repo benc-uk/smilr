@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "smilr-ingress-api"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: "/api"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /smilr/api
+        backend:
+          serviceName: data-api-svc
+          servicePort: 80
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "smilr-ingress-app"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+    nginx.ingress.kubernetes.io/add-base-url: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /smilr
+        backend:
+          serviceName: frontend-svc
+          servicePort: 80

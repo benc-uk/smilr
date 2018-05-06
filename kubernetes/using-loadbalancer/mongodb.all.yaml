@@ -1,42 +1,42 @@
+#
+# Deploy the back end databse in Kubernetes, as StatefulSet with a volume claim
+#
+
+# ------------------- Deployment ------------------- #
+
 kind: StatefulSet
 apiVersion: apps/v1
 metadata:
-  name: "{{ template "smilr.fullname" . }}-mongodb"
+  name: mongodb
   labels:
-    app: "{{ template "smilr.name" . }}-mongodb"
-    chart: {{ template "smilr.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app: mongodb
 spec:
   serviceName: "mongo"
   replicas: 1
   selector:
     matchLabels:
-      app: "{{ template "smilr.name" . }}-mongodb"
-      release: {{ .Release.Name }}
+      app: mongodb
   template:
     metadata:
       labels:
-        app: "{{ template "smilr.name" . }}-mongodb"
-        release: {{ .Release.Name }}
+        app: mongodb
     spec:
       containers:
-      - name: "{{ .Chart.Name }}-mongodb"
+      - name: mongodb-pods
 
         image: mongo:3.4-jessie
 
         ports:
         - containerPort: 27017
 
+        volumeMounts:
+          - name: mongo-storage
+            mountPath: /data/db
+
         resources:
           requests:
             memory: "1G"
             cpu: 0.25
-        
-{{if .Values.mongo.usePersistence }}
-        volumeMounts:
-          - name: mongo-storage
-            mountPath: /data/db
 
   volumeClaimTemplates:
     - metadata:
@@ -48,14 +48,15 @@ spec:
         resources:
           requests:
             storage: 500M
-{{end}}
 
 ---
+
+# ------------------- Internal Cluster IP ------------------- #
 
 kind: Service
 apiVersion: v1
 metadata:
-  name: "{{ template "smilr.fullname" . }}-mongodb"
+  name: mongodb-svc
 spec:
   type: ClusterIP
   ports:
@@ -63,5 +64,4 @@ spec:
     port: 27017
     targetPort: 27017
   selector:
-    app: "{{ template "smilr.name" . }}-mongodb"
-    release: {{ .Release.Name }}
+    app: mongodb

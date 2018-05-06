@@ -1,0 +1,18 @@
+Smilr has been deployed! Wow that was easy!
+===========================================
+{{ if .Values.domainSuffix }}
+The app is accessible at http://{{ .Release.Name }}.{{ .Values.domainSuffix }}/
+
+If you are using Azure DNS, the following commands will help you set up an A record for this release.
+Modify RES_GRP to point to the resource group with your DNS Zone:
+
+export RES_GRP=Change.Me
+export INGRESS_IP=$(kubectl get svc -l app=nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}')
+az network dns record-set a add-record -g $RES_GRP -z {{ .Values.domainSuffix }} -n {{ .Release.Name }} -a $INGRESS_IP
+{{ else }}
+Get the IP address of your ingress by running these commands:
+
+export INGRESS_IP=$(kubectl get svc -l app=nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}')
+echo "The app is accessible at http://$INGRESS_IP/{{ .Release.Name }}/"
+{{ end }}
+Have fun, bye!

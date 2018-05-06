@@ -1,9 +1,0 @@
-Smilr has been deployed, yes! wow!
-==================================
-
-Hello I need to put something here!
-
-The frontend is accessable here http://{{ template "smilr.fullname" . }}.{{ .Values.domainSuffix }}/
-The data API endpoint is here http://{{ template "smilr.fullname" . }}-api.{{ .Values.domainSuffix }}/api
-
-Have fun, bye!
