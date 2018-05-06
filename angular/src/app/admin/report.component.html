@@ -25,10 +25,11 @@
       <tr><td>Type: &nbsp;&nbsp; </td><td>{{event.type | titlecase}}</td></tr>
     </table>
     <hr/>
+
     <div *ngFor="let topic of event.topics">
       <br/>
       <h3 class="topicheader">{{ topic.desc }}</h3>
-      <h4>Responses: {{ topicStats[topic.id].count }} </h4>
+      <h4 *ngIf="topicStats[topic.id]">Responses: {{ topicStats[topic.id].count }} </h4>
       <h4>Average Rating:           
         <span *ngIf="topicStats[topic.id]" class="rating rating-colour-{{topicStats[topic.id].avgFloor}}">
             &nbsp;&nbsp;{{ topicStats[topic.id].avg | number:'1.2-2' }}&nbsp;&nbsp;
