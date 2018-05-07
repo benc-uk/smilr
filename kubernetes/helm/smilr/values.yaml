@@ -21,4 +21,4 @@ frontend:
   imagePullPolicy: Always
 
 mongo:
-  usePersistence: false
+  usePersistence: true

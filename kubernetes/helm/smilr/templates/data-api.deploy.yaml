@@ -35,8 +35,6 @@ spec:
         env:     
         - name: MONGO_CONNSTR
           value: {{ if .Values.dataApi.mongoConnStr }} {{ .Values.dataApi.mongoConnStr }} {{ else }} "mongodb://{{ $mongoFullName }}" {{ end }}
-        - name: MONGO_RETRY_DELAY
-          value: "5"
 
         livenessProbe:
           httpGet:
