@@ -50,7 +50,7 @@ Deployment YAML files have been provided to directly stand up Smilr in your Kube
 Before deployment of either scenario the two files `frontend.deploy.yaml` and `data-api.deploy.yaml` will require editing to point to your images and the relevant registry (i.e. ACR) & tag you are using. It is assumed you will be deploying to the default namespace
 
 ### Scenario A - Using Ingress
-![kube1](../etc/kube-1.png)
+![kube1](/etc/kube-1.png)
  **[Deployment Files for this scenario are in /kubernetes/using-ingress](using-ingress/)** 
 
 This method uses a Kubernetes ingress controller with a single entrypoint into your cluster, and rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Angular SPA is served from so it doesn't require any fiddling with IP addresses and DNS. However it does require an ingress controller (of type Nginx). Deploying an ingress controller is very simple with Helm and it's a single command `helm install stable/nginx-ingress`. If you don't want to use Helm you can [stand one up manually](https://kubernetes.github.io/ingress-nginx/deploy/)
@@ -67,7 +67,7 @@ kubectl get svc -l app=nginx-ingress --all-namespaces -o jsonpath='{.items[0].st
 ```
 
 ### Scenario B - Using LoadBalancer
-![kube2](../etc/kube-2.png)
+![kube2](/etc/kube-2.png)
 **[Deployment Files for this scenario are in /kubernetes/using-loadbalancer](using-loadbalancer/)** 
 
 This method exposes the two Smilr services externally with their own external IP addresses, using the Kubernetes ***LoadBalancer*** service type. This has the advantage of not requiring any dependency on an Ingress controller but does require some manual editing of the YAML during deployment. 
