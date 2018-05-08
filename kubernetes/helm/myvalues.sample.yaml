@@ -1,5 +1,5 @@
-registryPrefix: bcdemo.azurecr.io/
-domainSuffix: democloud.org.uk
+registryPrefix: myregistry.azurecr.io/
+domainSuffix: smilr.06a7fb76-2c31-4f5f-9dda-521bb761bc76.westeurope.aksapp.io
 dataApi:
   imageTag: stable
   replicas: 1

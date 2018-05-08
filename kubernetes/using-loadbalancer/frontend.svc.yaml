@@ -9,8 +9,11 @@ apiVersion: v1
 metadata:
   name: frontend-svc
   annotations:
-    # !CHANGE THIS! To your real DNS domain, if not using external DNS just leave & ignore
-    external-dns.alpha.kubernetes.io/hostname: smilr.democloud.org.uk 
+    # !CHANGE THIS! To your real DNS domain
+    external-dns.alpha.kubernetes.io/hostname: smilr-app.2913c6b6-3b1d-4e5d-9c02-558d5f7bd827.westeurope.aksapp.io
+
+    # This is a workaround for the annotaion filter the external DNS is looking for
+    kubernetes.io/ingress.class: addon-http-application-routing
 spec:
   type: LoadBalancer
   ports:
