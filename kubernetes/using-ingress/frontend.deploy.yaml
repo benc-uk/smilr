@@ -31,7 +31,7 @@ spec:
 
         env:       
         - name: API_ENDPOINT
-          value: /smilr/api 
+          value: /api 
 
         livenessProbe:
           httpGet:

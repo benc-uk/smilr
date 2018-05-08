@@ -13,6 +13,8 @@ This document is not intended to be a step by step guide for deploying Azure Con
  - Azure Citadel - [Kubernetes: Hands On With Microservices](https://azurecitadel.github.io/labs/kubernetes/)
  - Azure Docs - [Quickstart: Deploy an Azure Container Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
 
+**NOTE. May 2018.** When creating your AKS cluster it is strongly recommended you use the portal and enable the "HTTP Application Routing add-on" during creation, this will automatically enable an ingress in your cluster and also provide you with an external DNS zone. 
+
 ---
 
 # Deploying Smilr to Kubernetes
@@ -36,7 +38,6 @@ Notes on Smilr Kubernetes deployment:
 
 - Install Helm https://docs.helm.sh/using_helm/#installing-helm
 - Add Helm to your Kubernetes cluster: `helm init`
-- `helm install stable/nginx-ingress`
 - From root of this project `cd kubernetes/helm`
 - `helm install smilr`
 - Done!
@@ -53,17 +54,21 @@ Before deployment of either scenario the two files `frontend.deploy.yaml` and `d
 ![kube1](../etc/kube-scenario-a.png)
  **[Deployment Files for this scenario are in /kubernetes/using-ingress](using-ingress/)** 
 
-This method uses a Kubernetes ingress controller with a single entrypoint into your cluster, and rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Angular SPA is served from so it doesn't require any fiddling with IP addresses and DNS. However it does require an ingress controller (of type Nginx). Deploying an ingress controller is very simple with Helm and it's a single command `helm install stable/nginx-ingress`. If you don't want to use Helm you can [stand one up manually](https://kubernetes.github.io/ingress-nginx/deploy/)
+This method uses a Kubernetes ingress controller with a single entrypoint into your cluster, and rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Angular SPA is served from so it doesn't require any fiddling with IP addresses and DNS. 
 
-Once you have an ingress deployed, the steps for deployment of Smilr are:
+However it does require an ingress controller, which if you enabled "HTTP Application Routing" when creating AKS you will already have. If you don't have this add on, use Helm (e.g. `helm install stable/nginx-ingress`) but you will need to change the **kubernetes.io/ingress.class** in `ingress.yaml` to `nginx`
+
+The steps for deployment of Smilr are:
+- Edit `ingress.yaml` and modify the DNS zone/domain to match the one created with your AKS cluster (in the MC resource group). You should only need to do this once
+- Run the following
 ```
 cd kubernetes/using-ingress
 kubectl apply -f .
 ```
-The app will be available at **http://{ingress-controller-ip}/smilr**  
-If you want to get the IP of your ingress you can run  
+- The app will be available at **`http://smilr.{guid}.{region}.aksapp.io/`**
+- If you want to get the IP of your ingress you can run  
 ```
-kubectl get svc -l app=nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}'
+kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}'
 ```
 
 ### Scenario B - Using LoadBalancer

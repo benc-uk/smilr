@@ -8,12 +8,16 @@ registryPrefix:
 # Leave blank if not using DNS with your ingress
 domainSuffix: 
 
+# Change if not using AKS with HTTP routing 
+ingressClass: addon-http-application-routing
+
 dataApi:
   imageTag: latest
   replicas: 1
   # Leave blank to use the internal service, override if using external database
   mongoConnStr: 
   imagePullPolicy: Always
+  
 
 frontend:
   imageTag: latest
