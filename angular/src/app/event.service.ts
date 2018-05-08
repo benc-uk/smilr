@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ConfigService } from './config.service';
-import { Observable } from "rxjs/Observable";
-import 'rxjs/add/operator/filter';
+import { Observable } from "rxjs";
+import { filter, map } from 'rxjs/operators';
 import * as jsotp from 'jsotp';
 
 import { Event } from './models/event';
