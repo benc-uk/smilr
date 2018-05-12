@@ -73,13 +73,13 @@ kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namesp
 
 ### Scenario B - Using LoadBalancer
 ![kube2](../etc/kube-scenario-b.png)
-**[Deployment Files for this scenario are in /kubernetes/using-loadbalancer](using-loadbalancer/)** 
+**[Deployment Files for this scenario are in /kubernetes/using-lb](using-lb/)** 
 
 This method exposes the two Smilr services externally with their own external IP addresses, using the Kubernetes ***LoadBalancer*** service type. This has the advantage of not requiring any dependency on an Ingress controller but does require some manual editing of the YAML during deployment. 
 
 The steps for deployment are:
 ```
-cd kubernetes/using-loadbalancer
+cd kubernetes/using-lb
 kubectl apply -f mongodb.all.yaml
 kubectl apply -f data-api.deploy.yaml
 kubectl apply -f data-api.svc.yaml
