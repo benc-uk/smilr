@@ -4,7 +4,7 @@
     <div class="container-fluid">
 
       <!-- sidebar only show when toggled/opened -->
-      <side-nav #sideNav [env]="env" [userService]="userService" [aboutDialog]="aboutDialog"></side-nav>
+      <side-nav #sideNav [env]="env" [userService]="userService" [routerLink]="['/about']"></side-nav>
 
       <!-- logo -->
       <a class="navbar-brand" [routerLink]="['/home']"><img src='assets/img/logo-white.svg' class="navlogo"> <span class="navlogotext">&nbsp;Smilr</span> </a>
