@@ -1,6 +1,7 @@
 import { Component, Attribute, Input } from '@angular/core';
 import { EventService } from './event.service';
 import { Event } from './models/event';
+import 'rxjs/add/operator/map';
 
 @Component({
   templateUrl: './event-list.component.html',
