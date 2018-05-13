@@ -2,9 +2,8 @@
 # Build and bundle the Angular app with Angular-CLI
 #
 FROM node:8-alpine as angularbuild
-LABEL version="2.0.0" 
 ARG angular_root="angular"
-ARG build_mode="prod"
+ARG build_config="production"
 
 WORKDIR /build
 
@@ -13,12 +12,12 @@ COPY ${angular_root}/package*.json ./
 RUN npm install --silent
 
 # Copy in the Angular source
-COPY ${angular_root}/.angular-cli.json .
+COPY ${angular_root}/angular.json .
 COPY ${angular_root}/tsconfig.json .
 COPY ${angular_root}/src ./src
 
 # Run Angular CLI build & bundle in prod mode, and output to ./dist
-RUN node node_modules/@angular/cli/bin/ng build --${build_mode}
+RUN node node_modules/@angular/cli/bin/ng build -c ${build_config}
 
 # ===================================================================== #
 
@@ -27,7 +26,7 @@ RUN node node_modules/@angular/cli/bin/ng build --${build_mode}
 #
 FROM node:8-alpine
 
-LABEL version="1.1.0" 
+LABEL version="2.0.1"
 ARG basedir="node/frontend"
 ENV NODE_ENV production
 WORKDIR /home/app

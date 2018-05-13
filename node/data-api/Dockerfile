@@ -2,7 +2,9 @@ FROM node:8-alpine
 
 LABEL version="3.1.0" 
 ARG basedir="node/data-api"
+ARG build_info="Docker container build"
 ENV NODE_ENV production
+ENV BUILD_INFO $build_info
 WORKDIR /home/app
 
 # NPM install packages

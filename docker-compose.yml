@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: node/frontend/Dockerfile
       args: 
-        build_mode: prod
+        build_config: production
     ports: 
       - 3000:3000
     environment:
@@ -21,6 +21,8 @@ services:
     build: 
       context: .
       dockerfile: node/data-api/Dockerfile
+      args: 
+        build_info: Built from Docker compose
     ports: 
       - 4000:4000
     depends_on:
