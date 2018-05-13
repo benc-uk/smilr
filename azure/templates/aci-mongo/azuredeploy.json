@@ -27,7 +27,14 @@
       "metadata": {
         "description": "Image tag, e.g. latest or specific tag"
       }       
-    }
+    },
+    "releaseInfo": {
+      "type": "string",
+      "defaultValue": "Not set",
+      "metadata": {
+        "description": "String description of this release, normally used with VSTS"
+      }       
+    }    
   },
   "variables": {
     "containerFrontend": "smilr-frontend",
@@ -71,7 +78,11 @@
                 {
                   "name": "PORT",
                   "value": "80"
-                }                
+                },
+                {
+                  "name": "RELEASE_INFO",
+                  "value": "[parameters('releaseInfo')]"
+                }             
               ]
             }
           },
