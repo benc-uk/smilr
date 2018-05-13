@@ -46,8 +46,8 @@
   "variables": {
     "containerFrontend": "smilr-frontend",
     "containerDataApi": "smilr-data",
-    "imageFrontend": "[concat(parameters('acrName'), '.azurecr.io/smilr/frontend:', parameters('imageTag'))]",
-    "imageDataApi": "[concat(parameters('acrName'), '.azurecr.io/smilr/data-api:', parameters('imageTag'))]",
+    "imageFrontend": "[concat(parameters('acrName'), '.azurecr.io/smilr/frontend:', parameters('frontendImageTag'))]",
+    "imageDataApi": "[concat(parameters('acrName'), '.azurecr.io/smilr/data-api:', parameters('dataApiImageTag'))]",
     "imageMongo": "mongo:3.4-jessie",
     "memory": 1.0,
     "cpu": 1.0,
