@@ -27,6 +27,8 @@ routes
     cpuCount: os.cpus().length, 
     memory: Math.round(os.totalmem() / 1048576),
     nodeVer: process.version,
+    buildInfo: process.env.BUILD_INFO || "No build info",
+    releaseInfo: process.env.RELEASE_INFO || "No release info",
     mongoDb: {
       connected: req.app.get('data').db.serverConfig.isConnected(),
       host: req.app.get('data').db.serverConfig.host,

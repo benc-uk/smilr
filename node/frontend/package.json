@@ -1,11 +1,11 @@
 {
-  "name": "service-frontend",
+  "name": "smilr-frontend",
   "version": "1.1.0",
   "main": "server.js",
   "engines": {
     "node": "^8.10.0"
   },
-  "description": "Simple server for Angular apps",
+  "description": "Simple static content server for Smilr Angular app",
   "scripts": {
     "start": "node server.js"
   },

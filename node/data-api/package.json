@@ -1,11 +1,11 @@
 {
-  "name": "service-data-api",
+  "name": "smilr-data-api",
   "version": "3.1.0",
   "main": "server.js",
   "engines": {
     "node": "^8.11.1"
   },
-  "description": "Main microservice, REST data API",
+  "description": "Main Smilr microservice, REST data API",
   "scripts": {
     "start": "node server.js"
   },
