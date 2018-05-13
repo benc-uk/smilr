@@ -11,8 +11,14 @@
     "dnsPrefix": {
       "value": "make-me-unique"
     },
-    "imageTag": {
+    "dataApiImageTag": {
       "value": "latest"
+    },    
+    "frontendImageTag": {
+      "value": "latest"
+    },
+    "releaseInfo": {
+      "value": "Manual ARM template release"
     }
   }
 }

@@ -21,13 +21,20 @@
         "description": "Prefix for container DNS labels, change to ensure global DNS uniqueness"
       }      
     },
-    "imageTag": {
+    "dataApiImageTag": {
       "type": "string",
       "defaultValue": "latest",
       "metadata": {
-        "description": "Image tag, e.g. latest or specific tag"
+        "description": "Image tag of the Data API, e.g. latest or specific tag"
       }       
     },
+    "frontendImageTag": {
+      "type": "string",
+      "defaultValue": "latest",
+      "metadata": {
+        "description": "Image tag of the Frontend, e.g. latest or specific tag"
+      }       
+    },    
     "releaseInfo": {
       "type": "string",
       "defaultValue": "Not set",
