@@ -15,7 +15,7 @@
           <p class="navbar-btn"><a class="btn btn-success" [routerLink]="['/events']"><i class="fa fa-book"></i> <span class="hidden-sm"> Events</span></a>&nbsp;</p>
         </li>
         <li>
-         <p class="navbar-btn"><a class="btn btn-success" (click)="aboutDialog.show()"><i class="fa fa-info-circle"></i> <span class="hidden-sm"> About</span></a>&nbsp;</p>
+         <p class="navbar-btn"><a class="btn btn-success" [routerLink]="['/about']"><i class="fa fa-info-circle"></i> <span class="hidden-sm"> About</span></a>&nbsp;</p>
         </li>
       </ul>
 
@@ -28,7 +28,7 @@
           <p class="navbar-btn"><a class="btn btn-warning" [routerLink]="['/admin/events']"><i class="fa fa-wrench"></i> <span class="hidden-sm"> Admin</span></a>&nbsp;</p>
         </li>
         <li>
-          <p class="navbar-btn"><a class="btn btn-warning" href='/.auth/logout/aad'><i class="fa fa-user-circle"></i> <span class="hidden-md hidden-sm"> Logout</span></a>&nbsp;</p>
+          <p class="navbar-btn"><a class="btn btn-warning" href='/.auth/logout/aad?post_logout_redirect_uri=/home'><i class="fa fa-user-circle"></i> <span class="hidden-md hidden-sm"> Logout</span></a>&nbsp;</p>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right hidden-xs" *ngIf="env.secured && !userService.isLoggedIn()">
@@ -58,12 +58,3 @@
   </footer>
 
 </div>
-
-<!-- About dialog -->
-<modal-dialog #aboutDialog dialogTitle="Smilr" hideCancel="true" dialogBody="<div class='about'>
-  <img src='assets/img/face-5.svg' class='aboutface bounce'/><br/><br/><h4>A microservices &amp; Angular demonstration app</h4></div>
-  v2.0.3<br/>
-  <a href='https://github.com/benc-uk/microservices-demoapp' target='_blank'>github.com/benc-uk/microservices-demoapp</a>
-  <br/>&copy; Ben Coleman, 2018" ></modal-dialog>
-
-
