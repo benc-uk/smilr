@@ -18,6 +18,7 @@ routes
   res.type('application/json');
   
   var info = { 
+    version: require('../package.json').version,
     hostname: os.hostname(), 
     container: fs.existsSync('/.dockerenv'), 
     osType: os.type(), 
@@ -33,7 +34,7 @@ routes
       connected: req.app.get('data').db.serverConfig.isConnected(),
       host: req.app.get('data').db.serverConfig.host,
       port: req.app.get('data').db.serverConfig.port,
-      client: req.app.get('data').db.serverConfig.clientInfo
+      driverVer: req.app.get('data').db.serverConfig.clientInfo.driver.version
     }
   }  
 
@@ -41,11 +42,14 @@ routes
 })
 
 //
-// Catch annoying favicon.ico requests
+// Catch annoying favicon.ico & robot.txt requests
 //
 routes
 .get('/favicon.ico', function (req, res, next) {
-  res.status(204);
+  res.status(204).send();
+})
+.get('/robots*.txt', function (req, res, next) {
+  res.status(204).send();
 })
 
 module.exports = routes;
