@@ -1,11 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "1.0.0",
+    "version": "3.2.0",
     "title": "Smilr API",
-    "description": "REST API for data access middle tier of the Smilr microservices app",
+    "description": "REST API for data access microservice of the Smilr app",
     "contact": {
-      "name": "Ben Coleman"
+      "name": "Ben Coleman",
+      "email": "ben.coleman@microsoft.com"
     },
     "license": {
       "name": "Apache 2.0"
@@ -340,6 +341,7 @@
     "SystemInfo": {
       "type": "object",
       "properties": {
+        "version":  { "type": "string",  "example": "myhost001" },
         "hostname":  { "type": "string",  "example": "myhost001" },
         "container": { "type": "boolean", "example": true },
         "osType":    { "type": "string",  "example": "Linux" },
@@ -349,7 +351,9 @@
         "cpuCount":  { "type": "integer", "example": 4 },
         "memory":    { "type": "integer", "example": 16310 },
         "nodeVer":   { "type": "string",  "example": "v8.9.3" },
-        "cosmosDb":  { "type": "string",  "example": "https://localhost:8081/dbs/smilrDb/colls/alldata" }
+        "buildInfo":   { "type": "string",  "example": "VSTS build 20180513.8 from branch refs/heads/master" },
+        "releaseInfo": { "type": "string",  "example": "Release-4" },
+        "cosmosDb":    { "type": "object",  "example": {"connected": true, "host": "mongodb002", "port": 27017, "driverVer": "2.2.35"} }
       }
     }    
   }
