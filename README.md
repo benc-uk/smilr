@@ -83,17 +83,6 @@ The main app components are:
 
 These will be each described in their own sections below. 
 
-# :star: Architecture & Core App Components
-![arch](/etc/architecture.png)
-
-The main app components are:
-1. [Angular front end UI](#component-1---angular-front-end-ui)
-2. [Frontend service](#component-2---frontend-service)
-3. [Backend data API service](#component-3---backend-data-api-service)
-4. [Database](#component-4---database)
-5. [Optional serverless components](#component-5---optional-serverless-components) 
-
-These will be each described in their own sections below. 
 
 # :hourglass_flowing_sand: Build & Release Pipeline
 

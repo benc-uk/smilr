@@ -1,13 +1,19 @@
+# Note the trailing slash
 registryPrefix: myregistry.azurecr.io/
+
+# Get the name of your AKS DNS zone by running `az network dns zone list -o table`
 domainSuffix: smilr.06a7fb76-2c31-4f5f-9dda-521bb761bc76.westeurope.aksapp.io
+
 dataApi:
-  imageTag: stable
+  imageTag: latest
   replicas: 1
   mongoConnStr: 
   imagePullPolicy: Always
+
 frontend:
-  imageTag: stable
+  imageTag: latest
   replicas: 1
   imagePullPolicy: Always
+
 mongo:
   usePersistence: false
