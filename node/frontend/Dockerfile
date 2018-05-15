@@ -16,7 +16,7 @@ COPY ${angular_root}/angular.json .
 COPY ${angular_root}/tsconfig.json .
 COPY ${angular_root}/src ./src
 
-# Run Angular CLI build & bundle in prod mode, and output to ./dist
+# Run Angular CLI build & bundle, and output to ./dist
 RUN node node_modules/@angular/cli/bin/ng build -c ${build_config}
 
 # ===================================================================== #
