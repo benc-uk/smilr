@@ -4,7 +4,7 @@ This is a multi component application designed to showcase microservices design 
 
 The application is called *'Smilr'* and allows people to provide feedback on events or sessions they have attended via a simple web & mobile interface. The feedback consists of a rating (scored 1-5) and supporting comments.
 
-- The user interface is written in Angular (Angular 5) and is completely de-coupled from the back end, which it communicates with via REST. The UI is fully responsive and will work on on both web and mobile.
+- The user interface is written in Angular (Angular 6) and is completely de-coupled from the back end, which it communicates with via REST. The UI is fully responsive and will work on on both web and mobile.
 
 - The two microservices are both written in Node.js using the Express framework. These have been containerized so can easily be deployed & run as containers
 
@@ -69,7 +69,6 @@ If you are looking to build & work with the Smilr app locally, either as a learn
 The primary configuration mechanism for this project is system environmental variables (or env vars). These env vars are used with the Node.js services, container runtime, Docker tools and helper scripts is . This gives us a flexible and cross platform way to inject runtime settings, it is also widely supported in Azure (e.g. Azure App Service Settings)
 
 There are numerous ways to set & override environmental variables; in the operating system, the user profile or from command line tools. For local development purposes it is strongly recommended you create & use `.env` files. These are simple text files containing `var=value` pairs. Sample files named `.env.sample` are provided with the project, which you can rename and use. *Note.* `.env` files normally contain secrets so they are prevented from being committed to Git
-
 
 # :star: Architecture & Core App Components
 ![arch](/etc/architecture.png)
