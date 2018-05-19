@@ -9,7 +9,8 @@ const restify = require('restify');
 const builder = require('botbuilder');
 const botbuilder_azure = require("botbuilder-azure");
 const utils = require('./utils');
-const request = require('request');
+const request = require('request-promise-native');
+const numConverter = require('number-to-words');
 
 // Setup Restify Server
 const server = restify.createServer();
@@ -42,6 +43,7 @@ var bot = new builder.UniversalBot(connector, function (session, args) {
 });
 
 bot.set('storage', inMemoryStorage);
+bot.set(`persistConversationData`, false);
 
 // Make sure you add code to validate these fields
 var luisAppId = process.env.LuisAppId;
@@ -55,7 +57,7 @@ var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 bot.recognizer(recognizer);
 
 // Add first run dialog
-bot.dialog('firstRun', function (session) {    
+/*bot.dialog('firstRun', function (session) {    
   session.userData.firstRun = true;
   session.beginDialog('GreetingDialog')
 }).triggerAction({
@@ -68,7 +70,7 @@ bot.dialog('firstRun', function (session) {
           callback(null, 0.0);
       }
   }
-});
+});*/
 
 // Add a dialog for each intent that the LUIS app recognizes.
 // See https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-recognize-intent-luis 
@@ -86,6 +88,7 @@ bot.dialog('GreetingDialog',
 ).triggerAction({
   matches: 'greeting'
 })
+
 
 bot.dialog('HelpDialog', [
   (session) => {
@@ -108,23 +111,59 @@ bot.dialog('HelpDialog', [
   matches: 'help'
 })
 
+
 bot.dialog('ActiveEventsDialog', [
   async (session) => {
-    let eventsCount = 0;
-    let res = await request('http://smilr-api.azurewebsites.net/api/events');
+    session.sendTyping();
 
-    console.log(res);
-    
-    if(eventsCount > 0) {
-      session.endDialog(`HERE'S YOUR EVENTS HUMAN`);
-    } else {
+    await utils.sleep(2000);
+
+    // Call API get get active events 
+    let events = [];
+    await utils.getEvents('active')
+    .then(eventsResp => {
+      events = JSON.parse(eventsResp);
+    })
+    .catch(err => {
+      console.error(err);
+      session.endDialog(`Sorry there was a technical problem getting event data`);
+    })
+    //console.dir(events)
+    session.conversationData.events = events;
+
+    // Response is based on on number of events 
+    if(events.length < 1) {
       session.endDialog(`Sorry there are no events running today`);
+    } else if (events.length == 1) {
+      session.send(`There is one event on today, "${events[0].title}"`);
+      builder.Prompts.confirm(session, "Would you like to give feedback on it?")
+    } else {  
+      session.endDialog();
+      session.beginDialog('MultiEventsDialog');
+      //session.endDialog(`There are ${numConverter.toWords(events.length)} events on today:\n`);
     }
-    session.endDialog();
+  },
+  (session, results) => {
+    console.log(`######### ${results}`);
+    
+    if(results.response) {
+      session.endDialog(`RESP ${results.response}`);
+    }
   }]
 ).triggerAction({
   matches: 'events-active'
 })
+
+
+bot.dialog('MultiEventsDialog', [
+  (session) => {
+    console.dir(session.conversationData.events);
+    session.endDialog(`There are multiple events on! ${JSON.stringify(session.conversationData.events)}`);
+  }]
+).triggerAction({
+  matches: 'events-active'
+})
+
 
 bot.dialog('CancelDialog',
   (session) => {
@@ -132,7 +171,8 @@ bot.dialog('CancelDialog',
     session.endDialog();
   }
 ).triggerAction({
-  matches: 'cancel'
+  matches: 'cancel',
+  intentThreshold: 0.50
 })
 
 
