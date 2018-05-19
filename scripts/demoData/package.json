@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node demoData.js"
   },
-  "license": "Apache-2.0",
+  "license": "MIT",
   "dependencies": {
     "mongodb": "~2.2.0",
     "dotenv": "^4.0.0"
