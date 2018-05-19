@@ -22,6 +22,14 @@
       //"preLaunchTask": "NPM Install - Node API",
       "cwd": "${workspaceFolder}/node/data-api",
       "program": "${workspaceFolder}/node/data-api/server.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Bot",
+      //"preLaunchTask": "NPM Install - Node API",
+      "cwd": "${workspaceFolder}/bot",
+      "program": "${workspaceFolder}/bot/app.js"
     },    
     {
       "name": "Debug Orleans - Silo",
