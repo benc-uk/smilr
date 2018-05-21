@@ -221,7 +221,7 @@ bot.dialog('SingleEventDialog', [
                 "value": "3"
               }
             ]
-          },           
+          }      
         ],
         "actions": [
           {
