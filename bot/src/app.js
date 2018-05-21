@@ -14,6 +14,8 @@ const numConverter = require('number-to-words');
 const utils = require('./utils');
 const api = require('./smilr-api');
 
+const ASSET_DIR = `${__dirname}/../assets`
+
 // Setup Restify Server
 const server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
@@ -27,9 +29,14 @@ const connector = new builder.ChatConnector({
   openIdMetadata: process.env.BotOpenIdMetadata
 });
 
-
 // Listen for messages from users 
 server.post('/api/messages', connector.listen());
+
+// Also we'll serve static content/images 
+server.get('/assets/*', restify.plugins.serveStatic({
+  directory: `${__dirname}/../assets`,
+  appendRequestPath: false
+}));
 
 // var tableName = 'botdata';
 // var azureTableClient = new botbuilder_azure.AzureTableClient(tableName, process.env['AzureWebJobsStorage']);
@@ -58,22 +65,16 @@ const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/apps/' + luisApp
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 bot.recognizer(recognizer);
 
-// Add first run dialog
-// DOES NOT WORK!
-/*bot.dialog('firstRun', function (session) {    
-  session.userData.firstRun = true;
-  session.beginDialog('GreetingDialog')
-}).triggerAction({
-  onFindAction: function (context, callback) {
-      // Only trigger if we've never seen user before
-      if (!context.userData.firstRun) {
-          // Return a score of 1.1 to ensure the first run dialog wins
-          callback(null, 1.1);
-      } else {
-          callback(null, 0.0);
+// Send welcome when conversation with bot is started, by initiating the GreetingDialog 
+bot.on('conversationUpdate', function (message) {
+  if (message.membersAdded) {
+    message.membersAdded.forEach(function (identity) {
+      if (identity.id === message.address.bot.id) {
+        bot.beginDialog(message.address, 'GreetingDialog');
       }
+    });
   }
-});*/
+});
 
 // Add a dialog for each intent that the LUIS app recognizes.
 // See https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-recognize-intent-luis 
@@ -139,6 +140,7 @@ bot.dialog('ActiveEventsDialog', [
     // Response is based on on number of events 
     if (events.length < 1) {
       session.endDialog(`Sorry there are no events running today`);
+      session.endDialog(`Sorry there are no events running today`);
     } else if (events.length == 1) {
       session.send(`There is one event on today, "${events[0].title}"`);
       builder.Prompts.confirm(session, "Would you like to give feedback on it?")
@@ -156,7 +158,8 @@ bot.dialog('ActiveEventsDialog', [
     }
   }]
 ).triggerAction({
-  matches: 'events-active'
+  matches: 'events-active',
+  intentThreshold: 0.50
 })
 
 
@@ -194,12 +197,14 @@ bot.dialog('CancelDialog',
 ///
 ///
 function createFeedbackCard(session, event, fid) {
+  let svgImg = require('fs').readFileSync(`${ASSET_DIR}/faces.svg`);
+
   return new builder.HeroCard(session)
     .title(event.title)
     .subtitle(`Topic: ${event.topics[fid].desc}`)
-    .text(`Please provide your rating for <b>${event.title}: ${event.topics[fid].desc}</b>`)
+    .text(`Please provide your rating for: ${event.title}: ${event.topics[fid].desc}`)
     .images([
-      builder.CardImage.create(session, `https://smilr.azurewebsites.net/assets/img/events/${event.type}.svg`)
+      builder.CardImage.create(session, `data:image/svg+xml;utf8,${svgImg.toString()}`)
     ])
     .buttons([
       builder.CardAction.imBack(session, '1', 'Rating 😩 (1)'),
@@ -214,6 +219,8 @@ function createFeedbackCard(session, event, fid) {
 ///
 ///
 function createTopicCard(session, event) {
+  let svgImg = require('fs').readFileSync(`${ASSET_DIR}/${event.type}.svg`);
+
   let topicButtons = [];
   for(topic of event.topics) {
     topicButtons.push( builder.CardAction.imBack(session, `${topic.id}`, topic.desc) )
@@ -221,5 +228,8 @@ function createTopicCard(session, event) {
   return new builder.HeroCard(session)
     .title(event.title)
     .text(`Please pick the topic you want to give feedback on`)
+    .images([
+      builder.CardImage.create(session, `data:image/svg+xml;utf8,${svgImg.toString()}`)
+    ])
     .buttons(topicButtons);
 }
