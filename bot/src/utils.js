@@ -12,6 +12,10 @@ class Utils {
   static sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+
+  static sendRandomPhrase(session, phrases) {
+    // TODO!
+  }
 }
 
 module.exports = Utils;
