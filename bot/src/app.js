@@ -45,7 +45,7 @@ var bot = new builder.UniversalBot(connector, function (session, args) {
 });
 
 bot.set('storage', inMemoryStorage);
-bot.set('persistConversationData', false);
+bot.set('persistConversationData', true);
 
 // Make sure you add code to validate these fields
 var luisAppId = process.env.LuisAppId;
@@ -59,7 +59,8 @@ var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 bot.recognizer(recognizer);
 
 // Add first run dialog
-bot.dialog('firstRun', function (session) {    
+// DOES NOT WORK!
+/*bot.dialog('firstRun', function (session) {    
   session.userData.firstRun = true;
   session.beginDialog('GreetingDialog')
 }).triggerAction({
@@ -72,7 +73,7 @@ bot.dialog('firstRun', function (session) {
           callback(null, 0.0);
       }
   }
-});
+});*/
 
 // Add a dialog for each intent that the LUIS app recognizes.
 // See https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-recognize-intent-luis 
@@ -132,8 +133,8 @@ bot.dialog('ActiveEventsDialog', [
         console.error(err.message);
         session.endDialog(`Sorry there was a technical problem getting event data 😢`);
       })
-    //console.dir(events)
     session.conversationData.events = events;
+    console.dir(session.conversationData.events)
 
     // Response is based on on number of events 
     if (events.length < 1) {
@@ -164,82 +165,19 @@ bot.dialog('MultiEventsDialog', [
     console.dir(session.conversationData.events);
     session.endDialog(`There are multiple events on! ${JSON.stringify(session.conversationData.events)}`);
   }]
-).triggerAction({
-  matches: 'events-active'
-})
-
+)
 
 bot.dialog('SingleEventDialog', [
   (session) => {
-    var msg = new builder.Message(session)
-    .addAttachment({
-      contentType: "application/vnd.microsoft.card.adaptive",
-      content: {
-        type: "AdaptiveCard",
-        speak: "<s>Hello this is a test</s>",
-        body: [
-          {
-            "type": "TextBlock",
-            "text": "Adaptive Card design session",
-            "size": "large",
-            "weight": "bolder"
-          },
-          {
-            "type": "TextBlock",
-            "text": "Conf Room 112/3377 (10)"
-          },
-          {
-            "type": "TextBlock",
-            "text": "12:30 PM - 1:30 PM"
-          },
-          {
-            "type": "TextBlock",
-            "text": "Snooze for"
-          },
-          {
-            "type": "Input.Text",
-            "id": "snooze",
-            "isMultiline": true,
-            "placeholder": "Optional comments"
-          },
-          {
-            "type": "Input.ChoiceSet",
-            "id": "MultiSelectVal",
-            "value": "2",
-            "separator": true,
-            "choices": [
-              {
-                "title": "Bad 😖",
-                "value": "1"
-              },
-              {
-                "title": "OK 😐",
-                "value": "2"
-              },
-              {
-                "title": "Great 😃",
-                "value": "3"
-              }
-            ]
-          }      
-        ],
-        "actions": [
-          {
-            "type": "Action.Submit",
-            "title": "😖"
-          },
-          {
-            "type": "Action.Submit",
-            "title": "😃"
-          }              
-        ]
-      }
-    });
+    var msg = new builder.Message(session).addAttachment(createTopicCard(session, session.conversationData.events[0]));
+    builder.Prompts.number(session, msg)
+    //session.send(msg);
+  },
+  (session, result) => {
+    var msg = new builder.Message(session).addAttachment(createFeedbackCard(session, session.conversationData.events[0], 0));
     session.send(msg);
   }]
-).triggerAction({
-  matches: 'events-active'
-})
+)
 
 
 bot.dialog('CancelDialog',
@@ -252,5 +190,36 @@ bot.dialog('CancelDialog',
   intentThreshold: 0.50
 })
 
+///
+///
+///
+function createFeedbackCard(session, event, fid) {
+  return new builder.HeroCard(session)
+    .title(event.title)
+    .subtitle(`Topic: ${event.topics[fid].desc}`)
+    .text(`Please provide your rating for <b>${event.title}: ${event.topics[fid].desc}</b>`)
+    .images([
+      builder.CardImage.create(session, `https://smilr.azurewebsites.net/assets/img/events/${event.type}.svg`)
+    ])
+    .buttons([
+      builder.CardAction.imBack(session, '1', 'Rating 😩 (1)'),
+      builder.CardAction.imBack(session, '2', 'Rating 🙁 (2)'),
+      builder.CardAction.imBack(session, '3', 'Rating 😐 (3)'),
+      builder.CardAction.imBack(session, '4', 'Rating 🙂 (4)'),
+      builder.CardAction.imBack(session, '5', 'Rating 😄 (5)')
+    ]);
+}
 
-
+///
+///
+///
+function createTopicCard(session, event) {
+  let topicButtons = [];
+  for(topic of event.topics) {
+    topicButtons.push( builder.CardAction.imBack(session, `${topic.id}`, topic.desc) )
+  }
+  return new builder.HeroCard(session)
+    .title(event.title)
+    .text(`Please pick the topic you want to give feedback on`)
+    .buttons(topicButtons);
+}
