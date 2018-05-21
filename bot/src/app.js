@@ -59,7 +59,7 @@ var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 bot.recognizer(recognizer);
 
 // Add first run dialog
-/*bot.dialog('firstRun', function (session) {    
+bot.dialog('firstRun', function (session) {    
   session.userData.firstRun = true;
   session.beginDialog('GreetingDialog')
 }).triggerAction({
@@ -72,7 +72,7 @@ bot.recognizer(recognizer);
           callback(null, 0.0);
       }
   }
-});*/
+});
 
 // Add a dialog for each intent that the LUIS app recognizes.
 // See https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-recognize-intent-luis 
