@@ -2,12 +2,12 @@
   "name": "smilr-bot",
   "version": "1.0.0",
   "description": "Simple LUIS bot for Smilr",
-  "main": "app.js",
+  "main": "src/app.js",
   "author": "Ben Coleman",
   "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node src/app.js"
   },
   "repository": "https://github.com/benc-uk/microservices-demoapp",
   "dependencies": {
