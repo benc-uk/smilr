@@ -53,7 +53,6 @@ namespace API
       // see https://dotnet.github.io/orleans/Documentation/Deployment-and-Operations/Configuration-Guide/Client-Configuration.html
       var client = new ClientBuilder()
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IEventGrain).Assembly))
-                //.ConfigureCluster(options => options.ClusterId = this.Configuration["Orleans:ClusterId"])
                 .Configure<ClusterOptions>(options => options.ClusterId = this.Configuration["Orleans:ClusterId"])
                 .UseAzureStorageClustering(options => options.ConnectionString = this.Configuration["Orleans:ConnectionString"])
                 .Build();
