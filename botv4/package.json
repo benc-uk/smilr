@@ -1,0 +1,17 @@
+{
+  "name": "Smilr-Bot",
+  "version": "1.0.0",
+  "description": "LUIS based bot",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Ben Coleman",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "botbuilder": "^4.0.0-preview1.2",
+    "botbuilder-ai": "^4.0.0-preview1.2",
+    "dotenv": "^5.0.1",
+    "restify": "^7.1.1"
+  }
+}

@@ -2,18 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "previewLocation": {
-      "defaultValue": "westeurope",
-      "type": "string",
-      "allowedValues": [
-        "westeurope",
-        "westus",
-        "eastus"
-      ],
-      "metadata": {
-        "description": "During preview only available in these regions: westeurope westus & eastus"
-      }
-    },
     "acrName": {
       "type": "string",
       "metadata": {
@@ -21,7 +9,7 @@
       }
     },
     "acrPassword": {
-      "type": "string",
+      "type": "securestring",
       "metadata": {
         "description": "Password for ACR"
       }
@@ -32,16 +20,35 @@
       "metadata": {
         "description": "Prefix for container DNS labels, change to ensure global DNS uniqueness"
       }      
-    }
+    },
+    "dataApiImageTag": {
+      "type": "string",
+      "defaultValue": "latest",
+      "metadata": {
+        "description": "Image tag of the Data API, e.g. latest or specific tag"
+      }       
+    },
+    "frontendImageTag": {
+      "type": "string",
+      "defaultValue": "latest",
+      "metadata": {
+        "description": "Image tag of the Frontend, e.g. latest or specific tag"
+      }       
+    },    
+    "releaseInfo": {
+      "type": "string",
+      "defaultValue": "Not set",
+      "metadata": {
+        "description": "String description of this release, normally used with VSTS"
+      }       
+    }    
   },
   "variables": {
     "containerFrontend": "smilr-frontend",
     "containerDataApi": "smilr-data",
-    "imageFrontend": "[concat(parameters('acrName'), '.azurecr.io/smilr/frontend')]",
-    "imageDataApi": "[concat(parameters('acrName'), '.azurecr.io/smilr/data-api')]",
+    "imageFrontend": "[concat(parameters('acrName'), '.azurecr.io/smilr/frontend:', parameters('frontendImageTag'))]",
+    "imageDataApi": "[concat(parameters('acrName'), '.azurecr.io/smilr/data-api:', parameters('dataApiImageTag'))]",
     "imageMongo": "mongo:3.4-jessie",
-    "portFrontend": "3000",
-    "portDataApi": "4000",
     "memory": 1.0,
     "cpu": 1.0,
     "dnsLabelFrontend": "[concat(parameters('dnsPrefix'), '-frontend')]",
@@ -51,8 +58,8 @@
     {
       "name": "[variables('containerDataApi')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
-      "apiVersion": "2018-02-01-preview",
-      "location": "[parameters('previewLocation')]",
+      "apiVersion": "2018-04-01",
+      "location": "[resourceGroup().location]",
       "properties": {
         "containers": [
           {
@@ -61,9 +68,9 @@
               "image": "[variables('imageDataApi')]",
               "ports": [
                 {
-                  "port": "[variables('portDataApi')]"
+                  "port": "80"
                 }
-              ],
+              ],              
               "resources": {
                 "requests": {
                   "cpu": "[variables('cpu')]",
@@ -74,7 +81,15 @@
                 {
                   "name": "MONGO_CONNSTR",
                   "value": "mongodb://localhost"
-                }
+                },
+                {
+                  "name": "PORT",
+                  "value": "80"
+                },
+                {
+                  "name": "RELEASE_INFO",
+                  "value": "[parameters('releaseInfo')]"
+                }             
               ]
             }
           },
@@ -99,21 +114,21 @@
         "osType": "Linux",
         "ipAddress": {
           "type": "Public",
+          "dnsNameLabel": "[variables('dnsLabelDataApi')]",
           "ports": [
             {
               "protocol": "tcp",
-              "port": "[variables('portDataApi')]"
+              "port": "80"
             }
-          ],
-          "dnsNameLabel": "[variables('dnsLabelDataApi')]"
+          ]            
         }
       }
     },
     {
       "name": "[variables('containerFrontend')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
-      "apiVersion": "2018-02-01-preview",
-      "location": "[parameters('previewLocation')]",
+      "apiVersion": "2018-04-01",
+      "location": "[resourceGroup().location]",
       "properties": {
         "containers": [
           {
@@ -122,9 +137,9 @@
               "image": "[variables('imageFrontend')]",
               "ports": [
                 {
-                  "port": "[variables('portFrontend')]"
+                  "port": "80"
                 }
-              ],
+              ],              
               "resources": {
                 "requests": {
                   "cpu": "[variables('cpu')]",
@@ -134,8 +149,12 @@
               "environmentVariables": [
                 {
                   "name": "API_ENDPOINT",
-                  "value": "[concat('http://', variables('dnsLabelDataApi'), '.', parameters('previewLocation'), '.azurecontainer.io', ':', variables('portDataApi'), '/api')]"
-                }
+                  "value": "[concat('http://', variables('dnsLabelDataApi'), '.', resourceGroup().location, '.azurecontainer.io/api')]"
+                },
+                {
+                  "name": "PORT",
+                  "value": "80"
+                }                
               ]
             }
           }
@@ -148,13 +167,13 @@
         "osType": "Linux",
         "ipAddress": {
           "type": "Public",
+          "dnsNameLabel": "[variables('dnsLabelFrontend')]",
           "ports": [
             {
               "protocol": "tcp",
-              "port": "[variables('portFrontend')]"
+              "port": "80"
             }
-          ],
-          "dnsNameLabel": "[variables('dnsLabelFrontend')]"
+          ]          
         }
       },
       "dependsOn": [
@@ -164,11 +183,11 @@
   ],
   "outputs": {
     "frontendURL": {
-      "value": "[concat('http://', variables('dnsLabelFrontend'), '.', parameters('previewLocation'), '.azurecontainer.io', ':', variables('portFrontend'))]",
+      "value": "[concat('http://', variables('dnsLabelFrontend'), '.', resourceGroup().location, '.azurecontainer.io')]",
       "type": "string"
     },
     "apiURL": {
-      "value": "[concat('http://', variables('dnsLabelDataApi'), '.', parameters('previewLocation'), '.azurecontainer.io', ':', variables('portDataApi'), '/api')]",
+      "value": "[concat('http://', variables('dnsLabelDataApi'), '.', resourceGroup().location, '.azurecontainer.io/api')]",
       "type": "string"
     }
   }

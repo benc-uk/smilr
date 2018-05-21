@@ -1,0 +1,24 @@
+#
+# Deploy the back end data API microservice in Kubernetes
+#
+
+# ------------------- Loadbalancer ------------------- #
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: data-api-svc
+  annotations:
+    # !CHANGE THIS! To your real DNS domain
+    external-dns.alpha.kubernetes.io/hostname: smilr-api.2913c6b6-3b1d-4e5d-9c02-558d5f7bd827.westeurope.aksapp.io
+
+    # This is a workaround for the annotaion filter the external DNS is looking for
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4000
+  selector:
+    app: data-api

@@ -1,11 +1,26 @@
 //
 // Main Express server for Smilr Data API
-// ----------------------------------------------
+// ---------------------------------------------
 // Ben C, March 2018
 //
 
 // Load .env file if it exists
 require('dotenv').config()
+
+// App Insights. Set APPINSIGHTS_INSTRUMENTATIONKEY as App Setting or env var
+if(process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
+  const appInsights = require("applicationinsights");
+  appInsights.setup()
+  .setAutoDependencyCorrelation(true)
+  .setAutoCollectRequests(true)
+  .setAutoCollectPerformance(true)
+  .setAutoCollectExceptions(true)
+  .setAutoCollectDependencies(true)
+  .setAutoCollectConsole(true, true)
+  .setUseDiskRetryCaching(true);
+  appInsights.start();
+  console.log("### Server will report data to App Insights");
+}
 
 // Load in modules, and create Express app 
 const express = require('express');
@@ -41,9 +56,9 @@ if (app.get('env') === 'production') {
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
 // Routing to controllers
-app.use('/', require('./routes/api-events'));
-app.use('/', require('./routes/api-feedback'));
-app.use('/', require('./routes/api-other'));
+app.use(require('./routes/api-events'));
+app.use(require('./routes/api-feedback'));
+app.use(require('./routes/api-other'));
 
 // Global catch all for all requests not caught by other routes
 // Just return a HTTP 400

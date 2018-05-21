@@ -4,7 +4,7 @@ This is a multi component application designed to showcase microservices design 
 
 The application is called *'Smilr'* and allows people to provide feedback on events or sessions they have attended via a simple web & mobile interface. The feedback consists of a rating (scored 1-5) and supporting comments.
 
-- The user interface is written in Angular (Angular 5) and is completely de-coupled from the back end, which it communicates with via REST. The UI is fully responsive and will work on on both web and mobile.
+- The user interface is written in Angular (Angular 6) and is completely de-coupled from the back end, which it communicates with via REST. The UI is fully responsive and will work on on both web and mobile.
 
 - The two microservices are both written in Node.js using the Express framework. These have been containerized so can easily be deployed & run as containers
 
@@ -44,6 +44,9 @@ The main levels of the repository directory tree are laid out as follows
 ├── dotnet             .NET Core ASP implementation of the services - WIP
 ├── etc                Supporting files, pictures and other artefacts 
 ├── kubernetes         Docs and files to support deployment to Kubernetes & AKS
+│   ├── helm              Helm chart for deploying Smilr with Helm
+│   ├── using-ingress     Deployment YAML for use with K8S Ingress
+│   └── using-lb          Deployment YAML for use with K8S LoadBalancer
 ├── node               Main microservices, written in Node.js
 │   ├── data-api          Data API service source code
 │   └── frontend          Frontend service source code
@@ -67,9 +70,8 @@ The primary configuration mechanism for this project is system environmental var
 
 There are numerous ways to set & override environmental variables; in the operating system, the user profile or from command line tools. For local development purposes it is strongly recommended you create & use `.env` files. These are simple text files containing `var=value` pairs. Sample files named `.env.sample` are provided with the project, which you can rename and use. *Note.* `.env` files normally contain secrets so they are prevented from being committed to Git
 
-
 # :star: Architecture & Core App Components
-![arch](https://user-images.githubusercontent.com/14982936/37564863-730baed2-2a96-11e8-85c5-cdaeb13d595d.png)
+![arch](/etc/architecture.png)
 
 The main app components are:
 1. [Angular front end UI](#component-1---angular-front-end-ui)
@@ -79,6 +81,17 @@ The main app components are:
 5. [Optional serverless components](#component-5---optional-serverless-components) 
 
 These will be each described in their own sections below. 
+
+
+# :hourglass_flowing_sand: Build & Release Pipeline
+
+Automated CI/CD Pipeline has been created using Visual Studio Team Services (VSTS). This automatically builds the various components as containers and releases them to Azure for testing. To view the status of these builds & releases, you can visit the VSTS Public Project
+
+Data API Automated Build: [![Build badge](https://bencoleman.visualstudio.com/_apis/public/build/definitions/f73c2301-17e8-4801-86bb-7edc2917634c/3/badge)](https://bencoleman.visualstudio.com/Smilr/Smilr%20Team/_build/index?context=mine&path=%5C&definitionId=3&_a=completed) 
+
+Frontend Automated Build: [![Build badge](https://bencoleman.visualstudio.com/_apis/public/build/definitions/f73c2301-17e8-4801-86bb-7edc2917634c/2/badge)](https://bencoleman.visualstudio.com/Smilr/Smilr%20Team/_build/index?context=mine&path=%5C&definitionId=2&_a=completed) 
+
+### [VSTS Public Project - Smilr](https://bencoleman.visualstudio.com/Smilr/Smilr%20Team/_dashboards/Smilr%20Team/d1e7c4db-d72f-4c01-a16a-9775b9e59382)
 
 ---
 
@@ -92,7 +105,7 @@ When running in non production (or dev) mode, **InMemoryDbService** is used to p
 ## Build
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. You should use the `--prod` flag for a production build.
 
-## API endpoint configuration
+## API Endpoint Configuration
 :exclamation::speech_balloon: **Note.** The API endpoint for the backend data service must be set, there are two ways this is done, depending on if you are running in non production (e.g. from `ng serve`) or in production mode:
 
 - **Non production:** The API endpoint is set in [environment.ts](angular/src/environments/environment.ts), see comments in there for details. ***However in non-prod mode the value of this setting is always ignored*** as the InMemoryDbService intercepts all calls

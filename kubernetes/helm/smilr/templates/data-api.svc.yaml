@@ -1,0 +1,16 @@
+{{- $fullName := (printf "%s-data-api" (include "smilr.fullname" .)) -}}
+{{- $name := (printf "%s-data-api" (include "smilr.name" .)) -}}
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ $fullName }}
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4000
+  selector:
+    app: {{ $name }}
+    release: {{ .Release.Name }}

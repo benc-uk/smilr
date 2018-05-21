@@ -1,0 +1,60 @@
+{{- $fullName := (printf "%s-data-api" (include "smilr.fullname" .)) -}}
+{{- $name := (printf "%s-data-api" (include "smilr.name" .)) -}}
+{{- $mongoFullName := (printf "%s-mongodb" (include "smilr.fullname" .)) -}}
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ $name }}
+    chart: {{ template "smilr.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.dataApi.replicas }}
+  selector:
+    matchLabels:
+      app: {{ $name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $name }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ $name }}
+ 
+        image: "{{ .Values.registryPrefix }}smilr/data-api:{{ .Values.dataApi.imageTag }}"
+        imagePullPolicy: {{ .Values.dataApi.imagePullPolicy }}
+
+        ports:
+        - containerPort: 4000
+
+        env:     
+        - name: MONGO_CONNSTR
+          value: {{ if .Values.dataApi.mongoConnStr }} {{ .Values.dataApi.mongoConnStr }} {{ else }} "mongodb://{{ $mongoFullName }}" {{ end }}
+
+        livenessProbe:
+          httpGet:
+            path: /api/info
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+        resources:
+          requests:
+            memory: "256M"
+            cpu: 0.25
+            
+      # Wipe & initialize the database with demo data, remove if unwanted
+      #initContainers:
+      #  - name: init-demodata
+      #    image: bcdemo.azurecr.io/smilr/data-api
+      #    command: ['sh', '-c', 'cd demoData && node demoData.js']
+      #    env:
+      #      - name: MONGO_CONNSTR
+      #        value: mongodb://mongodb-svc.default
+      #      - name: WIPE_DB
+      #        value: "1"

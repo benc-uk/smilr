@@ -1,6 +1,4 @@
-node_modules
-**/node_modules
-**/npm-debug.log
+# Standard stuff
 Dockerfile*
 **/*Dockerfile*
 docker-compose*
@@ -10,7 +8,23 @@ docker-compose*
 readme.md
 **/readme.md
 **/LICENSE
-.vscode
+.vscode/
+
+# Node stuff
+node_modules
+**/node_modules
+**/*.log
+
+# Dotenv secrets!
 **/.env
-.env
-src
+
+# Outputs, binaries etc
+**/bin/
+**/obj/
+**/dist/
+
+# Project specific folders
+azure/
+docs/
+kubernetes/
+etc/

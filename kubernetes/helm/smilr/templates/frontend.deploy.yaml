@@ -1,0 +1,48 @@
+{{- $fullName := (printf "%s-frontend" (include "smilr.fullname" .)) -}}
+{{- $name := (printf "%s-frontend" (include "smilr.name" .)) -}}
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ $name }}
+    chart: {{ template "smilr.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.dataApi.replicas }}
+  selector:
+    matchLabels:
+      app: {{ $name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $name }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ $name }}
+
+        image: "{{ .Values.registryPrefix }}smilr/frontend:{{ .Values.frontend.imageTag }}"
+        imagePullPolicy: {{ .Values.frontend.imagePullPolicy }}
+
+        ports:
+        - containerPort: 3000
+
+        env:
+        - name: API_ENDPOINT
+          value: {{ if .Values.domainSuffix }} "/api"  {{ else }} "/{{ .Release.Name }}/api" {{ end }}
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+        resources:
+          requests:
+            memory: "64M"
+            cpu: 0.125
