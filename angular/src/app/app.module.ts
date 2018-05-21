@@ -13,6 +13,7 @@ import { HomeComponent } from './home.component';
 import { EventHistoryComponent } from './event-history.component';
 import { EventListComponent } from './event-list.component';
 import { FeedbackComponent } from './feedback.component';
+import { AboutComponent } from './about.component';
 import { FaceDirective } from './feedback.component';
 import { ModalDialogComponent } from './modal-dialog.component';
 import { EventService } from './event.service';
@@ -36,6 +37,7 @@ import { AppSvcLogin } from './admin/app-svc-login.component';
     EventListComponent,
     EventHistoryComponent,
     FeedbackComponent,
+    AboutComponent,
     ModalDialogComponent,
     ReportComponent,
     AdminComponent,

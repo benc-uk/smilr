@@ -1,0 +1,66 @@
+{{- $frontendFullName := (printf "%s-frontend" (include "smilr.fullname" .)) -}}
+{{- $dataApifullName := (printf "%s-data-api" (include "smilr.fullname" .)) -}}
+{{- $ingressName := (printf "%s-ingress" (include "smilr.fullname" .)) -}}
+
+{{ if .Values.domainSuffix }}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "{{ $ingressName }}-api"
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: "{{ .Release.Name }}.{{ .Values.domainSuffix }}"
+    http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: {{ $dataApifullName }}
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: {{ $frontendFullName }}
+          servicePort: 80
+
+{{ else }}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "{{ $ingressName }}-api"
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: "/api"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: "/{{ .Release.Name }}/api"
+        backend:
+          serviceName: {{ $dataApifullName }}
+          servicePort: 80
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "{{ $ingressName }}-front"
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+    nginx.ingress.kubernetes.io/add-base-url: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: "/{{ .Release.Name }}"
+        backend:
+          serviceName: {{ $frontendFullName }}
+          servicePort: 80    
+{{ end }}

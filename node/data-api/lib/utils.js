@@ -12,6 +12,11 @@ class Utils {
     console.log(`### Error with events API ${JSON.stringify(err)}`); 
     let statuscode = code;
     if(err.code > 1) statuscode = err.code;
+
+    // App Insights
+    const appInsights = require("applicationinsights");    
+    if(appInsights.defaultClient) appInsights.defaultClient.trackException({exception: err});
+    
     res.status(statuscode).send(err);
     return;
   }
@@ -24,16 +29,21 @@ class Utils {
     // This lets us pretend we're not really using Mongo!
     // It simply swaps the '_id' field for 'id' in all data returned
     // This way we don't need to change the front-end, which is expecting 'id' :)
+    let unMongoData = null;
+
     if(Array.isArray(data)) {
-      let unMongoData = data.map(d => {d.id = d._id; delete(d._id); return d});
-      res.status(200).send(unMongoData)
-      return;    
+      unMongoData = data.map(d => {d.id = d._id; delete(d._id); return d});
     } else {
-      data.id = data._id;
-      delete data._id;
-      res.status(200).send(data)
-      return;
+      unMongoData = data;
+      unMongoData.id = unMongoData._id;
+      delete unMongoData._id;
     }
+    // App Insights
+    const appInsights = require("applicationinsights");    
+    if(appInsights.defaultClient) appInsights.defaultClient.trackEvent({name: "dataEvent", properties: {data: JSON.stringify(unMongoData)}});
+    
+    res.status(200).send(unMongoData)
+    return;    
   }
 
   //

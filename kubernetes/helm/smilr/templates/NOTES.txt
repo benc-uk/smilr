@@ -1,0 +1,14 @@
+Smilr has been deployed! Wow that was easy!
+===========================================
+{{ if .Values.domainSuffix }}
+The app is accessible at http://{{ .Release.Name }}.{{ .Values.domainSuffix }}/
+
+It might take a while for the DNS record to be created & propagate, so please wait.
+{{ if .Values.mongo.usePersistence }} There might also be a delay while the MongoDB starts and is assigned a persistent volume {{ end }}
+{{ else }}
+Get the IP address of your Ingress by running these commands:
+
+export INGRESS_IP=$(kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}')
+echo "The app is accessible at http://$INGRESS_IP/{{ .Release.Name }}/"
+{{ end }}
+Have fun, bye!

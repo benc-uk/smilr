@@ -5,6 +5,7 @@ import { HomeComponent }         from './home.component';
 import { EventListComponent }    from './event-list.component';
 import { EventHistoryComponent } from './event-history.component';
 import { FeedbackComponent }     from './feedback.component';
+import { AboutComponent }        from './about.component';
 
 import { ReportComponent }       from './admin/report.component';
 import { AdminComponent }        from './admin/admin.component';
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'events', component: EventHistoryComponent },
+  { path: 'about', component: AboutComponent },
   { path: 'feedback/:eventid/:topicid', component: FeedbackComponent },
   { path: 'admin/events', component: AdminComponent, canActivate: [UserService] },
   { path: 'admin/report', component: ReportComponent, canActivate: [UserService] },

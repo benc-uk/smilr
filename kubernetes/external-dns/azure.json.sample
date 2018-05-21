@@ -1,0 +1,7 @@
+{
+   "subscriptionId":  "your-azure-subid",
+   "tenantId":        "your-azure-aad-tenant-id",
+   "aadClientId":     "aad-service-principal-id",
+   "aadClientSecret": "aad-service-principal-secret-key",
+   "resourceGroup":   "resource-group-for-dns-zone"
+}

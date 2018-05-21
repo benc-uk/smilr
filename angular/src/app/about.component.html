@@ -1,0 +1,50 @@
+<div class="panel panel-primary simpleFadeIn">
+  <div class="panel-heading">
+    <h2 class="panel-title">About</h2>
+  </div>
+  <div class="panel-body">
+    <div class='about'>
+        <h2 class="panel-title">A microservices &amp; Angular demonstration app</h2>
+      <br/><img src='assets/img/face-5.svg' class='aboutface bounce'/><br/><br/>
+    </div>
+  </div>
+</div>
+
+
+<div class="panel panel-primary simpleFadeIn">
+  <div class="panel-heading">
+    <h2 class="panel-title">Info</h2>
+  </div>
+  <div class="panel-body">
+    <h4>Version: v2.1.0</h4>
+    <h4>&copy; Ben Coleman, 2018</h4>
+    <hr/>
+    <table>
+      <tr>
+        <td>Angular Mode: &nbsp;</td><td>{{ devMode }}</td>
+      </tr>
+      <tr>
+        <td>Secured: &nbsp;</td><td>{{ secured }}</td>
+      </tr>
+      <tr>
+        <td>API Endpoint: &nbsp;</td><td>{{ apiEndpoint }}</td>
+      </tr>
+      <tr>
+        <td>More System Info : &nbsp;</td><td><a target="_blank" href="{{ apiEndpoint }}/info">{{ apiEndpoint }}/info</a></td>
+      </tr>      
+    </table>
+  </div>
+</div>
+
+
+<div class="panel panel-primary simpleFadeIn">
+  <div class="panel-heading">
+    <h2 class="panel-title">Links</h2>
+  </div>
+  <div class="panel-body" style="font-size:100%">
+    <ul>
+      <li><a href='https://aka.ms/smilr-project' target='_blank'>GitHub Project Page &amp; Source</a></li>
+      <li><a href='https://aka.ms/smilr-vsts' target='_blank'>CI/CD Build &amp; Release Pipelines</a></li>
+    </ul>
+  </div>
+</div>
