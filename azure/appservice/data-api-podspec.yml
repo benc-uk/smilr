@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: smilr
+spec:
+  containers:
+  - name: data-api
+    image: smilr/data-api:latest
+    ports:
+    - containerPort: 4000
+    env:     
+    - name: MONGO_CONNSTR
+      value: mongodb://database
+  - name: database
+    image: mongo:3.4-jessie

@@ -1,5 +1,5 @@
 //
-// Smilr bot, using Bot Framework & Builder SDK 3.x
+// Smilr bot, using Bot Framework & Bot Builder SDK 3.x
 // Ben Coleman, 2018
 //
 
@@ -7,22 +7,26 @@ require('dotenv').config()
 
 const restify = require('restify');
 const builder = require('botbuilder');
-const botbuilder_azure = require("botbuilder-azure");
-//const request = require('request-promise-native');
+const botbuilderAzure = require("botbuilder-azure");
 const numConverter = require('number-to-words');
 
 const utils = require('./utils');
-const api = require('./smilr-api');
+const SmilrApi = require('./smilr-api');
+const api = new SmilrApi(process.env.API_ENDPOINT || 'http://localhost:4000/api');
 
-const ASSET_DIR = `${__dirname}/../assets`
+const luisAppId = process.env.LuisAppId;
+const luisAPIKey = process.env.LuisAPIKey;
+const luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
+const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/apps/' + luisAppId + '?subscription-key=' + luisAPIKey;
 
 // Setup Restify Server
 const server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
-  console.log('%s listening to %s', server.name, server.url);
+  console.log(`### ${server.name} listening at: ${server.url}`);
 });
 
 // Create chat connector for communicating with the Bot Framework Service
+console.log(`### App ID: ${process.env.MicrosoftAppId}`);
 const connector = new builder.ChatConnector({
   appId: process.env.MicrosoftAppId,
   appPassword: process.env.MicrosoftAppPassword,
@@ -32,34 +36,15 @@ const connector = new builder.ChatConnector({
 // Listen for messages from users 
 server.post('/api/messages', connector.listen());
 
-// Also we'll serve static content/images 
-server.get('/assets/*', restify.plugins.serveStatic({
-  directory: `${__dirname}/../assets`,
-  appendRequestPath: false
-}));
-
-// var tableName = 'botdata';
-// var azureTableClient = new botbuilder_azure.AzureTableClient(tableName, process.env['AzureWebJobsStorage']);
-// var tableStorage = new botbuilder_azure.AzureBotStorage({ gzipData: false }, azureTableClient);
-var inMemoryStorage = new builder.MemoryBotStorage();
-
 // Create your bot with a function to receive messages from the user
-// This default message handler is invoked if the user's utterance doesn't
-// match any intents handled by other dialogs.
 var bot = new builder.UniversalBot(connector, function (session, args) {
   session.send("I'm sorry I didn't understand, that.\nI'm not smart, I'm only made of code 😞", session.message.text);
   //session.beginDialog('HelpDialog');
 });
 
+var inMemoryStorage = new builder.MemoryBotStorage();
 bot.set('storage', inMemoryStorage);
 bot.set('persistConversationData', true);
-
-// Make sure you add code to validate these fields
-var luisAppId = process.env.LuisAppId;
-var luisAPIKey = process.env.LuisAPIKey;
-var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
-
-const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/apps/' + luisAppId + '?subscription-key=' + luisAPIKey;
 
 // Create a recognizer that gets intents from LUIS, and add it to the bot
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
@@ -70,14 +55,13 @@ bot.on('conversationUpdate', function (message) {
   if (message.membersAdded) {
     message.membersAdded.forEach(function (identity) {
       if (identity.id === message.address.bot.id) {
-        bot.beginDialog(message.address, 'GreetingDialog');
+        bot.beginDialog(message.address, 'ActiveEventsDialog');//'GreetingDialog');
       }
     });
   }
 });
 
-// Add a dialog for each intent that the LUIS app recognizes.
-// See https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-recognize-intent-luis 
+// Add a dialog for each intent that the LUIS app recognizes
 bot.dialog('GreetingDialog',
   (session) => {
     let r = utils.getRandomInt(3);
@@ -125,29 +109,25 @@ bot.dialog('ActiveEventsDialog', [
     await utils.sleep(2000);
 
     // Call API get get active events 
-    let events = [];
     await api.getEvents('active')
       .then(eventsResp => {
-        events = JSON.parse(eventsResp);
+         // Store events in the session conversationData for use by later dialogs
+         session.conversationData.events = JSON.parse(eventsResp);
       })
       .catch(err => {
-        console.error(err.message);
-        session.endDialog(`Sorry there was a technical problem getting event data 😢`);
+        console.error(`### ${err.message}`);
+        session.endDialog(`Sorry there was a technical problem getting event information 😢`);
       })
-    session.conversationData.events = events;
-    console.dir(session.conversationData.events)
-
+      
     // Response is based on on number of events 
-    if (events.length < 1) {
+    if (session.conversationData.events.length < 1) {
       session.endDialog(`Sorry there are no events running today`);
-      session.endDialog(`Sorry there are no events running today`);
-    } else if (events.length == 1) {
-      session.send(`There is one event on today, "${events[0].title}"`);
+    } else if (session.conversationData.events.length == 1) {
+      session.send(`There is one event on today, "${session.conversationData.events[0].title}"`);
       builder.Prompts.confirm(session, "Would you like to give feedback on it?")
     } else {
       session.endDialog();
       session.beginDialog('MultiEventsDialog');
-      //session.endDialog(`There are ${numConverter.toWords(events.length)} events on today:\n`);
     }
   },
   (session, results) => {
@@ -165,10 +145,10 @@ bot.dialog('ActiveEventsDialog', [
 
 bot.dialog('MultiEventsDialog', [
   (session) => {
-    console.dir(session.conversationData.events);
     session.endDialog(`There are multiple events on! ${JSON.stringify(session.conversationData.events)}`);
   }]
 )
+
 
 bot.dialog('SingleEventDialog', [
   (session) => {
@@ -197,14 +177,12 @@ bot.dialog('CancelDialog',
 ///
 ///
 function createFeedbackCard(session, event, fid) {
-  let svgImg = require('fs').readFileSync(`${ASSET_DIR}/faces.svg`);
-
   return new builder.HeroCard(session)
     .title(event.title)
     .subtitle(`Topic: ${event.topics[fid].desc}`)
     .text(`Please provide your rating for: ${event.title}: ${event.topics[fid].desc}`)
     .images([
-      builder.CardImage.create(session, `data:image/svg+xml;utf8,${svgImg.toString()}`)
+      builder.CardImage.create(session, utils.getImageSVG('faces.svg'))
     ])
     .buttons([
       builder.CardAction.imBack(session, '1', 'Rating 😩 (1)'),
@@ -219,8 +197,6 @@ function createFeedbackCard(session, event, fid) {
 ///
 ///
 function createTopicCard(session, event) {
-  let svgImg = require('fs').readFileSync(`${ASSET_DIR}/${event.type}.svg`);
-
   let topicButtons = [];
   for(topic of event.topics) {
     topicButtons.push( builder.CardAction.imBack(session, `${topic.id}`, topic.desc) )
@@ -229,7 +205,7 @@ function createTopicCard(session, event) {
     .title(event.title)
     .text(`Please pick the topic you want to give feedback on`)
     .images([
-      builder.CardImage.create(session, `data:image/svg+xml;utf8,${svgImg.toString()}`)
+      builder.CardImage.create(session, utils.getImageSVG(event.type + '.svg'))
     ])
     .buttons(topicButtons);
 }

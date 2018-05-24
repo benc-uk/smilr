@@ -19,4 +19,4 @@ class SmilrApi {
 }
 
 // Return singleton
-module.exports = new SmilrApi();
+module.exports = SmilrApi;
