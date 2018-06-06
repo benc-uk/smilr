@@ -1,5 +1,5 @@
 # ARM Template - Azure Container Instance
-Deploy the Smilr app using just Azure Container Instances with MongoDB running in a container. The data-api and mongo containers will run in the same container group. 
+Deploy the Smilr app using just Azure Container Instances (ACI) with MongoDB running in a container. The data-api and mongo containers will run in the same container group and so demonstrates the shared container group model in ACI  
 
 ## Deployed Resources
 - Microsoft.ContainerInstance/containerGroups

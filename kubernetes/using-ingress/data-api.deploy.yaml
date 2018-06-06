@@ -25,6 +25,7 @@ spec:
 
         # !CHANGE THIS! To your real image reference for the data-api  
         image: bcdemo.azurecr.io/smilr/data-api:stable
+        #imagePullPolicy: Always
 
         ports:
         - containerPort: 4000

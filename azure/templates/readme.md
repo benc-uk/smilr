@@ -9,9 +9,16 @@ for how to build the images and push to ACR.
 :exclamation::speech_balloon: **Note.** It would not be helpful to deploy Azure Container Registry as part of these templates, as it would simply result in an empty registry
 
 ## Template List
+A range of templates are provided covering several scenarios 
 
-### [:hammer: Template 1 - Azure Container Instance](aci-mongo/)
+### [:hammer: Azure Container Instance with MongoDB Container](aci-mongo/)
 
-### [:hammer: Template 2 - Azure Container Instance & Cosmos DB](aci-cosmos/)
+### [:hammer: Azure Container Instance with Cosmos DB](aci-cosmos/)  
 
-### [:hammer: Template 3 - Azure Web App for Containers (Linux App Service)](web-app-containers/)
+### :hammer: Azure Web App for Containers with MongoDB Container
+(Note. Requires creating!) 
+
+### [:hammer: Azure Web App for Containers with Cosmos DB](web-app-containers/)
+
+### :hammer: Azure Web App (Windows) with Cosmos DB
+(Note. Requires creating!) 

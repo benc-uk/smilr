@@ -13,6 +13,15 @@
     },
     "dnsPrefix": {
       "value": "make-me-unique"
-    }
+    },
+    "dataApiImageTag": {
+      "value": "latest"
+    },    
+    "frontendImageTag": {
+      "value": "latest"
+    },
+    "releaseInfo": {
+      "value": "Manual ARM template release"
+    }    
   }
 }

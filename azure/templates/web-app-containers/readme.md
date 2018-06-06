@@ -1,5 +1,5 @@
 # ARM Template - Web App for Containers
-Deploy the Smilr app using Azure Web App for Containers (aka App Service Linux) & Cosmos DB.  
+Deploy the Smilr app using Azure Web App for Containers (aka App Service Linux) using Cosmos DB as the supporting database.  
 A new Cosmos DB account will be created, so this template takes around 5 minutes to deploy
 
 ## Deployed Resources
