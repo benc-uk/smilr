@@ -193,7 +193,8 @@ The server listens on port 4000 and requires just one configuration environmenta
 |Variable Name|Purpose|
 |-------------|-------|
 |MONGO_CONNSTR|A valid [MongoDB connection string](https://docs.mongodb.com/v3.4/reference/connection-string/), e.g. `mongodb://localhost`. When using Azure Cosmos DB, obtain the full Mongo connection string from the Cosmos instance in the portal, which will include the username & password.
-|API_SECRET|***Optional*** secret key used for admin calls to the event API (setting this turns security on, see [Admin Calls Security](#admin-calls-security) above for details)|
+|API_SECRET|***Optional*** secret key used for admin calls to the event API (setting this turns security on, see [Admin Calls Security](#admin-calls-security) above for details).
+|APPINSIGHTS_INSTRUMENTATIONKEY| The Instrumentation key of Application Insights to identify the resource created.|
 
 ## Running Data API service locally
 Run `npm install` in the **data-api** folder, ensure the environment variables are set as described above, then run `npm start`
