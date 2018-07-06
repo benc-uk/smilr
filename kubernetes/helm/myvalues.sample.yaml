@@ -1,3 +1,7 @@
+#
+# SAMPLE FILE - make a copy of this with your values in
+#
+
 # Note the trailing slash
 registryPrefix: myregistry.azurecr.io/
 

@@ -24,7 +24,8 @@ Once you have AKS deployed and are able to interact with it via `kubectl` you ca
 ## Pre-requisites 
 Before starting deploying Smilr into Kubernetes you will need to Deploy Azure Container Registry (ACR), build the Docker images and push them up to ACR.  
 
-:page_with_curl: [Refer to the complete container guide for details](/docs/containers.md)
+Refer to the container guide for details
+#### [:page_with_curl: Complete container guide](../docs/containers.md) 
 
 Notes on Smilr Kubernetes deployment:
 - When deploying to Kubernetes use of the `default` namespace is assumed.
@@ -42,7 +43,8 @@ Notes on Smilr Kubernetes deployment:
 - `helm install smilr`
 - Done!
 
-See the [Helm chart readme for more details](helm/readme.md)
+Full details of using the Helm chart are here:  
+#### [:page_with_curl: Helm Chart Docs](helm/readme.md)
 
 ## Option 2 - Direct Deployment
 
@@ -51,8 +53,8 @@ Deployment YAML files have been provided to directly stand up Smilr in your Kube
 Before deployment of either scenario the two files `frontend.deploy.yaml` and `data-api.deploy.yaml` will require editing to point to your images and the relevant registry (i.e. ACR) & tag you are using. It is assumed you will be deploying to the default namespace
 
 ### Scenario A - Using Ingress
-![kube1](../etc/kube-scenario-a.png)
- **[Deployment Files for this scenario are in /kubernetes/using-ingress](using-ingress/)** 
+![kube1](../etc/kube-scenario-a.png){: .framed .padded}  
+**[Deployment Files for this scenario are in /kubernetes/using-ingress](./using-ingress/)** 
 
 This method uses a Kubernetes ingress controller with a single entrypoint into your cluster, and rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Angular SPA is served from so it doesn't require any fiddling with IP addresses and DNS. 
 
@@ -72,8 +74,8 @@ kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namesp
 ```
 
 ### Scenario B - Using LoadBalancer
-![kube2](../etc/kube-scenario-b.png)
-**[Deployment Files for this scenario are in /kubernetes/using-lb](using-lb/)** 
+![kube2](../etc/kube-scenario-b.png){: .framed .padded}  
+**[Deployment Files for this scenario are in /kubernetes/using-lb](./using-lb/)** 
 
 This method exposes the two Smilr services externally with their own external IP addresses, using the Kubernetes ***LoadBalancer*** service type. This has the advantage of not requiring any dependency on an Ingress controller but does require some manual editing of the YAML during deployment. 
 
