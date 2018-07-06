@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "smilr-ingress-api"
+  name: "smilr-ingress"
   annotations:
     #kubernetes.io/ingress.class: nginx
     kubernetes.io/ingress.class: addon-http-application-routing
@@ -9,7 +9,7 @@ metadata:
 spec:
   rules:
           # !CHANGE THIS! To match your real DNS zone as created when you deployed AKS
-  - host: smilr.2913c6b6-3b1d-4e5d-9c02-558d5f7bd827.westeurope.aksapp.io
+  - host: smilr.7e28d40aaab5415089e6.northeurope.aksapp.io
     http:
       paths:
       - path: /api
@@ -20,24 +20,15 @@ spec:
         backend:
           serviceName: frontend-svc
           servicePort: 80
+  # - host: smilrkube.benco.io
+  #   http:
+  #     paths:
+  #     - path: /api
+  #       backend:
+  #         serviceName: data-api-svc
+  #         servicePort: 80
+  #     - path: /
+  #       backend:
+  #         serviceName: frontend-svc
+  #         servicePort: 80
 
-# ---
-
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata:
-#   name: "smilr-ingress-app"
-#   annotations:
-#     #kubernetes.io/ingress.class: nginx
-#     kubernetes.io/ingress.class: addon-http-application-routing
-#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-#     nginx.ingress.kubernetes.io/rewrite-target: "/"
-#     nginx.ingress.kubernetes.io/add-base-url: "true"
-# spec:
-#   rules:
-#   - http:
-#       paths:
-#       - path: /smilr
-#         backend:
-#           serviceName: frontend-svc
-#           servicePort: 80

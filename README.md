@@ -32,7 +32,7 @@ This application supports a range of demonstration, and learning scenarios, such
 
 
 # :star: Architecture & Core App Components
-![arch](/etc/architecture.png)
+![arch](/etc/architecture.png){: .framed .padded}
 
 
 # :file_folder: Repository Structure
@@ -111,7 +111,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 :exclamation::speech_balloon: **Note.** The API endpoint for the backend data service must be set, there are two ways this is done, depending on if you are running in non production (e.g. from `ng serve`) or in production mode:
 
 - **Non production:** The API endpoint is set in [environment.ts](angular/src/environments/environment.ts), see comments in there for details. ***However in non-prod mode the value of this setting is always ignored*** as the InMemoryDbService intercepts all calls
-- **Production mode:** The API endpoint is fetched dynamically at runtime, from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular-src/app\/config.service.ts) which is loaded during app initialization. Note. The static config file [environment.prod.ts](angular/src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
+- **Production mode:** The API endpoint is fetched dynamically at runtime, from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular/src/app/config.service.ts) which is loaded during app initialization. Note. The static config file [environment.prod.ts](angular/src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
 
 ## UI Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/41047514-9f8bf4ba-69a4-11e8-98a3-45957ab17fb0.png)
@@ -230,7 +230,7 @@ az cosmosdb list-connection-strings --resource-group {res_group} --name changeme
 
 ## Loading Demo Data
 The database requires no initialization, however a helper script is provided to populate the system with demo data:
-- **:page_with_curl: [Helper Script: demoData](scripts/demoData)**
+#### [:page_with_curl: Helper Script: demoData](scripts/demoData)
 
 ## Data Model
 There are two main models, one for holding an **Event** and one for submitted **Feedback**, there are also **Topics** which only exist as simple objects nested inside **Events**. **Topics** as entities only exist logically client side, from the perspective of the API and database, there are only **Events** & **Feedback**, this means events are always stored & retrieved with a simple serialized JSON array of topics within them
@@ -359,13 +359,13 @@ Check that the system works end to end by browsing to http://localhost:3000 and 
 ## Deploying as Containers
 Containers provide a perfect environment for running microservices, as such documentation and supporting files are provided to run Smilr in both Linux and Windows containers
 
-### :page_with_curl: [Guide on Containers & Docker](docs/containers.md)
+#### [:page_with_curl: Guide on Containers & Docker](docs/containers.md)
 
 ## Kubernetes (AKS)
-### :page_with_curl: [Guide for running in Kubernetes](kubernetes/readme.md)
+#### [:page_with_curl: Guide for running in Kubernetes](kubernetes/readme.md)
 
 ## Azure Container Instance
-### :page_with_curl: [ARM Templates for ACI](/azure/templates/)
+#### [:page_with_curl: ARM Templates](/azure/templates/readme.md)
 
 ## Azure App Service
 Provided [PowerShell script](/azure/appservice/) will build the front end service and deploy to Azure App Service. 

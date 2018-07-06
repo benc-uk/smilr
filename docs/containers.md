@@ -4,8 +4,8 @@ This covers the building of the app as Docker images and running as containers, 
 
 # Docker Images (Node.js)
 The Dockerfiles for both services are based on Alpine Linux and Node.js v8, the Dockerfiles are in the corresponding node services directories. There are two Docker images, one for each micro service:
- - [node/data-api/Dockerfile](/node/data-api/Dockerfile) For the data API REST service
- - [node/frontend/Dockerfile](/node/frontend/Dockerfile) For the frontend server which serves the Angular app to users, 
+ - [node/data-api/Dockerfile](../node/data-api/Dockerfile) For the data API REST service
+ - [node/frontend/Dockerfile](../node/frontend/Dockerfile) For the frontend server which serves the Angular app to users, 
 
 The frontend Dockerfile is multi-stage and will carry out the entire Angular build process without needing the Angular CLI installed on the local machine
 
@@ -14,7 +14,9 @@ If you want to build the images individually, rather than using Docker Compose, 
 
 # Docker Registry - ACR
 It is assumed that your images will be stored in Azure Container Registry (ACR) rather than a public repo (i.e. Dockerhub).  
-As a pre-req, create and set-up an ACR instance using the :page_with_curl: **[ACR Guide](acr.md)**, if you have an existing ACR instance, you can simply re-use it.
+As a pre-req, create and set-up an ACR instance using the guide below, if you have an existing ACR instance, you can simply re-use it.
+
+#### [:page_with_curl: Setting Up ACR](acr.md)
 
 # Docker Compose
 Docker Compose allows us to simplify the building and running of the two images, so a [docker-compose.yml](/docker-compose.yml) file has been created.  

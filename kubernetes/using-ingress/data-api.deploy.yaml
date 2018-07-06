@@ -11,7 +11,7 @@ metadata:
   labels:
     app: data-api
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: data-api
@@ -48,12 +48,12 @@ spec:
             cpu: 0.25
             
       # Wipe & initialize the database with demo data, remove if unwanted
-      #initContainers:
-      #  - name: init-demodata
-      #    image: bcdemo.azurecr.io/smilr/data-api
-      #    command: ['sh', '-c', 'cd demoData && node demoData.js']
-      #    env:
-      #      - name: MONGO_CONNSTR
-      #        value: mongodb://mongodb-svc.default
-      #      - name: WIPE_DB
-      #        value: "1"
+      initContainers:
+       - name: init-demodata
+         image: bcdemo.azurecr.io/smilr/data-api
+         command: ['sh', '-c', 'cd demoData && node demoData.js']
+         env:
+           - name: MONGO_CONNSTR
+             value: mongodb://mongodb-svc.default
+           - name: WIPE_DB
+             value: "1"

@@ -1,1 +1,18 @@
-theme: jekyll-theme-slate
+title: "Smilr: Microservices Reference App"
+remote_theme: benc-uk/theme-msdark
+favicon: /microservices-demoapp/angular/src/assets/img/logo.png
+plugins:
+  - jemoji
+buttons:
+  - b0:
+    text: Main Guide
+    href: /microservices-demoapp
+  - b1:
+    text: Docker
+    href: /microservices-demoapp/docs/containers
+  - b2:
+    text: Kubernetes
+    href: /microservices-demoapp/kubernetes
+  - b3:
+    text: Azure Templates
+    href: /microservices-demoapp/azure/templates
