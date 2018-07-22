@@ -11,14 +11,14 @@ for how to build the images and push to ACR.
 ## Template List
 A range of templates are provided covering several scenarios 
 
-### [:hammer: Azure Container Instance with MongoDB Container](aci-mongo/)
+#### [:hammer: Azure Container Instance with MongoDB Container](aci-mongo/)
 
-### [:hammer: Azure Container Instance with Cosmos DB](aci-cosmos/)  
+#### [:hammer: Azure Container Instance with Cosmos DB](aci-cosmos/)  
 
-### :hammer: Azure Web App for Containers with MongoDB Container
+#### :hammer: Azure Web App for Containers with MongoDB Container
 (Note. Requires creating!) 
 
-### [:hammer: Azure Web App for Containers with Cosmos DB](web-app-containers/)
+#### [:hammer: Azure Web App for Containers with Cosmos DB](web-app-containers/)
 
-### :hammer: Azure Web App (Windows) with Cosmos DB
+#### :hammer: Azure Web App (Windows) with Cosmos DB
 (Note. Requires creating!) 
