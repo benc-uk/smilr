@@ -114,7 +114,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 - **Production mode:** The API endpoint is fetched dynamically at runtime, from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular/src/app/config.service.ts) which is loaded during app initialization. Note. The static config file [environment.prod.ts](angular/src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
 
 ## UI Screenshot
-![screen](https://user-images.githubusercontent.com/14982936/41047514-9f8bf4ba-69a4-11e8-98a3-45957ab17fb0.png)
+![screen](https://user-images.githubusercontent.com/14982936/41047514-9f8bf4ba-69a4-11e8-98a3-45957ab17fb0.png){: .framed .padded}
 
 ---
 
