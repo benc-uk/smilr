@@ -6,13 +6,13 @@ plugins:
 buttons:
   - b0:
     text: Main Guide
-    href: /microservices-demoapp
+    href: /
   - b1:
     text: Docker
-    href: /microservices-demoapp/docs/containers
+    href: /docs/containers
   - b2:
     text: Kubernetes
-    href: /microservices-demoapp/kubernetes
+    href: /kubernetes
   - b3:
     text: Azure Templates
-    href: /microservices-demoapp/azure/templates
+    href: /azure/templates
