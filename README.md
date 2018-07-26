@@ -108,9 +108,9 @@ When running in non production (or dev) mode, **InMemoryDbService** is used to p
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. You should use the `--prod` flag for a production build.
 
 ## API Endpoint Configuration
-:exclamation::speech_balloon: **Note.** The API endpoint for the backend data service must be set, there are two ways this is done, depending on if you are running in non production (e.g. from `ng serve`) or in production mode:
+The API endpoint for the data service must be set, there are two ways this is done, depending on if you are running in non production (e.g. locally with `ng serve`) or in production mode:
 
-- **Non production:** The API endpoint is set in [environment.ts](angular/src/environments/environment.ts), see comments in there for details. ***However in non-prod mode the value of this setting is always ignored*** as the InMemoryDbService intercepts all calls
+- **Non production:** The API endpoint is set in [environment.ts](angular/src/environments/environment.ts), see comments in there for details. ***However in non-prod mode the value of this setting is always ignored*** as the InMemoryDbService will intercept all calls
 - **Production mode:** The API endpoint is fetched dynamically at runtime, from the frontend server where it is set as an environmental variable. This is loaded using a call to a special API on the frontend server (see below) by a [ConfigService](angular/src/app/config.service.ts) which is loaded during app initialization. Note. The static config file [environment.prod.ts](angular/src/environments/environment.prod.ts) controls what variables **ConfigService** fetches
 
 ## UI Screenshot
@@ -182,7 +182,7 @@ This key is used to generate Time-based One-time Passwords (TOTP), these passwor
 
 Once enabled the Angular client will need to know this key so it can generate the TOTP to send with any requests to the event PUT, POST and DELETE calls. This is done by setting it in **environment.prod.ts** in the `dataApiKey` field. 
 
-:exclamation::speech_balloon: **Note.** If `API_SECRET` is not set (which is the default), any value sent in the X-SECRET header is not validated and is simply ignored, the header can also be omitted. Also the GET methods of the event API are always open and not subject to TOTP validation, likewise the feedback API is left open by design
+> :exclamation::speech_balloon: **Note.** If `API_SECRET` is not set (which is the default), any value sent in the X-SECRET header is not validated and is simply ignored, the header can also be omitted. Also the GET methods of the event API are always open and not subject to TOTP validation, likewise the feedback API is left open by design
 
 ## Data access
 All data is held in MongoDB, the data access layer is a plain ES6 class **DataAccess** in [lib/data-access.js](node/data-api/lib/data-access.js). This is a singleton which encapsulates all MongoDB specific code and logic (e.g. connecting and creating the database, collections etc) and also operations on the event and feedback entities. See [Database component](#component-4---database) below for more details.
