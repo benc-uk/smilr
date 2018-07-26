@@ -1,3 +1,7 @@
+#
+# This file is only used by GitHub Pages, it has no other importance to the Smilr project
+#
+
 title: "Smilr: Microservices Reference App"
 remote_theme: benc-uk/theme-msdark
 favicon: /microservices-demoapp/angular/src/assets/img/logo.png
