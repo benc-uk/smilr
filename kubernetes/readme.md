@@ -105,7 +105,7 @@ These optional steps require you to have a DNS domain you own and that domain to
 
 Using DNS simplifies configuration, as you don't need to edit the `frontend.deploy.yaml` file to update it with the **data-api-endpoint** IP
 
-Create a config file called `azure.json`, take a copy & rename the sample [azure.json.sample](azure.json.sample) file, and populate with real values. You will need your Azure subscription-id, tenant-id and the client-id & secret of the AAD service principal that was created when you created your AKS instance (it has the same name as the AKS instance). 
+Create a config file called `azure.json`, take a copy & rename the sample [external-dns/azure.json.sample](external-dns/azure.json.sample) file, and populate with real values. You will need your Azure subscription-id, tenant-id and the client-id & secret of the AAD service principal that was created when you created your AKS instance (it has the same name as the AKS instance). 
 
 Most of this information is held in `~/.azure/aksServicePrincipal.json`, the key to each object in the JSON is the Azure subscription id
 
