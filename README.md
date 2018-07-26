@@ -290,7 +290,7 @@ The exact same [data access library](node/data-api/lib/data-access.js) used by t
 ## Deploying Serverless Data API
 You can deploy the serverless data-api any v2 Functions App, simply copy the whole of the [azure-functions](azure/functions/) to the App Service, into `wwwroot`. 
 
-:exclamation::speech_balloon: **Note.** Version 2 of Functions is required along with Node v8+ due to the use of Promises and async/await in the data access library
+> :exclamation::speech_balloon: **Note.** Version 2 of Functions is required along with Node v8+ due to the use of Promises and async/await in the data access library
 
 ![](https://user-images.githubusercontent.com/14982936/36417631-5e5c4cca-1624-11e8-9e22-65e7ff2e31bd.png)
 
@@ -336,7 +336,7 @@ docker run -d --rm -p 27017:27017 --name localmongo mongo
 
 If you are running the data API directly on your machine using Node (e.g. running `node server.js` or `npm start`), then you can connect to the MongoDB container simply using `mongodb://localhost` as the connection string. 
  
-:exclamation::speech_balloon: **Note.**  If you are running the data API ***also in local container***, you must link the two containers together using either a network or `--link`. When doing so the connection string will need to point to the name of the linked mongo container **not localhost** e.g. `mongodb://localmongo` in the example above.
+> :exclamation::speech_balloon: **Note.**  If you are running the data API ***also in local container***, you must link the two containers together using either a network or `--link`. When doing so the connection string will need to point to the name of the linked mongo container **not localhost** e.g. `mongodb://localmongo` in the example above.
 
 
 ### Install MongoDB for Windows
