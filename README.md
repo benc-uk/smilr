@@ -71,9 +71,9 @@ If you are looking to build & work with the Smilr app locally, either as a learn
 
 
 # :wrench: Runtime Configuration & Settings
-The primary configuration mechanism for this project is system environmental variables (or env vars). These env vars are used with the Node.js services, container runtime, Docker tools and helper scripts is . This gives us a flexible and cross platform way to inject runtime settings, it is also widely supported in Azure (e.g. Azure App Service Settings)
+The primary configuration mechanism for this project is system environmental variables (or env vars). These env vars are used with the Node.js services, container runtime, Docker tools and helper scripts. This gives a flexible and cross platform way to inject runtime settings, it is also widely supported in Azure (e.g. Azure App Service Settings) and Docker/Kubernetes.
 
-There are numerous ways to set & override environmental variables; in the operating system, the user profile or from command line tools. For local development purposes it is strongly recommended you create & use `.env` files. These are simple text files containing `var=value` pairs. Sample files named `.env.sample` are provided with the project, which you can rename and use. *Note.* `.env` files normally contain secrets so they are prevented from being committed to Git
+There are numerous ways to set & override environmental variables; in the operating system, the user profile or from command line tools. For local development purposes it is strongly recommended you create & use `.env` files. These are simple text files containing `var=value` pairs. Sample files named `.env.sample` are provided within the project, which you can rename and use. *Note.* `.env` files normally contain secrets so they are prevented from being committed to Git
 
 The main app components are:
 1. [Angular front end UI](#component-1---angular-front-end-ui)
