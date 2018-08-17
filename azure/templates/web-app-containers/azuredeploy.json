@@ -53,6 +53,7 @@
       "location": "[resourceGroup().location]",
       "kind": "MongoDB",
       "properties": {
+        "name": "[variables('cosmosName')]",
         "databaseAccountOfferType": "Standard"
       }
     },

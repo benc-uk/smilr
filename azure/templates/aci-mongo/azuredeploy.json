@@ -68,13 +68,13 @@
               "image": "[variables('imageDataApi')]",
               "ports": [
                 {
-                  "port": "80"
+                  "port": 80
                 }
               ],              
               "resources": {
                 "requests": {
                   "cpu": "[variables('cpu')]",
-                  "memoryInGb": "[variables('memory')]"
+                  "memoryInGB": "[variables('memory')]"
                 }
               },
               "environmentVariables": [
@@ -100,7 +100,7 @@
               "resources": {
                 "requests": {
                   "cpu": "[variables('cpu')]",
-                  "memoryInGb": "[variables('memory')]"
+                  "memoryInGB": "[variables('memory')]"
                 }
               }
             }
@@ -117,8 +117,8 @@
           "dnsNameLabel": "[variables('dnsLabelDataApi')]",
           "ports": [
             {
-              "protocol": "tcp",
-              "port": "80"
+              "protocol": "TCP",
+              "port": 80
             }
           ]            
         }
@@ -137,13 +137,13 @@
               "image": "[variables('imageFrontend')]",
               "ports": [
                 {
-                  "port": "80"
+                  "port": 80
                 }
               ],              
               "resources": {
                 "requests": {
                   "cpu": "[variables('cpu')]",
-                  "memoryInGb": "[variables('memory')]"
+                  "memoryInGB": "[variables('memory')]"
                 }
               },
               "environmentVariables": [
@@ -170,8 +170,8 @@
           "dnsNameLabel": "[variables('dnsLabelFrontend')]",
           "ports": [
             {
-              "protocol": "tcp",
-              "port": "80"
+              "protocol": "TCP",
+              "port": 80
             }
           ]          
         }

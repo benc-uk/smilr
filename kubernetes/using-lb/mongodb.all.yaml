@@ -36,7 +36,7 @@ spec:
         resources:
           requests:
             memory: "1G"
-            cpu: 0.25
+            cpu: "0.25"
 
   volumeClaimTemplates:
     - metadata:
