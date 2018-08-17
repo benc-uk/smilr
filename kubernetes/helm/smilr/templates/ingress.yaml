@@ -7,7 +7,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $ingressName }}-api"
+  name: "{{ $ingressName }}"
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingressClass }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -30,7 +30,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $ingressName }}-api"
+  name: "{{ $ingressName }}"
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingressClass }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
