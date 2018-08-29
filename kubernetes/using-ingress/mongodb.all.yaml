@@ -25,7 +25,8 @@ spec:
       - name: mongodb-pods
 
         image: mongo:3.4-jessie
-
+        imagePullPolicy: Always
+        
         ports:
         - containerPort: 27017
 
@@ -36,7 +37,7 @@ spec:
         resources:
           requests:
             memory: "1G"
-            cpu: 0.25
+            cpu: "0.25"
 
   volumeClaimTemplates:
     - metadata:

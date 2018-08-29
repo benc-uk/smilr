@@ -25,7 +25,7 @@ spec:
 
         # !CHANGE THIS! To your real image reference for the data-api  
         image: bcdemo.azurecr.io/smilr/data-api:stable
-        #imagePullPolicy: Always
+        imagePullPolicy: Always
 
         ports:
         - containerPort: 4000
@@ -45,7 +45,7 @@ spec:
         resources:
           requests:
             memory: "256M"
-            cpu: 0.25
+            cpu: "0.25"
             
       # Wipe & initialize the database with demo data, remove if unwanted
       initContainers:

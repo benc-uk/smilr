@@ -20,15 +20,3 @@ spec:
         backend:
           serviceName: frontend-svc
           servicePort: 80
-  # - host: smilrkube.benco.io
-  #   http:
-  #     paths:
-  #     - path: /api
-  #       backend:
-  #         serviceName: data-api-svc
-  #         servicePort: 80
-  #     - path: /
-  #       backend:
-  #         serviceName: frontend-svc
-  #         servicePort: 80
-

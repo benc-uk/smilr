@@ -25,7 +25,7 @@ spec:
 
         # !CHANGE THIS! To your real image reference for the frontend 
         image: bcdemo.azurecr.io/smilr/frontend:stable
-        #imagePullPolicy: Always
+        imagePullPolicy: Always
 
         ports:
         - containerPort: 3000
@@ -44,4 +44,4 @@ spec:
         resources:
           requests:
             memory: "64M"
-            cpu: 0.125
+            cpu: "0.125"
