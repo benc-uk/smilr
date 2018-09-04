@@ -1,6 +1,7 @@
 # Kubernetes - Using Ingress
 
-Kubernetes YAML files for deploying Smilr using an Ingress
+Kubernetes YAML files for advanced deployment of Smilr  
+Includes: Ingress & persistent storage volumes
 
 - data-api.deploy.yaml
 - data-api.svc.yaml
