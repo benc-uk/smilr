@@ -1,0 +1,62 @@
+#
+# Deploy the back end data API microservice in Kubernetes
+# Basic version
+#
+
+# ------------------- Deployment ------------------- #
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: data-api
+  labels:
+    app: data-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-api
+  template:
+    metadata:
+      labels:
+        app: data-api
+    spec:
+      containers:
+      - name: data-api-pods
+
+        # !CHANGE THIS! To your real image reference for the data-api  
+        image: bcdemo.azurecr.io/smilr/data-api:stable
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 4000
+
+        env:     
+        - name: MONGO_CONNSTR
+          value: mongodb://mongodb-svc.default
+
+        resources:
+          limits:
+            memory: "256M"
+            cpu: "0.25"
+
+--- 
+
+# ------------------- Loadbalancer ------------------- #
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: data-api-svc
+  annotations:
+    # !CHANGE THIS! To your real DNS domain
+    external-dns.alpha.kubernetes.io/hostname: smilr-api.basic.7e28d40aaab5415089e6.northeurope.aksapp.io
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4000
+  selector:
+    app: data-api

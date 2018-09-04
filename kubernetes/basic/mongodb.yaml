@@ -1,0 +1,53 @@
+#
+# Deploy the back end databse in Kubernetes, as StatefulSet with a volume claim
+# Basic version
+# 
+
+# ------------------- Deployment ------------------- #
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb-pods
+
+        image: mongo:3.4-jessie
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 27017
+
+        resources:
+          requests:
+            memory: "512M"
+            cpu: "0.25"
+
+---
+
+# ------------------- Internal Cluster IP ------------------- #
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: mongodb-svc
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+  selector:
+    app: mongodb

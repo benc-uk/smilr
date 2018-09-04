@@ -1,0 +1,64 @@
+#
+# Deploy the front end Angular UI microservice in Kubernetes
+# Basic version
+#
+
+# ------------------- Deployment ------------------- #
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-pods
+
+        # !CHANGE THIS! To your real image reference for the frontend 
+        image: bcdemo.azurecr.io/smilr/frontend:stable
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 3000
+
+        env:       
+        - name: API_ENDPOINT
+          # !CHANGE THIS! To the external IP of data-api-svc or DNS name if using external DNS, don't forget /api 
+          #value: http://40.115.111.34:80/api
+          value: http://smilr-api.basic.7e28d40aaab5415089e6.northeurope.aksapp.io/api
+
+        resources:
+          limits:
+            memory: "64M"
+            cpu: "0.125"
+
+---
+
+# ------------------- Loadbalancer ------------------- #
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-svc
+  annotations:
+    # !CHANGE THIS! To your real DNS domain
+    external-dns.alpha.kubernetes.io/hostname: smilr.basic.7e28d40aaab5415089e6.northeurope.aksapp.io
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  selector:
+    app: frontend
