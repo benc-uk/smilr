@@ -20,15 +20,14 @@ This document is not intended to be a step by step guide for deploying Azure Con
 Once you have AKS deployed and are able to interact with it via `kubectl` you can start deploying Smilr to it
 
 ## Pre-requisites 
-Before starting deploying Smilr into Kubernetes you will need to Deploy Azure Container Registry (ACR), build the Docker images and push them up to ACR.  
+Before starting deploying Smilr into Kubernetes you will need to have an Azure Container Registry (ACR) populated with the Smilr container images. 
 
-Refer to the container guide for details
+Refer to the main container guide for details
 #### [:page_with_curl: Complete container guide](../docs/containers.md) 
 
 Notes on Smilr Kubernetes deployment:
 - When deploying to Kubernetes use of the `default` namespace is assumed.
-- Kuberenetes version 1.9 is assumed, if you are using 1.8 or older the API version in the deployment YAML may require changing e.g. to `apiVersion: apps/v1beta1`. Older versions have not been tested.
-- In most scenarios the default is to deploy MongoDB with a persistent volume claim to persist data in the database. This can result in a ~5 minute wait while this volume is created and bound to the MonogDB pod. Until this pod is ready the Smilr app will not be fully functional.
+- Kubernetes version 1.9+ is assumed, if you are using 1.8 or older the API version in the deployment YAML may require changing e.g. to `apiVersion: apps/v1beta1`. Older versions have not been tested.
 
 ## Option 1 - Helm (Easiest)
 [Helm](https://helm.sh/) is a package manager for Kubernetes, and a Helm Chart has been created to deploy Smilr. This means you can deploy Smilr with a single command. The chart is called simply 'smilr' and is in the helm subdirectory 
@@ -48,21 +47,52 @@ Full details of using the Helm chart are here:
 
 Deployment YAML files have been provided to directly stand up Smilr in your Kubernetes cluster. Two scenarios are provided, in both cases the deployment has been split into multiple files. 
 
-Before deployment of either scenario the two files `frontend.deploy.yaml` and `data-api.deploy.yaml` will require editing to point to your images and the relevant registry (i.e. ACR) & tag you are using. It is assumed you will be deploying to the default namespace
+Before deployment of either scenario the files `frontend.yaml` and `data-api.yaml` will require editing to point to your images and the relevant registry (i.e. ACR) & tag you are using. It is assumed you will be deploying to the default namespace
 
-### Scenario A - Using Ingress
-![kube1](../etc/kube-scenario-a.png){: .framed .padded}  
-**[Deployment Files for this scenario are in /kubernetes/using-ingress](./using-ingress/)** 
+### Scenario A - Basic
+![kube2](../etc/kube-scenario-a.png){: .framed .padded}  
+**[Deployment Files for this scenario are in /kubernetes/basic](./basic/)** 
 
-This method uses a Kubernetes ingress controller with a single entrypoint into your cluster, and rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Angular SPA is served from so it doesn't require any fiddling with IP addresses and DNS. 
+This method exposes the two Smilr services externally with their own external IP addresses, using the Kubernetes ***LoadBalancer*** service type. This has the advantage of not requiring any dependency on an Ingress controller but does require some manual editing of the YAML during deployment. 
 
-However it does require an ingress controller, which if you enabled "HTTP Application Routing" when creating AKS you will already have. If you don't have this add on, use Helm (e.g. `helm install stable/nginx-ingress`) but you will need to change the **kubernetes.io/ingress.class** in `ingress.yaml` to `nginx`
+Note. This scenario also doesn't persist the data for the MongoDB
 
-The steps for deployment of Smilr are:
+The steps for deployment are:
+```
+cd kubernetes/basic
+kubectl apply -f mongodb.yaml
+kubectl apply -f data-api.yaml
+kubectl get svc data-api-svc -w
+```
+Wait for `data-api-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting. **Note.** This can take about 5-10 minutes in some cases, so be patient.  
+Copy the external IP address and edit `frontend.yaml` modify the `API_ENDPOINT` env URL to point to the data-api IP which was just assigned. You will need to have `/api` as part of the URL, e.g. **http://{data-api-svc-ip}/api**
+
+The steps for deployment of this scenario are:
+```
+kubectl apply -f frontend.yaml
+kubectl get svc frontend-svc -w
+```
+Wait for `frontend-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting.  
+The frontend-svc external IP address is where you can access the Smilr app, e.g. by visiting **http://{frontend-svc-ip}/** in your browser
+
+### Scenario B - Advanced
+![kube1](../etc/kube-scenario-b.png){: .framed .padded}  
+**[Deployment Files for this scenario are in /kubernetes/advanced](./advanced/)** 
+
+This method uses a Kubernetes *Ingress* to provide a single entrypoint into your cluster, and URL path rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Angular SPA is served from so it doesn't require any fiddling with IP addresses and DNS. 
+
+This scenario also uses introduces persistence to MongoDB:
+- Uses a *StatefulSet* rather than a *Deployment* to run the MongoDB component
+- Uses a *Persistent Volume* mounted into the pod, to hold the MongoDB data 
+- This can result in a ~5 minute wait while this volume is created and bound to the MonogDB pod. Until this pod is ready the Smilr app will not be fully functional.
+
+This scenario does require an ingress controller running in your cluster, which if you enabled "HTTP Application Routing" when creating AKS you will already have. If you don't have this add on, use Helm (e.g. `helm install stable/nginx-ingress`) but you will need to change the **kubernetes.io/ingress.class** in `ingress.yaml` to `nginx`
+
+The steps for deployment of this scenario are:
 - Edit `ingress.yaml` and modify the DNS zone/domain to match the one created with your AKS cluster (in the MC resource group). You should only need to do this once
 - Run the following
 ```
-cd kubernetes/using-ingress
+cd kubernetes/advanced
 kubectl apply -f .
 ```
 - The app will be available at **`http://smilr.{guid}.{region}.aksapp.io/`**
@@ -70,32 +100,6 @@ kubectl apply -f .
 ```
 kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}'
 ```
-
-### Scenario B - Using LoadBalancer
-![kube2](../etc/kube-scenario-b.png){: .framed .padded}  
-**[Deployment Files for this scenario are in /kubernetes/using-lb](./using-lb/)** 
-
-This method exposes the two Smilr services externally with their own external IP addresses, using the Kubernetes ***LoadBalancer*** service type. This has the advantage of not requiring any dependency on an Ingress controller but does require some manual editing of the YAML during deployment. 
-
-The steps for deployment are:
-```
-cd kubernetes/using-lb
-kubectl apply -f mongodb.all.yaml
-kubectl apply -f data-api.deploy.yaml
-kubectl apply -f data-api.svc.yaml
-kubectl get svc data-api-svc -w
-```
-Wait for `data-api-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting. **Note.** This can take about 5-10 minutes in some cases, so be patient.  
-Copy the external IP address and edit `frontend.deploy.yaml` modify the `API_ENDPOINT` env URL to point to the data-api IP which was just assigned. You will need to have `/api` as part of the URL, e.g. **http://{data-api-svc-ip}/api**
-
-Now run:
-```
-kubectl apply -f frontend.deploy.yaml
-kubectl apply -f frontend.svc.yaml
-kubectl get svc frontend-svc -w
-```
-Wait for `frontend-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting.  
-The frontend-svc external IP address is where you can access the Smilr app, e.g. by visiting **http://{frontend-svc-ip}/** in your browser
 
 ---
 
