@@ -546,13 +546,5 @@
 				]
 			}
 		}
-	],
-	"variable": [
-		{
-			"id": "87832f5e-cf86-45a6-97d5-f216c46ad137",
-			"key": "smilr-api-host",
-			"value": "localhost:4000",
-			"type": "string"
-		}
 	]
 }
