@@ -7,194 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "Get Info",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "46414654-4b17-4c78-9467-861fdfc001ee",
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {",
-							"     pm.response.to.be.ok;",
-							"     pm.response.to.be.withBody;",
-							"     pm.response.to.be.json;",
-							"});",
-							"",
-							"pm.test(\"there is info\", function () {",
-							"    var info = pm.response.json();",
-							"    pm.expect(info.hostname).to.not.be.empty;",
-							"});",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "http://{{smilr-api-host}}/api/info",
-					"protocol": "http",
-					"host": [
-						"{{smilr-api-host}}"
-					],
-					"path": [
-						"api",
-						"info"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Events",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "02218921-2585-48ee-ac1d-4d4ac36ea3c0",
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {",
-							"     pm.response.to.be.ok;",
-							"     pm.response.to.be.withBody;",
-							"     pm.response.to.be.json;",
-							"});",
-							"",
-							"pm.test(\"there are events\", function () {",
-							"    var events = pm.response.json();",
-							"    pm.expect(events.length).to.gt(0);",
-							"});",
-							"",
-							"pm.test(\"first event has a title\", function () {",
-							"    var events = pm.response.json();",
-							"    pm.expect(events[0].title).to.not.be.empty;",
-							"});",
-							"",
-							"// example using pm.response.to.be*",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "http://{{smilr-api-host}}/api/events/",
-					"protocol": "http",
-					"host": [
-						"{{smilr-api-host}}"
-					],
-					"path": [
-						"api",
-						"events",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Event",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "e02238b4-a6f5-432b-858f-caa03a97ce0d",
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {",
-							"     pm.response.to.be.ok;",
-							"     pm.response.to.be.withBody;",
-							"     pm.response.to.be.json;",
-							"});",
-							"",
-							"pm.test(\"event has a title\", function () {",
-							"    var event = pm.response.json();",
-							"    pm.expect(event.title).to.not.be.empty;",
-							"});",
-							"",
-							"// example using pm.response.to.be*",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "http://{{smilr-api-host}}/api/events/evt001",
-					"protocol": "http",
-					"host": [
-						"{{smilr-api-host}}"
-					],
-					"path": [
-						"api",
-						"events",
-						"evt001"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Filtered Events",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "02218921-2585-48ee-ac1d-4d4ac36ea3c0",
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"response must be valid and have a body\", function () {",
-							"     pm.response.to.be.ok;",
-							"     pm.response.to.be.withBody;",
-							"     pm.response.to.be.json;",
-							"});",
-							"",
-							"pm.test(\"there are events\", function () {",
-							"    var events = pm.response.json();",
-							"    pm.expect(events.length).to.gt(0);",
-							"});",
-							"",
-							"pm.test(\"first event has a title\", function () {",
-							"    var events = pm.response.json();",
-							"    pm.expect(events[0].title).to.not.be.empty;",
-							"});",
-							"",
-							"// example using pm.response.to.be*",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "http://{{smilr-api-host}}/api/events/filter/past",
-					"protocol": "http",
-					"host": [
-						"{{smilr-api-host}}"
-					],
-					"path": [
-						"api",
-						"events",
-						"filter",
-						"past"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "New Event",
 			"event": [
 				{
@@ -334,33 +146,127 @@
 			]
 		},
 		{
-			"name": "Delete Event",
+			"name": "Get Info",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "c9c08f48-85b8-4984-bb42-7172e252a1dd",
+						"id": "46414654-4b17-4c78-9467-861fdfc001ee",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok;",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"there is info\", function () {",
+							"    var info = pm.response.json();",
+							"    pm.expect(info.hostname).to.not.be.empty;",
+							"});",
+							""
 						]
 					}
 				}
 			],
 			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{smilr-api-host}}/api/info",
+					"protocol": "http",
+					"host": [
+						"{{smilr-api-host}}"
+					],
+					"path": [
+						"api",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Events",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "02218921-2585-48ee-ac1d-4d4ac36ea3c0",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok;",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"there are events\", function () {",
+							"    var events = pm.response.json();",
+							"    pm.expect(events.length).to.gt(0);",
+							"});",
+							"",
+							"pm.test(\"first event has a title\", function () {",
+							"    var events = pm.response.json();",
+							"    pm.expect(events[0].title).to.not.be.empty;",
+							"});",
+							"",
+							"// example using pm.response.to.be*",
+							""
+						]
 					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{smilr-api-host}}/api/events/",
+					"protocol": "http",
+					"host": [
+						"{{smilr-api-host}}"
+					],
+					"path": [
+						"api",
+						"events",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e02238b4-a6f5-432b-858f-caa03a97ce0d",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok;",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"event has a title\", function () {",
+							"    var event = pm.response.json();",
+							"    pm.expect(event.title).to.not.be.empty;",
+							"});",
+							"",
+							"// example using pm.response.to.be*",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
 				"url": {
 					"raw": "http://{{smilr-api-host}}/api/events/{{new_event_id}}",
 					"protocol": "http",
@@ -371,6 +277,57 @@
 						"api",
 						"events",
 						"{{new_event_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Filtered Events",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "02218921-2585-48ee-ac1d-4d4ac36ea3c0",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok;",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"there are events\", function () {",
+							"    var events = pm.response.json();",
+							"    pm.expect(events.length).to.gt(0);",
+							"});",
+							"",
+							"pm.test(\"first event has a title\", function () {",
+							"    var events = pm.response.json();",
+							"    pm.expect(events[0].title).to.not.be.empty;",
+							"});",
+							"",
+							"// example using pm.response.to.be*",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{smilr-api-host}}/api/events/filter/past",
+					"protocol": "http",
+					"host": [
+						"{{smilr-api-host}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"filter",
+						"past"
 					]
 				}
 			},
@@ -409,7 +366,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"id\": \"evt002\",\n    \"title\": \"Updated event with API\",\n    \"type\": \"hack\",\n    \"start\": \"2018-03-14\",\n    \"end\": \"2018-03-14\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah topic\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Hello yes\"        \n      }\n    ]\n}"
+					"raw": "{\n  \"id\": \"{{new_event_id}}\",\n    \"title\": \"Updated event with API\",\n    \"type\": \"hack\",\n    \"start\": \"2018-03-14\",\n    \"end\": \"2018-03-14\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah topic\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Hello yes\"        \n      }\n    ]\n}"
 				},
 				"url": {
 					"raw": "http://{{smilr-api-host}}/api/events",
@@ -459,7 +416,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"event\": \"evt001\",\n    \"topic\": 1,\n    \"rating\": 5,\n    \"comment\": \"This is a test comment, I have no opinion\"\n}"
+					"raw": "{\n    \"event\": \"{{new_event_id}}\",\n    \"topic\": 1,\n    \"rating\": 5,\n    \"comment\": \"This is a test comment, I have no opinion\"\n}"
 				},
 				"url": {
 					"raw": "http://{{smilr-api-host}}/api/feedback",
@@ -509,7 +466,7 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://{{smilr-api-host}}/api/feedback/evt001/1",
+					"raw": "http://{{smilr-api-host}}/api/feedback/{{new_event_id}}/1",
 					"protocol": "http",
 					"host": [
 						"{{smilr-api-host}}"
@@ -517,8 +474,51 @@
 					"path": [
 						"api",
 						"feedback",
-						"evt001",
+						"{{new_event_id}}",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c9c08f48-85b8-4984-bb42-7172e252a1dd",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{smilr-api-host}}/api/events/{{new_event_id}}",
+					"protocol": "http",
+					"host": [
+						"{{smilr-api-host}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"{{new_event_id}}"
 					]
 				}
 			},
