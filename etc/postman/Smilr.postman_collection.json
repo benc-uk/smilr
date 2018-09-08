@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "1f024236-a0c5-78be-b5e2-646356648421",
 		"name": "Smilr",
-		"description": "# Introduction\nTests and API calls for the Smilr data api, for accessing events & feedback. Also some minimal smoke tests for the frontend\n\n# Overview\nIt's a pretty standard REST API\n\n# Authentication\nBy default there is no auth\n\n# Error Codes\n400 and 500 with invalid requests\n404 when requesting events that don't exist\n\n# Rate limit\nNo limit",
+		"description": "# Introduction\nTests and API calls for the Smilr data api, for accessing events & feedback. Also some minimal smoke tests for the frontend\n\n# Overview\nIt's a pretty standard REST API\n\n# Required Variables\nProvide variables as globals or via an environment\n* `smilr-api-host` - The host name (plus port if not 80) of the Smilr Data API. do not include http:// or trailing URL path, e.g. `localhost:4000` or `smilrdata.azurewebsites.net`\n* `smilr-api-host` - The host name (plus port if not 80) of the Smilr Frontend. do not include http:// or trailing URL path, e.g. `localhost:3000` or `smilrapp.azurewebsites.net`\n\n# Authentication\nBy default there is no auth\n\n# Error Codes\n400 and 500 with invalid requests\n404 when requesting events that don't exist\n\n# Rate limit\nNo limit",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
