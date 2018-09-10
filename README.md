@@ -87,13 +87,14 @@ These will be each described in their own sections below.
 
 # :hourglass_flowing_sand: Build & Release Pipeline
 
-Automated CI/CD Pipeline has been created using Visual Studio Team Services (VSTS). This automatically builds the various components as containers and releases them to Azure for testing. To view the status of these builds & releases, you can visit the VSTS Public Project
+Automated CI/CD Pipeline has been created using Azure Pipelines. This automatically builds the various components as containers and releases them to Azure for testing. To view the status of these builds & releases, you can visit the Azure Devops Public Project
 
-Data API Automated Build: [![Build badge](https://bencoleman.visualstudio.com/_apis/public/build/definitions/f73c2301-17e8-4801-86bb-7edc2917634c/3/badge)](https://bencoleman.visualstudio.com/Smilr/Smilr%20Team/_build/index?context=mine&path=%5C&definitionId=3&_a=completed) 
 
-Frontend Automated Build: [![Build badge](https://bencoleman.visualstudio.com/_apis/public/build/definitions/f73c2301-17e8-4801-86bb-7edc2917634c/2/badge)](https://bencoleman.visualstudio.com/Smilr/Smilr%20Team/_build/index?context=mine&path=%5C&definitionId=2&_a=completed) 
+Data API Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Data%20API)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=3)
 
-### [VSTS Public Project - Smilr](https://bencoleman.visualstudio.com/Smilr/Smilr%20Team/_dashboards/Smilr%20Team/d1e7c4db-d72f-4c01-a16a-9775b9e59382)
+Frontend Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Frontend)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=2)
+
+### [DevOps Public Project - Smilr](https://dev.azure.com/bencoleman)
 
 ---
 
