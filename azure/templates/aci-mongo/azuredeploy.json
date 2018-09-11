@@ -39,7 +39,7 @@
       "type": "string",
       "defaultValue": "Not set",
       "metadata": {
-        "description": "String description of this release, normally used with VSTS"
+        "description": "String description of this release, normally used with Azure DevOps"
       }       
     }    
   },
