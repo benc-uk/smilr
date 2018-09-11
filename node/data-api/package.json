@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": "https://github.com/benc-uk/smilr",
   "dependencies": {
-    "applicationinsights": "^1.0.2",
+    "applicationinsights": "^1.0.4",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "dotenv": "^5.0.0",
