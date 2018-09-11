@@ -10,7 +10,7 @@
     "start": "node server.js"
   },
   "license": "MIT",
-  "repository": "https://github.com/benc-uk/microservices-demoapp",
+  "repository": "https://github.com/benc-uk/smilr",
   "dependencies": {
     "applicationinsights": "^1.0.2",
     "body-parser": "^1.18.2",

@@ -26,7 +26,7 @@ if(Test-Path $angularDir\dist) {
     echo "### I found a dist folder in the project root, so will carry on and use that!"    
 } else {
     try {
-        Start-Process -FilePath "node" -ArgumentList "c:\dev\microservices-demoapp\angular\node_modules\@angular\cli\bin\ng build","--prod" -WorkingDirectory $angularDir
+        Start-Process -FilePath "node" -ArgumentList "c:\dev\smilr\angular\node_modules\@angular\cli\bin\ng build","--prod" -WorkingDirectory $angularDir
     } catch {
         echo "### Wasn't able to ``run ng`` build and no dist folder was found, I can't carry on, sorry bye!"  
         exit  

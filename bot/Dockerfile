@@ -3,7 +3,7 @@ FROM node:8-alpine
 LABEL org.label-schema.name="Smilr Bot" \
       org.label-schema.description="Bot Framework demo bot for Smilr" \    
       org.label-schema.version="1.0.0" \
-      org.label-schema.vcs-url="https://github.com/benc-uk/microservices-demoapp" \  
+      org.label-schema.vcs-url="https://github.com/benc-uk/smilr" \  
       org.label-schema.url="http://aka.ms/smilr-project" \
       org.label-schema.docker.schema-version="1.0"
 

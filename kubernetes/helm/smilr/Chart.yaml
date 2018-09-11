@@ -3,10 +3,10 @@ appVersion: "2.0"
 description: A Helm chart to deploy Smilr microservices app to Kubernetes
 name: smilr
 version: 1.0.0
-icon: https://github.com/benc-uk/microservices-demoapp/raw/master/angular/src/assets/img/logo.png
+icon: https://github.com/benc-uk/smilr/raw/master/angular/src/assets/img/logo.png
 maintainers: 
   - name: Ben Coleman
     email: ben.coleman@microsoft.com
-home: https://github.com/benc-uk/microservices-demoapp
+home: https://github.com/benc-uk/smilr
 sources:
-  - https://github.com/benc-uk/microservices-demoapp
+  - https://github.com/benc-uk/smilr
