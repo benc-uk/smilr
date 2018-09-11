@@ -10,7 +10,7 @@ The Dockerfiles for both services are based on Alpine Linux and Node.js v8, the 
 The frontend Dockerfile is multi-stage and will carry out the entire Angular build process without needing the Angular CLI installed on the local machine
 
 ### :exclamation::speech_balloon: Gotcha
-If you want to build the images individually, rather than using Docker Compose, you must do so with the build context set to the root of the project, and point to the Dockerfile, e.g. run `docker build . -f /node/frontend/Dockerfile` from project root (the **microservices-demoapp** directory).
+If you want to build the images individually, rather than using Docker Compose, you must do so with the build context set to the root of the project, and point to the Dockerfile, e.g. run `docker build . -f /node/frontend/Dockerfile` from project root (the **smilr** directory).
 
 # Docker Registry - ACR
 It is assumed that your images will be stored in Azure Container Registry (ACR) rather than a public repo (i.e. Dockerhub).  

@@ -145,7 +145,7 @@ This config API is used only once and at startup by the Angular app's **ConfigSe
 ## Running frontend service/server locally
 If you want to run the front-end service locally, you can point the server at a directory containing the static content you want to serve, i.e. the bundled output of `ng build --prod`. To do this pass the directory as a parameter to the `server.js` e.g.
 ```
-node server.js C:\Dev\microservices-demoapp\angular\dist
+node server.js C:\Dev\smilr\angular\dist
 ```
 This saves you copying the Angular dist content to same folder as the Node **server.js** file. The path must be fully qualified and not relative.
 
