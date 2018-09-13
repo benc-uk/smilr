@@ -15,7 +15,9 @@ This is a working Helm chart to deploy Smilr. It requires that you have an Ingre
 
 # Configuration Settings
 
-Create a values file (e.g. `myvalues.yaml` take a copy of the provided .sample file) if you want to change the defaults, and install with
+Create a values file (e.g. `myvalues.yaml` take a copy of the provided .sample file) and change the defaults. The two values that MUST BE CHANGED are **registryPrefix** and **domainSuffix**, other changes are optional
+
+Then install into your cluster with
 ```
 helm install smilr -f myvalues.yaml -n releasename
 ```

@@ -2,8 +2,6 @@
 # Deploy the back end data API microservice in Kubernetes
 #
 
-# ------------------- Loadbalancer ------------------- #
-
 kind: Service
 apiVersion: v1
 metadata:

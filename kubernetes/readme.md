@@ -26,8 +26,13 @@ Refer to the main container guide for details
 #### [:page_with_curl: Complete container guide](../docs/containers.md) 
 
 Notes on Smilr Kubernetes deployment:
+- There are numerous places where the configurations refer to a container registry and image. Unfortunately these are not all parameterizable, so you will need to edit files to point to your own registry (ACR)
 - When deploying to Kubernetes use of the `default` namespace is assumed.
 - Kubernetes version 1.9+ is assumed, if you are using 1.8 or older the API version in the deployment YAML may require changing e.g. to `apiVersion: apps/v1beta1`. Older versions have not been tested.
+
+
+---
+
 
 ## Option 1 - Helm (Easiest)
 [Helm](https://helm.sh/) is a package manager for Kubernetes, and a Helm Chart has been created to deploy Smilr. This means you can deploy Smilr with a single command. The chart is called simply 'smilr' and is in the helm subdirectory 
@@ -42,6 +47,10 @@ Notes on Smilr Kubernetes deployment:
 
 Full details of using the Helm chart are here:  
 #### [:page_with_curl: Helm Chart Docs](helm/readme.md)
+
+
+---
+
 
 ## Option 2 - Direct Deployment
 
@@ -58,28 +67,34 @@ This method exposes the two Smilr services externally with their own external IP
 Note. This scenario also doesn't persist the data for the MongoDB
 
 The steps for deployment are:
-```
-cd kubernetes/basic
-kubectl apply -f mongodb.yaml
-kubectl apply -f data-api.yaml
-kubectl get svc data-api-svc -w
-```
-Wait for `data-api-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting. **Note.** This can take about 5-10 minutes in some cases, so be patient.  
-Copy the external IP address and edit `frontend.yaml` modify the `API_ENDPOINT` env URL to point to the data-api IP which was just assigned. You will need to have `/api` as part of the URL, e.g. **http://{data-api-svc-ip}/api**
 
-The steps for deployment of this scenario are:
-```
-kubectl apply -f frontend.yaml
-kubectl get svc frontend-svc -w
-```
-Wait for `frontend-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting.  
-The frontend-svc external IP address is where you can access the Smilr app, e.g. by visiting **http://{frontend-svc-ip}/** in your browser
+1. Modify `data-api.yaml` and `frontend.yaml` and change the `image:` section to point to where your Smilr images are held, i.e. your ACR instance
+
+2. Deploy the data layer
+    ```
+    cd kubernetes/basic
+    kubectl apply -f mongodb.yaml
+    kubectl apply -f data-api.yaml
+    kubectl get svc data-api-svc -w
+    ```
+    Wait for `data-api-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting. **Note.** This can take about 5-10 minutes in some cases, so be patient.  
+    Copy the external IP address and edit `frontend.yaml` modify the `API_ENDPOINT` env URL to point to the data-api IP which was just assigned. You will need to have `/api` as part of the URL, e.g. **http://{data-api-svc-ip}/api**
+
+3. Deploy the frontend
+    ```
+    kubectl apply -f frontend.yaml
+    kubectl get svc frontend-svc -w
+    ```
+    Wait for `frontend-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting.  
+    The frontend-svc external IP address is where you can access the Smilr app, e.g. by visiting **http://{frontend-svc-ip}/** in your browser
+
+
 
 ### Scenario B - Advanced
 ![kube1](../etc/kube-scenario-b.png){: .framed .padded}  
 **[Deployment Files for this scenario are in /kubernetes/advanced](./advanced/)** 
 
-This method uses a Kubernetes *Ingress* to provide a single entrypoint into your cluster, and URL path rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Angular SPA is served from so it doesn't require any fiddling with IP addresses and DNS. 
+This method uses a Kubernetes *Ingress* to provide a single entrypoint into your cluster, and URL path rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Angular SPA is served from so it doesn't require any fiddling with IP addresses or DNS. 
 
 This scenario also uses introduces persistence to MongoDB:
 - Uses a *StatefulSet* rather than a *Deployment* to run the MongoDB component
@@ -89,38 +104,28 @@ This scenario also uses introduces persistence to MongoDB:
 This scenario does require an ingress controller running in your cluster, which if you enabled "HTTP Application Routing" when creating AKS you will already have. If you don't have this add on, use Helm (e.g. `helm install stable/nginx-ingress`) but you will need to change the **kubernetes.io/ingress.class** in `ingress.yaml` to `nginx`
 
 The steps for deployment of this scenario are:
-- Edit `ingress.yaml` and modify the DNS zone/domain to match the one created with your AKS cluster (in the MC resource group). You should only need to do this once
-- Run the following
-```
-cd kubernetes/advanced
-kubectl apply -f .
-```
-- The app will be available at **`http://smilr.{guid}.{region}.aksapp.io/`**
-- If you want to get the IP of your ingress you can run  
-```
-kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}'
-```
+1. Edit `ingress.http.yaml` and modify the DNS zone/domain to match the one created with your AKS cluster (in the MC resource group). You should only need to do this once
+2. Edit `data-api.yaml` and `frontend.yaml` and change the `image:` section to point to where your Smilr images are held, i.e. your ACR instance
+3. Run the following
+    ```
+    cd kubernetes/advanced
+    kubectl apply -f mongodb.all.yaml
+    kubectl apply -f data-api.deploy.yaml
+    kubectl apply -f data-api.svc.yaml
+    kubectl apply -f frontend.deploy.yaml
+    kubectl apply -f frontend.svc.yaml
+    kubectl apply -f ingress.http.yaml
+    ```
+    Note. If you have setup cert-manager for HTTPS support (See appendix below) then use the `ingress.https.yaml` file instead
+
+4. The app will be available at **`http://smilr.{random}.{region}.aksapp.io/`** If you want to get the IP of your ingress you can run  
+    ```
+    kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}'
+    ```
+
 
 ---
 
-# Optional Appendix - Deploy External DNS
-These optional steps require you to have a DNS domain you own and that domain to be managed in Azure in a DNS Zone.  
-:exclamation::speech_balloon: **Note.** This part is not for the faint of heart, so you can skip this section and just use IP addresses
-
-Using DNS simplifies configuration, as you don't need to edit the `frontend.deploy.yaml` file to update it with the **data-api-endpoint** IP
-
-Create a config file called `azure.json`, take a copy & rename the sample [external-dns/azure.json.sample](external-dns/azure.json.sample) file, and populate with real values. You will need your Azure subscription-id, tenant-id and the client-id & secret of the AAD service principal that was created when you created your AKS instance (it has the same name as the AKS instance). 
-
-Most of this information is held in `~/.azure/aksServicePrincipal.json`, the key to each object in the JSON is the Azure subscription id
-
-```
-kubectl create secret generic azure-config-file --from-file=azure.json -n azure-system
-```
-
-Edit `external-dns/deploy.yaml` and change the DNS zone & resource group to match your configuration in Azure, then run
-```
-kubectl create -f external-dns/deploy.yaml -n azure-system
-```
-
-Edit both `frontend.svc.yaml` and `data-api.svc.yaml` and uncomment the annotation called **external-dns.alpha.kubernetes.io&#8203;/&#8203;hostname** giving them a name each within your domain zone, e.g. `smilr.example.com` and `smilr-api.example.com`
-
+# Optional Appendix - Enable HTTPS with cert-manager
+If you wish to use HTTPS and have certs issued via Let's Encrypt the instuctions for setting that up are in below
+#### [:page_with_curl: Enabling HTTPS with cert-manager](cert-manager/) 
