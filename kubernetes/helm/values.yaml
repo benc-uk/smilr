@@ -1,8 +1,7 @@
-# Note the trailing slash
 registryPrefix: bcdemo.azurecr.io/
-
-# Get the name of your AKS DNS zone by running `az network dns zone list -o table`
 domainSuffix: smilr.7e28d40aaab5415089e6.northeurope.aksapp.io
+cmCertIssuer: letsencrypt-staging
+#cmCertIssuer: 
 
 dataApi:
   imageTag: latest

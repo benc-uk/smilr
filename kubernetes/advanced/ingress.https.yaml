@@ -12,12 +12,12 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    certmanager.k8s.io/cluster-issuer: letsencrypt-staging
 spec:
   tls:
   - hosts:
     - smilr.7e28d40aaab5415089e6.northeurope.aksapp.io
-    secretName: smilr-tls-cert
+    secretName: smilr-ingress-cert
   rules:
   - host: smilr.7e28d40aaab5415089e6.northeurope.aksapp.io
     http:

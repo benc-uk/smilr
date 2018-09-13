@@ -11,22 +11,22 @@ Do not skip this part!
 
 1. Install cert-manager
 ```
-helm install stable/cert-manager -n certmgr \
+helm install stable/cert-manager -n cm --namespace kube-system \
   --set ingressShim.defaultIssuerName=letsencrypt-staging \
   --set ingressShim.defaultIssuerKind=ClusterIssuer \
   --set rbac.create=false \
   --set serviceAccount.create=false
 ```
 
-2. Install the cert issuer  
-`kubectl apply -f issuer.yaml`
-
-3. Install cert(s) for Smilr  
-`kubectl apply -f certs.yaml`
+2. Install the cert issuers
+```
+kubectl apply -f issuer.staging.yaml
+kubectl apply -f issuer.prod.yaml
+```
 
 4. Deploy Smilr using ingress using the configs found in [kubernetes/advanced](../advanced/) and use the `ingress.https.yaml`
 
 5. The certificate might take a little while to validate and be issued the first time
 
 ## Notes
-The cert-manager can be removed (`helm delete --purge certmgr`) after the cert has been issued and stored in Kubernetes, but you will need to restart it once the cert is up for renewal (90 days)
+We deploy two issuers, one for Let's Encrypt staging and one for production. The rate limits on Let's Encrypt production are **extremely** restrictive, so only switch to the prod issuer when you are happy you won't be making many changes or requests
