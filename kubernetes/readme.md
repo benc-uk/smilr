@@ -104,7 +104,7 @@ This scenario also uses introduces persistence to MongoDB:
 This scenario does require an ingress controller running in your cluster, which if you enabled "HTTP Application Routing" when creating AKS you will already have. If you don't have this add on, use Helm (e.g. `helm install stable/nginx-ingress`) but you will need to change the **kubernetes.io/ingress.class** in `ingress.yaml` to `nginx`
 
 The steps for deployment of this scenario are:
-1. Edit `ingress.http.yaml` and modify the DNS zone/domain to match the one created with your AKS cluster (in the MC resource group). You should only need to do this once
+1. Edit `ingress.http.yaml` or `ingress.https.yaml` and modify the DNS zone/domain to match the one created with your AKS cluster (in the MC resource group). It will take the form of `{random}.{region}.aksapp.io/`. You should only need to do this once
 2. Edit `data-api.yaml` and `frontend.yaml` and change the `image:` section to point to where your Smilr images are held, i.e. your ACR instance
 3. Run the following
     ```
@@ -127,5 +127,5 @@ The steps for deployment of this scenario are:
 ---
 
 # Optional Appendix - Enable HTTPS with cert-manager
-If you wish to use HTTPS and have certs issued via Let's Encrypt the instuctions for setting that up are in below
+If you wish to use HTTPS and have certs issued via Let's Encrypt the instuctions for setting that up are below
 #### [:page_with_curl: Enabling HTTPS with cert-manager](cert-manager/) 

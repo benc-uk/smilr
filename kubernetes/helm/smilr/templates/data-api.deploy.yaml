@@ -44,9 +44,9 @@ spec:
           periodSeconds: 20
 
         resources:
-          requests:
+          limits:
             memory: "256M"
-            cpu: 0.25
+            cpu: "0.125"
             
       # Wipe & initialize the database with demo data, remove if unwanted
       #initContainers:

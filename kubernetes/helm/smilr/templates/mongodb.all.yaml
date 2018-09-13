@@ -34,9 +34,9 @@ spec:
         - containerPort: 27017
 
         resources:
-          requests:
+          limits:
             memory: "500M"
-            cpu: 0.25
+            cpu: "0.25"
         
 {{ if .Values.mongo.usePersistence }}
         volumeMounts:

@@ -11,6 +11,10 @@ domainSuffix:
 # Change if not using AKS with HTTP routing 
 ingressClass: addon-http-application-routing
 
+# If using cert-manager to issue TLS certs for HTTPS support 
+# Leave blank if you haven't set up cert-manager to disable HTTPS
+cmCertIssuer: 
+
 dataApi:
   imageTag: latest
   replicas: 1
