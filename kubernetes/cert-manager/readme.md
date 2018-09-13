@@ -1,9 +1,11 @@
 # Enabling HTTPS with cert-manager
+This section briefly describes how to set up HTTPS for Smilr, using cert-manager and certificates issued by Let's Encrypt  
+The information and configs are based on information taken from the Azure docs https://docs.microsoft.com/en-us/azure/aks/ingress-tls 
 
 ## Important!
 Do not skip this part!
-- Change the email address in `issuer.yaml`
-- Change the DNS names and domains sections of `certs.yaml`
+- Change the email address in `issuer.yaml`, you can use any valid email address, just not mine!
+- Change the DNS names and domains sections of `certs.yaml` to match your domain
 
 ## Steps
 
@@ -16,7 +18,7 @@ helm install stable/cert-manager -n certmgr \
   --set serviceAccount.create=false
 ```
 
-2. Install Issuer  
+2. Install the cert issuer  
 `kubectl apply -f issuer.yaml`
 
 3. Install cert(s) for Smilr  
