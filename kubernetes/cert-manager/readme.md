@@ -26,5 +26,7 @@ helm install stable/cert-manager -n certmgr \
 
 4. Deploy Smilr using ingress using the configs found in [kubernetes/advanced](../advanced/) and use the `ingress.https.yaml`
 
+5. The certificate might take a little while to validate and be issued the first time
+
 ## Notes
 The cert-manager can be removed (`helm delete --purge certmgr`) after the cert has been issued and stored in Kubernetes, but you will need to restart it once the cert is up for renewal (90 days)
