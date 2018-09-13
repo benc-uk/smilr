@@ -2,11 +2,11 @@
 # SAMPLE FILE - make a copy of this with your values in
 #
 
-# Note the trailing slash
-registryPrefix: myregistry.azurecr.io/
+# Note the trailing slash, chnage this
+registryPrefix: changeme.azurecr.io/
 
 # Get the name of your AKS DNS zone by running `az network dns zone list -o table`
-domainSuffix: smilr.06a7fb76-2c31-4f5f-9dda-521bb761bc76.westeurope.aksapp.io
+domainSuffix: smilr.changeme.changeme-region.aksapp.io
 
 dataApi:
   imageTag: latest

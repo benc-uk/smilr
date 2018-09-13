@@ -7,5 +7,6 @@ Includes: Ingress & persistent storage volumes
 - data-api.svc.yaml
 - frontend.deploy.yaml
 - frontend.svc.yaml
-- ingress.yaml
 - mongodb.all.yaml
+- ingress.http.yaml
+- ingress.https.yaml

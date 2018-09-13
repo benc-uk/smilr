@@ -2,8 +2,6 @@
 # Deploy the front end Angular UI microservice in Kubernetes
 #
 
-# ------------------- Loadbalancer ------------------- #
-
 kind: Service
 apiVersion: v1
 metadata:
