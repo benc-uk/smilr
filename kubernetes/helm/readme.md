@@ -23,6 +23,7 @@ helm install smilr -f myvalues.yaml -n releasename
 ```
 
 ## General Settings
+
 |  Setting  |  Description           | Type | Default |
 | --------- | ---------------------- | ---- | ------- |
 | **registryPrefix** | Set this to your registry name with trailing slash. If left blank images will be pulled from [here on Docker Hub](https://hub.docker.com/u/smilr/). | String | *blank* |
@@ -31,6 +32,7 @@ helm install smilr -f myvalues.yaml -n releasename
 
 
 ## Data API Settings
+
 |  Setting  |  Description           | Type | Default |
 | --------- | ---------------------- | ---- | ------- |
 |**dataApi.imageTag** | Which tag to pull, e.g. latest | String | latest |
@@ -39,6 +41,7 @@ helm install smilr -f myvalues.yaml -n releasename
 | **dataApi.magePullPolicy** | One of: `Always` or `IfNotPresent` | String | Always |
 
 ## Frontend Settings
+
 |  Setting  |  Description           | Type | Default |
 | --------- | ---------------------- | ---- | ------- |
 | **frontend.imageTag** | Which tag to pull, e.g. latest | String | latest |
@@ -46,6 +49,7 @@ helm install smilr -f myvalues.yaml -n releasename
 | **frontend.imagePullPolicy** | One of: `Always` or `IfNotPresent` | String | Always |
 
 ## MongoDB Settings
+
 |  Setting  |  Description           | Type | Default |
 | --------- | ---------------------- | ---- | ------- |
 | **mongo.usePersistence** | Boolean. If true, then a persistent volume claim will be requested and mounted to persist MongoDB data. | Boolean | true |
