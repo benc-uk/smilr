@@ -1,0 +1,186 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "westeurope"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "smilrNetwork",
+      "type": "Microsoft.ServiceFabricMesh/networks",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressPrefix": "10.0.0.5/22",
+        "ingressConfig": {
+          "layer4": [
+            {
+              "name": "smilrApiIn",
+              "publicPort": "8080",
+              "applicationName": "smilrApp",
+              "serviceName": "smilrApiService",
+              "endpointName": "smilrApiListener"
+            },
+            {
+              "name": "smilrFrontendIn",
+              "publicPort": "80",
+              "applicationName": "smilrApp",
+              "serviceName": "smilrFrontendService",
+              "endpointName": "smilrFrontendListener"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "smilrApp",
+      "type": "Microsoft.ServiceFabricMesh/applications",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "Microsoft.ServiceFabricMesh/networks/smilrNetwork"
+      ],
+      "properties": {
+        "description": "Smilr Composite App",
+        "services": [
+          {
+            "type": "Microsoft.ServiceFabricMesh/services",
+            "location": "[parameters('location')]",
+            "name": "smilrFrontendService",
+            "properties": {
+              "description": "Smilr Angular Frontend",
+              "osType": "linux",
+              "codePackages": [
+                {
+                  "name": "smilrFrontendContainer",
+                  "image": "smilr/frontend:latest",
+                  "endpoints": [
+                    {
+                      "name": "smilrFrontendListener",
+                      "port": "80"
+                    }
+                  ],
+                  "environmentVariables": [
+                    {
+                      "name": "PORT",
+                      "value": "80"
+                    },
+                    {
+                      "name": "API_ENDPOINT",
+                      "value": "_remove_this_[concat('http://', reference('smilrNetwork').ingressConfig.publicIPAddress, ':8080/api')]"
+                    }                    
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "0.5",
+                      "memoryInGB": "0.25"
+                    }
+                  }
+                }
+              ],
+              "replicaCount": "2",
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'smilrNetwork')]"
+                }
+              ]
+            }
+          },
+          {
+            "type": "Microsoft.ServiceFabricMesh/services",
+            "location": "[parameters('location')]",
+            "name": "smilrApiService",
+            "properties": {
+              "description": "Smilr Data API",
+              "osType": "linux",
+              "codePackages": [
+                {
+                  "name": "smilrApiContainer",
+                  "image": "smilr/data-api:latest",
+                  "endpoints": [
+                    {
+                      "name": "smilrApiListener",
+                      "port": "8080"
+                    }
+                  ],
+                  "environmentVariables": [
+                    {
+                      "name": "PORT",
+                      "value": "8080"
+                    },
+                    {
+                      "name": "MONGO_CONNSTR",
+                      "value": "mongodb://smilrDbService"
+                    },
+                    {
+                      "name": "MONGO_RETRIES",
+                      "value": "50"
+                    },
+                    {
+                      "name": "MONGO_RETRY_DELAY",
+                      "value": "10"
+                    }                                        
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "0.5",
+                      "memoryInGB": "0.25"
+                    }
+                  }
+                }         
+              ],
+              "replicaCount": "1",
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'smilrNetwork')]"
+                }
+              ]
+            }
+          },
+          {
+            "type": "Microsoft.ServiceFabricMesh/services",
+            "location": "[parameters('location')]",
+            "name": "smilrDbService",
+            "properties": {
+              "description": "MongoDB",
+              "osType": "linux",
+              "codePackages": [
+                {
+                  "name": "smilrDbContainer",
+                  "image": "mongo:3.4-jessie",             
+                  "endpoints": [
+                    {
+                      "name": "smilrDbListener",
+                      "port": "27017"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "0.5",
+                      "memoryInGB": "0.5"
+                    }
+                  }
+                }                     
+              ],
+              "replicaCount": "1",
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'smilrNetwork')]"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "networkIp": {
+      "value": "xxx[reference('smilrNetwork').ingressConfig.publicIPAddress]",
+      "type": "string"
+    }
+  }
+}
