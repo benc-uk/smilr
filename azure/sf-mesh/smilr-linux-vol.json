@@ -4,44 +4,40 @@
   "parameters": {
     "location": {
       "type": "string",
-      "defaultValue": "eastus",
-    },
-    "acrName": {
-      "type": "string"
-    },
-    "acrPassword": {
-      "type": "string"
+      "defaultValue": "westeurope"
     },
     "storageShareName": {
       "type": "string",
       "defaultValue": "mongodata"
     },
     "storageAccountName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "changgeme"
     },
     "storageAccountKey": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "123123123123"
     }  
   },
   "resources": [
     {
-      "apiVersion": "2018-03-01-privatepreview",
+      "apiVersion": "2018-07-01-preview",
       "name": "smilrNetwork",
-      "type": "Microsoft.ServiceFabric/networks",
+      "type": "Microsoft.ServiceFabricMesh/networks",
       "location": "[parameters('location')]",
-      "dependsOn": [],
       "properties": {
-        "schemaVersion": "0.0.1",
         "addressPrefix": "10.0.0.5/22",
         "ingressConfig": {
           "layer4": [
             {
+              "name": "smilrApiIn",
               "publicPort": "8080",
               "applicationName": "smilrApp",
               "serviceName": "smilrApiService",
               "endpointName": "smilrApiListener"
             },
             {
+              "name": "smilrFrontendIn",
               "publicPort": "80",
               "applicationName": "smilrApp",
               "serviceName": "smilrFrontendService",
@@ -52,9 +48,9 @@
       }
     },
     {
-      "apiVersion": "2018-03-01-privatepreview",
+      "apiVersion": "2018-07-01-preview",
       "name": "smilrVolume",
-      "type": "Microsoft.ServiceFabric/volumes",
+      "type": "Microsoft.ServiceFabricMesh/volumes",
       "location": "[parameters('location')]",
       "properties": {
         "description": "File share for MongoDB volume",
@@ -67,19 +63,19 @@
       }
     },
     {
-      "apiVersion": "2018-03-01-privatepreview",
+      "apiVersion": "2018-07-01-preview",
       "name": "smilrApp",
-      "type": "Microsoft.ServiceFabric/applications",
+      "type": "Microsoft.ServiceFabricMesh/applications",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Microsoft.ServiceFabric/networks/smilrNetwork",
-        "Microsoft.ServiceFabric/volumes/smilrVolume"
+        "Microsoft.ServiceFabricMesh/networks/smilrNetwork",
+        "Microsoft.ServiceFabricMesh/volumes/smilrVolume"
       ],
       "properties": {
         "description": "Smilr Composite App",
         "services": [
           {
-            "type": "Microsoft.ServiceFabric/services",
+            "type": "Microsoft.ServiceFabricMesh/services",
             "location": "[parameters('location')]",
             "name": "smilrFrontendService",
             "properties": {
@@ -88,7 +84,7 @@
               "codePackages": [
                 {
                   "name": "smilrFrontendContainer",
-                  "image": "smilr/frontend:prod",
+                  "image": "smilr/frontend:latest",
                   "endpoints": [
                     {
                       "name": "smilrFrontendListener",
@@ -102,7 +98,7 @@
                     },
                     {
                       "name": "API_ENDPOINT",
-                      "value": "xxxx[concat('http://', reference('smilrNetwork').ingressConfig.publicIPAddress, ':8080/api')]"
+                      "value": "_remove_this_[concat('http://', reference('smilrNetwork').ingressConfig.publicIPAddress, ':8080/api')]"
                     }                    
                   ],
                   "resources": {
@@ -116,13 +112,13 @@
               "replicaCount": "2",
               "networkRefs": [
                 {
-                  "name": "[resourceId('Microsoft.ServiceFabric/networks', 'smilrNetwork')]"
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'smilrNetwork')]"
                 }
               ]
             }
           },
           {
-            "type": "Microsoft.ServiceFabric/services",
+            "type": "Microsoft.ServiceFabricMesh/services",
             "location": "[parameters('location')]",
             "name": "smilrApiService",
             "properties": {
@@ -131,7 +127,7 @@
               "codePackages": [
                 {
                   "name": "smilrApiContainer",
-                  "image": "smilr/data-api:prod",
+                  "image": "smilr/data-api:latest",
                   "endpoints": [
                     {
                       "name": "smilrApiListener",
@@ -167,13 +163,13 @@
               "replicaCount": "1",
               "networkRefs": [
                 {
-                  "name": "[resourceId('Microsoft.ServiceFabric/networks', 'smilrNetwork')]"
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'smilrNetwork')]"
                 }
               ]
             }
           },
           {
-            "type": "Microsoft.ServiceFabric/services",
+            "type": "Microsoft.ServiceFabricMesh/services",
             "location": "[parameters('location')]",
             "name": "smilrDbService",
             "properties": {
@@ -194,13 +190,19 @@
                       "cpu": "0.5",
                       "memoryInGB": "0.5"
                     }
-                  }
+                  },
+                  "volumeRefs": [
+                    {
+                      "name": "[resourceId('Microsoft.ServiceFabricMesh/volumes', 'smilrVolume')]",
+                      "destinationPath": "/data/db"
+                    }
+                  ]
                 }                     
               ],
               "replicaCount": "1",
               "networkRefs": [
                 {
-                  "name": "[resourceId('Microsoft.ServiceFabric/networks', 'smilrNetwork')]"
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'smilrNetwork')]"
                 }
               ]
             }
