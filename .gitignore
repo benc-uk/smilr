@@ -75,3 +75,6 @@ myvalues.yaml
 dist/
 tmp/
 tmp.zip
+
+# Test rubbish
+newman/*
