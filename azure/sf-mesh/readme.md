@@ -10,4 +10,7 @@ First deployment make sure the `API_ENDPOINT` has a static value in it. This is 
 On second deployment remove the `_remove_this_` part from the value so that it starts `[concat` and the expression will be evaluated 
 
 ## smilr-linux-vol.json
-This templates binds a storage volume from an Azure Files share to the Mongo container, to give persistence to the data. However it doesn't work and Mongo fails to start, the reason is unknown 
+> Note: Won't work!
+
+This templates binds a storage volume from an Azure Files share to the Mongo container, to give persistence to the data.  
+UPDATE: This will never work as SF Mesh uses Azure files which in turn are SMB based and MongoDB being a database can not run over a file share like SMB, it falls over at start. See issue https://github.com/Azure/service-fabric-mesh-preview/issues/281 

@@ -1,19 +1,19 @@
-FROM stefanscherer/node-windows:8.9.4-nanoserver-2016
-LABEL version="2.0.0" 
-ARG basedir="node/data-api"
+# Base Alpine linux image with Node 8.x
+FROM stefanscherer/node-windows:8-nanoserver
 
-# Node.js setup for the data-api
+LABEL version="3.1.0" 
+ARG basedir="node/data-api"
+ARG build_info="Docker Windows container build"
+ENV NODE_ENV production
 ENV NODE_ENV production
 WORKDIR /home/app
 
-# For efficient layer caching with NPM, this *really* speeds things up
-COPY ${basedir}/package.json .
-
-# NPM install for the server packages
+# NPM install packages
+COPY ${basedir}/package*.json ./
 RUN npm install --production --silent
 
 # NPM is done, now copy in the the whole project to the workdir
 COPY ${basedir}/ .
 
 EXPOSE 4000
-CMD npm start
+ENTRYPOINT [ "npm" , "start" ]

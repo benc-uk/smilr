@@ -45,4 +45,4 @@ COPY --from=angularbuild /build/dist .
 RUN apk update && apk add bash
 
 EXPOSE 3000
-CMD npm start
+ENTRYPOINT [ "npm" , "start" ]
