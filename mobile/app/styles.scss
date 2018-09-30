@@ -1,0 +1,13 @@
+
+@import '~nativescript-theme-core/scss/light';
+@import '~nativescript-theme-core/scss/index';
+@import '~nativescript-theme-core/scss/platforms/index.android';
+
+ActionBar {
+  background-color: #3D5AFE;
+  color: #ffffff;
+}
+
+TabViewItem {
+  background-color: #9FA8DA;
+}

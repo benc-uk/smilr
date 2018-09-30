@@ -11,7 +11,7 @@ metadata:
   name: "smilr-ingress"
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
     #certmanager.k8s.io/cluster-issuer: letsencrypt-staging
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
 spec:

@@ -1,0 +1,199 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "eastus"
+    },
+    "acrName": {
+      "type": "string"
+    },
+    "acrPassword": {
+      "type": "string"
+    }      
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "smilrNetwork",
+      "type": "Microsoft.ServiceFabric/networks",
+      "location": "[parameters('location')]",
+      "dependsOn": [],
+      "properties": {
+        "schemaVersion": "0.0.1",
+        "addressPrefix": "10.0.0.5/22",
+        "ingressConfig": {
+          "layer4": [
+            {
+              "publicPort": "80",
+              "applicationName": "smilrApp",
+              "serviceName": "smilrFrontendService",
+              "endpointName": "smilrFrontendListener"
+            },
+            {
+              "publicPort": "8080",
+              "applicationName": "smilrApp",
+              "serviceName": "smilrApiService",
+              "endpointName": "smilrApiListener"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "smilrApp",
+      "type": "Microsoft.ServiceFabric/applications",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "Microsoft.ServiceFabric/networks/smilrNetwork"
+      ],
+      "properties": {
+        "description": "Smilr Composite App",
+        "services": [
+          {
+            "type": "Microsoft.ServiceFabric/services",
+            "location": "[parameters('location')]",
+            "name": "smilrFrontendService",
+            "properties": {
+              "description": "Smilr Angular Frontend",
+              "osType": "windows",
+              "codePackages": [
+                {
+                  "name": "smilrFrontendContainer",
+                  "image": "smilr/frontend:windows-1709",
+                  "imageRegistryCredential": {
+                    "server": "[concat(parameters('acrName'), '.azurecr.io')]",
+                    "username": "[parameters('acrName')]",
+                    "password": "[parameters('acrPassword')]"
+                  },                  
+                  "endpoints": [
+                    {
+                      "name": "smilrFrontendListener",
+                      "port": "80"
+                    }
+                  ],
+                  "environmentVariables": [
+                    {
+                      "name": "PORT",
+                      "value": "80"
+                    },
+                    {
+                      "name": "API_ENDPOINT",
+                      "value": "[concat('http://', reference('smilrNetwork').ingressConfig.publicIPAddress, ':8080/api')]"
+                    }                    
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "1",
+                      "memoryInGB": "1.5"
+                    }
+                  }
+                }
+              ],
+              "replicaCount": "2",
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabric/networks', 'smilrNetwork')]"
+                }
+              ]
+            }
+          },
+          {
+            "type": "Microsoft.ServiceFabric/services",
+            "location": "[parameters('location')]",
+            "name": "smilrApiService",
+            "properties": {
+              "description": "Smilr Data API",
+              "osType": "windows",
+              "codePackages": [
+                {
+                  "name": "smilrApiContainer",
+                  "image": "smilr/data-api:windows-1709",
+                  "imageRegistryCredential": {
+                    "server": "[concat(parameters('acrName'), '.azurecr.io')]",
+                    "username": "[parameters('acrName')]",
+                    "password": "[parameters('acrPassword')]"
+                  },                        
+                  "endpoints": [
+                    {
+                      "name": "smilrApiListener",
+                      "port": "8080"
+                    }
+                  ],
+                  "environmentVariables": [
+                    {
+                      "name": "PORT",
+                      "value": "8080"
+                    },
+                    {
+                      "name": "MONGO_CONNSTR",
+                      "value": "mongodb://smilrDbService"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "1",
+                      "memoryInGB": "1.5"
+                    }
+                  }
+                }                     
+              ],
+              "replicaCount": "1",
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabric/networks', 'smilrNetwork')]"
+                }
+              ]
+            }
+          },
+          {
+            "type": "Microsoft.ServiceFabric/services",
+            "location": "[parameters('location')]",
+            "name": "smilrDbService",
+            "properties": {
+              "description": "MongoDB",
+              "osType": "windows",
+              "codePackages": [
+                {
+                  "name": "smilrDbContainer",
+                  "image": "mongo:windows-nano1709",
+                  "imageRegistryCredential": {
+                    "server": "[concat(parameters('acrName'), '.azurecr.io')]",
+                    "username": "[parameters('acrName')]",
+                    "password": "[parameters('acrPassword')]"
+                  },               
+                  "endpoints": [
+                    {
+                      "name": "smilrDbListener",
+                      "port": "27017"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "1",
+                      "memoryInGB": "1.5"
+                    }
+                  }
+                }                     
+              ],
+              "replicaCount": "1",
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabric/networks', 'smilrNetwork')]"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "networkIp": {
+      "value": "[reference('smilrNetwork').ingressConfig.publicIPAddress]",
+      "type": "string"
+    }
+  }
+}
