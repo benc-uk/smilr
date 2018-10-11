@@ -13,7 +13,7 @@
         </v-template>
       </ListView>
     </GridLayout>
-    </Page>
+  </Page>
 </template>
 
 
