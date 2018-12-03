@@ -1,7 +1,6 @@
 registryPrefix: bcdemo.azurecr.io/
 domainSuffix: smilr.7e28d40aaab5415089e6.northeurope.aksapp.io
 cmCertIssuer: letsencrypt-staging
-#cmCertIssuer: 
 
 dataApi:
   imageTag: latest

@@ -1,0 +1,60 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: data-api
+  labels:
+    app: data-api
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: data-api
+  template:
+    metadata:
+      labels:
+        app: data-api
+    spec:
+      containers:
+      - name: data-api-pods
+
+        image: bcdemo.azurecr.io/smilr/data-api:stable
+        imagePullPolicy: Always
+
+        env:     
+        - name: MONGO_CONNSTR
+          value: mongodb://mongodb-svc.default
+
+        livenessProbe:
+          httpGet:
+            path: /api/info
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+          
+        ports:
+        - containerPort: 4000
+
+        resources:
+          limits:
+            memory: "256M"
+            cpu: "0.2"
+
+      initContainers:
+       - name: demodata
+         image: bencuk/mongocurl
+         command: ['sh', '-c', "curl https://bcmisc.blob.core.windows.net/misc/initdb.sh | sh"]
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: data-api-svc
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4000
+  selector:
+    app: data-api

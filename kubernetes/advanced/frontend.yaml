@@ -1,0 +1,66 @@
+#
+# Deploy the front end Angular UI microservice in Kubernetes
+#
+# !IMPORTANT! Change the image reference to point to the registry holding
+# the Smilr images, either ACR or public
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-pods
+
+        # !CHANGE THIS! To your real image reference for the frontend 
+        image: bcdemo.azurecr.io/smilr/frontend:stable
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 3000
+
+        env:       
+        - name: API_ENDPOINT
+          value: /api 
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+        resources:
+          limits:
+            memory: "64M"
+            cpu: "0.1"
+
+---
+
+#
+# Deploy the front end Angular UI microservice in Kubernetes
+#
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-svc
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  selector:
+    app: frontend

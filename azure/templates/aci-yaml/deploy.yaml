@@ -1,0 +1,55 @@
+apiVersion: 2018-10-01
+type: Microsoft.ContainerInstance/containerGroups
+location: northeurope
+name: smilr-aci
+properties:
+  containers:
+  - name: data-api
+    properties:
+      image: smilr/data-api:latest
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.8
+      ports:
+      - port: 8080
+      environmentVariables:
+      - name: PORT
+        value: 8080
+      - name: MONGO_CONNSTR
+        value: mongodb://localhost   
+      - name: MONGO_RETRY_DELAY
+        value: 3           
+
+  - name: mongo-db
+    properties:
+      image: mongo:3.4-jessie
+      resources:
+        requests:
+          cpu: 0.5
+          memoryInGb: 0.5
+
+  - name: frontend
+    properties:
+      image: smilr/frontend:latest
+      resources:
+        requests:
+          cpu: 0.5
+          memoryInGb: 0.1
+      ports:
+      - port: 80
+      environmentVariables:
+      - name: PORT
+        value: 80
+      - name: API_ENDPOINT
+        value: http://smilr-aci.northeurope.azurecontainer.io:8080/api
+
+  osType: Linux
+  ipAddress:
+    type: Public
+    dnsNameLabel: smilr-aci
+    ports:
+    - protocol: tcp
+      port: '8080'
+    - protocol: tcp
+      port: '80'
