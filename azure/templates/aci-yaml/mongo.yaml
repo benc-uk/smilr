@@ -1,0 +1,23 @@
+apiVersion: 2018-10-01
+type: Microsoft.ContainerInstance/containerGroups
+location: northeurope
+name: mongo-mini
+properties:
+  containers:
+  - name: mongo-db
+    properties:
+      image: mongo:3.4-jessie
+      ports:
+      - port: 27017
+      resources:
+        requests:
+          cpu: 0.1
+          memoryInGb: 0.1
+
+  osType: Linux
+  ipAddress:
+    type: Public
+    dnsNameLabel: mongo-mini
+    ports:
+    - protocol: tcp
+      port: 27017

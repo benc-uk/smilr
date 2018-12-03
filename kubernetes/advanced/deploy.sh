@@ -1,16 +1,14 @@
 printf "\n### Deploying MongoDB\n"
-kubectl apply -f mongodb.all.yaml
+kubectl apply -f mongodb.yaml
 
 printf "\n### Deploying Data API microservice\n"
-kubectl apply -f data-api.deploy.yaml
-kubectl apply -f data-api.svc.yaml
+kubectl apply -f data-api.yaml
 
 printf "\n### Deploying Frontend microservice\n"
-kubectl apply -f frontend.deploy.yaml
-kubectl apply -f frontend.svc.yaml
+kubectl apply -f frontend.yaml
 
 printf "\n### Deploying HTTPS ingress\n"
-kubectl apply -f ingress.https.yaml
+kubectl apply -f ingress-https.yaml
 
 printf "\n"
 kubectl get all
