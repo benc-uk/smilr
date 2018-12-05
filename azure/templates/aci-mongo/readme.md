@@ -5,14 +5,16 @@ Deploy the Smilr app using just Azure Container Instances (ACI) with MongoDB run
 - Microsoft.ContainerInstance/containerGroups
 
 ## Parameters
-- `previewLocation`: During preview, only available in these regions: **westeurope**, **westus** & **eastus**
 - `acrName`: Name of your ACR instance
 - `acrPassword`: Password for ACR
+- `dnsPrefix`: DNS prefix for the deployed containers
+- `dataApiImageTag`: Image tag for Smilr data-api, e.g. 'latest'
+- `frontendImageTag`: Image tag for Smilr frontend, e.g. 'latest'
+- `releaseInfo`: Informational string about this release, e.g. "Test release"
 
 ## Outputs
 - `frontendURL`: URL to access frontend
 - `apiURL`: URL to access the API
-- `mongoConnStr`: Connection string for Cosmos DB Mongo API
 
 ## Quick Deploy
 [![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fsmilr%2Fmaster%2Fazure%2Ftemplates%2Faci-mongo%2Fazuredeploy.json)  
