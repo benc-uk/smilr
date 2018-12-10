@@ -42,7 +42,7 @@ properties:
       - name: PORT
         value: 80
       - name: API_ENDPOINT
-        value: http://smilr-aci.westeurope.azurecontainer.io:8080/api
+        value: http://smilr-aci.northeurope.azurecontainer.io:8080/api
 
   osType: Linux
   ipAddress:
