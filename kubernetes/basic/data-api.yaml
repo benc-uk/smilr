@@ -33,12 +33,13 @@ spec:
 
         env:     
         - name: MONGO_CONNSTR
-          value: mongodb://mongodb-svc.default
+          value: mongodb://mongodb-svc
 
         resources:
           limits:
             memory: "256M"
             cpu: "0.25"
+
 
 --- 
 
