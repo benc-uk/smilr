@@ -1,0 +1,48 @@
+{
+  "events": [
+    {
+      "type": "event",
+      "topics": [
+        {
+          "desc": "Start of Day",
+          "id": 1
+        },
+        {
+          "id": 2,
+          "desc": "Demos"
+        }
+      ],
+      "title": "Test Event",
+      "start": "2018-10-06",
+      "end": "2018-12-22",
+      "id": 1
+    },
+
+    {
+      "type": "workshop",
+      "topics": [
+        {
+          "desc": "Cheese 1",
+          "id": 1
+        },
+        {
+          "id": 2,
+          "desc": "Cheese 2"
+        }
+      ],
+      "title": "Something blah",
+      "start": "2018-12-01",
+      "end": "2018-12-22",
+      "id": 2
+    }    
+  ],
+  "feedback": [
+    {
+      "comment": "rter",
+      "rating": 4,
+      "event": "1",
+      "topic": 1,
+      "id": 1
+    }
+  ]
+}
