@@ -1,13 +1,19 @@
 <template>
-  <b-jumbotron header="Bootstrap Vue" lead="Bootstrap 4 Components for Vue.js 2" >
-    <p>For more information visit website</p>
-    <b-btn variant="primary" href="#">More Info</b-btn>
-  </b-jumbotron>
+  <div>
+    <event-list filter="active"></event-list>
+  </div>
 
+  
 </template>
 
 <script>
+import EventList from './EventList'
+
 export default {
-  name: 'Home'
+  name: 'Home',
+  
+  components: {
+    'event-list': EventList
+  },
 }
 </script>
