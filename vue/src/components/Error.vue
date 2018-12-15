@@ -17,6 +17,14 @@ export default {
     return {
       rootUrl: window.location.protocol + '//' + window.location.hostname + ':' + window.location.port
     }
+  },
+
+  created: function() {
+    // If message is empty means page has been loaded/refreshed by user directly
+    // - Redirect them to home. Stops user being stuck on error page and hitting F5 
+    if(!this.message) {
+      this.$router.push({name:'home'})
+    }
   }
 }
 </script>

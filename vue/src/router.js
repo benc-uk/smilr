@@ -37,7 +37,7 @@ var router = new Router({
     },
     {
       meta: {title: 'Smilr: Error'},
-      path: '*',
+      path: '/error',
       name: 'error',
       component: Error,
       props: true

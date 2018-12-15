@@ -35,17 +35,28 @@ export default {
     }
   },
 
-  created: function() {
-    this.apiGetEventsFiltered(this.filter)
-    .then(data => {
-      this.events = data;
-    })
+  watch: {
+    filter: function() {
+      this.refresh()
+    }
+  },
+
+  methods: {
+    refresh: function() {
+      this.apiGetEventsFiltered(this.filter)
+      .then(resp => {
+        if(resp) this.events = resp.data;
+      })
+    }
+  },
+
+  mounted: function() {
+    this.refresh()
   }
 }
 </script>
 
 <style>
-
 .card-body {
   font-size: 1.6rem;
 }

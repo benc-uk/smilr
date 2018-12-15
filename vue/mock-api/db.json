@@ -12,12 +12,11 @@
           "desc": "Demos"
         }
       ],
-      "title": "Test Event",
-      "start": "2018-10-06",
-      "end": "2018-12-22",
+      "title": "Future Test Event",
+      "start": "2018-12-31",
+      "end": "2018-12-31",
       "id": 1
     },
-
     {
       "type": "workshop",
       "topics": [
@@ -30,19 +29,46 @@
           "desc": "Cheese 2"
         }
       ],
-      "title": "Something blah",
-      "start": "2018-12-01",
-      "end": "2018-12-22",
+      "title": "Active test",
+      "start": "2018-12-15",
+      "end": "2018-12-15",
       "id": 2
-    }    
+    },
+    {
+      "type": "workshop",
+      "topics": [
+        {
+          "desc": "General",
+          "id": 1
+        }
+      ],
+      "title": "Past event",
+      "start": "2018-05-01",
+      "end": "2018-05-01",
+      "id": 2
+    }
   ],
   "feedback": [
     {
-      "comment": "rter",
+      "comment": "Blah",
       "rating": 4,
       "event": "1",
       "topic": 1,
       "id": 1
+    },
+    {
+      "comment": "Horrible",
+      "rating": 1,
+      "event": "1",
+      "topic": 1,
+      "id": 1
+    },    
+    {
+      "comment": "Brill!",
+      "rating": 3,
+      "event": "2",
+      "topic": 1,
+      "id": 2
     }
   ]
 }
