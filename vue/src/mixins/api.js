@@ -1,4 +1,8 @@
 import config from '../main'
+import axios from 'axios'
+import router from '../router'
+
+/* eslint-disable */
 
 export default {
   methods: {
@@ -15,14 +19,18 @@ export default {
     },    
 
     _apiRawGet: function(apiPath) {
-      return fetch(`${config.API_ENDPOINT}/${apiPath}`)
-        .then(resp => {
-          return resp.json();
+      var apiUrl = `${config.API_ENDPOINT}/${apiPath}`
+      //console.log("### API CALL "+ apiUrl);
+      
+      return axios.get(apiUrl)
+      .catch( err => {
+        // Handle errors here
+        router.push({
+          name: 'error', 
+          replace: true, 
+          params: { message: `API_ERROR:\n${apiUrl}\n${err.toString()}` }
         })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(`### API Error! ${err}`);
-        })
+      })
     }
   }
 }

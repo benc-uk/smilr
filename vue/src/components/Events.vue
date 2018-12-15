@@ -1,22 +1,40 @@
 <template>
-<div>
-  <b-card title="Card Title"
-          img-src="https://picsum.photos/600/300/?image=25"
-          img-alt="Image"
-          img-top
-          tag="article"
-          style="max-width: 20rem;"
-          class="mb-2">
-    <p class="card-text">
-      Some quick example text to build on the card title and make up the bulk of the card's content.
-    </p>
-    <b-button href="#" variant="primary">Go somewhere</b-button>
-  </b-card>
-</div>
+  <div>
+    <b-form-group label="Find events by time range" description="Select a time range filter">
+      <b-form-select v-model="time" class="mb-3" size="lg">
+        <option value="null" disabled>Please select an option</option>
+        <option value="past">&nbsp;&nbsp;&nbsp;Past</option>
+        <option value="active">&nbsp;&nbsp;&nbsp;Active</option>
+        <option value="future">&nbsp;&nbsp;&nbsp;Future</option>
+      </b-form-select>
+    </b-form-group>
+
+    <event-list :filter="time" v-if="time"></event-list>    
+  </div>
+
 </template>
 
 <script>
+import EventList from './EventList'
+
 export default {
-  name: 'Events'
+  name: 'Events',
+
+  components: {
+    'event-list': EventList
+  },
+
+  data: function() {
+    return {
+      time: null
+    }
+  }
+
 }
 </script>
+
+<style>
+.custom-select {
+  text-indent: 1rem !important;
+} 
+</style>

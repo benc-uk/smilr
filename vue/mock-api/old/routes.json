@@ -1,5 +1,4 @@
 {
   "/api/*": "/$1",
-  "/events/filter/*": "/events",
   "/feedback/:e/:t": "/feedback?event=:e&topic=:t"
 }

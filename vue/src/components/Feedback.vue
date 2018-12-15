@@ -55,10 +55,12 @@ export default {
 
   created: function() {
     this.apiGetEvent(this.eventId)
-    .then(result => {
-      this.event = result;
-      this.topic = result.topics.find(t => { if(t.id == this.topicId) return t });
-      document.title = `Smilr: Feedback for: ${this.event.title} - ${this.topic.desc}`
+    .then(resp => {
+      if (resp.data) {
+        this.event = resp.data;
+        this.topic = resp.data.topics.find(t => { if(t.id == this.topicId) return t });
+        document.title = `Smilr: Feedback for: ${this.event.title} - ${this.topic.desc}`
+      }
     })
   }
 }
@@ -75,7 +77,7 @@ export default {
   resize: none !important;
 }
 #submitbut {
-  font-size: calc(14px + 1vw);
+  font-size: calc(14px + 1.5vw);
 }
 .card-body {
   padding: 1.5vw !important;

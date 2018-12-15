@@ -4,8 +4,12 @@
 // But json-server expects them to be like PUT /events/27
 
 module.exports = (req, res, next) => {
+  let today = new Date().toISOString().substr(0, 10)
+
   if(req.method == 'PUT' && req.path == "/events") {
     req.url = "/events/" + req.body.id
   }
+
+  console.log(req.url)
   next()
 }
