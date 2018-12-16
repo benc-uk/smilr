@@ -1,6 +1,7 @@
 // 
 // Mock REST API server without database
 // Uses JSON Server https://github.com/typicode/json-server
+// - Ben Coleman, Dec 2018
 //
 const jsonServer = require('json-server')
 const server = jsonServer.create()
@@ -13,22 +14,6 @@ server.use(middlewares)
 server.get('/api', (req, res) => {
   res.send('<h1>Mock API server for Smilr is running</h1>')
 })
-
-// server.get('/api/events/filter/:time', (req, res) => {
-//   var db = router.db
-//   var today = new Date().toISOString().substr(0, 10)
-//   var events = db
-//     .get('events')
-//     .filter(function (e) {
-//       if(req.params.time.toLowerCase() == 'future') return e.start > today
-//       if(req.params.time.toLowerCase() == 'past') return e.end < today
-//       if(req.params.time.toLowerCase() == 'active') return (e.start <= today && e.end >= today)
-//       return res.send(400, {error:'Invalid time for filter, must be: [past, active, future]'})
-//     })
-//     .value()
-
-//   res.jsonp(events)  
-// })
 
 var today = new Date().toISOString().substr(0, 10)
 server.use(jsonServer.rewriter({
@@ -43,6 +28,10 @@ server.use((req, res, next) => {
     req.url = "/api/events/" + req.body.id
   }
   next()
+})
+
+server.use('/api', function(req, res, next) {
+  setTimeout(next, Math.random()*1000)
 })
 
 server.use('/api', router)
