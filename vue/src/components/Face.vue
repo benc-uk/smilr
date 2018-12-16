@@ -1,10 +1,11 @@
 <template>
   <div class="facebox" ref="facebox">
-    <img class="face" @click="clicked" :src="`/imgs/face-${number}.svg`" :class="{ 'fadeIn': fade, 'tossing': selected, 'unselected': unselected }">
+    <img class="face" @click="clicked" :src="faceSVG" :class="{ 'fadeIn': fade, 'tossing': selected, 'unselected': unselected }">
   </div>
 </template>
 
 <script>
+//:src="`./img/face-${number}.svg`"
 import '../assets/css/animations.css';
 
 export default {
@@ -15,6 +16,10 @@ export default {
   computed: {
     fade: function() {
       return (!this.selected && !this.unselected)
+    },
+
+    faceSVG: function() {
+      return require(`../assets/img/face-${this.number}.svg`);
     }
   },
 

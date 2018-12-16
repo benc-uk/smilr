@@ -10,6 +10,12 @@
             &nbsp;&nbsp;
             <b-button size="lg" :to="{name:'about'}" class="bigger" variant="success"><fa icon="info-circle" /> About</b-button>
           </b-navbar-nav>
+
+          <b-navbar-nav class="ml-auto">
+            <b-button size="lg" :to="{name:'report'}" class="bigger" variant="warning"><fa icon="chart-bar" /> Report</b-button> 
+            &nbsp;&nbsp;
+            <b-button size="lg" :to="{name:'admin'}" class="bigger" variant="warning"><fa icon="tools" /> Admin</b-button>
+          </b-navbar-nav>
        </b-collapse>
     </b-navbar>
 
@@ -26,6 +32,6 @@
     height: 45px;
   }
   .bigger {
-    font-size: 1.6rem !important;
+    font-size: 1.4rem !important;
   }
 </style>

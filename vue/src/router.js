@@ -41,7 +41,19 @@ var router = new Router({
       name: 'error',
       component: Error,
       props: true
-    }    
+    },
+    {
+      meta: {title: 'Smilr: Error'},
+      path: '/report',
+      name: 'report',
+      component: About
+    },
+    {
+      meta: {title: 'Smilr: Error'},
+      path: '/admin',
+      name: 'admin',
+      component: About
+    }   
   ]
 })
 

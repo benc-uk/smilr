@@ -14,13 +14,18 @@ Vue.use(require('vue-moment'));
 
 // Font Awesome
 import { library as faLibrary } from '@fortawesome/fontawesome-svg-core'
-import { faBars, faHome, faInfoCircle, faCoffee, faSync } from '@fortawesome/pro-solid-svg-icons'
+import { faHome, faInfoCircle, faCoffee, faSpinnerThird, faCalendarAlt, faFlask, faChalkboardTeacher, faLaptopCode, faTools, faChartBar } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 faLibrary.add(faHome) // Add your icons here
-faLibrary.add(faBars)
 faLibrary.add(faInfoCircle)
 faLibrary.add(faCoffee)
-faLibrary.add(faSync)
+faLibrary.add(faSpinnerThird)
+faLibrary.add(faCalendarAlt)
+faLibrary.add(faFlask)
+faLibrary.add(faChalkboardTeacher)
+faLibrary.add(faLaptopCode)
+faLibrary.add(faTools)
+faLibrary.add(faChartBar)
 Vue.component('fa', FontAwesomeIcon)
 
 /* ================================================================================================== */
