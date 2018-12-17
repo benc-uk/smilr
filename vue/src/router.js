@@ -5,6 +5,7 @@ import About from './components/About'
 import Events from './components/Events'
 import Feedback from './components/Feedback'
 import Error from './components/Error'
+import Report from './components/Report'
 import config from './main'
 
 Vue.use(Router)
@@ -43,10 +44,10 @@ var router = new Router({
       props: true
     },
     {
-      meta: {title: 'Smilr: Error'},
+      meta: {title: 'Smilr: Feedback Report'},
       path: '/report',
       name: 'report',
-      component: About
+      component: Report
     },
     {
       meta: {title: 'Smilr: Error'},

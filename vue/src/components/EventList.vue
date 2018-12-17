@@ -6,7 +6,7 @@
         <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
 
           <h1 slot="header"><fa :icon="faIcon(event.type)"/> &nbsp; {{ event.title }}</h1>
-          {{ event.start | moment("dddd, MMMM Do YYYY")  }}
+          {{ event.start | moment("dddd, MMMM Do YYYY") }}
           
           <hr>
 
@@ -32,7 +32,6 @@
 </template>
 
 <script>
-
 import api from "../mixins/api";
 import Spinner from './Spinner'
 
