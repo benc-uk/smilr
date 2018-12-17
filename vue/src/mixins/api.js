@@ -12,15 +12,36 @@ export default {
 
     apiGetEvent: function(id) { 
       return this._apiRawCall(`events/${id}`)
-    },  
+    },
 
     apiGetEventsFiltered: function(time) { 
       return this._apiRawCall(`events/filter/${time}`)
-    },    
+    },
+
+    apiGetFeedbackForEventSync: function(event) { 
+      let calls = []
+      let apifeedback = []
+
+      for(let topic of event.topics) {
+        calls.push(axios.get(`${config.API_ENDPOINT}/feedback/${event.id}/${topic.id}`))
+      }
+
+      axios.all(calls)
+      .then(axios.spread((...allResponses) => {
+        for(let resp of allResponses) {
+          for(let data of resp.data) {
+            //console.log("=====", data)
+            apifeedback.push(data)
+          }
+        }
+      }))
+
+      return apifeedback;
+    },
 
     apiPostFeedback: function(feedbackData) { 
       return this._apiRawCall(`feedback`, 'post', feedbackData)
-    },  
+    },
 
     _apiRawCall: function(apiPath, method = 'get', data = null) {
       var apiUrl = `${config.API_ENDPOINT}/${apiPath}`
