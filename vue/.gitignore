@@ -20,4 +20,4 @@ yarn-error.log*
 *.sln
 *.sw*
 .npmrc
-**/db.json
+mock-api/db.json

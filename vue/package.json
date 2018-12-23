@@ -10,17 +10,19 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.9",
-    "@fortawesome/pro-regular-svg-icons": "^5.6.0",
-    "@fortawesome/pro-solid-svg-icons": "^5.6.0",
+    "@fortawesome/free-solid-svg-icons": "^5.6.0",
     "@fortawesome/vue-fontawesome": "^0.1.3",
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.11",
     "bootswatch": "^4.1.3",
     "epic-spinners": "^1.0.4",
     "json-server": "^0.14.0",
+    "msal": "^0.2.3",
+    "vee-validate": "^2.1.4",
     "vue": "^2.5.17",
     "vue-moment": "^4.0.0",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuelidate": "^0.7.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-eslint": "^3.2.0",

@@ -1,25 +1,23 @@
 <template>
   <div class="facebox" ref="facebox">
-    <img class="face" @click="clicked" :src="faceSVG" :class="{ 'fadeIn': fade, 'tossing': selected, 'unselected': unselected }">
+    <img class="face" @click="clicked" :src="utilsFaceSVG(number)" :class="{ 'fadeIn': fade, 'tossing': selected, 'unselected': unselected }">
   </div>
 </template>
 
 <script>
-//:src="`./img/face-${number}.svg`"
 import '../assets/css/animations.css';
+import utils from "../mixins/utils";
 
 export default {
   name: 'Face',
 
   props: ['number', 'unselected', 'selected'],
 
+  mixins: [ utils ],
+
   computed: {
     fade: function() {
       return (!this.selected && !this.unselected)
-    },
-
-    faceSVG: function() {
-      return require(`../assets/img/face-${this.number}.svg`);
     }
   },
 

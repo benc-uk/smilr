@@ -6,7 +6,11 @@ import Events from './components/Events'
 import Feedback from './components/Feedback'
 import Error from './components/Error'
 import Report from './components/Report'
-import config from './main'
+import Admin from './components/Admin'
+import AdminEvent from './components/AdminEvent'
+import Login from './components/Login'
+import { config } from './main'
+import { userProfile } from './main'
 
 Vue.use(Router)
 
@@ -14,6 +18,7 @@ var router = new Router({
   mode: 'history',
   routes: [
     {
+      meta: {title: 'Smilr'},
       path: '/',
       name: 'home',
       component: Home
@@ -47,26 +52,50 @@ var router = new Router({
       meta: {title: 'Smilr: Feedback Report'},
       path: '/report',
       name: 'report',
-      component: Report
+      component: Report,
+      beforeEnter: validateUser     
     },
     {
-      meta: {title: 'Smilr: Error'},
+      meta: {title: 'Smilr: Event Admin'},
       path: '/admin',
       name: 'admin',
-      component: About
-    }   
+      component: Admin,
+      beforeEnter: validateUser
+    },
+    {
+      meta: {title: 'Smilr: Event Admin'},
+      path: '/admin/event/:action',
+      name: 'admin-event',
+      component: AdminEvent,
+      props: true,
+      beforeEnter: validateUser    
+    },
+    {
+      meta: {title: 'Smilr: Login'},
+      path: '/login',
+      name: 'login',
+      component: Login
+    }
   ]
 })
 
+function validateUser(to, from, next) {
+  if(!userProfile.user) {
+    next({name: 'login'})
+  } else {
+    next()
+  }
+}
+
 router.beforeEach((to, from, next) => {
-  // Check config for API_ENDPOINT, if it's not set we are screwed
+  // Check config for API_ENDPOINT, if it's not set whole app is screwed
   if(!config.API_ENDPOINT && to.name != 'error') {
     next({name: 'error', replace: true, params: { message: 'API_ENDPOINT is not set, app can not function without it' }})
     return;
   }
 
-  // Update page title
-  document.title = to.meta.title || process.env.VUE_APP_TITLE || "Smilr"
+  // Update page title based on route
+  document.title = process.env.NODE_ENV == 'development' ? to.meta.title + ' [DEV]' : to.meta.title
   next()
 })
 
