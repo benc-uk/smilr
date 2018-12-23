@@ -15,6 +15,8 @@ var app = express();
 // - Optional parameter can specify different location, use when debugging & running locally
 // - e.g. `node server.js ../angular/dist/`
 var staticContentDir = process.argv[2] || __dirname;
+// resolve to an absolute path
+staticContentDir = require('path').resolve(staticContentDir)
 console.log(`### Content dir = '${staticContentDir}'`);
 
 // Serve all Angular app static content (index.html, js, css, assets, etc.)
