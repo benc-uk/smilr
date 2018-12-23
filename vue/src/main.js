@@ -60,17 +60,17 @@ if(process.env.VUE_APP_AAD_CLIENT_ID) {
 }
 export { userProfile, config }
 
-console.log(`### App starting running in ${process.env.NODE_ENV} mode`)
-
 // In production mode fetch config at runtime from /.config endpoint
 // This assumes the SPA is being served by the Smilr frontend Node server
 if(process.env.NODE_ENV != 'development') {
-  fetch(`/.config/API_ENDPOINT`)
+  fetch(`/.config/API_ENDPOINT,AAD_CLIENT_ID,ADMIN_USER_LIST`)
   .then(resp => {
     resp.json()
     .then(result => {
       // Store results as our global config object, then init the app
       config.API_ENDPOINT = result.API_ENDPOINT
+      config.AAD_CLIENT_ID = result.AAD_CLIENT_ID
+      config.ADMIN_USER_LIST = result.ADMIN_USER_LIST
       initApp()
     })
     .catch(err => {
@@ -81,16 +81,20 @@ if(process.env.NODE_ENV != 'development') {
     console.log(`### Unable to fetch config from server. App will not start! Err: ${err}`);
   })
 } else {
-  // In dev mode fetch config from static .env file
+  // In dev mode fetch config from static .env file, note the VUE_APP_ prefix
   config.API_ENDPOINT = process.env.VUE_APP_API_ENDPOINT
+  config.AAD_CLIENT_ID = process.env.VUE_APP_AAD_CLIENT_ID
+  config.ADMIN_USER_LIST = process.env.VUE_APP_ADMIN_USER_LIST
   initApp()
 }
-
 
 //
 // It all starts here, create the Vue instance and mount the app component
 //
 function initApp() {
+  console.log(`### App starting running in ${process.env.NODE_ENV} mode`)
+  console.log('### App config is', config)
+
   new Vue({
     router,
     render: function (h) { return h(App) },

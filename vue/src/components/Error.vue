@@ -1,6 +1,6 @@
 <template>
   <b-jumbotron header="Error 😢" lead="Something bad has happened" >
-    <pre class="error-message">{{ message }}</pre>
+    <p class="error-message">{{ message }}</p>
     <br/>
     <b-button :href="rootUrl" variant="danger">Try to Reload App</b-button>
   </b-jumbotron>
@@ -31,6 +31,6 @@ export default {
 
 <style>
 .error-message {
-  font-size: 20px
+  font-size: 1.7rem
 }
 </style>
