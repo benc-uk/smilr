@@ -53,14 +53,14 @@ var router = new Router({
       path: '/report',
       name: 'report',
       component: Report,
-      beforeEnter: validateUser     
+      beforeEnter: validateAdminUser     
     },
     {
       meta: {title: 'Smilr: Event Admin'},
       path: '/admin',
       name: 'admin',
       component: Admin,
-      beforeEnter: validateUser
+      beforeEnter: validateAdminUser
     },
     {
       meta: {title: 'Smilr: Event Admin'},
@@ -68,21 +68,35 @@ var router = new Router({
       name: 'admin-event',
       component: AdminEvent,
       props: true,
-      beforeEnter: validateUser    
+      beforeEnter: validateAdminUser    
+    },
+    {
+      meta: {title: 'Smilr: Login'},
+      path: '/login/:redir',
+      name: 'login',
+      component: Login,
+      props: true
     },
     {
       meta: {title: 'Smilr: Login'},
       path: '/login',
-      name: 'login',
+      name: 'loginplain',
       component: Login
     }
   ]
 })
 
-function validateUser(to, from, next) {
+//
+// Validate user is logged-in and in the authorised users list
+//
+function validateAdminUser(to, from, next) {
   if(!userProfile.user) {
-    next({name: 'login'})
+    next({name: 'login', params: { redir: to.name}})
   } else {
+    if(!userProfile.isAdmin) {
+      next({name: 'error', replace: true, params: { message: `User '${userProfile.user.displayableId}' is not an administrator for this application` }})
+      return;      
+    }
     next()
   }
 }

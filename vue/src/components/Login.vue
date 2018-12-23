@@ -13,21 +13,23 @@
 import AuthService from '../auth/auth-service'
 import GraphService from '../auth/graph-service'
 import { userProfile } from '../main'
+import { config } from '../main'
 
 export default {
   name: 'Login',
+
+  props: ['redir'],
 
   data() {
     return {
       authService: null,
       graphService: null,
-      loginFailed: false,
-      appid: process.env.VUE_APP_AAD_CLIENT_ID
+      loginFailed: false
     }
   },
 
   created() {
-    this.authService = new AuthService(process.env.VUE_APP_AAD_CLIENT_ID, '/login');
+    this.authService = new AuthService(config.AAD_CLIENT_ID, '/login');
     this.graphService = new GraphService();
   },
 
@@ -38,7 +40,22 @@ export default {
         user => {
           if (user) {
             userProfile.user = user
-            this.$router.push({ name: 'admin' })
+            userProfile.isAdmin = false
+
+            // Check against list of admins
+            if(config.ADMIN_USER_LIST) {
+              for(let userName of config.ADMIN_USER_LIST.split(',')) {
+                if(userName.trim().toLowerCase() == userProfile.user.displayableId.toLowerCase()) {
+                  userProfile.isAdmin = true
+                  break
+                }          
+              }
+            }
+
+            if(this.redir)
+              this.$router.push({ name: this.redir })
+            else
+              this.$router.push({ name: 'admin' })
           } else {
             this.loginFailed = true;
           }
