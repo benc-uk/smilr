@@ -5,7 +5,7 @@
       <div v-for="event in events" :key="event.id">
         <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
 
-          <h1 slot="header"><fa :icon="faIcon(event.type)"/> &nbsp; {{ event.title }}</h1>
+          <h1 slot="header"><fa :icon="utilsFaIcon(event.type)"/> &nbsp; {{ event.title }}</h1>
           {{ event.start | moment("dddd, MMMM Do YYYY") }}
           
           <hr>
@@ -33,7 +33,8 @@
 
 <script>
 import api from "../mixins/api";
-import Spinner from './Spinner'
+import utils from "../mixins/utils";
+import Spinner from './Spinner';
 
 export default {
   name: "EventList",
@@ -44,7 +45,7 @@ export default {
     }
   },
 
-  mixins: [ api ],
+  mixins: [ api, utils ],
 
   components: {
     Spinner
@@ -70,17 +71,7 @@ export default {
       .then(resp => {
         if(resp) this.events = resp.data;
       })
-    },
-
-    faIcon: function(type) {
-      switch(type) {
-        case "event": return "calendar-alt"
-        case "lab": return "flask"
-        case "hack": return "laptop-code"
-        case "workshop": return "chalkboard-teacher"
-        default: return "calendar-alt" 
-      }
-    }    
+    } 
   },
 
   created: function() {

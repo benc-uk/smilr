@@ -1,4 +1,4 @@
-import config from '../main'
+import { config } from '../main'
 import axios from 'axios'
 import router from '../router'
 
@@ -6,6 +6,10 @@ import router from '../router'
 
 export default {
   methods: {
+
+    //
+    // ===== Events =====
+    //
     apiGetAllEvents: function() { 
       return this._apiRawCall(`events`)
     },
@@ -18,7 +22,7 @@ export default {
       return this._apiRawCall(`events/filter/${time}`)
     },
 
-    apiGetFeedbackForEventSync: function(event) { 
+    apiGetFeedbackForEvent: function(event) { 
       let calls = []
       let apifeedback = []
 
@@ -26,22 +30,43 @@ export default {
         calls.push(axios.get(`${config.API_ENDPOINT}/feedback/${event.id}/${topic.id}`))
       }
 
+      // I only partially understand what this is doing
+      // It should be waiting for all API calls to complete 
       axios.all(calls)
       .then(axios.spread((...allResponses) => {
         for(let resp of allResponses) {
           for(let data of resp.data) {
-            //console.log("=====", data)
             apifeedback.push(data)
           }
         }
       }))
 
-      return apifeedback;
+      return apifeedback
     },
+
+    apiDeleteEvent: function(event) {
+      return this._apiRawCall(`events/${event.id}`, 'delete')
+    },
+
+    apiUpdateEvent: function(event) {
+      return this._apiRawCall(`events`, 'put', event)
+    },
+
+    apiCreateEvent: function(event) {
+      return this._apiRawCall(`events`, 'post', event)
+    },    
+
+    //
+    // ===== Feedback =====
+    //
 
     apiPostFeedback: function(feedbackData) { 
       return this._apiRawCall(`feedback`, 'post', feedbackData)
     },
+
+    //
+    // ===== Private methods =====
+    //
 
     _apiRawCall: function(apiPath, method = 'get', data = null) {
       var apiUrl = `${config.API_ENDPOINT}/${apiPath}`

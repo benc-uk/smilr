@@ -24,10 +24,37 @@
     <b-container>
       <router-view/>
     </b-container>
+    
+    <div class="appFooter">
+      Active user: 
+      <span v-if="userProfile.user">{{ userProfile.user.name }}</span>
+      <span v-else>[No user logged in]</span>
+    </div>
   </div>
 </template>
 
+<script>
+import { userProfile } from './main'
+export default {
+  name: 'App',
+
+  data() {
+    return {
+      userProfile: userProfile
+    }
+  }
+}
+</script>
+
 <style>
+  .appFooter {
+    width: 100%;
+    text-align: right;
+    margin-top: 0.5rem;
+    padding: 0.8rem;
+    border-top: 1px solid #ddd;
+    color: #999
+  }
   .logo {
     height: 45px;
   }

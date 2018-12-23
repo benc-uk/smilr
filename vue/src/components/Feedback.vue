@@ -55,12 +55,12 @@ export default {
   methods: {
     clickFace: function(num) {
       for(let i in this.unselected) {
-        this.$set(this.unselected, i, true);
-        this.$set(this.selected, i, false);
+        this.$set(this.unselected, i, true)
+        this.$set(this.selected, i, false)
       }
-      this.$set(this.selected, num-1, true);
-      this.$set(this.unselected, num-1, false);
-      this.rating = num;
+      this.$set(this.selected, num-1, true)
+      this.$set(this.unselected, num-1, false)
+      this.rating = num
     },
 
     submitFeedback: function() {
@@ -71,16 +71,16 @@ export default {
         comment: this.comment
       })
       .then(() => {
-        this.$refs.successModal.show();
+        this.$refs.successModal.show()
       })
     },
 
     done: function() {
-      this.$router.push("/");
+      this.$router.push("/")
     }
   },
 
-  created: function() {
+  created() {
     this.apiGetEvent(this.eventId)
     .then(resp => {
       if (resp.data) {

@@ -4,9 +4,9 @@
     <b-form-group label="Find events by time range" description="Select a time range filter">
       <b-form-select v-model="time" class="mb-3" size="lg">
         <option value="null" disabled>-- Please select an option --</option>
-        <option value="past">&nbsp;&nbsp;&nbsp;Past</option>
-        <option value="active">&nbsp;&nbsp;&nbsp;Active</option>
-        <option value="future">&nbsp;&nbsp;&nbsp;Future</option>
+        <option value="past">Past</option>
+        <option value="active">Active</option>
+        <option value="future">Future</option>
       </b-form-select>
     </b-form-group>
 
@@ -33,9 +33,3 @@ export default {
 
 }
 </script>
-
-<style>
-.custom-select {
-  text-indent: 1rem !important;
-} 
-</style>
