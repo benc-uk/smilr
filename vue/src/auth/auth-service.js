@@ -31,7 +31,7 @@ export default class AuthService {
       idToken => {
         const user = this.app.getUser();
         if (user) {
-          return user;
+          return { token:idToken, user:user };
         } else {
           return null;
         }

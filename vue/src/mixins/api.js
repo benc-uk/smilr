@@ -1,4 +1,4 @@
-import { config } from '../main'
+import { config, userProfile } from '../main'
 import axios from 'axios'
 import router from '../router'
 
@@ -71,11 +71,19 @@ export default {
     _apiRawCall: function(apiPath, method = 'get', data = null) {
       var apiUrl = `${config.API_ENDPOINT}/${apiPath}`
       //console.log("### API CALL "+ apiUrl);
-      
+
+      var headers = {}
+      if(userProfile.token) {
+        headers = {
+          'Authorization': `Bearer ${userProfile.token}`
+        }
+      }
+
       return axios({
         method: method,
         url: apiUrl,
-        data: data
+        data: data,
+        headers: headers
       })
       .catch(err => {
         // Handle errors here, rather than up at caller level
@@ -85,6 +93,22 @@ export default {
           params: { message: `API_ERROR:\n${apiUrl}\n${err.toString()}` }
         })
       })          
-    }
+    },
+
+    // _createAuthHeader: function() {
+    //   let header = {
+    //     "typ": "JWT",
+    //     "alg": "HS256"
+    //   } 
+    //   console.log(userProfile.user );
+      
+
+    //   let data = base64urlEncode( header ) + "." + base64urlEncode( userProfile.user.idToken )
+    //   let hashedData = hash( data, secret )
+    //   let signature = base64urlEncode( hashedData )
+
+    //   console.log("MASHHHSHSHS ", header+payload+signature)
+    //   return header + payload + signature
+    // }
   }
 }
