@@ -48,7 +48,7 @@ const swaggerDocument = require('./swagger.json');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true));
 
 // Set up logging
-if (app.get('env') === 'production') {
+if (false) { // app.get('env') === 'production') {
     app.use(logger('combined'));
   } else {
     app.use(logger('dev'));
