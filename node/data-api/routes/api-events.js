@@ -91,9 +91,10 @@ routes
 
 //
 // PUT event - update an existing event, call with event body with id
+// Updated to match when id passed on URL but it will be ignored, id in body still used
 //
 routes
-.put('/api/events', function (req, res, next) {
+.put(['/api/events', '/api/events/:id'], function (req, res, next) {
   utils.verifyAuthentication(req)
   .then(valid => {
     res.type('application/json');
