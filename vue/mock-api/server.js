@@ -21,7 +21,6 @@ server.get('/api/info', (req, res) => {
   res.send({ message: "Mock API server for Smilr is running"})
 })
 
-
 // Various routes and tricks to act like the real Smilr API
 var today = new Date().toISOString().substr(0, 10)
 server.use(jsonServer.rewriter({
@@ -30,15 +29,6 @@ server.use(jsonServer.rewriter({
   "/api/events/filter/past":    "/api/events?end_lte="+today+"&start_ne="+today,
   "/api/events/filter/active":  "/api/events?start_lte="+today+"&end_gte="+today
 }))
-
-// Workaound how Smilr API was originally designed - PUTs didn't include id in path
-server.use((req, res, next) => {
-  // Change URL on the fly
-  if(req.method == 'PUT' && req.path == "/api/events") {
-    req.url = "/api/events/" + req.body.id
-  }
-  next()
-})
 
 // Fake real network with a slight random delay
 server.use('/api', function(req, res, next) {

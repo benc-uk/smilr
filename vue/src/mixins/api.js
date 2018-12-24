@@ -49,7 +49,7 @@ export default {
     },
 
     apiUpdateEvent: function(event) {
-      return this._apiRawCall(`events`, 'put', event)
+      return this._apiRawCall(`events/${event.id}`, 'put', event)
     },
 
     apiCreateEvent: function(event) {

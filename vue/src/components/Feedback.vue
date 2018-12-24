@@ -92,7 +92,7 @@ export default {
   mounted() {
     // Check feedback cookie
     let fbCookie = this.cookieRead(`feedback_${this.eventId}_${this.topicId}`)
-    if(fbCookie) {
+    if(fbCookie && process.env.NODE_ENV != 'development') {
       this.$refs.nopeModal.show()
       return
     } 

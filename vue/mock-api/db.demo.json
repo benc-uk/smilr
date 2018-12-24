@@ -1,0 +1,103 @@
+{
+  "events": [
+    {
+      "title": "Test Demo Event",
+      "type": "event",
+      "start": "2018-01-01",
+      "end": "2019-12-31",
+      "topics": [
+        {
+          "id": 1,
+          "desc": "Introduction"
+        },
+        {
+          "id": 2,
+          "desc": "Live Demos"
+        },
+        {
+          "id": 3,
+          "desc": "Round Table Discussion"
+        }
+      ],
+      "id": 1
+    },
+    {
+      "title": "Goat Herding - Hands On Lab ",
+      "type": "lab",
+      "start": "2018-11-16",
+      "end": "2018-11-16",
+      "topics": [
+        {
+          "id": 1,
+          "desc": "What is a Goat?"
+        },
+        {
+          "id": 2,
+          "desc": "More about goats"
+        }
+      ],
+      "id": 2
+    },
+    {
+      "title": "This Is A Demo Workshop ",
+      "type": "workshop",
+      "start": "2020-06-25",
+      "end": "2020-06-30",
+      "topics": [
+        {
+          "id": 1,
+          "desc": "What Are Computers?"
+        },
+        {
+          "id": 2,
+          "desc": "Jetpacks"
+        }
+      ],
+      "id": 3
+    }
+  ],
+  "feedback": [
+    {
+      "rating": 4,
+      "topic": 1,
+      "event": 1,
+      "comment": "I thought it was pretty ok",
+      "id": 1
+    },
+    {
+      "rating": 5,
+      "topic": 1,
+      "event": 1,
+      "comment": "This was great",
+      "id": 2
+    },
+    {
+      "rating": 1,
+      "topic": 3,
+      "event": 1,
+      "comment": "I hated this part, for no apparent reason",
+      "id": 3
+    },
+    {
+      "rating": 2,
+      "topic": 1,
+      "event": 1,
+      "comment": "I needed the toilet",
+      "id": 4
+    },
+    {
+      "rating": 3,
+      "topic": 2,
+      "event": 1,
+      "comment": "This is a demo comment, goodbye",
+      "id": 5
+    },
+    {
+      "rating": 5,
+      "topic": 2,
+      "event": 1,
+      "comment": "Super fab demos 😊",
+      "id": 6
+    }
+  ]
+}
