@@ -2,7 +2,7 @@
 FROM node:8-alpine
 
 # Build time arguments
-LABEL version="3.1.0" 
+LABEL version="4.0.0" 
 ARG basedir="node/data-api"
 ARG build_info="Docker container build"
 ENV NODE_ENV production
