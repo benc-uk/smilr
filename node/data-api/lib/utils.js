@@ -49,12 +49,12 @@ class Utils {
   //
   // Security check function, check a supplied code using TOTP
   //
-  verifyCode(code) {
-    if(!process.env.API_SECRET) return true;
-    let jsotp = require('jsotp');
-    let totp = jsotp.TOTP(process.env.API_SECRET);
-    return totp.verify(code);
-  }
+  // verifyCode(code) {
+  //   if(!process.env.API_SECRET) return true;
+  //   let jsotp = require('jsotp');
+  //   let totp = jsotp.TOTP(process.env.API_SECRET);
+  //   return totp.verify(code);
+  // }
 
   //
   // Security check function, attempts to validate JWT tokens
@@ -74,12 +74,19 @@ class Utils {
       
       // Validate using azure-ad-jwt
       // Note. azure-ad-jwt has been modified to support AAD v2 
-      var aad = require('./azure-ad-jwt/azure-ad-jwt.js')
+      try {
+        var aad = require('./azure-ad-jwt/azure-ad-jwt')
+      } catch(e) {
+        console.log(e);
+        
+      }
       var authorization = req.headers['authorization']
       var bearer = authorization.split(" ");
       var jwtToken = bearer[1];
 
-      aad.verify(jwtToken, null, true, function(err, result) {
+      let aadV2 = false;
+      if(process.env.AAD_V2 == "true") aadV2 = true;
+      aad.verify(jwtToken, null, true, aadV2, function(err, result) {
         if (result) {
           console.log(`### Verified identity of '${result.name}' in token on API call`);
           resolve(result)
