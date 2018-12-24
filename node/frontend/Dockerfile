@@ -1,23 +1,22 @@
 #
-# Build and bundle the Angular app with Angular-CLI
+# Build and bundle the Vue.js app with Vue CLI 3 https://cli.vuejs.org/
 #
-FROM node:8-alpine as angularbuild
-ARG angular_root="angular"
-ARG build_config="production"
+FROM node:8-alpine as spabuild
+ARG vue_root="vue"
 
 WORKDIR /build
 
-# Install all the Angular dev tools & CLI
-COPY ${angular_root}/package*.json ./
+# Install all the Vue.js dev tools & CLI, and our app dependencies 
+COPY ${vue_root}/package*.json ./
 RUN npm install --silent
 
-# Copy in the Angular source
-COPY ${angular_root}/angular.json .
-COPY ${angular_root}/tsconfig.json .
-COPY ${angular_root}/src ./src
+# Copy in the Vue.js app source
+COPY ${vue_root}/.env.production .
+COPY ${vue_root}/public ./public
+COPY ${vue_root}/src ./src
 
-# Run Angular CLI build & bundle, and output to ./dist
-RUN node node_modules/@angular/cli/bin/ng build -c ${build_config}
+# Run Vue CLI build & bundle, and output to ./dist
+RUN npm run build
 
 # ===================================================================== #
 
@@ -26,7 +25,7 @@ RUN node node_modules/@angular/cli/bin/ng build -c ${build_config}
 #
 FROM node:8-alpine
 
-LABEL version="2.0.1"
+LABEL version="3.0.0"
 ARG basedir="node/frontend"
 ENV NODE_ENV production
 WORKDIR /home/app
@@ -38,8 +37,8 @@ RUN npm install --production --silent
 # NPM is done, now copy in the the whole project to the workdir
 COPY ${basedir}/ .
 
-# Copy in Angular app, uses previous build step 'angularbuild' as source
-COPY --from=angularbuild /build/dist .
+# Copy in Vue.js app, uses previous build step 'spabuild' as source
+COPY --from=spabuild /build/dist .
 
 # Install bash inside container just for debugging 
 RUN apk update && apk add bash
