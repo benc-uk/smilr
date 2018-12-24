@@ -2,7 +2,7 @@ var exports = module.exports;
 
 exports.AzureActiveDirectoryValidationManager = require('./azure-ad-validation-manager.js');
 
-exports.verify = function(jwtString, options, useV2 = false, callback) {
+exports.verify = function(jwtString, options, fetchCommon = false, useV2 = false, callback) {
 
     var aadManager = new exports.AzureActiveDirectoryValidationManager();
 
@@ -14,7 +14,7 @@ exports.verify = function(jwtString, options, useV2 = false, callback) {
         return callback(new Error(-1, 'Not a valid AAD token'), null)
     }
 
-    if(useV2) {
+    if(fetchCommon) {
         // download the common v2.0 open id config
         aadManager.requestOpenIdConfig('common/v2.0', function(err, openIdConfigCommon) {
             // download the signing certificates from Microsoft for common (Microsoft) accounts
@@ -27,7 +27,7 @@ exports.verify = function(jwtString, options, useV2 = false, callback) {
                     aadManager.requestSigningCertificates(openIdConfig.jwks_uri, options, function(err, certificates) {
 
                         // verify against all certificates
-                        aadManager.verify(jwtString, certificates, options, true, callback);
+                        aadManager.verify(jwtString, certificates, options, useV2, callback);
                     })
                 });
             });
@@ -40,7 +40,7 @@ exports.verify = function(jwtString, options, useV2 = false, callback) {
             aadManager.requestSigningCertificates(openIdConfig.jwks_uri, options, function(err, certificates) {
 
                 // verify against all certificates
-                aadManager.verify(jwtString, certificates, options, false, callback);
+                aadManager.verify(jwtString, certificates, options, useV2, callback);
             })
         });
     }
