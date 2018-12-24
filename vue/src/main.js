@@ -52,10 +52,12 @@ if(process.env.VUE_APP_AAD_CLIENT_ID) {
     user: null
   }
 } else {
+  // Already log in as fake admin user, bypassing all auth and login stuff
   var userProfile = {
     user: {
       name: '[Auth Disabled]'
-    }
+    },
+    isAdmin: true
   }
 }
 export { userProfile, config }

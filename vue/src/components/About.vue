@@ -8,7 +8,7 @@
      
       <hr/>
 
-      <b>Version: {{ ver }}</b><br/>
+      <b>Version: {{ ver }} (Vue.js)</b><br/>
       &copy; Ben Coleman, 2017/2018<br/>
       Provided under the <a target="_blank" href="https://opensource.org/licenses/MIT">MIT License</a><br/>
       <b-button variant="primary" href="https://smilr.benco.io" target="_blank">Project details &amp; source code</b-button>

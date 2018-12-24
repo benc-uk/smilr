@@ -39,23 +39,11 @@ export default {
       this.authService.login().then(
         resp => {
           if (resp) {
-            // console.log("RAW USER", resp.user);
-            // console.log("RAW TOKEN", resp.token);
-            
             userProfile.user = resp.user
             userProfile.token = resp.token
             userProfile.isAdmin = false
-
-            // Get token
-            // this.authService.getToken()
-            // .then(token => {
-            //   userProfile.token = token
-            //   console.dir("FETCHED TOKEN: ", token);
-            // })
-
-            console.dir(userProfile);
+            //console.dir(userProfile);
             
-
             // Check against list of admins
             if(config.ADMIN_USER_LIST) {
               for(let userName of config.ADMIN_USER_LIST.split(',')) {
