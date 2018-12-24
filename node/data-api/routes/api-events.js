@@ -74,17 +74,19 @@ routes
 //
 routes
 .post('/api/events', function (req, res, next) {
-  if(!utils.verifyCode(req.headers['x-secret'])) { utils.sendError(res, {msg: "Supplied x-secret code not valid"}, 401); return; }
+  utils.verifyAuthentication(req)
+  .then(valid => {
+    res.type('application/json');
+    let event = req.body;
 
-  res.type('application/json');
-  let event = req.body;
+    if(event._id || event.id) utils.sendError(res, {msg: "Should not POST events with id"}, 400);
 
-  if(event._id || event.id) utils.sendError(res, {msg: "Should not POST events with id"}, 400);
-
-  // We send back the new record, which has the new id
-  res.app.get('data').createOrUpdateEvent(event, false)
+    // We send back the new record, which has the new id
+    res.app.get('data').createOrUpdateEvent(event, false)
     .then(data => utils.sendData(res, data.ops[0]))
     .catch(err => utils.sendError(res, err));
+  })
+  .catch(err => utils.sendError(res, err, 401));        
 })
 
 //
@@ -92,19 +94,19 @@ routes
 //
 routes
 .put('/api/events', function (req, res, next) {
-  if(!utils.verifyCode(req.headers['x-secret'])) { utils.sendError(res, {msg: "Supplied x-secret code not valid"}, 401); return; }
+  utils.verifyAuthentication(req)
+  .then(valid => {
+    res.type('application/json');
+    let event = req.body;
 
-  res.type('application/json');
-  let event = req.body;
+    // IMPORTANT! We munge and swap the _id and id fields so it matches MonogDB
+    event._id = event.id;
+    delete(event.id);
 
-  // IMPORTANT! We munge and swap the _id and id fields so it matches MonogDB
-  event._id = event.id;
-  delete(event.id);
+    if(!event._id) utils.sendError(res, {msg: "Should not PUT events without id"}, 400);
 
-  if(!event._id) utils.sendError(res, {msg: "Should not PUT events without id"}, 400);
-
-  // Note we send back the same event object we receive, Monogo doesn't return it
-  res.app.get('data').createOrUpdateEvent(event, false)
+    // Note we send back the same event object we receive, Monogo doesn't return it
+    res.app.get('data').createOrUpdateEvent(event, false)
     .then(data => {
       if(data.result.n == 0) {
         utils.sendError(res, {msg: `No event with id ${event._id} found to modify`}, 404);
@@ -113,6 +115,8 @@ routes
       utils.sendData(res, event);
     })
     .catch(err => utils.sendError(res, err));
+  })
+  .catch(err => utils.sendError(res, err, 401));        
 })
 
 //
@@ -120,15 +124,17 @@ routes
 //
 routes
 .delete('/api/events/:id', function (req, res, next) {
-  if(!utils.verifyCode(req.headers['x-secret'])) { utils.sendError(res, {msg: "Supplied x-secret code not valid"}, 401); return; }
-
-  res.type('application/json');
-  res.app.get('data').deleteEvent(req.params.id)
+  utils.verifyAuthentication(req)
+  .then(valid => {
+    res.type('application/json');
+    res.app.get('data').deleteEvent(req.params.id)
     .then(data => {
       if(data.deletedCount == 0) utils.sendError(res, {msg: `No event with id ${req.params.id} found to delete`}, 404);
       else utils.sendData(res, {msg: `Deleted doc ${req.params.id} ok`})
     })
-    .catch(err => utils.sendError(res, err));
+    .catch(err => utils.sendError(res, err));  
+  })
+  .catch(err => utils.sendError(res, err, 401));  
 })
 
 module.exports = routes;

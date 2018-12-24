@@ -57,6 +57,43 @@ class Utils {
   }
 
   //
+  // Security check function, attempts to validate JWT tokens
+  //
+  verifyAuthentication(req) {
+
+    return new Promise(function(resolve, reject) {
+      // Short circuit validation if SECURE_API is switched off
+      if(process.env.SECURE_API != "true") 
+        resolve(true);
+
+      // Check we even have a authorization header
+      if(!req.headers['authorization']) {
+        reject('SECURE_API enabled, and authorization token missing');
+        return;
+      }
+      
+      // Validate using azure-ad-jwt
+      // Note. azure-ad-jwt has been modified to support AAD v2 
+      var aad = require('./azure-ad-jwt/azure-ad-jwt.js')
+      var authorization = req.headers['authorization']
+      var bearer = authorization.split(" ");
+      var jwtToken = bearer[1];
+
+      aad.verify(jwtToken, null, true, function(err, result) {
+        if (result) {
+          console.log(`### Verified identity of '${result.name}' in token on API call`);
+          resolve(result)
+        } else {
+          console.log("### Verify authentication failed, JWT is invalid: " + err);
+          reject(err)
+        }
+      });
+        
+    });
+  }
+
+
+  //
   // Simple random ID generator, good enough, with len=6 it's a 1:56 billion chance of a clash
   //
   makeId(len) {
