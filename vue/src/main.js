@@ -42,24 +42,11 @@ Vue.component('fa', FontAwesomeIcon)
 /* eslint-disable */
 Vue.config.productionTip = false
 
-// config is a global object created and populated here and exported for other code to use
+// Global object created and populated here and exported for other code to use
 var config = {}
-//export default config;
+// Global user profile object 
+var userProfile = {}
 
-// Global user object - set up dummy user if AAD auth is disabled
-if(process.env.VUE_APP_AAD_CLIENT_ID) {
-  var userProfile = {
-    user: null
-  }
-} else {
-  // Already log in as fake admin user, bypassing all auth and login stuff
-  var userProfile = {
-    user: {
-      name: '[Auth Disabled]'
-    },
-    isAdmin: true
-  }
-}
 export { userProfile, config }
 
 // In production mode fetch config at runtime from /.config endpoint
@@ -96,6 +83,21 @@ if(process.env.NODE_ENV != 'development') {
 function initApp() {
   console.log(`### App starting running in ${process.env.NODE_ENV} mode`)
   console.log('### App config is', config)
+
+  // Check if security enabled
+  if(config.AAD_CLIENT_ID) {
+    userProfile = {
+      user: null
+    }
+  } else {
+    // Already log in as fake admin user, bypassing all auth and login stuff
+    userProfile = {
+      user: {
+        name: '[Auth Disabled]'
+      },
+      isAdmin: true
+    }
+  }
 
   new Vue({
     router,
