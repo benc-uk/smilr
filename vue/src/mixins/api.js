@@ -94,21 +94,5 @@ export default {
         })
       })          
     },
-
-    // _createAuthHeader: function() {
-    //   let header = {
-    //     "typ": "JWT",
-    //     "alg": "HS256"
-    //   } 
-    //   console.log(userProfile.user );
-      
-
-    //   let data = base64urlEncode( header ) + "." + base64urlEncode( userProfile.user.idToken )
-    //   let hashedData = hash( data, secret )
-    //   let signature = base64urlEncode( hashedData )
-
-    //   console.log("MASHHHSHSHS ", header+payload+signature)
-    //   return header + payload + signature
-    // }
   }
 }
