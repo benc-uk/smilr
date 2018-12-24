@@ -37,10 +37,24 @@ export default {
     login() {
       this.loginFailed = false;
       this.authService.login().then(
-        user => {
-          if (user) {
-            userProfile.user = user
+        resp => {
+          if (resp) {
+            // console.log("RAW USER", resp.user);
+            // console.log("RAW TOKEN", resp.token);
+            
+            userProfile.user = resp.user
+            userProfile.token = resp.token
             userProfile.isAdmin = false
+
+            // Get token
+            // this.authService.getToken()
+            // .then(token => {
+            //   userProfile.token = token
+            //   console.dir("FETCHED TOKEN: ", token);
+            // })
+
+            console.dir(userProfile);
+            
 
             // Check against list of admins
             if(config.ADMIN_USER_LIST) {

@@ -9,8 +9,7 @@ import Report from './components/Report'
 import Admin from './components/Admin'
 import AdminEvent from './components/AdminEvent'
 import Login from './components/Login'
-import { config } from './main'
-import { userProfile } from './main'
+import { config, userProfile } from './main'
 
 Vue.use(Router)
 
