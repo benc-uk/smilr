@@ -27,7 +27,7 @@ export default {
 
   data: function() {
     return {
-      time: null
+      time: 'active'
     }
   }
 
