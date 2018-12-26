@@ -1,7 +1,6 @@
 //
 // Taken from https://github.com/sunilbandla/vue-msal-sample
 //
-/* eslint-disable */
 
 import * as Msal from 'msal';
 

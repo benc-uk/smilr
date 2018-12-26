@@ -94,7 +94,7 @@ The steps for deployment are:
 ![kube1](../etc/kube-scenario-b.png){: .framed .padded}  
 **[Deployment Files for this scenario are in /kubernetes/advanced](./advanced/)** 
 
-This method uses a Kubernetes *Ingress* to provide a single entrypoint into your cluster, and URL path rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Angular SPA is served from so it doesn't require any fiddling with IP addresses or DNS. 
+This method uses a Kubernetes *Ingress* to provide a single entrypoint into your cluster, and URL path rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Vue.js SPA is served from so it doesn't require any fiddling with IP addresses or DNS. 
 
 This scenario also uses introduces persistence to MongoDB:
 - Uses a *StatefulSet* rather than a *Deployment* to run the MongoDB component

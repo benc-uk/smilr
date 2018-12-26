@@ -64,7 +64,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import utils from "../mixins/utils"
 import api from "../mixins/api"
 var newEvent = {}

@@ -1,5 +1,7 @@
 # Azure Templates
 
+# :warning: Templates need validating against new Vue.js version
+
 These ARM templates allow you to deploy the complete app to Azure.
 
 These templates all use containers, so an Azure Container Registry (ACR) instance populated with the Smilr images is a pre-req before deploying. Please refer to the 

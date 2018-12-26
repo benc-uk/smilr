@@ -2,7 +2,7 @@ var exports = module.exports;
 
 exports.AzureActiveDirectoryValidationManager = require('./azure-ad-validation-manager.js');
 
-exports.verify = function(jwtString, options, fetchCommon = false, useV2 = false, callback) {
+exports.verify = function(jwtString, options, fetchCommon = false, useV2issuer = false, callback) {
 
     var aadManager = new exports.AzureActiveDirectoryValidationManager();
 
@@ -27,7 +27,7 @@ exports.verify = function(jwtString, options, fetchCommon = false, useV2 = false
                     aadManager.requestSigningCertificates(openIdConfig.jwks_uri, options, function(err, certificates) {
 
                         // verify against all certificates
-                        aadManager.verify(jwtString, certificates, options, useV2, callback);
+                        aadManager.verify(jwtString, certificates, options, useV2issuer, callback);
                     })
                 });
             });
@@ -40,7 +40,7 @@ exports.verify = function(jwtString, options, fetchCommon = false, useV2 = false
             aadManager.requestSigningCertificates(openIdConfig.jwks_uri, options, function(err, certificates) {
 
                 // verify against all certificates
-                aadManager.verify(jwtString, certificates, options, useV2, callback);
+                aadManager.verify(jwtString, certificates, options, useV2issuer, callback);
             })
         });
     }
