@@ -21,21 +21,8 @@ import { faHome, faInfoCircle, faCoffee, faCalendarAlt, faFlask, faChalkboardTea
   faTools, faChartBar, faSync, faEdit, faTrashAlt, 
   faCalendarPlus, faPlusSquare, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-faLibrary.add(faHome) // Add your icons here
-faLibrary.add(faInfoCircle)
-faLibrary.add(faCoffee)
-faLibrary.add(faSync)
-faLibrary.add(faCalendarAlt)
-faLibrary.add(faFlask)
-faLibrary.add(faChalkboardTeacher)
-faLibrary.add(faLaptopCode)
-faLibrary.add(faTools)
-faLibrary.add(faChartBar)
-faLibrary.add(faEdit)
-faLibrary.add(faTrashAlt)
-faLibrary.add(faCalendarPlus)
-faLibrary.add(faPlusSquare)
-faLibrary.add(faUser)
+faLibrary.add(faHome, faInfoCircle, faCoffee, faSync, faCalendarAlt, faFlask, faChalkboardTeacher,
+  faLaptopCode, faTools, faChartBar, faEdit, faTrashAlt, faCalendarPlus, faPlusSquare, faUser)
 Vue.component('fa', FontAwesomeIcon)
 
 /* ================================================================================================== */
@@ -51,7 +38,7 @@ var userProfile = {}
 export { userProfile, config }
 
 // In production mode fetch config at runtime from /.config endpoint
-// This assumes the SPA is being served by the Smilr frontend Node server
+// This REQUIRES the SPA is being served by the Smilr frontend Node server
 if(process.env.NODE_ENV != 'development') {
   fetch(`/.config/API_ENDPOINT,AAD_CLIENT_ID,ADMIN_USER_LIST`)
   .then(resp => {
@@ -100,6 +87,7 @@ function initApp() {
     }
   }
 
+  // Mount the top level App component
   new Vue({
     router,
     render: function (h) { return h(App) },

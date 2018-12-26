@@ -5,9 +5,7 @@ Smilr is a multi component application & reference architecure. It has been desi
 The Smilr app is simple, it allows users to provide feedback on events or sessions they have attended via a simple web & mobile interface. The feedback consists of a rating (scored 1-5) and supporting comments.
 
 - The user interface is written in Vue.js and is completely de-coupled from the back end, which it communicates with via REST. The UI is fully responsive and will work on on both web and mobile.
-
 - The two microservices are both written in Node.js using the Express framework. These have been containerized so can easily be deployed & run as containers
-
 - The database is a NoSQL document store holding JSON, provided by MongoDB and/or *Azure Cosmos DB*
 
 The app has been designed to be deployed to Azure, but the flexible nature of the design & chosen technology stack results in a wide range of deployment options and compute scenarios, including:
@@ -28,6 +26,8 @@ This application supports a range of demonstration, and learning scenarios, such
  - The Actor model as an alternative to a traditional data model
  - CQRS (Command & Query Responsibility Segregation) as a possible pattern to separate read and write actions and stores 
 
+## :warning: These docs are in the process of major re-write, please excuse our dust
+
 ---
 
 
@@ -45,8 +45,8 @@ The app consists of four logical components
 # Getting Started
 There are a number of ways to get started with this project depending on your goals. Below are some suggestions and pointers
 - [Running Smilr locally with Node.js](./docs/local-dev.md) - If you're a developer interested in the building and running Node.js and/or Vue.js components locally, this is a good place to start.
-- [Deploying to Azure from pre-built images](/changeme) - Probably the quickest way to deploy Smilr is using ARM templates & Azure Container Instances running from pre-built images
-- [Deploying to Kubernetes](/changeme) - This project is a good candidate for running in Kubernetes. Step by step documentations is provided to walk through deployment to Kubernetes
+- [Deploying to Azure from pre-built images](./azure/templates/aci-quickstart) - Probably the quickest way to deploy Smilr is using ARM templates & Azure Container Instances running from pre-built images
+- [Deploying to Kubernetes](./kubernetes) - This project is a good candidate for running in Kubernetes. Step by step documentations is provided to walk through deployment to Kubernetes
 
 
 # Repository Structure
@@ -87,9 +87,7 @@ The stable & complete version of the Smilr app consists of Node.js implementatio
 
 
 # Fundamentals
-The boring stuff here
-
-
+These docs covers some of the fundamental aspects of Smilr, which are independent of any particular implementation
 #### [:page_with_curl: API Reference & Data Model](./docs/api-model.md) 
 #### [:page_with_curl: Database Notes](./docs/database.md) 
 
@@ -103,11 +101,34 @@ There are numerous ways to set & override environmental variables; in the operat
 # Experimental Implementations
 There are several re-implementations of the Smilr architecture. Either at the backend, providing an API compatible with the data-api REST spec. Also the frontend has been implemented as a mobile app. All of these alternatives are considered experimental and for technology demo use cases 
 
+#### [Serverless - Azure Functions](./azure/functions)
+#### [Bots and Bot Framework](./bot)
+#### [Native Mobile App](./mobile)
+#### [Service Fabric](./servicefabric)
+#### [Orleans](./orleans)
+
 # DevOps CI/CD Pipeline
-Todo
+Automated CI/CD Pipeline has been created using Azure Pipelines. This automatically builds the various components as containers and releases them to Azure for testing. To view the status of these builds & releases, you can visit the Azure Devops Public Project
+
+
+Data API Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Data%20API)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=3)
+
+Frontend Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Frontend)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=2)
+
+#### [DevOps Public Project - Smilr](https://dev.azure.com/bencoleman/Smilr)
+
+
+# Kubernetes 
+As containers and Kubernetes represents such an important build & deployment scenario, they have dedicated guides and documentation
+
+#### [Builing Smilr as Containers](./docs/containers.md)
+#### [Running and deploying in Kubernetes](./kubernetes)
 
 # Deploying to Azure 
-Todo
+See provided Azure Resource Manager (ARM) templates to allow you to deploy the complete Smilr app and all components to Azure. As all deployment scenarios are container based you also need to refer to the containers section described above
+
+#### [ARM Deployment Templates](./azure/templates)
+
 
 # Changelog 
 High level project changes and overall history are listed here:

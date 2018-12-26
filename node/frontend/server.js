@@ -1,7 +1,8 @@
 //
-// Main Express server for Smilr Data API
+// Main Express server for Smilr frontend
 // ----------------------------------------------
 // Ben C, March 2018
+// - Updated: Dec 2018
 //
 
 // Load .env file if it exists
@@ -23,8 +24,8 @@ console.log(`### Content dir = '${staticContentDir}'`);
 app.use('/', express.static(staticContentDir));
 
 //
-// MICRO API allowing dynamic configuration of the client side Angular
-// Allow Angular to fetch a comma separated set of environmental vars from the server
+// MICRO API allowing dynamic configuration of the client side Vue.js
+// Allow Vue.js to fetch a comma separated set of environmental vars from the server
 //
 app.get('/.config/:vars', function (req, res) {
     let data = {};
@@ -34,7 +35,7 @@ app.get('/.config/:vars', function (req, res) {
     res.send(data);
 });
 
-// Redirect all other requests to Angular app - i.e. index.html
+// Redirect all other requests to Vue.js app - i.e. index.html
 // This allows us to do in-app, client side routing and deep linking 
 // - see https://angular.io/guide/deployment#server-configuration
 app.use('*', function(req, res) {

@@ -66,7 +66,6 @@
 <script>
 import utils from "../mixins/utils"
 import api from "../mixins/api"
-var newEvent = {}
 
 export default {
   name: 'AdminEvent',
