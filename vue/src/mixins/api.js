@@ -71,6 +71,8 @@ export default {
       //console.log("### API CALL "+ apiUrl);
 
       var headers = {}
+
+      // Send token as per the OAuth 2.0 bearer token scheme
       if(userProfile.token) {
         headers = {
           'Authorization': `Bearer ${userProfile.token}`
