@@ -8,7 +8,7 @@ This assumes you have the latest Azure CLI installed (2.0.21+)
 # Set-up & Creation of AKS
 
 This document is not intended to be a step by step guide for deploying Azure Container Service (AKS), if you do not have AKS setup then there are several guides you can use
- - Azure Citadel - [Kubernetes: Hands On With Microservices](https://azurecitadel.github.io/labs/kubernetes/)
+ - Azure Citadel - [Kubernetes: Hands On With Microservices](https://aka.ms/kubelab)
  - Azure Docs - [Quickstart: Deploy an Azure Container Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
 
 > **NOTE.** When creating your AKS cluster it is strongly recommended you use the portal and enable the "HTTP Application Routing add-on" during creation, or create with the `--enable-addons http_application_routing` option. This will automatically enable an ingress controller in your cluster and also provide you with an external DNS zone in Azure, with Kubernetes configured to automatically create records in it. 

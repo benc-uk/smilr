@@ -101,11 +101,11 @@ There are numerous ways to set & override environmental variables; in the operat
 # Experimental Implementations
 There are several re-implementations of the Smilr architecture. Either at the backend, providing an API compatible with the data-api REST spec. Also the frontend has been implemented as a mobile app. All of these alternatives are considered experimental and for technology demo use cases 
 
-#### [Serverless - Azure Functions](./azure/functions)
-#### [Bots and Bot Framework](./bot)
-#### [Native Mobile App](./mobile)
-#### [Service Fabric](./servicefabric)
-#### [Orleans](./orleans)
+- [**Serverless - Azure Functions**](./azure/functions)
+- [**Bots and Bot Framework**](./bot)
+- [**Native Mobile App**](./mobile)
+- [**Service Fabric**](./servicefabric)
+- [**Actors with Orleans**](./orleans)
 
 # DevOps CI/CD Pipeline
 Automated CI/CD Pipeline has been created using Azure Pipelines. This automatically builds the various components as containers and releases them to Azure for testing. To view the status of these builds & releases, you can visit the Azure Devops Public Project
@@ -118,10 +118,10 @@ Frontend Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smil
 #### [DevOps Public Project - Smilr](https://dev.azure.com/bencoleman/Smilr)
 
 
-# Kubernetes 
+# Containers & Kubernetes 
 As containers and Kubernetes represents such an important build & deployment scenario, they have dedicated guides and documentation
 
-#### [Builing Smilr as Containers](./docs/containers.md)
+#### [Building Smilr as Containers](./docs/containers.md)
 #### [Running and deploying in Kubernetes](./kubernetes)
 
 # Deploying to Azure 
