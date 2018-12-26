@@ -25,7 +25,7 @@ RUN npm run build
 #
 FROM node:8-alpine
 
-LABEL version="3.0.0"
+LABEL version="1.2.0"
 ARG basedir="node/frontend"
 ENV NODE_ENV production
 WORKDIR /home/app
