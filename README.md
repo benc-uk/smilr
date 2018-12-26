@@ -26,21 +26,36 @@ This application supports a range of demonstration, and learning scenarios, such
  - The Actor model as an alternative to a traditional data model
  - CQRS (Command & Query Responsibility Segregation) as a possible pattern to separate read and write actions and stores 
 
-## :warning: These docs are in the process of major re-write, please excuse our dust
+---
+
+# Table of Contents
+
+- [Architecture & Core App Components](#architecture--core-app-components)
+- [Getting Started](#getting-started)
+- [Repository Structure](#repository-structure)
+- [Stable Core Implementation](#stable-core-implementation)
+- [Fundamentals](#Fundamentals)
+- [Containers & Kubernetes](#containers--kubernetes)
+- [Deploying to Azure](#deploying-to-azure)
+- [DevOps CI/CD Pipeline](#devops-cicd-pipeline)
+- [Experimental Implementations](#experimental-implementations)
+- [Changelog](#changelog)
 
 ---
 
 
 # Architecture & Core App Components
-![arch](/etc/architecture.png){: .framed .padded}
+![arch](./etc/architecture.png){: .framed .padded}
 
 ## Logical Components
 The app consists of four logical components
-- **Client Vue.js SPA** - The primary web user interface
+- **Client Vue.js SPA** - The primary web user interface, as a single page application (SPA)
 - **Frontend Service** - Serves the above client SPA and acts as runtime config API
 - **Data API Service** - Main REST API used by the app for all data access
 - **Database** - Backend MongoDB database & persistent store
 
+## Screenshot
+![screenshot](./etc/screen.png){: .framed .padded}
 
 # Getting Started
 There are a number of ways to get started with this project depending on your goals. Below are some suggestions and pointers
@@ -98,24 +113,6 @@ The primary configuration mechanism for this project is system environmental var
 There are numerous ways to set & override environmental variables; in the operating system, the user profile or from command line tools. For local development purposes it is strongly recommended you create & use `.env` files. These are simple text files containing `var=value` pairs. Sample files named `.env.sample` are provided within the project, which you can rename and use. *Note.* `.env` files can often contain secrets so they are prevented from being committed to Git
 
 
-# Experimental Implementations
-There are several re-implementations of the Smilr architecture. Either at the backend, providing an API compatible with the data-api REST spec. Also the frontend has been implemented as a mobile app. All of these alternatives are considered experimental and for technology demo use cases 
-
-- [**Serverless - Azure Functions**](./azure/functions)
-- [**Bots and Bot Framework**](./bot)
-- [**Native Mobile App**](./mobile)
-- [**Service Fabric**](./servicefabric)
-- [**Actors with Orleans**](./orleans)
-
-# DevOps CI/CD Pipeline
-Automated CI/CD Pipeline has been created using Azure Pipelines. This automatically builds the various components as containers and releases them to Azure for testing. To view the status of these builds & releases, you can visit the Azure Devops Public Project
-
-
-Data API Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Data%20API)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=3)
-
-Frontend Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Frontend)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=2)
-
-#### [DevOps Public Project - Smilr](https://dev.azure.com/bencoleman/Smilr)
 
 
 # Containers & Kubernetes 
@@ -128,6 +125,26 @@ As containers and Kubernetes represents such an important build & deployment sce
 See provided Azure Resource Manager (ARM) templates to allow you to deploy the complete Smilr app and all components to Azure. As all deployment scenarios are container based you also need to refer to the containers section described above
 
 #### [ARM Deployment Templates](./azure/templates)
+
+
+# DevOps CI/CD Pipeline
+Automated CI/CD Pipeline has been created using Azure Pipelines. This automatically builds the various components as containers and releases them to Azure for testing. To view the status of these builds & releases, you can visit the Azure Devops Public Project
+
+Data API Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Data%20API)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=3)
+
+Frontend Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Frontend)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=2)
+
+#### [DevOps Public Project - Smilr](https://dev.azure.com/bencoleman/Smilr)
+
+
+# Experimental Implementations
+There are several re-implementations of the Smilr architecture. Either at the backend, providing an API compatible with the data-api REST spec. Also the frontend has been implemented as a mobile app. All of these alternatives are considered experimental and for technology demo use cases 
+
+- [**Serverless - Azure Functions**](./azure/functions)
+- [**Bots and Bot Framework**](./bot)
+- [**Native Mobile App**](./mobile)
+- [**Service Fabric**](./servicefabric)
+- [**Actors with Orleans**](./orleans)
 
 
 # Changelog 
