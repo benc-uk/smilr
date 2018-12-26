@@ -1,7 +1,7 @@
 #
 # Build and bundle the Vue.js app with Vue CLI 3 https://cli.vuejs.org/
 #
-FROM node:8-alpine as spabuild
+FROM node:10-alpine as spabuild
 ARG vue_root="vue"
 
 WORKDIR /build
@@ -23,7 +23,7 @@ RUN npm run build
 #
 # Build Node.js frontend service, pulling in bundled output from previous step
 #
-FROM node:8-alpine
+FROM node:10-alpine
 
 LABEL version="1.2.0"
 ARG basedir="node/frontend"

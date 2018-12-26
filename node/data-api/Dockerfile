@@ -1,5 +1,5 @@
-# Base Alpine linux image with Node 8.x
-FROM node:8-alpine
+# Base Alpine linux image with Node 10.x
+FROM node:10-alpine
 
 # Build time arguments
 LABEL version="4.0.2" 
