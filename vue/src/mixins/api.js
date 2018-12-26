@@ -2,8 +2,6 @@ import { config, userProfile } from '../main'
 import axios from 'axios'
 import router from '../router'
 
-/* eslint-disable */
-
 export default {
   methods: {
 

@@ -21,8 +21,7 @@
     "vee-validate": "^2.1.4",
     "vue": "^2.5.17",
     "vue-moment": "^4.0.0",
-    "vue-router": "^3.0.1",
-    "vuelidate": "^0.7.4"
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-eslint": "^3.2.0",

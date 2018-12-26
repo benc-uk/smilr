@@ -47,16 +47,6 @@ class Utils {
   }
 
   //
-  // Security check function, check a supplied code using TOTP
-  //
-  // verifyCode(code) {
-  //   if(!process.env.API_SECRET) return true;
-  //   let jsotp = require('jsotp');
-  //   let totp = jsotp.TOTP(process.env.API_SECRET);
-  //   return totp.verify(code);
-  // }
-
-  //
   // Security check function, attempts to validate JWT tokens
   //
   verifyAuthentication(req) {
@@ -98,7 +88,6 @@ class Utils {
         
     });
   }
-
 
   //
   // Simple random ID generator, good enough, with len=6 it's a 1:56 billion chance of a clash

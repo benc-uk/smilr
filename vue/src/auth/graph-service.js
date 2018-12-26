@@ -1,7 +1,6 @@
 //
 // Taken from https://github.com/sunilbandla/vue-msal-sample
 //
-/* eslint-disable */
 
 export default class GraphService {
   constructor() {

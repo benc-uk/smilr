@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "3.2.0",
+    "version": "3.3.0",
     "title": "Smilr API",
     "description": "REST API for data access microservice of the Smilr app",
     "contact": {
@@ -24,10 +24,10 @@
     "application/json"
   ],
   "securityDefinitions": {
-    "X-Secret": {
-      "type": "apiKey",
-      "in": "header",
-      "name": "X-SECRET"
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
     }
   },
   "paths": {
@@ -108,34 +108,7 @@
             "description": "Unexpected error"
           }
         }
-      },
-      "put": {
-        "tags": ["Events"],
-        "description": "Update an existing event",
-        "operationId": "updateEvent",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Event object",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Event"
-            }            
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The updated event"
-          },
-          "400": {
-            "description": "Unexpected error"
-          }
-        }
-      } 
+      }
     },
     "/events/{id}": {
       "get": {
@@ -152,6 +125,43 @@
             "description": "Id of the event, e.g. evt002",
             "required": true,
             "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single event object",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "description": "Unexpected error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Events"],
+        "description": "Update an existing event",
+        "operationId": "updateEvent",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the event, e.g. evt002",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Event object. Note. This must include the id also",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }            
           }
         ],
         "responses": {

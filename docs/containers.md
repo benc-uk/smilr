@@ -2,12 +2,12 @@
 
 This covers the building of the app as Docker images and running as containers, using Docker Compose and and pushing into Azure Container Registry.
 
-# Docker Images (Node.js)
+# Docker Images for Node.js Implementation
 The Dockerfiles for both services are based on Alpine Linux and Node.js v8, the Dockerfiles are in the corresponding node services directories. There are two Docker images, one for each micro service:
  - [node/data-api/Dockerfile](../node/data-api/Dockerfile) For the data API REST service
- - [node/frontend/Dockerfile](../node/frontend/Dockerfile) For the frontend server which serves the Angular app to users, 
+ - [node/frontend/Dockerfile](../node/frontend/Dockerfile) For the frontend server which serves the Vue.js app to users, 
 
-The frontend Dockerfile is multi-stage and will carry out the entire Angular build process without needing the Angular CLI installed on the local machine
+The frontend Dockerfile is multi-stage and will carry out the entire Vue.js build process without needing to separately build/bundle the Vue.js app
 
 ### :exclamation::speech_balloon: Gotcha
 If you want to build the images individually, rather than using Docker Compose, you must do so with the build context set to the root of the project, and point to the Dockerfile, e.g. run `docker build . -f /node/frontend/Dockerfile` from project root (the **smilr** directory).

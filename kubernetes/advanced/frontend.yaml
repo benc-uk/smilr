@@ -1,5 +1,5 @@
 #
-# Deploy the front end Angular UI microservice in Kubernetes
+# Deploy the front end microservice which serves the client app
 #
 # !IMPORTANT! Change the image reference to point to the registry holding
 # the Smilr images, either ACR or public
@@ -49,7 +49,7 @@ spec:
 ---
 
 #
-# Deploy the front end Angular UI microservice in Kubernetes
+# Endpoint for the front end microservice which serves the client app
 #
 
 kind: Service

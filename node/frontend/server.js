@@ -11,7 +11,7 @@ require('dotenv').config()
 var express = require('express');
 var app = express();
 
-// Serve static content from working directory (or '.') by default
+// Serve static content from working directory ('.') by default
 // - Optional parameter can specify different location, use when debugging & running locally
 // - e.g. `node server.js ../angular/dist/`
 var staticContentDir = process.argv[2] || __dirname;
@@ -33,14 +33,6 @@ app.get('/.config/:vars', function (req, res) {
     })
     res.send(data);
 });
-
-//
-// This is VERY important, with out this, App Service Auth and AAD Login will not work!
-// This prevents calls to /.auth (used by App Svc login flow) from being directed to our Angular code
-//
-app.get('/.auth/*', function (req, res) {
-    res.end;
-})
 
 // Redirect all other requests to Angular app - i.e. index.html
 // This allows us to do in-app, client side routing and deep linking 
