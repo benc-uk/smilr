@@ -31,16 +31,21 @@ The server listens on port 4000 by default and requires just one mandatory confi
 |AAD_V1|Optional. Use older Azure AD v1 issuer when validating tokens. Only used when SECURE_CLIENT_ID is set. Change this to true if you get 401 errors even with a valid user. *Default: false*|
 |APPINSIGHTS_INSTRUMENTATIONKEY|Optional. Enables data collection and monitoring with Azure App Insights, set to the key of the instance you want to send data to. *Default: 'blank'*|
 
+
 # Security
-The event PUT, POST and DELETE calls are considered sensitive, and are only called by the admin section of the Smilr app. Optionally these calls can be locked down to prevent people hitting the API directly. For demos it is suggested that the APIs are left open for ease of showing the API and the working app, however for a permanent or live instance it should be restricted.
+For demos it is suggested that the API is left open for ease of showing the API and the working app, however for a permanent or live instance it should be restricted.
+
+The event PUT, POST and DELETE calls result in data modification, and are only called by the admin section of the Smilr client app. The configuration described here allows these calls to be placed behind an authentication scheme, to prevent direct API access. 
 
 To switch on security for these three calls, set the `SECURE_CLIENT_ID` environmental variable to the client id of an [app registered with Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
 
-Validation is done in `lib/utils.js` and the ***verifyAuthentication()*** method, validation is skipped entirely if SECURE_CLIENT_ID is unset or blank (Note. This is the default). This method calls on a library called 'azure-ad-jwt' in order to validate the tokens. At the time of writing (Dec 2018) there are some issues with the public version of 'azure-ad-jwt', so a locally modified copy is provided in `lib/azure-ad-jwt/`. The modifications are [detailed in this pull request](https://github.com/dei79/node-azure-ad-jwt/pull/13)
+HTTP request validation is done in `lib/utils.js` and the ***verifyAuthentication()*** method, validation is skipped entirely if SECURE_CLIENT_ID is unset or blank (Note. This is the default). This method calls on a library called 'azure-ad-jwt' in order to validate the tokens.  
 
-The validation logic checks for having a `authorization` header in the HTTP request, the bearer token is extracted and treated as a JWT, which is validated that it is signed and issued and signed by Azure AD. Lastly the token's 'audience claim' is checked that it matches the client id provided in `SECURE_CLIENT_ID`. This means the token was issued by our known registered app.  
-Failure of any of these checks will result in a HTTP 401 being returned
+> :speech_balloon: **Node.** At the time of writing (Dec 2018) there are some issues with the public version of 'azure-ad-jwt', so a locally modified copy is provided in `lib/azure-ad-jwt/`. The modifications are [detailed in this pull request](https://github.com/dei79/node-azure-ad-jwt/pull/13)
 
-Once security is enabled the Vue.js client will also need to be similarly configured. This is done by setting `AAD_CLIENT_ID` to the same client id, which will protect the admin parts of the UI with AAD login. Additionally it will send the token of the logged in user on API requests. More details in [the Vue.js SPA docs](../../vue)
+The validation logic first checks for the `authorization` header in the HTTP request, the bearer token is extracted and treated as a JWT, which is validated that it is signed and issued and signed by Azure AD. Lastly the token's 'audience claim' is checked that it matches the client id provided in `SECURE_CLIENT_ID`. This means the token was issued to our known registered app.  
+Failure of any of these checks will result in no data being modified and a HTTP 401 error being returned (with a reason message in the body)
 
-> :speech_balloon: **Note.** If `SECURE_API` is not set (which is the default), any tokens sent (in the authentication HTTP header) will not be validated and are simply ignored, the header can also be omitted. Also the GET methods of the event API are always open and not subject to ANY validation, likewise the feedback API is left open by design
+Once security is enabled, the Vue.js client will also need to be [similarly configured, with the matching AAD app client id used for validation](../../vue/#security)
+
+> :speech_balloon: **Note.** If `SECURE_CLIENT_ID` is not set (which is the default), any tokens sent (in the authentication HTTP header) will simply be ignored, the header can also be omitted. Also the GET methods of the event API are always open and not subject to ANY validation, likewise the feedback API is left open by design

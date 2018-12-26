@@ -100,6 +100,14 @@ The stable & complete version of the Smilr app consists of Node.js implementatio
 #### [:page_with_curl: Frontend Server - Documentation](./node/frontend) 
 #### [:page_with_curl: Data API - Documentation](./node/data-api) 
 
+### Notes on Security
+As Smilr is commonly used in demos, workshops/labs and for self learning, it defaults to being unsecured and open. This makes it easier to deploy without additional configuration or authentication complications.
+
+Should you want to secure Smilr, typically because you want to have a permanent "live" version hosted and accessible, this is also possible. Securing both single page applications and REST APIs presents some interesting challenges. The approach taken was to use [Azure Active Directory v2 for identity](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview), the OAuth2 Implicit Grant flow for authentication and OAuth2 bearer tokens for validation
+
+- [Securing the Vue.js SPA](./vue/#security) 
+- [Securing the Data API](./node/data-api#security) 
+
 
 # Fundamentals
 These docs covers some of the fundamental aspects of Smilr, which are independent of any particular implementation
