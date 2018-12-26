@@ -97,7 +97,7 @@ This repo contains multiple discreet but loosely dependant code bases. The top l
 The stable & complete version of the Smilr app consists of Node.js implementations of the frontend server & data-api and the Vue.js SPA. There are alternative versions (detailed below) but currently the core of the project is represented this implementation:
 
 #### [:page_with_curl: Vue.js SPA - Documentation](./vue/) 
-#### [:page_with_curl: Frontend Server - Documentation](./node/frontend/readme.md) 
+#### [:page_with_curl: Frontend Server - Documentation](./node/frontend) 
 #### [:page_with_curl: Data API - Documentation](./node/data-api) 
 
 ### Notes on Security
