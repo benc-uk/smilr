@@ -13,8 +13,8 @@ buttons:
     text: Main Guide
     href: /
   - b1:
-    text: Docker
-    href: /docs/containers
+    text: Getting Started 
+    href: "#getting-started"
   - b2:
     text: Kubernetes
     href: /kubernetes

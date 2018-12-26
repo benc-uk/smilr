@@ -9,7 +9,8 @@
       "email": "ben.coleman@microsoft.com"
     },
     "license": {
-      "name": "Apache 2.0"
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
     }
   },
   "basePath": "/api",
