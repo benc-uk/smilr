@@ -95,6 +95,9 @@ The mock API server will start on localhost on port 4000 (just like the real dat
 # Security
 Blah blah AAD_CLIENT_ID
 
+This is standard the standard [OAuth 2.0 Bearer Token mechanisms](https://tools.ietf.org/html/rfc6750)
+
+
 
 # Design notes
 Todo

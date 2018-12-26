@@ -84,11 +84,14 @@ export default {
         headers: headers
       })
       .catch(err => {
+        //console.log("### API CALL ERROR "+ err);
+        let extra = ''
+        if(err.response && err.response.data) extra = JSON.stringify(err.response.data)
         // Handle errors here, rather than up at caller level
         router.push({
           name: 'error', 
           replace: true, 
-          params: { message: `API_ERROR:\n${apiUrl}\n${err.toString()}` }
+          params: { message: `API_ERROR:\n${apiUrl}\n${err.toString()} [${extra}]` }
         })
       })          
     },

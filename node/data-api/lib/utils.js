@@ -52,13 +52,13 @@ class Utils {
   verifyAuthentication(req) {
 
     return new Promise(function(resolve, reject) {
-      // Short circuit validation if SECURE_API is switched off
-      if(process.env.SECURE_API != "true") 
+      // Short circuit validation if SECURE_CLIENT_ID is not set
+      if(!process.env.SECURE_CLIENT_ID) 
         resolve(true);
 
       // Check we even have a authorization header
       if(!req.headers['authorization']) {
-        reject('SECURE_API enabled, and authorization token missing');
+        reject('SECURE_CLIENT_ID set enabled, but authorization bearer token missing');
         return;
       }
       
@@ -74,12 +74,19 @@ class Utils {
       var bearer = authorization.split(" ");
       var jwtToken = bearer[1];
 
-      let aadV2 = false;
-      if(process.env.AAD_V2 == "true") aadV2 = true;
+      let aadV2 = true;
+      if(process.env.AAD_V1 == "true") aadV2 = false;
+      
       aad.verify(jwtToken, null, true, aadV2, function(err, result) {
         if (result) {
-          console.log(`### Verified identity of '${result.name}' in token on API call`);
-          resolve(result)
+
+          // validate audience is our client id
+          if(result.aud == process.env.SECURE_CLIENT_ID) {
+            console.log(`### Verified identity of '${result.name}' in token on API call`);
+            resolve(result)
+          } else {
+            reject("Verify authentication failed, SECURE_CLIENT_ID doesn't match token audience claim")
+          }
         } else {
           console.log("### Verify authentication failed, JWT is invalid: " + err);
           reject(err)

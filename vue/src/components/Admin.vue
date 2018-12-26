@@ -71,9 +71,11 @@ export default {
     
     deleteEvent: function() {
       this.apiDeleteEvent(this.eventToDelete)
-      .then(() => {
-        for(let eindex in this.events) {
-          if(this.events[eindex].id == this.eventToDelete.id) this.events.splice(eindex, 1)
+      .then(resp => {
+        if(resp) {
+          for(let eindex in this.events) {
+            if(this.events[eindex].id == this.eventToDelete.id) this.events.splice(eindex, 1)
+          }
         }
       })
     }

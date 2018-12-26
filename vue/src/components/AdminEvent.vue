@@ -128,8 +128,8 @@ export default {
       if(this.errors.all().length > 0) return
 
       this.apiUpdateEvent(this.event)
-      .then(() => {
-        this.$router.push({name: 'admin'})
+      .then(resp => {
+        if(resp) this.$router.push({name: 'admin'})
       })
     },
 
@@ -138,8 +138,8 @@ export default {
       if(this.errors.all().length > 0) return
 
       this.apiCreateEvent(this.event)
-      .then(() => {
-        this.$router.push({name: 'admin'})
+      .then(resp => {
+        if(resp) this.$router.push({name: 'admin'})
       })      
     },
 
