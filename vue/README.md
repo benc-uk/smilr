@@ -76,11 +76,11 @@ This mode is used when the app is properly built and bundled using `npm run buil
 This also means when running in production mode the app must be served from the dedicated Smilr Node frontend server, **serving from simple static file hosting (e.g. Azure Storage or other hosting) will not work**. It also means that configuration is done by setting env variables on the frontend server, much like you would with a classic server-side web app
 
 ## Config Variables Reference
-|Variable Name|Description|
-|-------------|-----------|
-|API_ENDPOINT|**Required setting!** This points to URL endpoint of the data service API, e.g. `https://myapi.azurewebsites.net/api`. It must end with `/api`|
-|AAD_CLIENT_ID|Optional. The client ID of an app registered in Azure AD, setting this to anything other than blank will "switch security on". Further details are provided in the [Security section below](#security). *Default: 'blank'*|
-|ADMIN_USER_LIST|Optional. A comma separated list of usernames that can use the app. Further details are provided in the [Security section below](#security). *Default: 'blank'*|
+| Variable Name | Description |
+| ------------- | ----------- |
+| API_ENDPOINT |**Required setting!** This points to URL endpoint of the data service API, e.g. `https://myapi.azurewebsites.net/api`. It must end with `/api` |
+| AAD_CLIENT_ID | Optional. The client ID of an app registered in Azure AD, setting this to anything other than blank will "switch security on". Further details are provided in the [Security section below](#security). *Default: 'blank'* |
+| ADMIN_USER_LIST | Optional. A comma separated list of usernames that can use the app. Further details are provided in the [Security section below](#security). *Default: 'blank'* |
 
 
 # Mock API
