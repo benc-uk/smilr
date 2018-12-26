@@ -14,7 +14,7 @@ buttons:
     href: /
   - b1:
     text: Getting Started 
-    href: "#getting-started"
+    href: "/#getting-started"
   - b2:
     text: Kubernetes
     href: /kubernetes
