@@ -3,6 +3,7 @@
 #
 FROM node:10-alpine as spabuild
 ARG vue_root="vue"
+ARG build_info="Docker container build"
 
 WORKDIR /build
 
@@ -15,8 +16,11 @@ COPY ${vue_root}/.env.production .
 COPY ${vue_root}/public ./public
 COPY ${vue_root}/src ./src
 
+ENV VUE_APP_BUILD_INFO $build_info
+
 # Run Vue CLI build & bundle, and output to ./dist
-RUN npm run build
+# Updated to run in modern mode https://cli.vuejs.org/guide/browser-compatibility.html#modern-mode
+RUN npm run build-modern
 
 # ===================================================================== #
 
