@@ -114,13 +114,10 @@ These docs covers some of the fundamental aspects of Smilr, which are independen
 #### [:page_with_curl: API Reference & Data Model](./docs/api-model.md) 
 #### [:page_with_curl: Database Notes](./docs/database.md) 
 
-
 ## Runtime Configuration & Settings
 The primary configuration mechanism for this project is system environmental variables (or env vars). These env vars are used with the Node.js services, container runtime, Docker tools and helper scripts. This gives a flexible and cross platform way to inject runtime settings, it is also widely supported in Azure (e.g. Azure App Service Settings) and Docker/Kubernetes.
 
 There are numerous ways to set & override environmental variables; in the operating system, the user profile or from command line tools. For local development purposes it is strongly recommended you create & use `.env` files. These are simple text files containing `var=value` pairs. Sample files named `.env.sample` are provided within the project, which you can rename and use. *Note.* `.env` files can often contain secrets so they are prevented from being committed to Git
-
-
 
 
 # Containers & Kubernetes 
@@ -130,11 +127,13 @@ As containers and Kubernetes represents such an important build & deployment sce
 #### [Running and deploying in Kubernetes](./kubernetes)
 
 ### Public Images
-Pre built images are available on Dockerhub. Using these will naturally mean you can get started without needing to build any images yourself. However building your own is still recommended, especially if you want to understand the build process in more detail. 
+Pre built images are available on Dockerhub. Using these will naturally mean you can get started deploying/running Smilr without needing to do anything. However building your own is still recommended, especially if you want to understand the build process in more detail. 
 
-Images for the Node.js data API and frontend (serving the Vue.js client) are available. The `stable` tag is only pushed after validation and testing, and `latest` is auto-pushed with latest code every night
+Images for the Node.js data API and frontend (serving the Vue.js client) are available. 
+- The `stable` tag is only pushed after some manual validation and testing,
+- `latest` is auto-pushed with latest code every night
 
-##### [Smilr on Dockerhub](https://hub.docker.com/u/smilr)
+##### [Smilr on Dockerhub 🡽](https://hub.docker.com/u/smilr)
 
 
 # Deploying to Azure 
@@ -150,7 +149,7 @@ Data API Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smil
 
 Frontend Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Frontend)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=2)
 
-#### [DevOps Public Project - Smilr](https://dev.azure.com/bencoleman/Smilr)
+##### [DevOps Public Project - Smilr 🡽](https://dev.azure.com/bencoleman/Smilr)
 
 
 # Experimental Implementations
