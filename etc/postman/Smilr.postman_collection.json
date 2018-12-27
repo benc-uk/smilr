@@ -304,7 +304,6 @@
 							"listen": "test",
 							"script": {
 								"id": "02218921-2585-48ee-ac1d-4d4ac36ea3c0",
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"response must be valid and have a body\", function () {",
 									"     pm.response.to.be.ok;",
@@ -324,7 +323,8 @@
 									"",
 									"// example using pm.response.to.be*",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -336,7 +336,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://{{smilr-api-host}}/api/events/filter/past",
+							"raw": "http://{{smilr-api-host}}/api/events/filter/active",
 							"protocol": "http",
 							"host": [
 								"{{smilr-api-host}}"
@@ -345,7 +345,7 @@
 								"api",
 								"events",
 								"filter",
-								"past"
+								"active"
 							]
 						}
 					},
@@ -581,7 +581,6 @@
 							"listen": "test",
 							"script": {
 								"id": "e87ce3c9-0508-4fff-a0e1-641b50f1793a",
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"response must be valid and have a body\", function () {",
 									"     pm.response.to.be.ok;",
@@ -589,17 +588,18 @@
 									"     pm.response.to.have.header(\"Content-Type\", \"text/html; charset=UTF-8\")",
 									"});",
 									"",
-									"pm.test(\"there is a loading message\", function () {",
+									"pm.test(\"there is an app title\", function () {",
 									"    var html = pm.response.text()",
-									"    pm.expect(html).to.include(\"Loading App...\")",
+									"    pm.expect(html).to.include(\"<title>Smilr</title>\")",
 									"});",
 									"",
-									"pm.test(\"there is valid main.js\", function () {",
+									"pm.test(\"there is valid app.js\", function () {",
 									"    var html = pm.response.text()",
-									"    pm.expect(html).to.include('<script type=\"text/javascript\" src=\"main')",
+									"    pm.expect(html).to.include('src=/js/app')",
 									"});",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
