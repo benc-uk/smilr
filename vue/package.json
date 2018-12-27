@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
     "build": "vue-cli-service build",
+    "build-modern": "vue-cli-service build --modern",
     "lint": "vue-cli-service lint",
     "mock-api": "node mock-api/server.js"
   },

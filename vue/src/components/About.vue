@@ -17,7 +17,8 @@
 
       <b>Debug Info:</b><br>
       API Endpoint: <a :href="apiEndpoint">{{ apiEndpoint }}</a> <br/>
-      Mode: {{ mode }}
+      Mode: {{ mode }} <br/>
+      Build Info: {{ buildInfo }}
     </b-card>
   </div>
 </template>
@@ -35,6 +36,7 @@ export default {
     return {
       apiEndpoint: config.API_ENDPOINT,
       mode: process.env.NODE_ENV,
+      buildInfo: process.env.VUE_APP_BUILD_INFO || 'No build info',
       egg: "",
       faceRating: 5,
       ver: require('../../package.json').version
