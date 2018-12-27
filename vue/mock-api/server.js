@@ -8,6 +8,9 @@ const server = jsonServer.create()
 const path = require('path')
 const router = jsonServer.router(path.join(__dirname, 'db.json'))
 
+// Pretend we're using MongoDB style ids
+router.db._.id = '_id';
+
 // Set up middleware and bodyParser for JSON
 const middlewares = jsonServer.defaults()
 server.use(middlewares)

@@ -27,6 +27,7 @@ routes
   let feedback = req.body;
   let topicId = feedback.topic;
   let eventId = feedback.event;
+  
   // Some simple validation
   if(!feedback.rating || !feedback.topic || !feedback.event) {
     utils.sendError(res, "Invalid feedback object, must contain properties: 'rating', 'topic' & 'event'"); 

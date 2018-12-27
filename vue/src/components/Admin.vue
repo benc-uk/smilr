@@ -57,7 +57,7 @@ export default {
   methods: {
     editEvent: function(row) {
       let event = row.item
-      this.$router.push({name: 'admin-event', params: { action: ""+event.id, editEvent: event }})
+      this.$router.push({name: 'admin-event', params: { action: ""+event._id, editEvent: event }})
     },
 
     newEvent: function() {

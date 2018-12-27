@@ -27,7 +27,7 @@ There are two main models, one for holding an **Event** and one for submitted **
 
 ```ts
 Event {
-  id:     any       // Six character UID string or int
+  _id:    string    // Six character UID string
   title:  string    // Title of the event, 50 char max
   type:   string    // Type of event ['event', 'workshop', 'hack', 'lab']
   start:  Date      // Start date, an ISO 8601 string; YYYY-MM-DD
@@ -35,6 +35,7 @@ Event {
   topics: Topic[];  // List of Topics, must be at least one
 }
 ``` 
+
 ```ts
 Topic {
   id:       number       // int (starting at 1)
@@ -42,12 +43,17 @@ Topic {
   feedback: Feedback[];  // VIRTUAL PROPERTY - Only hydrated client side when reporting
 }
 ``` 
+
 ```ts
 Feedback {
-  id:       number  // Six character UID string or int
+  _id:      string  // Twelve character UID string
   event:    string  // Event id
   topic:    number  // Topic id
   rating:   number  // Feedback rating 1 to 5
   comment:  string  // Feedback comments
 }
 ``` 
+
+## Notes.
+Rather than let 
+When using the mock API, the _ids will be integers not UID strings

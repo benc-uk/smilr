@@ -158,7 +158,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "Event object. Note. This must include the id also",
+            "description": "Event object. Note. If body contains id, the id on the URL path takes priority",
             "required": true,
             "schema": {
               "$ref": "#/definitions/Event"
@@ -314,7 +314,7 @@
     "Event": {
       "type": "object",
       "properties": {
-        "id": {
+        "_id": {
           "type": "string",
           "example": "eB60xQ"
         },

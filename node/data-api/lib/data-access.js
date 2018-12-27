@@ -84,7 +84,10 @@ class DataAccess {
     if (event._id) {
       return this.db.collection(this.EVENT_COLLECTION).updateOne({_id: event._id}, {$set: event}, {upsert: doUpsert});
     } else {
-      // Create a random short-code style id for new events, 
+
+      // Create a random short-code style id for new events
+      // IMPORTANT!
+      // We have to create our own id as a string, because Azure Functions can't handle MongoDB self generated ids
       event._id = utils.makeId(5);
       return this.db.collection(this.EVENT_COLLECTION).insertOne(event);
     }
@@ -100,7 +103,7 @@ class DataAccess {
 
   createFeedback(feedback) {
     // IMPORTANT!
-    // We have to create our own id as a string, because Azure Functions can't handle mongo's self generated ids
+    // We have to create our own id as a string, because Azure Functions can't handle MongoDB self generated idss
     feedback._id = utils.makeId(12);
     return this.db.collection(this.FEEDBACK_COLLECTION).insertOne(feedback)
   }

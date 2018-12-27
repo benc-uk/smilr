@@ -2,7 +2,7 @@
 
   <div>
     <transition-group name="fade" tag="p">
-      <div v-for="event in events" :key="event.id">
+      <div v-for="event in events" :key="event._id">
         <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
 
           <h1 slot="header"><fa :icon="utilsFaIcon(event.type)"/> &nbsp; {{ event.title }}</h1>
@@ -12,7 +12,7 @@
 
           <ul>
             <li v-for="topic in event.topics" :key="topic.id">
-              <router-link v-if="filter == 'active'" :to="{ name: 'feedback', params: { eventId: event.id, topicId: topic.id }}">{{ topic.desc }}</router-link>
+              <router-link v-if="filter == 'active'" :to="{ name: 'feedback', params: { eventId: event._id, topicId: topic.id }}">{{ topic.desc }}</router-link>
               <span v-else>{{ topic.desc }}</span>
             </li>
           </ul>
