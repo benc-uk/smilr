@@ -54,6 +54,23 @@ Feedback {
 }
 ``` 
 
-## Notes.
-Rather than let 
-When using the mock API, the _ids will be integers not UID strings
+## Notes
+For certain historical reasons we do not use MongoDB auto generated ids (i.e. ObjectId) as they cause upstream problems with things such as Azure Functions. An early design goal for the project was "short code" URLs for events
+
+Instead we generate our own string ids using the simple function below. Length 5 is used for events and length 12 for feedback. 
+
+Although uniqueness is not guaranteed, the probability of clashes is small enough to be acceptable
+
+```js
+  makeId(len) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < len; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  }
+```
+
+Also note, when using the mock API, the values of _id will be integers not UID strings, however it has no effect on functionality or the Vue.js client

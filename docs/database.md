@@ -50,10 +50,3 @@ MonogDB server will start and be listening on all IPs by default, there is no au
 The database requires no initialization, however a helper script is provided to populate the system with demo data:
 #### [:page_with_curl: Helper Script: demoData](../scripts/demoData)
 
-
-# Notes on the id field
-For historical reasons the id field is named `id` on all objects client side and exposed by the API. This was due to the use of DocumentDB early on in the project's life. MongoDB uses `_id` and this is what will be stored physically in the data collections. 
-
-Rather than introduce breaking changes a translation is done between the two id fields by the data API, see [node/data-api/lib/utils.js](../node/data-api/lib/utils.js) and the ***sendData()*** method.
-
-UNDER CONSIDERATION - In the future this translation may be removed and _id will be used everywhere
