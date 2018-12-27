@@ -43,8 +43,10 @@ This will build the images and by default, tag them as:
 
 :exclamation::speech_balloon: **Note.** There is no build required for the MongoDB image, as we use the [official **mongo** image from Dockerhub](https://hub.docker.com/_/mongo/)
 
-In order to help tagging the images to be pushed to ACR, you can set the `DOCKER_REG` env var. This should hold the name of the ACR instance with a trailing slash '/', e.g. `myregistry.azurecr.io/`. This is then prefixed in front of the image.  
-The best way to set `DOCKER_REG` is with an `.env` file, there is a sample file provided at the root of the project, `.env` files are automatically picked up when you run **docker-compose**
+### IMPORTANT! Registry Prefix 
+In order to help tagging the images with your registry/repo prefix, you can set the `DOCKER_REG` env variable which prefixed in front of the images. When pushing to ACR this should hold the name of the ACR instance with a trailing slash, e.g. `myregistry.azurecr.io/`. If not using ACR, you can pick any prefix you like. T  
+
+It is strongly suggested you set `DOCKER_REG` using a `.env` file. There is a sample file provided at the root of the project which can be copied & renamed. A `.env` file is automatically picked up when you run **docker-compose**
 
 Fully tagged images with registry prefix:
 - `myregistry.azurecr.io/smilr/data-api` 
