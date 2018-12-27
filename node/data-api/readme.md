@@ -1,5 +1,5 @@
 # Node.js - Data API
-This is a instantiation of the [Smilr API](../docs/api-model) using Node.js and Express. It acts as the REST API endpoint for the Vue.js client app. This is a stateless service. The main API routes & logic are held in `routes/api_events.js`, `routes/api_feedback.js`, `routes/api_other.js`
+This is a instantiation of the [Smilr API](../../docs/api-model) using Node.js and Express. It acts as the REST API endpoint for the Vue.js client app. This is a stateless service. The main API routes & logic are held in `routes/api_events.js`, `routes/api_feedback.js`, `routes/api_other.js`
 
 
 # Building & Running Locally

@@ -50,7 +50,7 @@ This means we need to direct all URL requests that aren't static files to the SP
 
 This is easily done with Express
 
-```
+```js
 app.use('*', function(req, res) {
    res.sendFile(`${staticContentDir}/index.html`);
 });

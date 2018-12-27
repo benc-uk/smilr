@@ -1,4 +1,5 @@
 # API Reference
+The API is RESTful and very simple, there are two main entities that can be referenced **event(s)** and **feedback** The standard REST verbs and conventions apply
 
 **Events:**  
 - `GET /api/events` - Return a list of all events
@@ -19,6 +20,7 @@
 There is a full [Swagger definition for the API](../node/data-api/swagger.json) 
 The data API server will also expose this out using Swagger UI, just use `/api-docs` as the URL, e.g.  **http://localhost:4000/api-docs/**
 
+---
 
 # Data Model
 There are two main models, one for holding an **Event** and one for submitted **Feedback**, there are also **Topics** which only exist as simple objects nested inside **Events**. **Topics** as entities only exist logically client side, from the perspective of the API and database, there are only **Events** & **Feedback**, this means events are always stored & retrieved with a simple serialized JSON array of topics within them
