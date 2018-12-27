@@ -40,6 +40,8 @@ var router = new Router({
       component: Feedback,
       props: true
     },
+
+    // Used when trapping errors
     {
       meta: {title: 'Smilr: Error'},
       path: '/error',
@@ -47,6 +49,8 @@ var router = new Router({
       component: Error,
       props: true
     },
+
+    // These three routes have a guard checking for logged in user
     {
       meta: {title: 'Smilr: Feedback Report'},
       path: '/report',
@@ -69,6 +73,8 @@ var router = new Router({
       props: true,
       beforeEnter: validateAdminUser    
     },
+
+    // Login, only used when AAD_CLIENT_ID is set
     {
       meta: {title: 'Smilr: Login'},
       path: '/login/:redir',
@@ -81,7 +87,15 @@ var router = new Router({
       path: '/login',
       name: 'loginplain',
       component: Login
-    }
+    },
+
+    // Catch all route, redirects to Error without props, so will redirect to Home
+    {
+      meta: {title: 'Smilr: Error'},
+      path: '*',
+      name: 'error-noprops',
+      component: Error,
+    }    
   ]
 })
 
@@ -89,9 +103,11 @@ var router = new Router({
 // Validate user is logged-in and in the authorised users list
 //
 function validateAdminUser(to, from, next) {
+  // If no user object - redirect to Login 
   if(!userProfile.user) {
     next({name: 'login', params: { redir: to.name}})
   } else {
+    // Now check if their name is on the list
     if(!userProfile.isAdmin) {
       next({name: 'error', replace: true, params: { message: `User '${userProfile.user.displayableId}' is not an administrator for this application` }})
       return;      
@@ -100,6 +116,9 @@ function validateAdminUser(to, from, next) {
   }
 }
 
+//
+// All routes go through this check, it catches some low level errors
+//
 router.beforeEach((to, from, next) => {
   // Check config for API_ENDPOINT, if it's not set whole app is screwed
   if(!config.API_ENDPOINT && to.name != 'error') {
