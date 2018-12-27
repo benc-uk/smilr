@@ -36,55 +36,22 @@
             "command": "docker-compose push",
             "problemMatcher": []
         },
-        {
-            "label": "Azure App Service Deploy",
-            "type": "shell",
-            "command": "powershell.exe ./azure/appservice/deploy-frontend.ps1 -appService ${config:appservice-site} -deployUser ${config:appservice-user}",
-            "problemMatcher": []
-        },
-        {
-            "label": "Dotnet Build - Orleans API",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/orleans/API/API.csproj"
-            ],
-            "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "Dotnet Build - Orleans Silo",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/orleans/Silo/Silo.csproj"
-            ],
-            "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "Dotnet Publish - Orleans Project",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/orleans/OrleansContainer.sln",
-                "-c",
-                "Release",
-                "-o",
-                "pub"
-            ],
-            "problemMatcher": "$msCompile"
-        },
 
+
+        {
+            "label": "Build Vue Project",
+            // VSCode has bugs when NPM is installed in both WSL & Windows. Hardcode path to NPM
+            // Change as required.
+            "command": "npm",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/vue"
+            },
+            "args": [
+                "run", "build"
+            ],
+            "problemMatcher": []        
+        },        
         {
             "label": "NPM Install - Node API",
             // VSCode has bugs when NPM is installed in both WSL & Windows. Hardcode path to NPM
@@ -92,7 +59,7 @@
             "command": "npm",
             "type": "shell",
             "options": {
-                "cwd": "node/data-api"
+                "cwd": "${workspaceFolder}/node/data-api"
             },
             "args": [
                 "install"
@@ -101,13 +68,43 @@
         },
         {
             "label": "NPM Install - Node Frontend",
+            // VSCode has bugs when NPM is installed in both WSL & Windows. Hardcode path to NPM
+            // Change as required.            
             "command": "npm",
             "type": "shell",
             "options": {
-                "cwd": "node/frontend"
+                "cwd": "${workspaceFolder}/node/frontend"
             },
             "args": [
                 "install"
+            ],
+            "problemMatcher": []        
+        },
+        {
+            "label": "NPM Install - Vue Project",
+            // VSCode has bugs when NPM is installed in both WSL & Windows. Hardcode path to NPM
+            // Change as required.
+            "command": "/home/ben/.npm-global/bin/npm",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/vue"
+            },
+            "args": [
+                "install"
+            ],
+            "problemMatcher": []        
+        },
+        {
+            "label": "Run Mock API",
+            // VSCode has bugs when NPM is installed in both WSL & Windows. Hardcode path to NPM
+            // Change as required.            
+            "command": "npm",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/vue"
+            },
+            "args": [
+                "run", "mock-api"
             ],
             "problemMatcher": []        
         }  

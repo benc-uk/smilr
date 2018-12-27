@@ -9,10 +9,10 @@
       "request": "launch",
       "name": "Debug Node - Frontend",
       "cwd": "${workspaceFolder}/node/frontend",
-      //"preLaunchTask": "NPM Install - Node Frontend",
+      "preLaunchTask": "Build Vue Project",
       "program": "${workspaceFolder}/node/frontend/server.js",
       "args": [
-        "${workspaceFolder}/angular/dist"
+        "${workspaceFolder}/vue/dist"
       ]
     },
     {
@@ -22,63 +22,6 @@
       //"preLaunchTask": "NPM Install - Node API",
       "cwd": "${workspaceFolder}/node/data-api",
       "program": "${workspaceFolder}/node/data-api/server.js"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Debug Bot",
-      //"preLaunchTask": "NPM Install - Node API",
-      "cwd": "${workspaceFolder}/bot",
-      "program": "${workspaceFolder}/bot/app.js"
-    },    
-    {
-      "name": "Debug Orleans - Silo",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "Dotnet Build - Orleans Silo",
-      "program": "${workspaceRoot}/orleans/Silo/bin/Debug/netcoreapp2.0/Silo.dll",
-      "args": [], 
-      "cwd": "${workspaceRoot}/orleans/Silo",
-      "stopAtEntry": false,
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart"
-    },
-    {
-      "name": "Debug Orleans - API",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "Dotnet Build - Orleans API",
-      "program": "${workspaceRoot}/orleans/API/bin/Debug/netcoreapp2.0/API.dll",
-      "args": [],
-      "cwd": "${workspaceFolder}/orleans/API",
-      "stopAtEntry": false,
-      "internalConsoleOptions": "openOnSessionStart",
-      "launchBrowser": {
-        "enabled": true,
-        "args": "${auto-detect-url}/api/values",
-        "windows": {
-          "command": "cmd.exe",
-          "args": "/C start ${auto-detect-url}/api/values"
-        },
-        "osx": {
-          "command": "open"
-        },
-        "linux": {
-          "command": "xdg-open"
-        }
-      },
-      "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "sourceFileMap": {
-        "/Views": "${workspaceFolder}/Views"
-      }
-    },
-    {
-      "name": ".NET Core Attach",
-      "type": "coreclr",
-      "request": "attach",
-      "processId": "${command:pickProcess}"
     }
   ]
 }
