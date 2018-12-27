@@ -37,9 +37,11 @@ npm run serve
 ```
 
 ### Compile & Bundle for Production
-To build, bundle and minify the app using Webpack. The resulting output will be placed into the `dist` subdirectory (i.e. `/vue/dist` from main project root). This output is ready to be served via the Node frontend service 
+To build, bundle and minify the app using Webpack. The resulting output will be placed into the `dist` subdirectory (i.e. `/vue/dist` from main project root). This output is ready to be served via the Node frontend service. 
+
+It's recommended to run `build-modern` which uses the [Vue CLI newer modern build mode](https://cli.vuejs.org/guide/browser-compatibility.html#modern-mode) outputting native ES6 modules. By design, no effort has been made in this app to support older browsers.
 ```
-npm run build
+npm run build-modern
 ```
 
 
