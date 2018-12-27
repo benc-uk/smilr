@@ -61,7 +61,7 @@ The app consists of four logical components
 There are a number of ways to get started with this project depending on your goals. Below are some suggestions and pointers
 - [Running Smilr locally with Node.js](./docs/local-dev.md) - If you're a developer interested in the building and running Node.js and/or Vue.js components locally, this is a good place to start.
 - [Deploying to Azure from pre-built images](./azure/templates/aci-quickstart) - Probably the quickest way to deploy Smilr is using ARM templates & Azure Container Instances running from pre-built images
-- [Deploying to Kubernetes](./kubernetes) - This project is a good candidate for running in Kubernetes. Step by step documentations is provided to walk through deployment to Kubernetes
+- [Deploying to Kubernetes](./kubernetes) - This project is an ideal candidate for running in Kubernetes. Step by step documentation is provided to walk through deployment to Kubernetes and Azure Kubernetes Service
 
 
 # Repository Structure
@@ -123,8 +123,8 @@ There are numerous ways to set & override environmental variables; in the operat
 # Containers & Kubernetes 
 As containers and Kubernetes represents such an important build & deployment scenario, they have dedicated guides and documentation
 
-#### [Building Smilr as Containers](./docs/containers.md)
-#### [Running and deploying in Kubernetes](./kubernetes)
+#### [:page_with_curl: Building Smilr as Containers](./docs/containers.md)
+#### [:page_with_curl: Running and deploying in Kubernetes](./kubernetes)
 
 ### Public Images
 Pre built images are available on Dockerhub. Using these will naturally mean you can get started deploying/running Smilr without needing to do anything. However building your own is still recommended, especially if you want to understand the build process in more detail. 
