@@ -9,9 +9,9 @@ The Smilr app is simple, it allows users to provide feedback on events or sessio
 - The database is a NoSQL document store holding JSON, provided by MongoDB and/or *Azure Cosmos DB*
 
 The app has been designed to be deployed to Azure, but the flexible nature of the design & chosen technology stack results in a wide range of deployment options and compute scenarios, including:
-- Containers: *Azure Container Service (ACS or AKS)* or *Azure Container Instances* 
+- Containers: *Azure Kubernetes Service (AKS)* or *Azure Container Instances* 
 - Platform services: Regular Windows *Azure App Service (Web Apps)* or Linux *Web App for Containers*
-- Serverless: *Azure Functions*
+- Serverless compute: *Azure Functions*
 - Virtual Machines: Sub-optimal but theoretically possible
 
 This application supports a range of demonstration, and learning scenarios, such as:
