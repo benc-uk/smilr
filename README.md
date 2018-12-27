@@ -17,12 +17,12 @@ The app has been designed to be deployed to Azure, but the flexible nature of th
 This application supports a range of demonstration, and learning scenarios, such as:
  - A working example of microservices design
  - Use of containers, Docker & Kubernetes
- - No-SQL and document stores over traditional relational databases
+ - NoSQL and document stores over traditional relational databases
  - Development and deployment challenges of single page applications 
+ - RESTful API design 
  - Platform services for application hosting
  - Using serverless technology to support or provide services
- - Use of an open source application stack such as Angular and Node.js
- - RESTful API design 
+ - Use of an open source application stack such as Node.js
  - The Actor model as an alternative to a traditional data model
  - CQRS (Command & Query Responsibility Segregation) as a possible pattern to separate read and write actions and stores 
 
@@ -128,6 +128,14 @@ As containers and Kubernetes represents such an important build & deployment sce
 
 #### [Building Smilr as Containers](./docs/containers.md)
 #### [Running and deploying in Kubernetes](./kubernetes)
+
+### Public Images
+Pre built images are available on Dockerhub. Using these will naturally mean you can get started without needing to build any images yourself. However building your own is still recommended, especially if you want to understand the build process in more detail. 
+
+Images for the Node.js data API and frontend (serving the Vue.js client) are available. The `stable` tag is only pushed after validation and testing, and `latest` is auto-pushed with latest code every night
+
+##### [Smilr on Dockerhub](https://hub.docker.com/u/smilr)
+
 
 # Deploying to Azure 
 See provided Azure Resource Manager (ARM) templates to allow you to deploy the complete Smilr app and all components to Azure. As all deployment scenarios are container based you also need to refer to the containers section described above
