@@ -22,27 +22,14 @@ class Utils {
   }
 
   //
-  // This will unMongo our data and send it back 
+  // This will send data back to caller
   //
   sendData(res, data) {
-    // IMPORTANT!
-    // This lets us pretend we're not really using Mongo!
-    // It simply swaps the '_id' field for 'id' in all data returned
-    // This way we don't need to change the front-end, which is expecting 'id' :)
-    let unMongoData = null;
-
-    if(Array.isArray(data)) {
-      unMongoData = data.map(d => {d.id = d._id; delete(d._id); return d});
-    } else {
-      unMongoData = data;
-      unMongoData.id = unMongoData._id;
-      delete unMongoData._id;
-    }
     // App Insights
     const appInsights = require("applicationinsights");    
-    if(appInsights.defaultClient) appInsights.defaultClient.trackEvent({name: "dataEvent", properties: {data: JSON.stringify(unMongoData)}});
+    if(appInsights.defaultClient) appInsights.defaultClient.trackEvent({name: "dataEvent", properties: {data: JSON.stringify(data)}});
     
-    res.status(200).send(unMongoData)
+    res.status(200).send(data)
     return;    
   }
 
@@ -58,7 +45,7 @@ class Utils {
 
       // Check we even have a authorization header
       if(!req.headers['authorization']) {
-        reject('SECURE_CLIENT_ID set enabled, but authorization bearer token missing');
+        reject('SECURE_CLIENT_ID is set, but authorization bearer token missing');
         return;
       }
       

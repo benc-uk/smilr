@@ -92,6 +92,8 @@ export default {
   mounted() {
     // Check feedback cookie
     let fbCookie = this.cookieRead(`feedback_${this.eventId}_${this.topicId}`)
+
+    // Note. We skip cookie check when in local dev mode, it saves hassle
     if(fbCookie && process.env.NODE_ENV != 'development') {
       this.$refs.nopeModal.show()
       return

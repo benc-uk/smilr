@@ -25,7 +25,7 @@ export default {
       let apifeedback = []
 
       for(let topic of event.topics) {
-        calls.push(axios.get(`${config.API_ENDPOINT}/feedback/${event.id}/${topic.id}`))
+        calls.push(axios.get(`${config.API_ENDPOINT}/feedback/${event._id}/${topic.id}`))
       }
 
       // I only partially understand what this is doing
@@ -43,11 +43,11 @@ export default {
     },
 
     apiDeleteEvent: function(event) {
-      return this._apiRawCall(`events/${event.id}`, 'delete')
+      return this._apiRawCall(`events/${event._id}`, 'delete')
     },
 
     apiUpdateEvent: function(event) {
-      return this._apiRawCall(`events/${event.id}`, 'put', event)
+      return this._apiRawCall(`events/${event._id}`, 'put', event)
     },
 
     apiCreateEvent: function(event) {

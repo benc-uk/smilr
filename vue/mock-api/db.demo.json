@@ -19,7 +19,7 @@
           "desc": "Round Table Discussion"
         }
       ],
-      "id": 1
+      "_id": 1
     },
     {
       "title": "Goat Herding - Hands On Lab ",
@@ -36,10 +36,10 @@
           "desc": "More about goats"
         }
       ],
-      "id": 2
+      "_id": 2
     },
     {
-      "title": "This Is A Demo Workshop ",
+      "title": "This Is A Demo Workshop",
       "type": "workshop",
       "start": "2020-06-25",
       "end": "2020-06-30",
@@ -50,10 +50,10 @@
         },
         {
           "id": 2,
-          "desc": "Jetpacks"
+          "desc": "Switching a Computer On"
         }
       ],
-      "id": 3
+      "_id": 3
     }
   ],
   "feedback": [
@@ -62,42 +62,42 @@
       "topic": 1,
       "event": 1,
       "comment": "I thought it was pretty ok",
-      "id": 1
+      "_id": 1
     },
     {
       "rating": 5,
       "topic": 1,
       "event": 1,
       "comment": "This was great",
-      "id": 2
+      "_id": 2
     },
     {
       "rating": 1,
       "topic": 3,
       "event": 1,
       "comment": "I hated this part, for no apparent reason",
-      "id": 3
+      "_id": 3
     },
     {
       "rating": 2,
       "topic": 1,
       "event": 1,
       "comment": "I needed the toilet",
-      "id": 4
+      "_id": 4
     },
     {
       "rating": 3,
       "topic": 2,
       "event": 1,
       "comment": "This is a demo comment, goodbye",
-      "id": 5
+      "_id": 5
     },
     {
       "rating": 5,
       "topic": 2,
       "event": 1,
       "comment": "Super fab demos 😊",
-      "id": 6
+      "_id": 6
     }
   ]
 }

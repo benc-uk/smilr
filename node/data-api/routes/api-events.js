@@ -79,7 +79,7 @@ routes
     res.type('application/json');
     let event = req.body;
 
-    if(event._id || event.id) utils.sendError(res, {msg: "Should not POST events with id"}, 400);
+    if(event._id) utils.sendError(res, {msg: "Should not POST events with _id"}, 400);
 
     // We send back the new record, which has the new id
     res.app.get('data').createOrUpdateEvent(event, false)
@@ -90,21 +90,17 @@ routes
 })
 
 //
-// PUT event - update an existing event, call with event body with id
-// Updated to match when id passed on URL but it will be ignored, id in body still used
+// PUT event - update an existing event, call with event id
 //
 routes
-.put(['/api/events', '/api/events/:id'], function (req, res, next) {
+.put(['/api/events/:id'], function (req, res, next) {
   utils.verifyAuthentication(req)
   .then(valid => {
     res.type('application/json');
     let event = req.body;
 
-    // IMPORTANT! We munge and swap the _id and id fields so it matches MonogDB
-    event._id = event.id;
-    delete(event.id);
-
-    if(!event._id) utils.sendError(res, {msg: "Should not PUT events without id"}, 400);
+    // Ensure event id is in body, URL params take priority
+    event._id = req.params.id;
 
     // Note we send back the same event object we receive, Monogo doesn't return it
     res.app.get('data').createOrUpdateEvent(event, false)

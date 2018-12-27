@@ -7,7 +7,7 @@
     <b-form label="Select event to report on" inline v-if="events">
       <b-form-select v-model="selectedIndex" size="lg">
         <option :value="null" disabled>-- Please select an event --</option>
-        <option v-for="(event, index) in events" v-bind:value="index" :key="event.id">
+        <option v-for="(event, index) in events" v-bind:value="index" :key="event._id">
           {{ event.title }}
         </option>           
       </b-form-select> &nbsp;
