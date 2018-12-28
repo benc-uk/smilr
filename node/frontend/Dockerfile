@@ -29,7 +29,7 @@ RUN npm run build-modern
 #
 FROM node:10-alpine
 
-LABEL version="1.2.0"
+LABEL version="2.2.0" 
 ARG basedir="node/frontend"
 ENV NODE_ENV production
 WORKDIR /home/app
