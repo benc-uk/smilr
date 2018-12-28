@@ -4,7 +4,7 @@ The API is RESTful and very simple, there are two main entities that can be refe
 **Events:**  
 - `GET /api/events` - Return a list of all events
 - `GET /api/events/filter/{active|future|past}` - Return list of events filtered to a given time frame
-- `GET /api/event/{id}` - Return just one event, by id
+- `GET /api/events/{id}` - Return just one event, by id
 - `POST /api/events` - Create a new event (*secured admin API call*)
 - `PUT /api/events/{id}` - Update existing event (*secured admin API call*)
 - `DELETE /api/events/{id}` - Delete event (*secured admin API call*)

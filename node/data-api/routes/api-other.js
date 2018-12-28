@@ -13,10 +13,7 @@ const utils = require('../lib/utils');
 //
 // GET info - Return system info and other debugging details 
 //
-routes
-.get('/api/info', function (req, res, next) {
-  res.type('application/json');
-  
+routes.get('/api/info', function (req, res, next) {
   var info = { 
     version: require('../package.json').version,
     hostname: os.hostname(), 
@@ -39,17 +36,6 @@ routes
   }  
 
   utils.sendData(res, info)
-})
-
-//
-// Catch annoying favicon.ico & robot.txt requests
-//
-routes
-.get('/favicon.ico', function (req, res, next) {
-  res.status(204).send();
-})
-.get('/robots*.txt', function (req, res, next) {
-  res.status(204).send();
 })
 
 module.exports = routes;

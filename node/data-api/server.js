@@ -48,22 +48,27 @@ const swaggerDocument = require('./swagger.json');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true));
 
 // Set up logging
-if (false) { // app.get('env') === 'production') {
+if (app.get('env') === 'production') {
     app.use(logger('combined'));
   } else {
     app.use(logger('dev'));
 }
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
-// Routing to controllers
+// Main routing and API hooks here
 app.use(require('./routes/api-events'));
 app.use(require('./routes/api-feedback'));
 app.use(require('./routes/api-other'));
 
+// Catch annoying favicon.ico & robot.txt requests, return nothing
+app.get(['/favicon.ico', '/robots*.txt'], function (req, res, next) {
+  res.status(204).send();
+})
+
 // Global catch all for all requests not caught by other routes
-// Just return a HTTP 400
+// Just return a HTTP 404
 app.use('*', function (req, res, next) {
-  res.sendStatus(400);
+  require('./lib/utils').sendError(res, "Route not found", 404);
 })
 
 // Get values from env vars or defaults where not provided

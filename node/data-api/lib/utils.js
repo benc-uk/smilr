@@ -8,16 +8,24 @@ class Utils {
   //
   // Try to send back the underlying error code and message
   //
-  sendError(res, err, code = 500) {
+  sendError(res, err, code = 500, title = 'smilr-api-error') {
     console.log(`### Error with events API ${JSON.stringify(err)}`); 
     let statuscode = code;
-    if(err.code > 1) statuscode = err.code;
+    if(err.code > 200) statuscode = err.code;
 
     // App Insights
     const appInsights = require("applicationinsights");    
     if(appInsights.defaultClient) appInsights.defaultClient.trackException({exception: err});
     
-    res.status(statuscode).send(err);
+    // Problem Details object as per https://tools.ietf.org/html/rfc7807
+    let problemDetails = {
+      'error': true,
+      'title' : title,
+      'details' : err,
+      'status': statuscode
+    };
+
+    res.status(statuscode).send(problemDetails);
     return;
   }
 
@@ -29,6 +37,7 @@ class Utils {
     const appInsights = require("applicationinsights");    
     if(appInsights.defaultClient) appInsights.defaultClient.trackEvent({name: "dataEvent", properties: {data: JSON.stringify(data)}});
     
+    res.type('application/json');
     res.status(200).send(data)
     return;    
   }
