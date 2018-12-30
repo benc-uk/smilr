@@ -1,22 +1,42 @@
 # Containers & Docker
 
-This covers the building of the app as Docker images and running as containers, using Docker Compose and and pushing into Azure Container Registry.
+This covers the building of the app as Docker images and running as containers, using Docker Compose and and pushing into Azure Container Registry (ACR).
 
 # Docker Images for Node.js Implementation
-The Dockerfiles for both services are based on Alpine Linux and Node.js v8, the Dockerfiles are in the corresponding node services directories. There are two Docker images, one for each micro service:
+The Dockerfiles for both services are based on Alpine Linux and Node.js v10, the Dockerfiles are in the corresponding node services directories. There are two Docker images, one for each micro service:
  - [node/data-api/Dockerfile](../node/data-api/Dockerfile) For the data API REST service
  - [node/frontend/Dockerfile](../node/frontend/Dockerfile) For the frontend server which serves the Vue.js app to users, 
 
-The frontend Dockerfile is multi-stage and will carry out the entire Vue.js build process without needing to separately build/bundle the Vue.js app
+The frontend Dockerfile is multi-stage and will also carry out the Vue.js build process and integrate the output with the frontend server, without needing to separately build/bundle the Vue.js app
 
-### :exclamation::speech_balloon: Gotcha
-If you want to build the images individually, rather than using Docker Compose, you must do so with the build context set to the root of the project, and point to the Dockerfile, e.g. run `docker build . -f /node/frontend/Dockerfile` from project root (the **smilr** directory).
+# Azure Container Registry
+It is assumed that you will want to store the images in Azure Container Registry (ACR) rather than a public repo (i.e. Dockerhub). Therefore as a pre-req, create and set-up an ACR instance using the guide below, if you have an existing ACR instance, you can simply re-use it.
 
-# Docker Registry - ACR
-It is assumed that your images will be stored in Azure Container Registry (ACR) rather than a public repo (i.e. Dockerhub).  
-As a pre-req, create and set-up an ACR instance using the guide below, if you have an existing ACR instance, you can simply re-use it.
+#### [:page_with_curl: Setting Up Azure Container Registry](acr.md)
 
-#### [:page_with_curl: Setting Up ACR](acr.md)
+---
+
+# Option 1 - Build Images Using ACR Tasks
+This option does not require you to have Docker installed and running locally or access to any sort of Docker host. Images will be built directly in Azure using a feature of Azure Container Registry called 'ACR Tasks'. 
+
+##### [ACR Tasks Docs 🡽](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-overview)
+
+You will require the [Azure CLI installed](https://aka.ms/azure-cli) (in Windows/PowerShell or WSL/Bash), and make sure it is up to date, at least v2.0.50
+
+In the bash snippet below modify the *myAcrName* parameter to match the name of ACR instance you have setup or are using, and modify *myAcrResGroup* to the resource group it resides in
+
+```
+# Build data API
+az acr build --registry myAcrName -g myAcrResGroup --file node/data-api/Dockerfile --image smilr/data-api https://github.com/benc-uk/smilr.git
+
+# Build frontend
+az acr build --registry myAcrName -g myAcrResGroup --file node/frontend/Dockerfile --image smilr/frontend https://github.com/benc-uk/smilr.git
+```
+> NN
+
+---
+
+# Option 2 - Build Images Using Local Docker
 
 # Docker Compose
 Docker Compose allows us to simplify the building and running of the two images, so a [docker-compose.yml](/docker-compose.yml) file has been created.  
@@ -41,10 +61,10 @@ This will build the images and by default, tag them as:
 - `smilr/data-api` 
 - `smilr/frontend`
 
-:exclamation::speech_balloon: **Note.** There is no build required for the MongoDB image, as we use the [official **mongo** image from Dockerhub](https://hub.docker.com/_/mongo/)
+> :speech_balloon: **Note.** There is no build required for the MongoDB image, as we use the [official **mongo** image from Dockerhub](https://hub.docker.com/_/mongo/)
 
 ### IMPORTANT! Registry Prefix 
-In order to help tagging the images with your registry/repo prefix, you can set the `DOCKER_REG` env variable which prefixed in front of the images. When pushing to ACR this should hold the name of the ACR instance with a trailing slash, e.g. `myregistry.azurecr.io/`. If not using ACR, you can pick any prefix you like. T  
+In order to help tagging the images with your registry/repo prefix, you can set the `DOCKER_REG` env variable which prefixed in front of the images. When pushing to ACR this should hold the name of the ACR instance with a trailing slash, e.g. `myregistry.azurecr.io/`. If not using ACR, you can pick any prefix you like. 
 
 It is strongly suggested you set `DOCKER_REG` using a `.env` file. There is a sample file provided at the root of the project which can be copied & renamed. A `.env` file is automatically picked up when you run **docker-compose**
 
@@ -52,9 +72,15 @@ Fully tagged images with registry prefix:
 - `myregistry.azurecr.io/smilr/data-api` 
 - `myregistry.azurecr.io/smilr/frontend`
 
+#### Building using 'docker build'
+If you want to build the images individually with `docker build`, rather than using Docker Compose, you can do so. When running the command ensure the build context set to the root of the project, and point to the Dockerfile. E.g. from the root of the project run the commands:
+```
+docker build . -f /node/data-api/Dockerfile -t changeme
+docker build . -f /node/frontend/Dockerfile -t changeme
+```
 
 ## Docker Compose - Running Containers
-To run all containers and stand up a complete running instance of Smilr, simply run:
+To run all containers and stand up a complete local running instance of Smilr, simply run:
 ```
 docker-compose up
 ```
@@ -74,7 +100,7 @@ This will push the latest images to the registry.
 
 # Windows Containers
 
-### :exclamation::speech_balloon: Note. **It is strongly advised not to use Windows Containers**. They are currently in a state of flux with the 1709 and Nano Server changes, running them locally on Windows 10 is extremely problematic on numerous fronts. The use of Windows Containers has not been fully tested. Proceed at your own risk.
+### :speech_balloon: Note. **It is strongly advised not to use Windows Containers**. They are currently in a state of flux with the 1709 and Nano Server changes, running them locally on Windows 10 is extremely problematic on numerous fronts. The use of Windows Containers has not been fully tested. Proceed at your own risk.
 
 Docker build files for creating Windows containers are also provided, with the filename `windows.Dockerfile`.  
 These are using the [Node on Windows base images from Stefan Scherer](https://hub.docker.com/r/stefanscherer/node-windows/). Currently the Dockerfile is set to use the `nanoserver-2016` tag however this can be changed to any of the *many* tags available for this image (for example 1709)

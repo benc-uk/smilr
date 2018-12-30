@@ -1,7 +1,9 @@
 #
 # Build and bundle the Vue.js app with Vue CLI 3 https://cli.vuejs.org/
 #
-FROM stefanscherer/node-windows:10-nanoserver as spabuild
+# Base Windows Nanoserver image with Node 8.x
+# Using Stefan Scherer's semi offical Node for Windows images https://hub.docker.com/r/stefanscherer/node-windows
+FROM stefanscherer/node-windows:10.14.0-nanoserver-2016 as spabuild
 ARG vue_root="vue"
 ARG build_info="Docker container build"
 
@@ -27,7 +29,9 @@ RUN npm run build-modern
 #
 # Build Node.js frontend service, pulling in bundled output from previous step
 #
-FROM stefanscherer/node-windows:10-nanoserver
+# Base Windows Nanoserver image with Node 8.x
+# Using Stefan Scherer's semi offical Node for Windows images https://hub.docker.com/r/stefanscherer/node-windows
+FROM stefanscherer/node-windows:10.14.0-nanoserver-2016
 
 LABEL version="2.2.0" 
 ARG basedir="node/frontend"
