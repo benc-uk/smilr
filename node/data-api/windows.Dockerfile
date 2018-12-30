@@ -1,7 +1,7 @@
 # Base Windows Nanoserver image with Node 8.x
 # Using Stefan Scherer's semi offical Node for Windows images https://hub.docker.com/r/stefanscherer/node-windows
 
-FROM stefanscherer/node-windows:10-nanoserver-2016
+FROM stefanscherer/node-windows:10.14.0-nanoserver-2016
 
 # Build time arguments
 LABEL version="4.1.0" 

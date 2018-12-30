@@ -3,7 +3,7 @@ Azure Container Registry (ACR) is a managed Docker registry service (PaaS) based
 
 You can stand up an ACR instance two ways:
 
-## Create ACR using Azure CLI
+## Option 1 - Create ACR using Azure CLI
 These steps assume you have the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest) installed
 
 Substitute `{acr_name}` for the name of the ACR instance you want to create and use, change `{res_group}` as required.
@@ -24,13 +24,14 @@ az acr credential show -n {acr_name} -g {res_group}
 docker login {acr_name}.azurecr.io
 ```
 
-#### Set CLI Default Registry
+### Set CLI Default Registry
 You generally work with only a single Container Registry so it's helpful to set its name as the default for all CLI commands
 ```
 az configure --defaults acr={acr_name}
 ```
 
+---
 
-## Create ACR using Azure Portal
+## Option 2 - Create ACR using Azure Portal
 As this is something you typically only do once, you can use the Azure portal:  
 https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal

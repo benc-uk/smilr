@@ -1,3 +1,2 @@
 # Running & Developing Locally
 
-Yes
