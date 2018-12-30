@@ -5,12 +5,12 @@
 # Using Stefan Scherer's semi offical Node for Windows images https://hub.docker.com/r/stefanscherer/node-windows
 FROM stefanscherer/node-windows:10.14.0-nanoserver-2016 as spabuild
 ARG vue_root="vue"
-ARG build_info="Docker container build"
+ARG build_info="Docker Windows Nanoserver container build"
 
 WORKDIR /build
 
 # Install all the Vue.js dev tools & CLI, and our app dependencies 
-COPY ${angular_root}/package*.json ./
+COPY ${vue_root}/package*.json ./
 RUN npm install --silent
 
 # Copy in the Vue.js app source
