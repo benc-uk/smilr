@@ -32,7 +32,12 @@ FROM node:10-alpine
 LABEL version="2.2.0" 
 ARG basedir="node/frontend"
 ENV NODE_ENV production
+
+# Place our app here
 WORKDIR /home/app
+
+# Install bash inside container just for debugging 
+RUN apk update && apk add bash
 
 # NPM install packages
 COPY ${basedir}/package*.json ./
@@ -43,9 +48,6 @@ COPY ${basedir}/ .
 
 # Copy in Vue.js app, uses previous build step 'spabuild' as source
 COPY --from=spabuild /build/dist .
-
-# Install bash inside container just for debugging 
-RUN apk update && apk add bash
 
 EXPOSE 3000
 ENTRYPOINT [ "npm" , "start" ]

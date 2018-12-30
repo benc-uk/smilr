@@ -1,11 +1,16 @@
-# Base Alpine linux image with Node 8.x
-FROM stefanscherer/node-windows:8-nanoserver
+# Base Windows Nanoserver image with Node 8.x
+# Using Stefan Scherer's semi offical Node for Windows images https://hub.docker.com/r/stefanscherer/node-windows
 
-LABEL version="4.0.0" 
+FROM stefanscherer/node-windows:10-nanoserver-2016
+
+# Build time arguments
+LABEL version="4.1.0" 
 ARG basedir="node/data-api"
-ARG build_info="Docker Windows container build"
+ARG build_info="Docker Windows Nanoserver container build"
 ENV NODE_ENV production
-ENV NODE_ENV production
+ENV BUILD_INFO $build_info
+
+# Place our app here
 WORKDIR /home/app
 
 # NPM install packages
