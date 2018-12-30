@@ -51,4 +51,4 @@ COPY ${basedir}/ .
 COPY --from=spabuild /build/dist .
 
 EXPOSE 3000
-ENTRYPOINT [ "npm" , "start" ]
+ENTRYPOINT [ "node" , "server.js" ]

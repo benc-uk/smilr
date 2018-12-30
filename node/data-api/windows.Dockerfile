@@ -21,4 +21,4 @@ RUN npm install --production --silent
 COPY ${basedir}/ .
 
 EXPOSE 4000
-ENTRYPOINT [ "npm" , "start" ]
+ENTRYPOINT [ "node" , "server.js" ]
