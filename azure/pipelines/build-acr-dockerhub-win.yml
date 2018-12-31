@@ -37,7 +37,7 @@ steps:
 # Frontend build steps
 #
 - bash: |
-    docker build . -f node/frontend/Dockerfile -t smilr/frontend:windows -t $(acr-name).azurecr.io/smilr/frontend:windows
+    docker build . -f node/frontend/windows.Dockerfile -t smilr/frontend:windows -t $(acr-name).azurecr.io/smilr/frontend:windows
   displayName: 'Build Windows frontend image'
 
 - bash: |
