@@ -8,11 +8,12 @@ variables:
   - group: shared-variables
 
 steps:
-- bash: |
-    docker build . -f node/data-api/Dockerfile -t smilr/data-api:latest -t smilr/data-api:$(Build.BuildNumber)
-  displayName: 'Build data API image'
+# - bash: |
+#     docker build . -f node/data-api/Dockerfile -t smilr/data-api:latest -t smilr/data-api:$(Build.BuildNumber)
+#   displayName: 'Build data API image'
 
 - bash: |
+    echo "login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)"
     docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
     docker push smilr/data-api
   displayName: 'Push images to ACR'
