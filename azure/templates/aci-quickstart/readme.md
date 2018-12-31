@@ -1,8 +1,7 @@
 # ARM Template - Quick Start with Azure Container Instances
+**Note.** This template will deploy using [pre-built public images on Dockerhub](https://hub.docker.com/u/smilr), and doesn't require you to build any mages or have ACR set up
+
 Deploy the Smilr app using just Azure Container Instances (ACI) with MongoDB running in a container. The data-api and mongo containers will run in the same container group and so demonstrates the shared container group model in ACI  
-
-**Note.** This template will deploy using [pre-built public images on Dockerhub](https://hub.docker.com/u/smilr), and doesn't require ACR set up or for you to build images
-
 
 ## Deployed Resources
 - Microsoft.ContainerInstance/containerGroups

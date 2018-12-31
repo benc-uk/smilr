@@ -54,16 +54,17 @@ npm run build-modern
 cd ../node/frontend
 npm start ../../vue/dist
 ```
+Here we are starting the frontend and pointing it to the dist directory which was the output of the previous step
 
-#### 6. Access Smilr app
+#### 6. Open the client app
 Open a modern browser (Chrome, Edge or Firefox) and go to [`http://localhost:3000`](http://localhost:3000)
 
-#### Further details of these steps can be in the respective documentation sub-sections:
+### Further details of these steps is covered in the respective sub-sections:
 
-#### [:page_with_curl: Bundling or running the Vue.js client SPA](../vue/#building--running-locally)
-#### [:page_with_curl: Running the frontend](../node/frontend/#building--running-locally)
-#### [:page_with_curl: Running the Data API](../node/data-api/#building--running-locally)
-#### [:page_with_curl: Running MongoDB](./database#option-3---run-mongodb-locally)
+#### [:page_with_curl: 1. Running MongoDB](./database#option-3---run-mongodb-locally)
+#### [:page_with_curl: 2. Running the Data API](../node/data-api/#building--running-locally)
+#### [:page_with_curl: 3. Bundling or running the Vue.js client SPA](../vue/#building--running-locally)
+#### [:page_with_curl: 4. Running the frontend](../node/frontend/#building--running-locally)
 
 > :speech_balloon: Note. The dependencies between the components means the frontend and client can't function without the data API, and the data API will not start without a MongoDB instance. So you will likely want to work "backwards" from the database
 
@@ -76,7 +77,7 @@ Prerequisites:
 
 > Note. Using containers means there is no requirement to have the underlying platform components such as Node & Mongo installed, however it does require access to a Docker host
 
-Full details of building and running containers are covered elsewhere in these docs:
+Full details of building and running in containers is already covered elsewhere in these docs:
 
 #### [:page_with_curl: Build Images Using Local Docker](./containers/#option-2---build-images-using-local-docker)
 

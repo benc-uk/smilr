@@ -1,0 +1,16 @@
+resources:
+  - repo: self
+
+queue:
+  name: Hosted Ubuntu 1604
+
+variables:
+  - name: acr-name
+    value: bcdemo
+
+steps:
+- script: 'docker build . -f node/data-api/Dockerfile -t smilr/data-api:latest -t smilr/data-api:$(Build.BuildNumber)'
+  displayName: 'Build data API image'
+
+- script: 'docker build . -f node/frontend/Dockerfile -t smilr/frontend:latest -t smilr/frontend:$(Build.BuildNumber)'
+  displayName: 'Build frontend image'
