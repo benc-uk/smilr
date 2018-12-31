@@ -38,12 +38,12 @@ steps:
 #
 - bash: |
     docker build . -f node/frontend/Dockerfile -t smilr/frontend:latest -t smilr/frontend:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/frontend:latest -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber)
-  displayName: 'Build data API image'
+  displayName: 'Build frontend API image'
 
 - bash: |
     docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
     docker push $(acr-name).azurecr.io/smilr/frontend
-  displayName: 'Push data API image(s) to ACR'
+  displayName: 'Push frontend API image(s) to ACR'
 
 #
 # Update public Dockerhub

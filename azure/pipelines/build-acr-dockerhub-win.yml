@@ -37,12 +37,12 @@ steps:
 #
 - bash: |
     docker build . -f node/frontend/Dockerfile -t smilr/frontend:windows -t $(acr-name).azurecr.io/smilr/frontend:windows
-  displayName: 'Build Windows data API image'
+  displayName: 'Build Windows frontend image'
 
 - bash: |
     docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
     docker push $(acr-name).azurecr.io/smilr/frontend:windows
-  displayName: 'Push Windows data API image to ACR'
+  displayName: 'Push Windows frontend image to ACR'
 
 #
 # Update public Dockerhub

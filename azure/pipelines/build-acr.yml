@@ -1,6 +1,6 @@
 #
 # Azure Pipeline - Build defintion
-# Build both Smilr Node.js images and push to Azure Container Registry
+# Build both Smilr Node.js images and push to JUST Azure Container Registry
 # Ben C, 2018
 #
 
