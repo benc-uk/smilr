@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "main": "server.js",
   "engines": {
-    "node": "^8.10.0"
+    "node": "^10.15.0"
   },
   "description": "Simple static content server for Smilr Angular app",
   "scripts": {
