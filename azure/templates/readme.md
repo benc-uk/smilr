@@ -1,7 +1,5 @@
 # Azure Templates
 
-### :warning: Templates need validating against new Vue.js version
-
 These ARM templates allow you to deploy the complete app to Azure, all deployment scenarios are container based
 
 ## Template List
