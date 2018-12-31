@@ -3,15 +3,18 @@
     <h1 slot="header"><fa icon="user"/> &nbsp; Login Required</h1>
     To access this part of the application you must be logged in
     <br/><br/>
-    <p class="text-center"><b-button @click="login" size="lg" variant="success"> &nbsp;&nbsp; <fa icon="user"/> LOGIN WITH AZURE ACTIVE DIRECTORY &nbsp;&nbsp; </b-button></p>
+    <p class="text-center">
+      <b-button @click="login" size="lg" variant="success"> 
+      &nbsp;&nbsp; <fa icon="user"/> LOGIN WITH AZURE ACTIVE DIRECTORY &nbsp;&nbsp; </b-button>
+    </p>
     
     <b-alert v-if="loginFailed" show>Login failed, please try again!</b-alert>
   </b-card>
 </template>
 
 <script>
-import AuthService from '../auth/auth-service'
-import GraphService from '../auth/graph-service'
+/* eslint-disable */
+import AuthService from '../lib/auth-service'
 import { userProfile } from '../main'
 import { config } from '../main'
 
@@ -23,26 +26,27 @@ export default {
   data() {
     return {
       authService: null,
-      graphService: null,
       loginFailed: false
     }
   },
 
   created() {
-    this.authService = new AuthService(config.AAD_CLIENT_ID, '/login');
-    this.graphService = new GraphService();
+    this.authService = new AuthService(config.AAD_CLIENT_ID, '/login')
   },
 
-  methods:{
+  methods: {
     login() {
       this.loginFailed = false;
       this.authService.login().then(
         resp => {
           if (resp) {
+            // Access tokens are sometimes encrypted, I give up with them
+            //this.authService.getToken(resp.user).then(accessToken => console.log("$$$ AT", accessToken) )
+            
+            // Store everything, including idToken
             userProfile.user = resp.user
-            userProfile.token = resp.token
+            userProfile.idToken = resp.idToken
             userProfile.isAdmin = false
-            //console.dir(userProfile);
             
             // Check against list of admins
             if(config.ADMIN_USER_LIST) {
@@ -54,6 +58,7 @@ export default {
               }
             }
 
+            // Redirect if we have a route to forward onto
             if(this.redir)
               this.$router.push({ name: this.redir })
             else
