@@ -21,9 +21,9 @@ This option does not require you to have Docker installed and running locally or
 
 ##### [ACR Tasks Docs 🡽](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-overview)
 
-You will require the [Azure CLI installed](https://aka.ms/azure-cli) (in Windows/PowerShell or WSL/Bash), and make sure it is up to date, at least v2.0.50
+You will require the [Azure CLI installed](https://aka.ms/azure-cli) (either in Windows/PowerShell or WSL/Bash), and ensure the version is at least v2.0.50
 
-In the bash snippet below modify the *myAcrName* parameter to match the name of ACR instance you have setup or are using, and modify *myAcrResGroup* to the resource group it resides in
+In the bash command snippet below modify the *myAcrName* parameter to match the name of ACR instance you have setup or are using, and modify *myAcrResGroup* to the resource group it resides in
 
 ```
 # Build data API
@@ -32,7 +32,8 @@ az acr build --registry myAcrName -g myAcrResGroup --file node/data-api/Dockerfi
 # Build frontend
 az acr build --registry myAcrName -g myAcrResGroup --file node/frontend/Dockerfile --image smilr/frontend https://github.com/benc-uk/smilr.git
 ```
-> NN
+
+> Note. If you are working from a local git clone of the repo, you can switch the URL of the GitHub repo for a local file path, such as `.` if working inside the root of the project
 
 ---
 
@@ -100,10 +101,10 @@ This will push the latest images to the registry.
 
 # Windows Containers
 
-### :speech_balloon: Note. **It is strongly advised not to use Windows Containers**. They are currently in a state of flux with the 1709 and Nano Server changes, running them locally on Windows 10 is extremely problematic on numerous fronts. The use of Windows Containers has not been fully tested. Proceed at your own risk.
+### :speech_balloon: Note. **It is strongly advised not to use Windows Containers**. 
 
-Docker build files for creating Windows containers are also provided, with the filename `windows.Dockerfile`.  
-These are using the [Node on Windows base images from Stefan Scherer](https://hub.docker.com/r/stefanscherer/node-windows/). Currently the Dockerfile is set to use the `nanoserver-2016` tag however this can be changed to any of the *many* tags available for this image (for example 1709)
+Windows Containers are currently in a state of flux and running them locally on Windows 10 is extremely problematic on numerous fronts. The use of Windows Containers has not been fully tested. Proceed at your own risk.
 
-A Docker Compose file `docker-compose-windows.yml` has been created to build and run the Windows containers. The images will be tagged with a `:windows` tag. Add the `-f docker-compose-windows.yml` switch to the compose commands to point Docker Compose at the Windows version.
+Docker build files for creating Windows containers are  provided, with the filename `windows.Dockerfile`.  
 
+These Dockerfiles use the [Node on Windows base images from Stefan Scherer](https://hub.docker.com/r/stefanscherer/node-windows/). For compatibility with Azure Container Instances, currently the Dockerfile is set to use the `nanoserver-2016` tag however this can be changed to any of the *many* tags available for this image

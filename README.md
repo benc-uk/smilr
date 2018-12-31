@@ -34,7 +34,7 @@ This application supports a range of demonstration, and learning scenarios, such
 - [Getting Started](#getting-started)
 - [Repository Structure](#repository-structure)
 - [Stable Core Implementation](#stable-core-implementation)
-- [Fundamentals](#Fundamentals)
+- [Fundamentals](#fundamentals)
 - [Containers & Kubernetes](#containers--kubernetes)
 - [Deploying to Azure](#deploying-to-azure)
 - [DevOps CI/CD Pipeline](#devops-cicd-pipeline)
