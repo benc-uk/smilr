@@ -1,6 +1,8 @@
 resources:
   - repo: self
 
+trigger: none 
+
 queue:
   name: Hosted Ubuntu 1604
 
@@ -8,15 +10,14 @@ variables:
   - group: shared-variables
 
 steps:
-# - bash: |
-#     docker build . -f node/data-api/Dockerfile -t smilr/data-api:latest -t smilr/data-api:$(Build.BuildNumber)
-#   displayName: 'Build data API image'
+- bash: |
+    docker build . -f node/data-api/Dockerfile -t smilr/data-api:latest -t smilr/data-api:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/data-api:latest -t $(acr-name).azurecr.io/smilr/data-api:$(Build.BuildNumber)
+  displayName: 'Build data API image'
 
 - bash: |
-    echo "login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)"
     docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-    docker push smilr/data-api
-  displayName: 'Push images to ACR'
+    docker push $(acr-name).azurecr.io/smilr/data-api
+  displayName: 'Push data API image to ACR'
 
 #- script: 'docker build . -f node/frontend/Dockerfile -t smilr/frontend:latest -t smilr/frontend:$(Build.BuildNumber)'
 #  displayName: 'Build frontend image'
