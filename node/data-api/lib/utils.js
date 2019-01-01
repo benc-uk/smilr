@@ -64,11 +64,12 @@ class Utils {
         var aad = require('./azure-ad-jwt/azure-ad-jwt')
       } catch(e) {
         console.log(e);
-        
       }
+
       var authorization = req.headers['authorization']
       var bearer = authorization.split(" ");
       var jwtToken = bearer[1];
+      //console.log("### TOKEN ###", jwtToken); 
 
       let aadV2 = true;
       if(process.env.AAD_V1 == "true") aadV2 = false;
