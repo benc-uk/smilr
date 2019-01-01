@@ -22,6 +22,7 @@ This application supports a range of demonstration, and learning scenarios, such
  - RESTful API design 
  - Platform services for application hosting
  - Using serverless technology to support or provide services
+ - DevOps practices, automated CI build, test & release pipelines 
  - Use of an open source application stack such as Node.js
  - The Actor model as an alternative to a traditional data model
  - CQRS (Command & Query Responsibility Segregation) as a possible pattern to separate read and write actions and stores 
@@ -147,11 +148,9 @@ Automated CI/CD Pipeline has been created using Azure Pipelines. This automatica
 
 | Automated Build | Status |
 |---|---|
-|Linux Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=31?branchName=master)|
-|Windows Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub%20(Win)?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=32?branchName=master)|
-|API Tests|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=33?branchName=master)|
-
-
+|Linux Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=31)|
+|Windows Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub%20(Win)?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=32)|
+|API Tests|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Run%20API%20Tests?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=34)|
 
 ##### [DevOps Public Project - Smilr 🡽](https://dev.azure.com/bencoleman/Smilr)
 

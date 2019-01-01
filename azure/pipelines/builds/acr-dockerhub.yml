@@ -25,7 +25,7 @@ steps:
 # Data API build steps
 #
 - bash: |
-    docker build . -f node/data-api/Dockerfile -t smilr/data-api:latest -t smilr/data-api:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/data-api:latest -t $(acr-name).azurecr.io/smilr/data-api:$(Build.BuildNumber)
+    docker build . -f node/data-api/Dockerfile -t smilr/data-api:latest -t smilr/data-api:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/data-api:latest -t $(acr-name).azurecr.io/smilr/data-api:$(Build.BuildNumber) --build-arg build_info="Azure DevOps build: '$(Build.BuildNumber)' Trigger: '$(Build.Reason)'. Built as container image"
   displayName: 'Build data API image'
 
 - bash: |
@@ -37,7 +37,7 @@ steps:
 # Frontend build steps
 #
 - bash: |
-    docker build . -f node/frontend/Dockerfile -t smilr/frontend:latest -t smilr/frontend:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/frontend:latest -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber)
+    docker build . -f node/frontend/Dockerfile -t smilr/frontend:latest -t smilr/frontend:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/frontend:latest -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber) --build-arg build_info="Azure DevOps build: '$(Build.BuildNumber)' Trigger: '$(Build.Reason)'. Built as container image"
   displayName: 'Build frontend API image'
 
 - bash: |
