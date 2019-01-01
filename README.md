@@ -145,11 +145,17 @@ See provided Azure Resource Manager (ARM) templates to allow you to deploy the c
 # DevOps CI/CD Pipeline
 Automated CI/CD Pipeline has been created using Azure Pipelines. This automatically builds the various components as containers and releases them to Azure for testing. To view the status of these builds & releases, you can visit the Azure Devops Public Project
 
-Data API Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Data%20API)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=3)
+| Automated Build | Status |
+|---|---|
+|Linux Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=31?branchName=master)|
+|Windows Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub%20(Win)?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=32?branchName=master)|
+|API Tests|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=33?branchName=master)|
 
-Frontend Automated Build: [![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20Image%20-%20Frontend)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=2)
+
 
 ##### [DevOps Public Project - Smilr 🡽](https://dev.azure.com/bencoleman/Smilr)
+
+If you want to try using Azure DevOps to build Smilr, [the pipelines are provided in the source repo as YAML for your own use](./azure/pipelines). An Azure DevOps account/organisation is required but can be setup for free.
 
 
 # Experimental Implementations
