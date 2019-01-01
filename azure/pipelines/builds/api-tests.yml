@@ -19,17 +19,38 @@ variables:
   mongo-image: mongo:3.4-jessie
 
 steps:
-# - bash: |
-#     cd node/data-api
-#     npm install 
-#   displayName: 'NPM install'
-
 - task: AzureCLI@1
-  displayName: 'Azure CLI '
   inputs:
     azureSubscription: '$(azure-sub)'
     scriptLocation: inlineScript
     inlineScript: |
       az group create -n $(azure-resgroup) -l westeurope
-      az container create -n mongodb-aci -g $(azure-resgroup) --image $(mongo-image) --port 27017 --ip-address public --dns-name-label mongodb-$(Build.BuildId)
+      az container create -n mongodb-aci -g $(azure-resgroup) --image $(mongo-image) --port 27017 --ip-address public --dns-name-label mongodb-smilr-$(Build.BuildId)
+  displayName: 'Create temp MongoDB with ACI'
 
+
+- bash: |
+    cd node/data-api
+    npm install 
+  displayName: 'NPM install data API'
+
+
+- bash: |
+    npm install -g newman --prefix $(System.DefaultWorkingDirectory) 
+  displayName: 'NPM install newman'
+  
+
+- bash: |
+    export MONGO_CONNSTR=mongodb://mongodb-smilr-$(Build.BuildId).$(azure-region).azurecontainer.io:27017
+    cd node/data-api
+    npm start &
+    sleep 2
+    $(System.DefaultWorkingDirectory)/bin/newman run ../../etc/postman/Smilr.postman_collection.json -r junit -n 5 --timeout 8000 --folder API --global-var smilr-api-host="localhost:4000"
+  displayName: 'Start and run tests'
+
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: 'newman/*.xml'
+    searchFolder: '$(System.DefaultWorkingDirectory)/node/data-api'
+  displayName: 'Publish Test Results'
