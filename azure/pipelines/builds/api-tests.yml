@@ -1,6 +1,6 @@
 #
 # Azure Pipeline - Build defintion
-# Test the API
+# Test the API, using ACI to run MongoDB and newman to run Postman tests
 # Ben C, 2018
 #
 
@@ -54,3 +54,12 @@ steps:
     testResultsFiles: 'newman/*.xml'
     searchFolder: '$(System.DefaultWorkingDirectory)/node/data-api'
   displayName: 'Publish Test Results'
+
+
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: '$(azure-sub)'
+    scriptLocation: inlineScript
+    inlineScript: |
+      az group delete -n $(azure-resgroup) -l westeurope --no-wait --yes
+  displayName: 'Clean up resources'
