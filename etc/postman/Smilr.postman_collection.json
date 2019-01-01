@@ -70,7 +70,7 @@
 									"",
 									"pm.test(\"new event has correct title\", function () {",
 									"    var event = pm.response.json();",
-									"    pm.expect(event.title).to.eq(\"This is a new demo event\");",
+									"    pm.expect(event.title).to.contain(\"This is a new demo event\");",
 									"});",
 									"",
 									"pm.test(\"new event has ID\", function () {",
