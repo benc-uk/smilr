@@ -22,14 +22,16 @@
           <b-row>
             <b-col sm="6">
               <b-form-group label="Event Start Date" label-for="startInput">
-                <b-form-input inline  id="startInput" :state="!errors.first('start')" v-validate="'required'" v-model="event.start" type="date" name="start"></b-form-input>
+                <b-form-input inline id="startInput" :state="!errors.first('start') && datesOK" v-validate="'required'" v-model="event.start" type="date" name="start"></b-form-input>
                 <p class="formError">{{ errors.first('start') }}</p>
+                <p class="formError" v-if="!datesOK">Start date must be on or before end date</p>
               </b-form-group>          
             </b-col>
             <b-col sm="6">
               <b-form-group label="Event End Date" label-for="endInput">
-                <b-form-input inline id="endInput" :state="!errors.first('end')" v-validate="'required'" v-model="event.end" type="date" name="end"></b-form-input>
+                <b-form-input inline id="endInput" :state="!errors.first('end') && datesOK" v-validate="'required'" v-model="event.end" type="date" name="end" ref="endRef"></b-form-input>
                 <p class="formError">{{ errors.first('end') }}</p>
+                <p class="formError" v-if="!datesOK">End date must be on or after start date</p>
               </b-form-group>
             </b-col>
           </b-row>
@@ -82,6 +84,10 @@ export default {
         if(t.desc.trim() == '')  return false 
       }
       return true
+    },
+
+    datesOK: function() {
+      return this.event.start <= this.event.end
     }
   },
 
