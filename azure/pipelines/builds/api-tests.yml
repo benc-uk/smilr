@@ -61,5 +61,5 @@ steps:
     azureSubscription: '$(azure-sub)'
     scriptLocation: inlineScript
     inlineScript: |
-      az group delete -n $(azure-resgroup) -l westeurope --no-wait --yes
+      az group delete -n $(azure-resgroup) --no-wait --yes
   displayName: 'Clean up resources'
