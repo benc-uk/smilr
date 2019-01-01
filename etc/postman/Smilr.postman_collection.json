@@ -87,6 +87,17 @@
 								],
 								"type": "text/javascript"
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "92c93df5-80ac-4b6f-9813-a2ad2938af97",
+								"exec": [
+									"var uuid = require('uuid'); ",
+									"var myUUID = uuid.v4();"
+								],
+								"type": "text/javascript"
+							}
 						}
 					],
 					"request": {
@@ -102,7 +113,138 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"This is a new demo event\",\n    \"type\": \"event\",\n    \"start\": \"2018-12-01\",\n    \"end\": \"2019-06-31\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Test data is boring\"\n      }      \n    ]\n}"
+							"raw": "{\n    \"title\": \"This is a new demo event {{$randomInt}}\",\n    \"type\": \"event\",\n    \"start\": \"2018-12-01\",\n    \"end\": \"2019-06-29\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Test data is boring\"\n      }      \n    ]\n}"
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/events",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Event Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"This is an example event\",\n    \"type\": \"event\",\n    \"start\": \"2018-01-01\",\n    \"end\": \"2018-07-20\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah a topic\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Another session\"        \n      }\n    ]\n}"
+								},
+								"url": {
+									"raw": "http://{{smilr-api-host}}/api/events",
+									"protocol": "http",
+									"host": [
+										"{{smilr-api-host}}"
+									],
+									"path": [
+										"api",
+										"events"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Length",
+									"value": "185",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 18 Mar 2018 19:35:23 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"b9-eS+gYVlJmbQfQ7wipok5PLs3Qzg\"",
+									"name": "ETag",
+									"description": "An identifier for a specific version of a resource, often a message digest"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express",
+									"name": "X-Powered-By",
+									"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+								}
+							],
+							"cookie": [],
+							"body": "{\"title\":\"This is an example event\",\"type\":\"event\",\"start\":\"2018-01-01\",\"end\":\"2018-07-20\",\"topics\":[{\"id\":1,\"desc\":\"Blah blah a topic\"},{\"id\":2,\"desc\":\"Another session\"}],\"id\":\"Chw8k\"}"
+						}
+					]
+				},
+				{
+					"name": "Invalid Event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bf05dbb3-4241-47db-8dd7-29374d140dc8",
+								"exec": [
+									"pm.test(\"get 400 status\", function () {",
+									"    pm.response.to.have.status(400);",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"response is an JSON error object\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(true);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"This should fail date validation\",\n    \"type\": \"event\",\n    \"start\": \"2018-12-01\",\n    \"end\": \"2018-04-15\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Test\"\n      }    \n    ]\n}"
 						},
 						"url": {
 							"raw": "http://{{smilr-api-host}}/api/events",
