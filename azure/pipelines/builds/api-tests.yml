@@ -47,6 +47,7 @@ steps:
     sleep 2
     $(System.DefaultWorkingDirectory)/bin/newman run ../../etc/postman/Smilr.postman_collection.json -r junit -n 5 --timeout 8000 --folder API --global-var smilr-api-host="localhost:4000"
   displayName: 'Start data API & run tests with newman'
+  continueOnError: true
 
 
 - task: PublishTestResults@2
@@ -54,7 +55,8 @@ steps:
     testResultsFiles: 'newman/*.xml'
     searchFolder: '$(System.DefaultWorkingDirectory)/node/data-api'
   displayName: 'Publish Test Results'
-
+  condition: always()
+  
 
 - task: AzureCLI@1
   inputs:
@@ -63,3 +65,4 @@ steps:
     inlineScript: |
       az group delete -n $(azure-resgroup) --no-wait --yes
   displayName: 'Clean up resources'
+  condition: always()
