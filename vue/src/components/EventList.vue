@@ -32,9 +32,10 @@
 </template>
 
 <script>
-import api from "../mixins/api";
-import utils from "../mixins/utils";
-import Spinner from './Spinner';
+import '../assets/css/animate.css'
+import api from "../mixins/api"
+import utils from "../mixins/utils"
+import Spinner from './Spinner'
 
 export default {
   name: "EventList",
@@ -90,9 +91,9 @@ export default {
 }
 
 .fade-enter-active {
-  animation: fadeAnim 1s;
+  animation: fadeInRight 0.8s;
 }
-@keyframes fadeAnim {
+/* @keyframes fadeAnim {
   0% {
     opacity: 0;
     transform: translate(0, 2rem)
@@ -100,7 +101,7 @@ export default {
   100% {
     opacity: 1;
   }
-}
+} */
 
 .spinner {
    font-size: 6rem;

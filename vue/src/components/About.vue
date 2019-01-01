@@ -3,7 +3,7 @@
     <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
       <h1 slot="header"><fa icon="info-circle"/> &nbsp; About Smilr</h1>
       <h2>A microservices &amp; SPA reference / demonstration app</h2> 
-      <img :src="utilsFaceSVG(faceRating)" class="aboutface tossing" @click="easter">
+      <img :src="utilsFaceSVG(faceRating)" class="aboutface animated rubberBand infinite slow" @click="easter">
       <h5>{{ egg }}</h5> 
      
       <hr/>
@@ -24,8 +24,9 @@
 </template>
 
 <script>
+import '../assets/css/animate.css'
 import { config } from '../main'
-import utils from "../mixins/utils";
+import utils from "../mixins/utils"
 
 export default {
   name: 'About',

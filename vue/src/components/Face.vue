@@ -1,12 +1,19 @@
 <template>
   <div class="facebox" ref="facebox">
-    <img class="face" @click="clicked" :src="utilsFaceSVG(number)" :class="{ 'fadeIn': fade, 'tossing': selected, 'unselected': unselected }">
+    <img class="face" @click="clicked" :src="utilsFaceSVG(number)" 
+      :class="{ 
+        'animated': true, 
+        'slower': selected, 
+        'infinite': selected, 
+        'tada': selected, 
+        'zoomInDown': fade, 
+        'unselected': unselected }">
   </div>
 </template>
 
 <script>
-import '../assets/css/animations.css';
-import utils from "../mixins/utils";
+import '../assets/css/animate.css'
+import utils from "../mixins/utils"
 
 export default {
   name: 'Face',
