@@ -1,0 +1,35 @@
+#
+# Azure Pipeline - Build defintion
+# Test the API
+# Ben C, 2018
+#
+
+resources:
+  - repo: self
+
+trigger: none 
+
+queue:
+  name: Hosted Ubuntu 1604
+
+variables:
+  azure-sub: Azure (AIRS)  
+  azure-resgroup: temp.smilr.mongo 
+  azure-region: westeurope 
+  mongo-image: mongo:3.4-jessie
+
+steps:
+# - bash: |
+#     cd node/data-api
+#     npm install 
+#   displayName: 'NPM install'
+
+- task: AzureCLI@1
+  displayName: 'Azure CLI '
+  inputs:
+    azureSubscription: '$(azure-sub)'
+    scriptLocation: inlineScript
+    inlineScript: |
+      az group create -n $(azure-resgroup) -l westeurope
+      az container create -n mongodb-aci -g $(azure-resgroup) --image $(mongo-image) --port 27017 --ip-address public --dns-name-label mongodb-$(Build.BuildId)
+
