@@ -71,7 +71,16 @@ routes.post('/api/events', function (req, res, next) {
   .then(valid => {
     let event = req.body;
 
-    if(event._id) utils.sendError(res, `Should not POST events with _id in body`, 400, 'event-validation');
+    // Don't send me an id, we don't want it
+    if(event._id) { 
+      utils.sendError(res, `Should not POST events with _id in body`, 400, 'event-validation');
+      return;
+    }
+    // Date validation, I forgot about this
+    if(event.start > event.end) {
+      utils.sendError(res, `Event start date should be before end date`, 400, 'event-validation');
+      return;
+    }
 
     // We send back the new record, which has the new id
     res.app.get('data').createOrUpdateEvent(event, false)
@@ -91,8 +100,13 @@ routes.put(['/api/events/:id'], function (req, res, next) {
 
     // Ensure event id is in body, URL params take priority
     event._id = req.params.id;
+    // Date validation, I forgot about this
+    if(event.start > event.end) {
+      utils.sendError(res, `Event start date should be before end date`, 400, 'event-validation');
+      return;
+    }
 
-    // Note we send back the same event object we receive, Monogo doesn't return it
+    // Note we send back the same event object we receive, Mongo doesn't return it
     res.app.get('data').createOrUpdateEvent(event, false)
     .then(data => {
       if(data.result.n == 0) {

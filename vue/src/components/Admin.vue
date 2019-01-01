@@ -74,7 +74,7 @@ export default {
       .then(resp => {
         if(resp) {
           for(let eindex in this.events) {
-            if(this.events[eindex].id == this.eventToDelete.id) this.events.splice(eindex, 1)
+            if(this.events[eindex]._id == this.eventToDelete._id) this.events.splice(eindex, 1)
           }
         }
       })
