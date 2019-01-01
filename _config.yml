@@ -21,5 +21,3 @@ buttons:
   - b3:
     text: Azure Templates
     href: /azure/templates
-    
-exclude: [node/frontend/index.html]
