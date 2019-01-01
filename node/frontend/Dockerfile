@@ -3,7 +3,7 @@
 #
 FROM node:10-alpine as spabuild
 ARG vue_root="vue"
-ARG build_info="Docker Windows Nanoserver container build"
+ARG build_info="Docker container build"
 
 WORKDIR /build
 

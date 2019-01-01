@@ -25,7 +25,7 @@ steps:
 # Data API build steps
 #
 - bash: |
-    docker build . -f node/data-api/windows.Dockerfile -t smilr/data-api:windows -t $(acr-name).azurecr.io/smilr/data-api:windows
+    docker build . -f node/data-api/windows.Dockerfile -t smilr/data-api:windows -t $(acr-name).azurecr.io/smilr/data-api:windows --build-arg build_info="Azure DevOps build: '$(Build.BuildNumber)' Trigger: '$(Build.Reason)'. Built as Windows container image"
   displayName: 'Build Windows data API image'
 
 - bash: |
@@ -37,7 +37,7 @@ steps:
 # Frontend build steps
 #
 - bash: |
-    docker build . -f node/frontend/windows.Dockerfile -t smilr/frontend:windows -t $(acr-name).azurecr.io/smilr/frontend:windows
+    docker build . -f node/frontend/windows.Dockerfile -t smilr/frontend:windows -t $(acr-name).azurecr.io/smilr/frontend:windows --build-arg build_info="Azure DevOps build: '$(Build.BuildNumber)' Trigger: '$(Build.Reason)'. Built as Windows container image"
   displayName: 'Build Windows frontend image'
 
 - bash: |
