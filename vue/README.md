@@ -99,8 +99,8 @@ The mock API server will start on localhost on port 4000 (just like the real dat
 
 
 # Security
-By default all authentication & security is disabled, this means users have unrestricted access to admin sections of the UI; namely the reports view and the events admin view. For use in demos, workshops and labs this is mostly likely the desired behavior.   
-Note. Admin views are denoted with yellow buttons on the navbar
+By default all authentication & security is disabled, this means users have unrestricted access to admin sections of the UI (presently the 'reports' view & the 'events admin' view). For use in demos, workshops and labs this is mostly likely the desired behavior.   
+Note. Admin views are denoted with yellow buttons on the navbar, over on the right
 
 Should you want to host Smilr permanently somewhere or to investigate how to secure SPA apps, then authentication & security can be enabled
 
@@ -108,7 +108,7 @@ To secure the Smilr client app we use Azure Active Directory v2 and the OAuth 2.
 
 Setting the configuration `AAD_CLIENT_ID` (or `VUE_APP_AAD_CLIENT_ID` when running locally) will switch on security. The value should be the client id of an [app registered with Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app). Setting this changes the app behavior in two ways
 
-- The *Report* and *Admin* components will be protected by a Vue route guard, this guard checks that there is a logged in user and the user is in the list of admins. If there is no logged in user, they are redirected to the *Login* component.
+- The *Report* and *Admin* components will be protected by a Vue route guard. This guard checks that there is a logged in user and the user is in the list of admins. If there is no logged in user, they are redirected to the *Login* component.
 - If there is a logged in user, all HTTP requests to the data API will include that user's access token as a JWT in the **authorization** header, as described in the standard [OAuth 2.0 Bearer Token scheme](https://tools.ietf.org/html/rfc6750).
 
 The Login component uses the MSAL.js library to authenticate using the configured `AAD_CLIENT_ID`. As we are a SPA this is done with a popup rather than a redirect.
@@ -118,7 +118,7 @@ The user is held as global object exported from `main.js` called `userProfile` I
 - `isAdmin`: Boolean flag set at login after user is checked against the list of users in `ADMIN_USER_LIST`
 - `token`: The token returned by MSAL, which is a Base64 encoded JWT string
 
-> Note. When `AAD_CLIENT_ID` is unset and security disabled, then a fake shallow `userProfile` is created with `isAdmin` set to true and a dummy MSAL user object. This results in passing all the checks in the router guard
+> Note. When `AAD_CLIENT_ID` is unset and security disabled, then a fake shallow `userProfile` is created with `isAdmin` set to true and a dummy MSAL user object. This results in passing all the user checks, so the app functions as if you are logged in.
 
 The configuration variable `ADMIN_USER_LIST` determines which users can actually access the *Report* and *Admin* components. This is a simple permission mechanism, and just consists of a comma separated list of usernames, e.g. `bob@example.net,dave@example.net`  
 
