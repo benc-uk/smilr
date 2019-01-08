@@ -21,7 +21,7 @@ variables:
 
 steps:
 #
-# Retag images
+# Retag images, latest -> stable
 #
 - bash: |
     docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
@@ -34,7 +34,7 @@ steps:
   displayName: 'Pull and retag images'
 
 #
-# Update ACR
+# Push to ACR
 #
 - bash: |
     docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
@@ -43,7 +43,7 @@ steps:
   displayName: 'Push both stable images to ACR'
 
 #
-# Update public Dockerhub
+# Push to public Dockerhub
 #
 - bash: |
     docker login -u $(dockerhub-user) -p $(dockerhub-password)

@@ -19,6 +19,9 @@ variables:
   mongo-image: mongo:3.4-jessie
 
 steps:
+#
+# Stand up MongoDB in Container Instance
+#
 - task: AzureCLI@1
   inputs:
     azureSubscription: '$(azure-sub)'
@@ -28,18 +31,25 @@ steps:
       az container create -n mongodb-aci -g $(azure-resgroup) --image $(mongo-image) --port 27017 --ip-address public --dns-name-label mongodb-smilr-$(Build.BuildId)
   displayName: 'Create temp MongoDB with ACI'
 
-
+#
+# NPM install for data API modules
+#
 - bash: |
     cd node/data-api
     npm install 
   displayName: 'NPM install data API'
 
-
+#
+# Install Newman as global tool, in specific path
+#
 - bash: |
     npm install -g newman --prefix $(System.DefaultWorkingDirectory) 
   displayName: 'NPM install newman'
   
-
+#
+# Point data API at Mongo, and start as a background job
+# Then run the Postman tests against the API using Newman
+#
 - bash: |
     export MONGO_CONNSTR=mongodb://mongodb-smilr-$(Build.BuildId).$(azure-region).azurecontainer.io:27017
     cd node/data-api
@@ -49,7 +59,9 @@ steps:
   displayName: 'Start data API & run tests with newman'
   continueOnError: true
 
-
+#
+# Publish test results 
+#
 - task: PublishTestResults@2
   inputs:
     testResultsFiles: 'newman/*.xml'
@@ -57,7 +69,9 @@ steps:
   displayName: 'Publish Test Results'
   condition: always()
   
-
+#
+# Nuke the MongoDB instance
+#
 - task: AzureCLI@1
   inputs:
     azureSubscription: '$(azure-sub)'

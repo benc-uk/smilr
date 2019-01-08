@@ -143,8 +143,8 @@ See provided Azure Resource Manager (ARM) templates to allow you to deploy the c
 #### [ARM Deployment Templates](./azure/templates)
 
 
-# DevOps CI/CD Pipeline
-Automated CI/CD Pipeline has been created using Azure Pipelines. This automatically builds the various components as containers and releases them to Azure for testing. To view the status of these builds & releases, you can visit the Azure Devops Public Project
+# DevOps & CI/CD
+Automated CI/CD pipelines have been created using Azure Pipelines. These automatically build the various components as containers and releases them to Azure for testing. The current status of these builds & releases is shown below
 
 | Automated Build | Status |
 |---|---|
@@ -152,13 +152,14 @@ Automated CI/CD Pipeline has been created using Azure Pipelines. This automatica
 |Windows Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub%20(Win)?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=32)|
 |API Tests|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Run%20API%20Tests?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=34)|
 
+You can visit the Azure Devops Public Project where these pipelines reside, although keep in mind the source code repo remains here on GitHub.
 ##### [DevOps Public Project - Smilr 🡽](https://dev.azure.com/bencoleman/Smilr)
 
-If you want to try using Azure DevOps to build Smilr, [the pipelines are provided in the source repo as YAML for your own use](./azure/pipelines). An Azure DevOps account/organisation is required but can be setup for free.
+If you want to try using Azure DevOps to build Smilr, [the pipelines are provided as YAML for your own use](./azure/pipelines). An Azure DevOps account/organisation is required to use these, but can be setup for free.
 
 
 # Experimental Implementations
-There are several re-implementations of the Smilr architecture. Either at the backend, providing an API compatible with the data-api REST spec. Also the frontend has been implemented as a mobile app. All of these alternatives are considered experimental and for technology demo use cases 
+There are several re-implementations of the Smilr architecture. Either at the backend, providing an API compatible with the data-api REST specification. Also the frontend has been implemented as a mobile app. All of these alternatives are considered experimental and for technology demo use cases 
 
 - [**Serverless - Azure Functions**](./azure/functions)
 - [**Bots and Bot Framework**](./bot)
@@ -168,11 +169,12 @@ There are several re-implementations of the Smilr architecture. Either at the ba
 
 
 # Changelog 
-High level project changes and overall history are listed here:
-- *Oct 2017* - Project created, using Azure Table storage
-- *Nov 2017* - Switched to CosmosDB SQL API (aka DocumentDB)
-- *Dec 2017* - Name changed to Smilr
-- *Jan 2018* - Simple onetime password security added to API
-- *March 2018* - Switched to MongoDB for database
-- *May 2018* - Major updates for Kubernetes deployment & Angular 6
+High level project changes and overall history are recorded here:
+
 - *Dec 2018* - Total rewrite of SPA in Vue.js and proper AAD security
+- *May 2018* - Major updates for Kubernetes deployment & Angular 6
+- *Mar 2018* - Switched to MongoDB for database
+- *Jan 2018* - Simple onetime password security added to API
+- *Dec 2017* - Name changed to Smilr
+- *Nov 2017* - Switched to CosmosDB SQL API (aka DocumentDB)
+- *Oct 2017* - Project created, using Azure Table storage
