@@ -16,20 +16,20 @@
 							"listen": "test",
 							"script": {
 								"id": "46414654-4b17-4c78-9467-861fdfc001ee",
-								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
+									"pm.test(\"Info GET: Response is OK, with JSON body\", function () {",
 									"     pm.response.to.be.ok;",
 									"     pm.response.to.be.withBody;",
 									"     pm.response.to.be.json;",
 									"});",
 									"",
-									"pm.test(\"there is info\", function () {",
+									"pm.test(\"Info GET: JSON object retured\", function () {",
 									"    var info = pm.response.json();",
 									"    pm.expect(info.hostname).to.not.be.empty;",
 									"});",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -62,18 +62,18 @@
 							"script": {
 								"id": "bf05dbb3-4241-47db-8dd7-29374d140dc8",
 								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
+									"pm.test(\"Events POST: Response is OK, with JSON body\", function () {",
 									"     pm.response.to.be.ok;",
 									"     pm.response.to.be.withBody;",
 									"     pm.response.to.be.json;",
 									"});",
 									"",
-									"pm.test(\"new event has correct title\", function () {",
+									"pm.test(\"Events POST: New event has correct title\", function () {",
 									"    var event = pm.response.json();",
 									"    pm.expect(event.title).to.contain(\"This is a new demo event\");",
 									"});",
 									"",
-									"pm.test(\"new event has ID\", function () {",
+									"pm.test(\"Events POST: New event has ID\", function () {",
 									"    var event = pm.response.json();",
 									"    pm.expect(event._id).to.not.be.empty;",
 									"    // Put event id into variable to be used by next test (Delete Event)",
@@ -215,13 +215,13 @@
 							"script": {
 								"id": "bf05dbb3-4241-47db-8dd7-29374d140dc8",
 								"exec": [
-									"pm.test(\"get 400 status\", function () {",
+									"pm.test(\"Events POST: Invalid event triggers 400 status\", function () {",
 									"    pm.response.to.have.status(400);",
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
 									"});",
 									"",
-									"pm.test(\"response is an JSON error object\", function () {",
+									"pm.test(\"Events POST: Invalid event reponse has JSON error object\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    pm.expect(jsonData.error).to.eql(true);",
 									"});",
@@ -345,27 +345,25 @@
 							"listen": "test",
 							"script": {
 								"id": "02218921-2585-48ee-ac1d-4d4ac36ea3c0",
-								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
+									"pm.test(\"Events GET (ALL): Response is OK, with JSON body\", function () {",
 									"     pm.response.to.be.ok;",
 									"     pm.response.to.be.withBody;",
 									"     pm.response.to.be.json;",
 									"});",
 									"",
-									"pm.test(\"there are events\", function () {",
+									"pm.test(\"Events GET (ALL): JSON events array not empty\", function () {",
 									"    var events = pm.response.json();",
 									"    pm.expect(events.length).to.gt(0);",
 									"});",
 									"",
-									"pm.test(\"first event has a title\", function () {",
+									"pm.test(\"Events GET (ALL): First event in result has a title\", function () {",
 									"    var events = pm.response.json();",
 									"    pm.expect(events[0].title).to.not.be.empty;",
 									"});",
-									"",
-									"// example using pm.response.to.be*",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -398,22 +396,20 @@
 							"listen": "test",
 							"script": {
 								"id": "e02238b4-a6f5-432b-858f-caa03a97ce0d",
-								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
+									"pm.test(\"Events GET (SINGLE): Response is OK, with JSON body\", function () {",
 									"     pm.response.to.be.ok;",
 									"     pm.response.to.be.withBody;",
 									"     pm.response.to.be.json;",
 									"});",
 									"",
-									"pm.test(\"event has a title\", function () {",
+									"pm.test(\"Events GET (SINGLE): Event has a title\", function () {",
 									"    var event = pm.response.json();",
 									"    pm.expect(event.title).to.not.be.empty;",
 									"});",
-									"",
-									"// example using pm.response.to.be*",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -447,23 +443,21 @@
 							"script": {
 								"id": "02218921-2585-48ee-ac1d-4d4ac36ea3c0",
 								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
+									"pm.test(\"Events GET (ACTIVE): Response is OK, with JSON body\", function () {",
 									"     pm.response.to.be.ok;",
 									"     pm.response.to.be.withBody;",
 									"     pm.response.to.be.json;",
 									"});",
 									"",
-									"pm.test(\"there are events\", function () {",
+									"pm.test(\"Events GET (ACTIVE): JSON events array not empt\", function () {",
 									"    var events = pm.response.json();",
 									"    pm.expect(events.length).to.gt(0);",
 									"});",
 									"",
-									"pm.test(\"first event has a title\", function () {",
+									"pm.test(\"Events GET (ACTIVE): First event in result has a title\", function () {",
 									"    var events = pm.response.json();",
 									"    pm.expect(events[0].title).to.not.be.empty;",
 									"});",
-									"",
-									"// example using pm.response.to.be*",
 									""
 								],
 								"type": "text/javascript"
@@ -501,13 +495,13 @@
 							"script": {
 								"id": "43a399da-f9c3-4a5e-9ac9-05d805877752",
 								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
+									"pm.test(\"Events PUT: Response is OK, with JSON body\", function () {",
 									"     pm.response.to.be.ok;",
 									"     pm.response.to.be.withBody;",
 									"     pm.response.to.be.json;",
 									"});",
 									"",
-									"pm.test(\"returned event has new title\", function () {",
+									"pm.test(\"Events PUT: Modified event title has changed\", function () {",
 									"    var event = pm.response.json();",
 									"    pm.expect(event.title).to.eq(\"Updated event with API\")",
 									"});"
@@ -551,13 +545,13 @@
 							"script": {
 								"id": "fce74a1d-bcd1-4730-afdb-846f532b5ecc",
 								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
+									"pm.test(\"Feedback POST: Response is OK, with JSON body\", function () {",
 									"     pm.response.to.be.ok;",
 									"     pm.response.to.be.withBody;",
 									"     pm.response.to.be.json;",
 									"});",
 									"",
-									"pm.test(\"new feedback has id\", function () {",
+									"pm.test(\"Feedback POST: New feedback has ID\", function () {",
 									"    var feedback = pm.response.json();",
 									"    pm.expect(feedback._id).to.not.be.empty;",
 									"});",
@@ -600,25 +594,25 @@
 							"listen": "test",
 							"script": {
 								"id": "812eb514-60fb-45af-9624-c0ba7f44cf2e",
-								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
+									"pm.test(\"Feedback GET: Response is OK, with JSON body\", function () {",
 									"     pm.response.to.be.ok;",
 									"     pm.response.to.be.withBody;",
 									"     pm.response.to.be.json;",
 									"});",
 									"",
-									"pm.test(\"there is feedback\", function () {",
+									"pm.test(\"Feedback GET: JSON feedback array not empty\", function () {",
 									"    var feedback = pm.response.json();",
 									"    pm.expect(feedback.length).to.gt(0);",
 									"});",
 									"",
-									"pm.test(\"there is a rating\", function () {",
+									"pm.test(\"Feedback GET: First feedback in result has rating\", function () {",
 									"    var feedback = pm.response.json();",
 									"    pm.expect(feedback[0].rating).to.gt(0);",
 									"});",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -652,12 +646,12 @@
 							"listen": "test",
 							"script": {
 								"id": "c9c08f48-85b8-4984-bb42-7172e252a1dd",
-								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
+									"pm.test(\"Events DELETE: Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});"
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
