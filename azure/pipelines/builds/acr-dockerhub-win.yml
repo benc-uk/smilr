@@ -7,7 +7,7 @@ trigger: none
 
 # Note - Windows build agent queue
 pool:
-  name: Hosted Ubuntu 1604
+  name: Hosted VS2017
 
 #
 # NOTE! This variable group must be pre-created and populated
