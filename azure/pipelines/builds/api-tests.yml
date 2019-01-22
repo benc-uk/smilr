@@ -3,13 +3,9 @@
 # Test the API, using ACI to run MongoDB and newman to run Postman tests
 # Ben C, 2018
 #
-
-resources:
-  - repo: self
-
 trigger: none 
 
-queue:
+pool:
   name: Hosted Ubuntu 1604
 
 variables:

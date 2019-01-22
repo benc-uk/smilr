@@ -3,15 +3,11 @@
 # Build both Smilr Node.js images FOR WINDOWS and push to Azure Container Registry
 # Ben C, 2018
 #
-
-resources:
-  - repo: self
-
 trigger: none 
 
 # Note - Windows build agent queue
-queue:
-  name: Hosted VS2017
+pool:
+  name: Hosted Ubuntu 1604
 
 #
 # NOTE! This variable group must be pre-created and populated
