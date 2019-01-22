@@ -51,7 +51,7 @@ steps:
     cd node/data-api
     npm start &
     sleep 2
-    $(System.DefaultWorkingDirectory)/bin/newman run ../../etc/postman/Smilr.postman_collection.json -r junit -n 5 --timeout 8000 --folder API --global-var smilr-api-host="localhost:4000"
+    $(System.DefaultWorkingDirectory)/bin/newman run ../../etc/postman/Smilr.postman_collection.json -r junit -n 5 --timeout 8000 --folder API --reporter-junit-export test-results.xml --global-var smilr-api-host="localhost:4000"
   displayName: 'Start data API & run tests with newman'
   continueOnError: true
 
@@ -60,7 +60,8 @@ steps:
 #
 - task: PublishTestResults@2
   inputs:
-    testResultsFiles: 'newman/*.xml'
+    testResultsFormat: JUnit
+    testResultsFiles: 'test-results.xml'
     searchFolder: '$(System.DefaultWorkingDirectory)/node/data-api'
   displayName: 'Publish Test Results'
   condition: always()
