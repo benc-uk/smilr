@@ -3,13 +3,9 @@
 # Re-tag latest as stable and push to ACR and Dockerhub
 # Ben C, 2018
 #
-
-resources:
-  - repo: self
-
 trigger: none 
 
-queue:
+pool:
   name: Hosted Ubuntu 1604
 
 #

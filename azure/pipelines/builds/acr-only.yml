@@ -3,11 +3,7 @@
 # Build both Smilr Node.js images and push to Azure Container Registry
 # Ben C, 2018
 #
-
-resources:
-  - repo: self
-
-queue:
+pool:
   name: Hosted Ubuntu 1604
 
 #
