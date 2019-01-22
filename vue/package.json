@@ -15,7 +15,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.3",
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.11",
-    "bootswatch": "^4.1.3",
+    "bootswatch": "^4.2.1",
     "epic-spinners": "^1.0.4",
     "json-server": "^0.14.0",
     "msal": "^0.2.3",
@@ -25,8 +25,8 @@
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-eslint": "^3.2.0",
-    "@vue/cli-service": "^3.2.0",
+    "@vue/cli-plugin-eslint": "^3.3.0",
+    "@vue/cli-service": "^3.3.1",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0-0",
