@@ -520,7 +520,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Updated event with API\",\n    \"type\": \"hack\",\n    \"start\": \"2018-03-14\",\n    \"end\": \"2018-03-14\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah topic\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Hello yes\"        \n      }\n    ]\n}"
+							"raw": "{\n    \"title\": \"Updated event with API\",\n    \"type\": \"event\",\n    \"start\": \"2018-03-14\",\n    \"end\": \"2018-03-14\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah topic\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Hello yes\"        \n      }\n    ]\n}"
 						},
 						"url": {
 							"raw": "http://{{smilr-api-host}}/api/events/{{new-event-id}}",
