@@ -126,13 +126,15 @@ routes.put(['/api/events/:id'], function (req, res, next) {
 routes.delete('/api/events/:id', function (req, res, next) {
 
   utils.verifyAuthentication(req)
-  .then(valid => {
-    res.app.get('data').deleteEvent(req.params.id)
+  .then(async valid => {
+    // We have to fetch the event coz we need the type, we need the type for DB sharding
+    evt = await res.app.get('data').getEvent(req.params.id);  
+    res.app.get('data').deleteEvent(req.params.id, evt.type)
     .then(data => {
       if(data.deletedCount == 0) utils.sendError(res, `No event with id '${req.params.id}' found to delete`, 404, 'event-delete-failed');
       else utils.sendData(res, {message: `Deleted event '${req.params.id}' ok`})
     })
-    .catch(err => utils.sendError(res, err, 500, 'data-access-deleteEvent')); 
+    .catch(err => utils.sendError(res, err, 500, 'data-access-deleteEvent'));
   })
   .catch(err => utils.sendError(res, err, 401, 'verify-identity-failed'));  
 })

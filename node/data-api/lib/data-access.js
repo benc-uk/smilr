@@ -58,7 +58,7 @@ class DataAccess {
       // Return promise, if we have a db, resolve with it, otherwise reject with error
       return new Promise((resolve, reject) => {
         if(this.db) { resolve(this.db) }
-        else { reject(err) }
+        else { reject(mongoErr) }
       });
     }
   }
@@ -75,14 +75,14 @@ class DataAccess {
     return this.db.collection(this.EVENT_COLLECTION).findOne({_id: id})
   }
 
-  deleteEvent(id) {
-    return this.db.collection(this.EVENT_COLLECTION).deleteOne({_id: id})
+  deleteEvent(id, type) {
+    return this.db.collection(this.EVENT_COLLECTION).deleteOne({_id: id, type: type})
   }
 
   // Used to both create and update events. NOTE doUpsert=true is only used by demoData loading script
   createOrUpdateEvent(event, doUpsert) {
     if (event._id) {
-      return this.db.collection(this.EVENT_COLLECTION).updateOne({_id: event._id}, {$set: event}, {upsert: doUpsert});
+      return this.db.collection(this.EVENT_COLLECTION).updateOne({_id: event._id, type: event.type}, {$set: event}, {upsert: doUpsert});
     } else {
 
       // Create a random short-code style id for new events
