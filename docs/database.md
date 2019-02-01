@@ -10,7 +10,7 @@ The choice of MongoDB allows us to explore several deployment architectures, the
 Switching between the two options is simply a matter of changing the MongoDB connection string used by the data API (`MONGO_CONNSTR`), this can be done to highlight or demonstrate the compatibility of Cosmos DB
 
 ## Collection Sharding
-The data-access layer supports sharded collections, but sharding is not manditory. The shard keys for the collections are as follows:
+The data-access layer supports sharded collections, but sharding is not mandatory. The shard keys for the collections are as follows:
 - `events` collection to be set with a shard key of `type`
 - `feedback` collection to be set with a shard key of `event`
 

@@ -84,7 +84,6 @@ class DataAccess {
     if (event._id) {
       return this.db.collection(this.EVENT_COLLECTION).updateOne({_id: event._id, type: event.type}, {$set: event}, {upsert: doUpsert});
     } else {
-
       // Create a random short-code style id for new events
       // IMPORTANT!
       // We have to create our own id as a string, because Azure Functions can't handle MongoDB self generated ids
