@@ -8,7 +8,7 @@
           "GET"
         ]
       },
-      "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?code=72KxACwHfak/6cGl3YdEQkrklu5rsDxRdXfmGhxrE1abmOqf5x94yA==&id={id}"
+      "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?code=CHANGEME&id={id}"
     },
     "Data API - Events List": {
       "matchCondition": {
@@ -17,7 +17,7 @@
           "GET"
         ]
       },
-      "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?code=72KxACwHfak/6cGl3YdEQkrklu5rsDxRdXfmGhxrE1abmOqf5x94yA=="
+      "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?code=CHANGEME"
     },
     "Data API - Feedback Create": {
       "matchCondition": {
@@ -26,13 +26,13 @@
           "POST"
         ]
       },
-      "backendUri": "https://changeme.azurewebsites.net/api/feedbackAPI?code=72KxACwHfak/6cGl3YdEQkrklu5rsDxRdXfmGhxrE1abmOqf5x94yA=="
+      "backendUri": "https://changeme.azurewebsites.net/api/feedbackAPI?code=CHANGEME"
     },
     "Data API - Events Filter": {
       "matchCondition": {
         "route": "/api/events/filter/{time}"
       },
-      "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?code=72KxACwHfak/6cGl3YdEQkrklu5rsDxRdXfmGhxrE1abmOqf5x94yA==&time={time}"
+      "backendUri": "https://changeme.azurewebsites.net/api/eventsAPI?code=CHANGEME&time={time}"
     }
   }
 }
