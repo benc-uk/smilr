@@ -95,7 +95,7 @@ routes.post('/api/events', function (req, res, next) {
 //
 routes.put(['/api/events/:id'], function (req, res, next) {
   utils.verifyAuthentication(req)
-  .then(valid => {
+  .then(async valid => {
     let event = req.body;
 
     // Ensure event id is in body, URL params take priority
@@ -106,12 +106,21 @@ routes.put(['/api/events/:id'], function (req, res, next) {
       return;
     }
 
+    // We have to fetch the event coz we need the type, we need the type for DB sharding
+    oldEvent = await res.app.get('data').getEvent(req.params.id);
+
+    // Type is shard key, if changed we give up - more elegant fix on backlog
+    if(oldEvent.type != event.type) {
+      utils.sendError(res, "Event type can not be changed", 400, 'event-modification-not-acceptable')
+      return;
+    }
+
     // Note we send back the same event object we receive, Mongo doesn't return it
     res.app.get('data').createOrUpdateEvent(event, false)
     .then(data => {
       if(data.result.n == 0) {
-        utils.sendError(res, `No event with id '${event._id}' found to modify`, 404, 'event-update-failed');
-        return;
+       utils.sendError(res, `No event with id '${event._id}' found to modify`, 404, 'event-update-failed');
+       return;
       }
       utils.sendData(res, event);
     })
