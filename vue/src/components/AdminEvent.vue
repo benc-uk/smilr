@@ -11,7 +11,7 @@
         </b-form-group>
 
         <b-form-group label="Event Type" label-for="typeInput">
-          <b-select id="typeInput" v-model="event.type" name="type" placeholder="Please provide a title" class="eventSelect">
+          <b-select id="typeInput" v-model="event.type" name="type" placeholder="Please provide a title" class="eventSelect" :disabled="action!='new'">
             <option v-for="(type, index) in getEventTypes()" v-bind:value="type" :key="index" class="typeOption">
               {{ type }}
             </option> 
