@@ -31,6 +31,8 @@ const cors = require('cors');
 
 // Include our data-access library for MongoDB
 var dataAccess = require('./lib/data-access');
+const ApiError = require('./lib/api-error');
+const Utils = require('./lib/utils')
 
 // We need this set or it's impossible to continue!
 if(!process.env.MONGO_CONNSTR) {
@@ -68,7 +70,7 @@ app.get(['/favicon.ico', '/robots*.txt'], function (req, res, next) {
 // Global catch all for all requests not caught by other routes
 // Just return a HTTP 404
 app.use('*', function (req, res, next) {
-  require('./lib/utils').sendError(res, "Route not found", 404);
+  Utils.sendError(res, new ApiError("No matching route not found", 404));
 })
 
 // Get values from env vars or defaults where not provided
