@@ -728,11 +728,6 @@
 									"    var html = pm.response.text()",
 									"    pm.expect(html).to.include(\"<title>Smilr</title>\")",
 									"});",
-									"",
-									"pm.test(\"there is valid app.js\", function () {",
-									"    var html = pm.response.text()",
-									"    pm.expect(html).to.include('src=/js/app')",
-									"});",
 									""
 								],
 								"type": "text/javascript"
