@@ -34,6 +34,9 @@
           <template slot="rating" slot-scope="data">
             <img :src="utilsFaceSVG(data.item.rating)"/> {{ data.item.rating }} 
           </template>
+          <template slot="sentiment" slot-scope="data">
+            {{ data.item.sentiment ? Math.round(data.item.sentiment * 100) + "%" : '-' }} 
+          </template>          
         </b-table>
       </div>
     </b-card>
@@ -64,7 +67,7 @@ export default {
       feedBackTableFields: {
         rating: { sortable: true },
         comment: { sortable: true },
-        sentiment: { label: "Sentiment Score", sortable: true}
+        sentiment: { label: "Sentiment Score", sortable: true }
       }
     }
   },
