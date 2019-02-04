@@ -107,6 +107,30 @@
                 "run", "mock-api"
             ],
             "problemMatcher": []        
-        }  
+        },
+
+        {
+            "label": "Functions Run Host",
+            "type": "shell",
+            "command": "func host start --script-root ${workspaceFolder}/azure/functionsv2",
+            "isBackground": true,
+            "problemMatcher": "$func-watch",
+            "options": {
+              "env": {
+                "languageWorkers__node__arguments": "--inspect=5858",
+                "cwd": "${workspaceFolder}/azure/functionsv2"
+              }
+            },
+            "dependsOn": "Functions Install Extensions"
+        },
+
+        {
+            "label": "Functions Install Extensions",
+            "command": "func extensions install",
+            "options": {
+                "cwd": "${workspaceFolder}/azure/functionsv2"
+            },
+            "type": "shell"
+        }        
     ]
 }

@@ -1,0 +1,16 @@
+{
+  "bindings": [
+    {
+      "type": "cosmosDBTrigger",
+      "name": "documents",
+      "direction": "in",
+      "leaseCollectionName": "leases",
+      "leasesCollectionThroughput": "400",
+      "connectionStringSetting": "COSMOS_MONGO_CONNSTR",
+      "databaseName": "smilrDb",
+      "collectionName": "feedback",
+      "createLeaseCollectionIfNotExists": true
+    }
+  ],
+  "disabled": false
+}
