@@ -1,0 +1,13 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsStorage": "{AzureWebJobsStorage}",
+    "MONGO_CONNSTR": "mongodb://<<CHANGEME>>",
+    "COSMOS_MONGO_CONNSTR": "AccountEndpoint=https://<<CHANGEME>>.documents.azure.com:443/;AccountKey=<<CHANGEME>>",
+    "COGNITIVE_API_KEY": "<<CHANGEME>>"
+  },
+  "Host": {
+    "CORS": "*"
+  }
+}
