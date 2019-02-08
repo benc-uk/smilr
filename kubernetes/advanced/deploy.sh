@@ -7,7 +7,7 @@ kubectl apply -f data-api.yaml
 printf "\n### Deploying Frontend microservice\n"
 kubectl apply -f frontend.yaml
 
-printf "\n### Deploying HTTPS ingress\n"
+printf "\n### Deploying HTTP(S) ingress\n"
 kubectl apply -f ingress-https.yaml
 
 printf "\n"
