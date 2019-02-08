@@ -1,12 +1,12 @@
 # Smilr Helm Chart
 
-![logo](https://ngeor.files.wordpress.com/2017/11/helm-small.png?w=250)
+![logo](https://datamountaineer.com/wp-content/uploads/2016/09/helm.png)
 
 This is a working Helm chart to deploy Smilr. It requires that you have an Ingress Controller deployed, which can be easily installed via Helm.
 
 # Quick Start
 
-- Install Helm https://docs.helm.sh/using_helm/#installing-helm
+- Install Helm [https://docs.helm.sh/using_helm/#installing-helm](https://docs.helm.sh/using_helm/#installing-helm)
 - Add Helm to your Kubernetes cluster: `helm init`
 - `helm install stable/nginx-ingress`
 - From root of this project `cd kubernetes/helm`
