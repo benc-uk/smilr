@@ -1,20 +1,13 @@
 # Enabling HTTPS with cert-manager
 This section briefly describes how to set up HTTPS for Smilr, using cert-manager and certificates issued by Let's Encrypt  
-The information and configs are based on information taken from the Azure docs https://docs.microsoft.com/en-us/azure/aks/ingress-tls 
+The information and configs are based on information taken from the Azure docs [https://docs.microsoft.com/azure/aks/ingress-tls](https://docs.microsoft.com/azure/aks/ingress-tls)
 
 ## Important!
 Change the email address in the issuer.*.yaml files, you can use any valid email address, just not mine!
 
 ## Steps
 
-1. Install cert-manager using Helm
-```
-helm install stable/cert-manager -n cm --namespace kube-system \
-  --set ingressShim.defaultIssuerName=letsencrypt-staging \
-  --set ingressShim.defaultIssuerKind=ClusterIssuer \
-  --set rbac.create=false \
-  --set serviceAccount.create=false
-```
+1. Install cert-manager. [Follow these steps](https://docs.cert-manager.io/en/latest/getting-started/install.html)
 
 2. Install the cert issuers
 ```

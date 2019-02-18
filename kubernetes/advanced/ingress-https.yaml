@@ -17,11 +17,11 @@ metadata:
 spec:
   tls:
   - hosts:
-    - smilr.7e28d40aaab5415089e6.northeurope.aksapp.io
+    - smilr.k.benco.io #smilr.56539f01234e4e00981e.westeurope.aksapp.io
     #secretName: smilr-cert-staging
     secretName: smilr-cert-prod
   rules:
-  - host: smilr.7e28d40aaab5415089e6.northeurope.aksapp.io
+  - host: smilr.k.benco.io #smilr.56539f01234e4e00981e.westeurope.aksapp.io
     http:
       paths:
       - path: /api

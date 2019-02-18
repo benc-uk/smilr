@@ -34,8 +34,7 @@ spec:
         env:       
         - name: API_ENDPOINT
           # !CHANGE THIS! To the external IP of data-api-svc or DNS name if using external DNS, don't forget /api 
-          #value: http://40.115.111.34:80/api
-          value: http://smilr-api.basic.7e28d40aaab5415089e6.northeurope.aksapp.io/api
+          value: http://smilrbasic-api.56539f01234e4e00981e.westeurope.aksapp.io/api
 
         resources:
           limits:
@@ -52,7 +51,7 @@ metadata:
   name: frontend-svc
   annotations:
     # !CHANGE THIS! To your real DNS domain
-    external-dns.alpha.kubernetes.io/hostname: smilr.basic.7e28d40aaab5415089e6.northeurope.aksapp.io
+    external-dns.alpha.kubernetes.io/hostname: smilrbasic.56539f01234e4e00981e.westeurope.aksapp.io
     kubernetes.io/ingress.class: addon-http-application-routing
 spec:
   type: LoadBalancer

@@ -1,17 +1,21 @@
 registryPrefix: bcdemo.azurecr.io/
-domainSuffix: smilr.7e28d40aaab5415089e6.northeurope.aksapp.io
-cmCertIssuer: letsencrypt-staging
+domainSuffix: smilr.56539f01234e4e00981e.westeurope.aksapp.io
+cmCertIssuer: 
 
 dataApi:
-  imageTag: latest
-  replicas: 3
+  imageTag: stable
+  replicas: 5
+  # Leave blank to use the internal service, override if using external database
   mongoConnStr: 
   imagePullPolicy: Always
 
 frontend:
-  imageTag: latest
-  replicas: 2
+  imageTag: stable
+  replicas: 5
   imagePullPolicy: Always
 
-mongo:
-  usePersistence: false
+mongodb:
+  persistence:
+    enabled: true
+  replicaSet:
+    enabled: true

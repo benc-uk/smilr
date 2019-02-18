@@ -22,11 +22,12 @@ dataApi:
   mongoConnStr: 
   imagePullPolicy: Always
   
-
 frontend:
   imageTag: latest
   replicas: 1
   imagePullPolicy: Always
 
-mongo:
-  usePersistence: true
+mongodb:
+  persistence:
+    enabled: false
+  usePassword: false
