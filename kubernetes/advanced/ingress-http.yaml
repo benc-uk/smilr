@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-  - host: smilr.7e28d40aaab5415089e6.northeurope.aksapp.io
+  - host: smilr.k.benco.io
     http:
       paths:
       - path: /api

@@ -6,8 +6,8 @@ spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
 
-    # !!! CHANGE THIS EMAIL ADDRESS !!!
-    email: ben.coleman@microsoft.com
+    # CHANGE THIS EMAIL ADDRESS
+    email: dummy@example.com
     privateKeySecretRef:
       name: letsencrypt-staging
     http01: {}

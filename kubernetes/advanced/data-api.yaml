@@ -33,7 +33,8 @@ spec:
         env:     
         - name: MONGO_CONNSTR
           value: mongodb://mongodb-svc.default
-          #value: mongodb://smilr-demo:blah@smilr-demo.documents.azure.com:10255/?ssl=true&replicaSet=globaldb
+        - name: MONGO_RETRY_DELAY
+          value: "10"
 
         livenessProbe:
           httpGet:
@@ -48,15 +49,15 @@ spec:
             cpu: "0.1"
             
       # Wipe & initialize the database with demo data, remove if unwanted
-      initContainers:
-       - name: init-demodata
-         image: bcdemo.azurecr.io/smilr/data-api
-         command: ['sh', '-c', 'cd demoData && node demoData.js']
-         env:
-           - name: MONGO_CONNSTR
-             value: mongodb://mongodb-svc.default
-           - name: WIPE_DB
-             value: "1"
+      # initContainers:
+      #  - name: init-demodata
+      #    image: bcdemo.azurecr.io/smilr/data-api
+      #    command: ['sh', '-c', 'cd demoData && node demoData.js']
+      #    env:
+      #      - name: MONGO_CONNSTR
+      #        value: mongodb://mongodb-svc.default
+      #      - name: WIPE_DB
+      #        value: "1"
 
 ---
 
@@ -68,6 +69,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: data-api-svc
+  labels:
+    app: data-api
 spec:
   type: ClusterIP
   ports:

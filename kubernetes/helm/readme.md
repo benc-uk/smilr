@@ -8,18 +8,18 @@ This is a working Helm chart to deploy Smilr. It requires that you have an Ingre
 
 - Install Helm [https://docs.helm.sh/using_helm/#installing-helm](https://docs.helm.sh/using_helm/#installing-helm)
 - Add Helm to your Kubernetes cluster: `helm init`
-- `helm install stable/nginx-ingress`
 - From root of this project `cd kubernetes/helm`
+- `helm dependency update smilr`
 - `helm install smilr`
 - Done!
 
 # Configuration Settings
 
-Create a values file e.g. `myvalues.yaml` by taking a copy of the provided `myvalues.sample.yaml` file and change the defaults. The two values that you are most likely to want to change are **registryPrefix** and **domainSuffix**, see details below
+Create a values file e.g. `values.yaml` by taking a copy of the provided `values.sample.yaml` file and change the defaults. The two values that you are most likely to want to change are **registryPrefix** and **domainSuffix**, see details below
 
 Then install into your cluster with
 ```
-helm install smilr -f myvalues.yaml -n releasename
+helm upgrade -i <<release-name>> smilr -f values.yaml
 ```
 
 ## General Settings
@@ -53,4 +53,4 @@ helm install smilr -f myvalues.yaml -n releasename
 
 |  Setting  |  Description           | Type | Default |
 | --------- | ---------------------- | ---- | ------- |
-| **mongo.usePersistence** | Boolean. If true, then a persistent volume claim will be requested and mounted to persist MongoDB data. | Boolean | true |
+| **mongodb.persistence.enabled** | Boolean. If true, then a persistent volume claim will be requested and mounted to persist MongoDB data. | Boolean | true |

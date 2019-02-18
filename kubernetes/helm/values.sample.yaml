@@ -1,0 +1,32 @@
+#
+# SAMPLE FILE - make a copy of this with your real values in
+#
+
+# Change to blank string to pull from prebuilt images on Docker Hub
+registryPrefix: changeme.azurecr.io/
+
+# Leave blank if not using DNS with your ingress
+# Get the name of your AKS DNS zone by running `az network dns zone list -o table`
+domainSuffix: smilr.<randomstuff>.<region>.aksapp.io
+
+# If using cert-manager to issue TLS certs for HTTPS support 
+# Leave blank if you haven't set up cert-manager to disable HTTPS
+cmCertIssuer: 
+
+dataApi:
+  imageTag: latest
+  replicas: 1
+  # Leave blank to use the internal service, override if using external database
+  mongoConnStr: 
+  imagePullPolicy: Always
+
+frontend:
+  imageTag: latest
+  replicas: 1
+  imagePullPolicy: Always
+
+mongodb:
+  persistence:
+    enabled: false
+  replicaSet:
+    enabled: false    

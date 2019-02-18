@@ -34,7 +34,7 @@ spec:
 
         env:     
         - name: MONGO_CONNSTR
-          value: {{ if .Values.dataApi.mongoConnStr }} {{ .Values.dataApi.mongoConnStr }} {{ else }} "mongodb://{{ $mongoFullName }}" {{ end }}
+          value: {{ if .Values.dataApi.mongoConnStr }} {{ .Values.dataApi.mongoConnStr }} {{ else }} "mongodb://{{ .Release.Name }}-mongodb" {{ end }}
 
         livenessProbe:
           httpGet:
