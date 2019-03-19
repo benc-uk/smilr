@@ -8,5 +8,14 @@
     "obj": true,
     "bin": true
   },
-  "debug.internalConsoleOptions": "neverOpen"
+  "debug.internalConsoleOptions": "neverOpen",
+  "workbench.colorCustomizations": {
+    "terminal.background": "#0e1018",
+    "terminal.ansiBlack": "#000",
+    "terminal.ansiBlue": "#59a1ff",
+    "titleBar.activeBackground": "#39c250",
+    "titleBar.inactiveBackground": "#287a36",
+    "titleBar.activeForeground": "#011401",
+    "titleBar.inactiveForeground": "#ffffff99"
+  }
 }
