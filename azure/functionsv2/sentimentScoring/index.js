@@ -16,8 +16,10 @@ module.exports = async function (context, documents) {
       var docValue = doc.$v;
       var comment = docValue.comment.$v;
       var docId = docValue._id.$v;
-      // VERY IMPORTANT - Don't process docs that already have sentiment added
+
+      // VERY IMPORTANT - Don't process docs that already have sentiment added!
       if(docValue.hasOwnProperty('sentiment')) continue;
+      
       context.log(`### Triggered on changed/new feedback document: ${docId}`);
       context.log(`### Comment: "${comment}"`);
       docsToAnalyse.push({
@@ -54,10 +56,9 @@ module.exports = async function (context, documents) {
 
     for(let cogResult of cognitiveResults.documents) {
       // For sharding we need the event property too, that's back in our original documents list
-      // So we need to search for it, keying on _id 
-      let sourceDoc = documents.find(d => {
-        return d.$v._id.$v == cogResult.id
-      })
+      //  - So we need to search for it, keying on _id 
+      let sourceDoc = documents.find(d => { return d.$v._id.$v == cogResult.id })
+
       // Supply both the doc _id and the event, the event property is the shard key
       await feedback.updateOne({ _id: cogResult.id, event: sourceDoc.$v.event.$v }, { $set: {sentiment: cogResult.score} })
       context.log(`### Successfully updated document '${cogResult.id}' in database`);

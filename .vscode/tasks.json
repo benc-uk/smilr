@@ -125,7 +125,7 @@
         },
 
         {
-            "label": "Functions Install Extensions",
+            "label": "installExtensions",
             "command": "func extensions install",
             "options": {
                 "cwd": "${workspaceFolder}/azure/functionsv2"
