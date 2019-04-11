@@ -2,7 +2,7 @@
   "azureFunctions.projectLanguage": "JavaScript",
   "azureFunctions.projectRuntime": "~2",
   "azureFunctions.templateFilter": "Verified",
-  "azureFunctions.deploySubpath": ".",
+  // "azureFunctions.deploySubpath": ".",
   "azureFunctions.preDeployTask": "installExtensions",
   "files.exclude": {
     "obj": true,
