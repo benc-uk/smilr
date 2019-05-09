@@ -5,7 +5,7 @@ stages:
 - stage: deployTo${{ parameters.envName }}
   displayName: Deploy to ${{ parameters.envName }}
   condition: true
-  
+
   jobs:
   - deployment: deployWithACI
     displayName: 'Deploy using ACI'
@@ -16,7 +16,7 @@ stages:
 
     variables:
       env-name: ${{ parameters.envName }}
-      location: 'westeurope'
+      location: westeurope
       res-group: temp.smilr.${{ parameters.envName }}
       dns-prefix: smilr-$(Build.BuildId)-${{ parameters.envName }}
 
@@ -33,7 +33,7 @@ stages:
             inputs:
               azureSubscription: Azure (AIRS)
               resourceGroupName: $(res-group)
-              location: $(westeurope)
+              location: $(location)
               csmFile: azure/templates/aci-mongo/azuredeploy.json
               csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
               overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix $(dns-prefix) -dataApiImageTag latest -frontendImageTag latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
