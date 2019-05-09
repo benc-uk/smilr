@@ -1,16 +1,15 @@
 #
 # Azure Pipeline - Build definition
 # Build both Smilr Node.js images and push to Azure Container Registry
+# Deploy to Azure Container Instances across multiple stages
 # Ben C, 2018
 #
 
 trigger:
-- devops-testing
+- master
 
-#
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-name, acr-password
-#
 variables:
   - group: shared-variables
 
@@ -20,12 +19,15 @@ stages:
 #
 - stage: build
   displayName: 'Build containers'
-  condition: false
+  #condition: false
+
   jobs:
   - job: buildJob
-    displayName: 'Docker build & push to ACR'
+    displayName: 'Docker build & ACR push'
+
     pool:
       vmImage: Ubuntu-16.04
+
     steps:
     # Data API build, tag as both latest and BuildNumber
     - bash: |
@@ -51,46 +53,67 @@ stages:
 # Deploy stage 1 - test environment
 #
 - stage: deployToTest
-  condition: true
-  displayName: 'Deploy to test'
+  displayName: Deploy to Test
+  #condition: true
+  
+  variables:
+    location: westeurope
+    dns-prefix: smilr-$(Build.BuildId)-test
+
   jobs:
-  - deployment: deployWithACI
-    displayName: 'Deploy using ACI'
-    environment: Test
-    pool:
-      vmImage: Ubuntu-16.04
-    variables:
-      env-name: 'test'   
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          # Checkout git source
-          - checkout: self
-          # Deploy an ARM template from the repo and inject parameters
-          - task: AzureResourceGroupDeployment@2
-            displayName: 'Deploy ARM Template'
-            inputs:
-              azureSubscription: Azure (AIRS)
-              resourceGroupName: temp.smilr.$(env-name)
-              location: westeurope
-              csmFile: azure/templates/aci-mongo/azuredeploy.json
-              csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
-              overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix smilr-$(Build.BuildId)-$(env-name) -dataApiImageTag smilr/data-api:latest -frontendImageTag smilr/frontend:latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: Test
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      envName: Test
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
 #
 # Deploy stage 2 - staging environment
 #
 - stage: deployToStaging
-  displayName: 'Deploy to staging'
+  displayName: Deploy to Staging
+  #condition: true
+  
+  variables:
+    location: westeurope
+    dns-prefix: smilr-$(Build.BuildId)-staging
+
   jobs:
-  - deployment: deployWithACI
-    displayName: 'Deploy using ACI'
-    environment: Staging
-    pool:
-      vmImage: Ubuntu-16.04
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: echo Hello          
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: Staging
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      envName: Staging
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+
+#
+# Deploy stage 3 - prod environment
+#
+- stage: deployToProduction
+  displayName: Deploy to Production
+  #condition: true
+  
+  variables:
+    location: westeurope
+    dns-prefix: smilr
+
+  jobs:
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: Production
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      envName: Production
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
