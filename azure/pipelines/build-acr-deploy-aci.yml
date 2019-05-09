@@ -61,9 +61,9 @@ stages:
     dns-prefix: smilr-$(Build.BuildId)-test
 
   jobs:
-  # - template: templates/deploy-aci-arm.yml
-  #   parameters:
-  #     envName: Test
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: Test
 
   - job: runTestsJob
     dependsOn: deployWithACI
