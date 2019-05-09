@@ -5,7 +5,7 @@
 #
 
 trigger:
-- master
+- devops-testing
 
 #
 # NOTE! This variable group must be pre-created and populated
