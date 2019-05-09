@@ -70,7 +70,7 @@ stages:
       envName: Test
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-      frontHost: $(dns-prefix).$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
 #
 # Deploy stage 2 - staging environment
@@ -93,4 +93,4 @@ stages:
       envName: Staging
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-      frontHost: $(dns-prefix).$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
