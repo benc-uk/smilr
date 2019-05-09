@@ -5,7 +5,7 @@ parameters:
 
 jobs:
   - job: runTestsJob
-    dependsOn: deployWithACI
+    dependsOn: ${{ parameters.dependsOn }}
     displayName: 'Functional API tests'
 
     pool:
@@ -14,7 +14,7 @@ jobs:
     steps:
     - checkout: self
     - bash: npm install -g newman --prefix $(System.DefaultWorkingDirectory)
-    - bash: $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/Smilr.postman_collection.json -r junit -n 3 --global-var smilr-api-host="${{ apiHost }}" --global-var smilr-front-host="${{ frontHost }}" --timeout 180000
+    - bash: $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/Smilr.postman_collection.json -r junit -n 3 --global-var smilr-api-host="${{ parameters.apiHost }}" --global-var smilr-front-host="${{ parameters.frontHost }}" --timeout 180000
     - task: PublishTestResults@2
       inputs:
         testResultsFiles: 'newman/*.xml'
