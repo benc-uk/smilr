@@ -54,11 +54,11 @@ stages:
 #
 - template: templates/deploy-aci-arm.yml
   parameters:
-  - envName: test
+    envName: Test
 
 #
 # Deploy stage 2 - staging environment
 #
 - template: templates/deploy-aci-arm.yml
   parameters:
-  - envName: staging
+    envName: Staging
