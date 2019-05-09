@@ -1,5 +1,6 @@
 parameters:
   envName: ''
+  dnsPrefix: ''
 
 jobs:
 - deployment: deployWithACI
@@ -13,7 +14,7 @@ jobs:
     env-name: ${{ parameters.envName }}
     location: westeurope
     res-group: temp.smilr.${{ parameters.envName }}
-    dns-prefix: smilr-$(Build.BuildId)-${{ parameters.envName }}
+    dns-prefix: ${{ parameters.dnsPrefix }}
 
   strategy:
     runOnce:

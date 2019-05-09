@@ -55,10 +55,33 @@ stages:
 - stage: deployToTest
   displayName: Deploy to Test
   condition: true
+  
+  variables:
+    location: westeurope
+    dns-prefix: smilr-$(Build.BuildId)-${{ parameters.envName }}
+
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: Test
+      dnsPrefix: $(dns-prefix)
+
+  - job: runTestsJob
+    displayName: 'Functional API tests'
+    environment: ${{ parameters.envName }}
+
+    pool:
+      vmImage: Ubuntu-16.04
+
+    steps:
+    - checkout: self
+    - bash: install -g newman --prefix $(System.DefaultWorkingDirectory)
+    - bash: $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/Smilr.postman_collection.json -r junit -n 3 --global-var smilr-api-host="$(dns-prefix)-api.$(location).azurecontainer.io" --global-var smilr-front-host="$(dns-prefix)-frontend.$(location).azurecontainer.io" --timeout 180000
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: 'newman/*.xml'
+      condition: succeededOrFailed()
+
 
 #
 # Deploy stage 2 - staging environment
