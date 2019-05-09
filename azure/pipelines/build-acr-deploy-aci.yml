@@ -24,7 +24,7 @@ stages:
   jobs:
   - job: buildJob
     displayName: 'Docker build & ACR push'
-    
+
     pool:
       vmImage: Ubuntu-16.04
 
@@ -54,11 +54,11 @@ stages:
 #
 - template: templates/deploy-aci-arm.yml
   parameters:
-    - envName: test
+  - envName: test
 
 #
 # Deploy stage 2 - staging environment
 #
 - template: templates/deploy-aci-arm.yml
   parameters:
-    - envName: staging
+  - envName: staging
