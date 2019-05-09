@@ -18,7 +18,8 @@ stages:
 #
 # Build stage
 #
-- stage: build-to-ACR
+- stage: build
+  displayName: Build to ACR
   jobs:
   - job: build-job
     pool:
@@ -51,9 +52,10 @@ stages:
 #
 # Deploy stage 1 - Dev environment
 #
-- stage: deploy-to-dev-ACI
+- stage: deploy_dev
+  displayName: Deploy to Dev ACI
   jobs:
-  - deployment: deploy-dev
+  - deployment: deploy_job_dev
     environment: dev
     pool:
       vmImage: Ubuntu-16.04
