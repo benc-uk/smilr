@@ -66,7 +66,7 @@ stages:
       envName: Test
 
   - job: runTestsJob
-    dependsOn: deployToTest
+    dependsOn: deployWithACI
     displayName: 'Functional API tests'
     pool:
       vmImage: Ubuntu-16.04
