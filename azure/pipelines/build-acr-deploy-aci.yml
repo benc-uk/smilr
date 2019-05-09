@@ -68,7 +68,6 @@ stages:
 
   - job: runTestsJob
     displayName: 'Functional API tests'
-    environment: ${{ parameters.envName }}
 
     pool:
       vmImage: Ubuntu-16.04
