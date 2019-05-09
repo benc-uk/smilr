@@ -1,39 +1,34 @@
 parameters:
   envName: ''
 
-stages:
-- stage: deployTo${{ parameters.envName }}
-  displayName: Deploy to ${{ parameters.envName }}
-  condition: true
+jobs:
+- deployment: deployWithACI
+  displayName: 'Deploy using ACI'
+  environment: ${{ parameters.envName }}
 
-  jobs:
-  - deployment: deployWithACI
-    displayName: 'Deploy using ACI'
-    environment: ${{ parameters.envName }}
+  pool:
+    vmImage: Ubuntu-16.04
 
-    pool:
-      vmImage: Ubuntu-16.04
+  variables:
+    env-name: ${{ parameters.envName }}
+    location: westeurope
+    res-group: temp.smilr.${{ parameters.envName }}
+    dns-prefix: smilr-$(Build.BuildId)-${{ parameters.envName }}
 
-    variables:
-      env-name: ${{ parameters.envName }}
-      location: westeurope
-      res-group: temp.smilr.${{ parameters.envName }}
-      dns-prefix: smilr-$(Build.BuildId)-${{ parameters.envName }}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        # Checkout git source
+        - checkout: self
 
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          # Checkout git source
-          - checkout: self
-
-          # Deploy an ARM template from the repo and inject parameters
-          - task: AzureResourceGroupDeployment@2
-            displayName: 'Deploy ARM Template'
-            inputs:
-              azureSubscription: Azure (AIRS)
-              resourceGroupName: $(res-group)
-              location: $(location)
-              csmFile: azure/templates/aci-mongo/azuredeploy.json
-              csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
-              overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix $(dns-prefix) -dataApiImageTag latest -frontendImageTag latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
+        # Deploy an ARM template from the repo and inject parameters
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Deploy ARM Template'
+          inputs:
+            azureSubscription: Azure (AIRS)
+            resourceGroupName: $(res-group)
+            location: $(location)
+            csmFile: azure/templates/aci-mongo/azuredeploy.json
+            csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
+            overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix $(dns-prefix) -dataApiImageTag latest -frontendImageTag latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
