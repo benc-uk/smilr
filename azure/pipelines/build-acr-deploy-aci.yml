@@ -58,7 +58,7 @@ stages:
   
   variables:
     location: westeurope
-    dns-prefix: smilr-$(Build.BuildId)-${{ parameters.envName }}
+    dns-prefix: smilr-$(Build.BuildId)-test
 
   jobs:
   - template: templates/deploy-aci-arm.yml
