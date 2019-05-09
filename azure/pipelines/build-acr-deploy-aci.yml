@@ -52,13 +52,21 @@ stages:
 #
 # Deploy stage 1 - test environment
 #
-- template: templates/deploy-aci-arm.yml
-  parameters:
-    envName: Test
+- stage: deployToTest
+  displayName: Deploy to Test
+  condition: true
+  jobs:
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: Test
 
 #
 # Deploy stage 2 - staging environment
 #
-- template: templates/deploy-aci-arm.yml
-  parameters:
-    envName: Staging
+- stage: deployToStaging
+  displayName: Deploy to Staging
+  condition: true
+  jobs:
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: Staging
