@@ -4,7 +4,8 @@ parameters:
 stages:
 - stage: deployTo${{ parameters.envName }}
   displayName: Deploy to ${{ parameters.envName }}
-
+  condition: true
+  
   jobs:
   - deployment: deployWithACI
     displayName: 'Deploy using ACI'
