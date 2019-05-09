@@ -19,7 +19,7 @@ stages:
 # Build stage
 #
 - stage: build
-  displayName: Build to ACR
+  displayName: 'Build and push to ACR'
   jobs:
   - job: buildJob
     pool:
@@ -42,21 +42,22 @@ stages:
     #
     - bash: |
         docker build . -f node/frontend/Dockerfile -t smilr/frontend:latest -t smilr/frontend:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/frontend:latest -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber)
-      displayName: 'Build data API image'
+      displayName: 'Build frontend image'
 
     - bash: |
         docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
         docker push $(acr-name).azurecr.io/smilr/frontend
-      displayName: 'Push data API image(s) to ACR'
+      displayName: 'Push frontend image(s) to ACR'
 
 #
 # Deploy stage 1 - Dev environment
 #
-- stage: deployDev
-  displayName: Deploy to Dev ACI
+- stage: deployToTest
+  displayName: 'Deploy to test'
   jobs:
-  - deployment: deployJobDev
-    environment: dev
+  - deployment: deployWithACI
+    displayName: 'Deploy using ACI'
+    environment: Test
     pool:
       vmImage: Ubuntu-16.04
     strategy:
@@ -64,3 +65,20 @@ stages:
         deploy:
           steps:
           - script: echo Hello
+
+#
+# Deploy stage 1 - Dev environment
+#
+- stage: deployToStaging
+  displayName: 'Deploy to staging'
+  jobs:
+  - deployment: deployWithACI
+    displayName: 'Deploy using ACI'
+    environment: Staging
+    pool:
+      vmImage: Ubuntu-16.04
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Hello          
