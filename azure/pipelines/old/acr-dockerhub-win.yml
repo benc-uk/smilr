@@ -1,0 +1,51 @@
+#
+# Azure Pipeline - Build defintion
+# Build both Smilr Node.js images FOR WINDOWS and push to Azure Container Registry
+# Ben C, 2018
+#
+trigger: none 
+
+# Note - Windows build agent queue
+pool:
+  name: Hosted VS2017
+
+#
+# NOTE! This variable group must be pre-created and populated
+# - Expected variables: acr-name, acr-password, dockerhub-user, dockerhub-password
+#
+variables:
+  - group: shared-variables
+
+steps:
+#
+# Data API build steps - Windows
+#
+- bash: |
+    docker build . -f node/data-api/windows.Dockerfile -t smilr/data-api:windows -t $(acr-name).azurecr.io/smilr/data-api:windows --build-arg build_info="Azure DevOps build: '$(Build.BuildNumber)' Trigger: '$(Build.Reason)'. Built as Windows container image"
+  displayName: 'Build Windows data API image'
+
+- bash: |
+    docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+    docker push $(acr-name).azurecr.io/smilr/data-api:windows
+  displayName: 'Push Windows data API image to ACR'
+
+#
+# Frontend build steps - Windows
+#
+- bash: |
+    docker build . -f node/frontend/windows.Dockerfile -t smilr/frontend:windows -t $(acr-name).azurecr.io/smilr/frontend:windows --build-arg build_info="Azure DevOps build: '$(Build.BuildNumber)' Trigger: '$(Build.Reason)'. Built as Windows container image"
+  displayName: 'Build Windows frontend image'
+
+- bash: |
+    docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+    docker push $(acr-name).azurecr.io/smilr/frontend:windows
+  displayName: 'Push Windows frontend image to ACR'
+
+#
+# Update public Dockerhub
+#
+- bash: |
+    docker login -u $(dockerhub-user) -p $(dockerhub-password)
+    docker push smilr/frontend:windows
+    docker push smilr/data-api:windows
+  displayName: 'Push both Windows images to Dockerhub'

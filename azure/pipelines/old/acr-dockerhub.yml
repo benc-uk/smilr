@@ -1,0 +1,51 @@
+#
+# Azure Pipeline - Build defintion
+# Build both Smilr Node.js images and push to Azure Container Registry
+# AND push to public Dockerhub
+# Ben C, 2018
+#
+trigger: none 
+
+pool:
+  name: Hosted Ubuntu 1604
+
+#
+# NOTE! This variable group must be pre-created and populated
+# - Expected variables: acr-name, acr-password, dockerhub-user, dockerhub-password
+#
+variables:
+  - group: shared-variables
+
+steps:
+#
+# Data API build steps
+#
+- bash: |
+    docker build . -f node/data-api/Dockerfile -t smilr/data-api:latest -t smilr/data-api:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/data-api:latest -t $(acr-name).azurecr.io/smilr/data-api:$(Build.BuildNumber) --build-arg build_info="Azure DevOps build: '$(Build.BuildNumber)' Trigger: '$(Build.Reason)'. Built as container image"
+  displayName: 'Build data API image'
+
+- bash: |
+    docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+    docker push $(acr-name).azurecr.io/smilr/data-api
+  displayName: 'Push data API image(s) to ACR'
+
+#
+# Frontend build steps
+#
+- bash: |
+    docker build . -f node/frontend/Dockerfile -t smilr/frontend:latest -t smilr/frontend:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/frontend:latest -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber) --build-arg build_info="Azure DevOps build: '$(Build.BuildNumber)' Trigger: '$(Build.Reason)'. Built as container image"
+  displayName: 'Build frontend API image'
+
+- bash: |
+    docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+    docker push $(acr-name).azurecr.io/smilr/frontend
+  displayName: 'Push frontend API image(s) to ACR'
+
+#
+# Update public Dockerhub
+#
+- bash: |
+    docker login -u $(dockerhub-user) -p $(dockerhub-password)
+    docker push smilr/frontend:latest
+    docker push smilr/data-api:latest
+  displayName: 'Push both images to Dockerhub'

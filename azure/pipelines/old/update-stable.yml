@@ -1,0 +1,48 @@
+#
+# Azure Pipeline - Build defintion
+# Re-tag latest as stable and push to ACR and Dockerhub
+# Ben C, 2018
+#
+trigger: none 
+
+pool:
+  name: Hosted Ubuntu 1604
+
+#
+# NOTE! This variable group must be pre-created and populated
+# - Expected variables: acr-name, acr-password, dockerhub-user, dockerhub-password
+#
+variables:
+  - group: shared-variables
+
+steps:
+#
+# Retag images, latest -> stable
+#
+- bash: |
+    docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+    docker pull $(acr-name).azurecr.io/smilr/data-api:latest
+    docker pull $(acr-name).azurecr.io/smilr/frontend:latest
+    docker tag $(acr-name).azurecr.io/smilr/data-api:latest $(acr-name).azurecr.io/smilr/data-api:stable
+    docker tag $(acr-name).azurecr.io/smilr/data-api:latest smilr/data-api:stable
+    docker tag $(acr-name).azurecr.io/smilr/frontend:latest $(acr-name).azurecr.io/smilr/frontend:stable
+    docker tag $(acr-name).azurecr.io/smilr/frontend:latest smilr/frontend:stable
+  displayName: 'Pull and retag images'
+
+#
+# Push to ACR
+#
+- bash: |
+    docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+    docker push $(acr-name).azurecr.io/smilr/data-api:stable
+    docker push $(acr-name).azurecr.io/smilr/frontend:stable
+  displayName: 'Push both stable images to ACR'
+
+#
+# Push to public Dockerhub
+#
+- bash: |
+    docker login -u $(dockerhub-user) -p $(dockerhub-password)
+    docker push smilr/data-api:stable
+    docker push smilr/frontend:stable
+  displayName: 'Push both stable images to Dockerhub'
