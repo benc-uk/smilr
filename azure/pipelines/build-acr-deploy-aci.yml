@@ -58,7 +58,7 @@ stages:
     pool:
       vmImage: Ubuntu-16.04
     strategy:
-    runOnce:
-      deploy:
-        steps:
-        - script: echo Hello
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Hello
