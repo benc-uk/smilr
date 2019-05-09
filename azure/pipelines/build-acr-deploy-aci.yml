@@ -64,11 +64,10 @@ stages:
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: Test
-      dnsPrefix: $(dns-prefix)
 
   - job: runTestsJob
+    dependsOn: deployToTest
     displayName: 'Functional API tests'
-
     pool:
       vmImage: Ubuntu-16.04
 
