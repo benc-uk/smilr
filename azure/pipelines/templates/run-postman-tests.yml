@@ -5,7 +5,7 @@ parameters:
 
 jobs:
   - job: runTestsJob
-    dependsOn: ${{ dependsOn }}
+    dependsOn: deployWithACI
     displayName: 'Functional API tests'
 
     pool:
