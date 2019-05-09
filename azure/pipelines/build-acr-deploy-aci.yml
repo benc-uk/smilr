@@ -20,11 +20,14 @@ stages:
 - stage: build
   displayName: 'Build containers'
   condition: false
+
   jobs:
   - job: buildJob
-    displayName: 'Docker build & push to ACR'
+    displayName: 'Docker build & ACR push'
+    
     pool:
       vmImage: Ubuntu-16.04
+
     steps:
     # Data API build, tag as both latest and BuildNumber
     - bash: |
@@ -49,47 +52,13 @@ stages:
 #
 # Deploy stage 1 - test environment
 #
-- stage: deployToTest
-  condition: true
-  displayName: 'Deploy to test'
-  jobs:
-  - deployment: deployWithACI
-    displayName: 'Deploy using ACI'
-    environment: Test
-    pool:
-      vmImage: Ubuntu-16.04
-    variables:
-      env-name: 'test'   
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          # Checkout git source
-          - checkout: self
-          # Deploy an ARM template from the repo and inject parameters
-          - task: AzureResourceGroupDeployment@2
-            displayName: 'Deploy ARM Template'
-            inputs:
-              azureSubscription: Azure (AIRS)
-              resourceGroupName: temp.smilr.$(env-name)
-              location: westeurope
-              csmFile: azure/templates/aci-mongo/azuredeploy.json
-              csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
-              overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix smilr-$(Build.BuildId)-$(env-name) -dataApiImageTag latest -frontendImageTag latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
+- template: templates/deploy-aci-arm.yml
+  parameters:
+    - envName: test
 
 #
 # Deploy stage 2 - staging environment
 #
-- stage: deployToStaging
-  displayName: 'Deploy to staging'
-  jobs:
-  - deployment: deployWithACI
-    displayName: 'Deploy using ACI'
-    environment: Staging
-    pool:
-      vmImage: Ubuntu-16.04
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: echo Hello          
+- template: templates/deploy-aci-arm.yml
+  parameters:
+    - envName: staging
