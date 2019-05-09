@@ -1,0 +1,91 @@
+#
+# Deploy the back end data API microservice in Kubernetes
+#
+# !IMPORTANT! Change the image reference to point to the registry holding
+# the Smilr images, either ACR or public
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: data-api
+  labels:
+    app: data-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-api
+  template:
+    metadata:
+      labels:
+        app: data-api
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/os
+                operator: In
+                values:
+                - windows
+
+      containers:
+      - name: data-api-pods
+
+        # !CHANGE THIS! To your real image reference for the data-api  
+        image: bcdemo.azurecr.io/smilr/data-api:windows1809
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 4000
+
+        env:     
+        - name: MONGO_CONNSTR
+          # Windows weirdness, *must* include the port
+          value: mongodb://mongodb:27017
+        - name: MONGO_RETRY_DELAY
+          value: "10"
+
+        livenessProbe:
+          httpGet:
+            path: /api/info
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+        resources:
+          limits:
+            cpu: "0.5"
+            
+      # Wipe & initialize the database with demo data, remove if unwanted
+      # initContainers:
+      #  - name: init-demodata
+      #    image: bcdemo.azurecr.io/smilr/data-api
+      #    command: ['sh', '-c', 'cd demoData && node demoData.js']
+      #    env:
+      #      - name: MONGO_CONNSTR
+      #        value: mongodb://mongodb-svc.default
+      #      - name: WIPE_DB
+      #        value: "1"
+
+---
+
+#
+# Deploy the back end data API microservice in Kubernetes
+#
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: data-api-svc
+  labels:
+    app: data-api
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4000
+  selector:
+    app: data-api

@@ -1,0 +1,64 @@
+#
+# Azure Pipeline - Build definition
+# Build both Smilr Node.js images and push to Azure Container Registry
+# Ben C, 2018
+#
+
+trigger:
+- master
+
+#
+# NOTE! This variable group must be pre-created and populated
+# - Expected variables: acr-name, acr-password
+#
+variables:
+  - group: shared-variables
+
+stages:
+#
+# Build stage
+#
+- stage: Build to ACR
+  jobs:
+  - job: build-job
+    pool:
+      vmImage: Ubuntu-16.04
+    steps:
+    #
+    # Data API build steps, tag as both latest and BuildNumber
+    #
+    - bash: |
+        docker build . -f node/data-api/Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:latest -t $(acr-name).azurecr.io/smilr/data-api:$(Build.BuildNumber)
+      displayName: 'Build data API image'
+
+    - bash: |
+        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+        docker push $(acr-name).azurecr.io/smilr/data-api
+      displayName: 'Push data API image(s) to ACR'
+
+    #
+    # Frontend build steps, tag as both latest and BuildNumber
+    #
+    - bash: |
+        docker build . -f node/frontend/Dockerfile -t smilr/frontend:latest -t smilr/frontend:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/frontend:latest -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber)
+      displayName: 'Build data API image'
+
+    - bash: |
+        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+        docker push $(acr-name).azurecr.io/smilr/frontend
+      displayName: 'Push data API image(s) to ACR'
+
+#
+# Deploy stage 1 - Dev environment
+#
+- stage: Deploy to Dev (ACI)
+  jobs:
+  - deployment: deploy-dev
+    environment: dev
+    pool:
+      vmImage: Ubuntu-16.04
+    strategy:
+    runOnce:
+      deploy:
+        steps:
+        - script: echo Hello

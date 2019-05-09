@@ -1,0 +1,77 @@
+#
+# Deploy the front end microservice which serves the client app
+#
+# !IMPORTANT! Change the image reference to point to the registry holding
+# the Smilr images, either ACR or public
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/os
+                operator: In
+                values:
+                - windows
+
+      containers:
+      - name: frontend-pods
+
+        # !CHANGE THIS! To your real image reference for the frontend 
+        image: bcdemo.azurecr.io/smilr/frontend:windows1809
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 3000
+
+        env:       
+        - name: API_ENDPOINT
+          value: /api 
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+        resources:
+          limits:
+            cpu: "0.5"
+
+---
+
+#
+# Endpoint for the front end microservice which serves the client app
+#
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-svc
+  labels:
+    app: frontend
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  selector:
+    app: frontend
