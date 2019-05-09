@@ -19,9 +19,10 @@ stages:
 # Build stage
 #
 - stage: build
-  displayName: 'Build and push to ACR'
+  displayName: 'Build containers'
   jobs:
   - job: buildJob
+    displayName: 'Docker build & push to ACR'
     pool:
       vmImage: Ubuntu-16.04
     steps:
@@ -50,7 +51,7 @@ stages:
       displayName: 'Push frontend image(s) to ACR'
 
 #
-# Deploy stage 1 - Dev environment
+# Deploy stage 1 - test environment
 #
 - stage: deployToTest
   displayName: 'Deploy to test'
@@ -60,14 +61,24 @@ stages:
     environment: Test
     pool:
       vmImage: Ubuntu-16.04
+    variables:
+      env-name: 'test'   
     strategy:
       runOnce:
         deploy:
           steps:
-          - script: echo Hello
+          - task: AzureResourceGroupDeployment@2
+            displayName: 'Deploy ARM Template'
+            inputs:
+              azureSubscription: Azure (AIRS)
+              resourceGroupName: temp.smilr.$(env-name)
+              location: westeurope
+              csmFile: azure/templates/aci-mongo/azuredeploy.json
+              csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
+              overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix smilr-$(Build.BuildId)-$(env-name) -dataApiImageTag smilr/data-api:latest -frontendImageTag smilr/frontend:latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
 
 #
-# Deploy stage 1 - Dev environment
+# Deploy stage 12 - staging environment
 #
 - stage: deployToStaging
   displayName: 'Deploy to staging'
