@@ -58,9 +58,9 @@ stages:
   condition: true
   displayName: 'Deploy to test'
   jobs:
-  - deployment: deployWithACI
+  - job: deployWithACI
     displayName: 'Deploy using ACI'
-    environment: Test
+    # environment: Test
     pool:
       vmImage: Ubuntu-16.04
     variables:
@@ -70,6 +70,7 @@ stages:
         deploy:
           steps:
           - bash: ls
+          - bash: pwd
           - task: AzureResourceGroupDeployment@2
             displayName: 'Deploy ARM Template'
             inputs:
