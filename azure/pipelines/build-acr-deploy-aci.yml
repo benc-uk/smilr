@@ -6,7 +6,7 @@
 #
 
 trigger:
-- devops-testing
+- master
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-name, acr-password
