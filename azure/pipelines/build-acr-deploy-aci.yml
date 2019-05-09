@@ -20,6 +20,7 @@ stages:
 #
 - stage: build
   displayName: 'Build containers'
+  condition: false
   jobs:
   - job: buildJob
     displayName: 'Docker build & push to ACR'
@@ -54,6 +55,7 @@ stages:
 # Deploy stage 1 - test environment
 #
 - stage: deployToTest
+  condition: true
   displayName: 'Deploy to test'
   jobs:
   - deployment: deployWithACI
@@ -67,14 +69,15 @@ stages:
       runOnce:
         deploy:
           steps:
+          - bash: ls
           - task: AzureResourceGroupDeployment@2
             displayName: 'Deploy ARM Template'
             inputs:
               azureSubscription: Azure (AIRS)
               resourceGroupName: temp.smilr.$(env-name)
               location: westeurope
-              csmFile: azure/templates/aci-mongo/azuredeploy.json
-              csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
+              csmFile: /azure/templates/aci-mongo/azuredeploy.json
+              csmParametersFile: /azure/templates/aci-mongo/azuredeploy.parameters.json
               overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix smilr-$(Build.BuildId)-$(env-name) -dataApiImageTag smilr/data-api:latest -frontendImageTag smilr/frontend:latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
 
 #
