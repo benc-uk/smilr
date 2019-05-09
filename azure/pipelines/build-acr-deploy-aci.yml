@@ -65,21 +65,12 @@ stages:
     parameters:
       envName: Test
 
-  - job: runTestsJob
-    dependsOn: deployWithACI
-    displayName: 'Functional API tests'
-    pool:
-      vmImage: Ubuntu-16.04
-
-    steps:
-    - checkout: self
-    - bash: npm install -g newman --prefix $(System.DefaultWorkingDirectory)
-    - bash: $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/Smilr.postman_collection.json -r junit -n 3 --global-var smilr-api-host="$(dns-prefix)-api.$(location).azurecontainer.io" --global-var smilr-front-host="$(dns-prefix)-frontend.$(location).azurecontainer.io" --timeout 180000
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFiles: 'newman/*.xml'
-      condition: succeededOrFailed()
-
+  - template: templates/run-postman-tests.yml
+    parameters:
+      envName: Test
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix).$(location).azurecontainer.io
 
 #
 # Deploy stage 2 - staging environment
@@ -87,7 +78,19 @@ stages:
 - stage: deployToStaging
   displayName: Deploy to Staging
   condition: true
+  
+  variables:
+    location: westeurope
+    dns-prefix: smilr-$(Build.BuildId)-test
+
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: Staging
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      envName: Staging
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix).$(location).azurecontainer.io
