@@ -18,7 +18,7 @@ stages:
 #
 # Build stage
 #
-- stage: Build to ACR
+- stage: build-to-ACR
   jobs:
   - job: build-job
     pool:
@@ -51,7 +51,7 @@ stages:
 #
 # Deploy stage 1 - Dev environment
 #
-- stage: Deploy to Dev (ACI)
+- stage: deploy-to-dev-ACI
   jobs:
   - deployment: deploy-dev
     environment: dev
