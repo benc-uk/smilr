@@ -1,16 +1,15 @@
 #
 # Azure Pipeline - Build definition
 # Build both Smilr Node.js images and push to Azure Container Registry
+# Deploy to Azure Container Instances across multiple stages
 # Ben C, 2018
 #
 
 trigger:
 - devops-testing
 
-#
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-name, acr-password
-#
 variables:
   - group: shared-variables
 
@@ -76,7 +75,7 @@ stages:
               location: westeurope
               csmFile: azure/templates/aci-mongo/azuredeploy.json
               csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
-              overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix smilr-$(Build.BuildId)-$(env-name) -dataApiImageTag smilr/data-api:latest -frontendImageTag smilr/frontend:latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
+              overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix smilr-$(Build.BuildId)-$(env-name) -dataApiImageTag latest -frontendImageTag latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
 
 #
 # Deploy stage 2 - staging environment
