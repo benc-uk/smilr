@@ -23,7 +23,7 @@ stages:
 
   jobs:
   - deployment: deployToTest
-    environment: 'AKS Test'
+    environment: AKS-Test
 
     pool:
       vmImage: Ubuntu-16.04
@@ -35,12 +35,12 @@ stages:
           - checkout: self
 
           - task: HelmInstaller@1
-            displayName: 'Install Helm Version'
+            displayName: 'Install Helm version'
             inputs:
               helmVersionToInstall: 2.12.3
           
           - task: HelmDeploy@0
-            displayName: 'Helm Update Dependencies'
+            displayName: 'Helm update dependencies'
             inputs:
               azureSubscriptionEndpoint: $(azure-sub)
               azureResourceGroup: $(aks-resgrp)
@@ -49,14 +49,14 @@ stages:
               arguments: 'update kubernetes/helm/smilr'
 
           - task: HelmDeploy@0
-            displayName: 'Helm Install/Upgrade Smilr'
+            displayName: 'Helm install to test namespace'
             inputs:
               azureSubscriptionEndpoint: $(azure-sub)
               azureResourceGroup: $(aks-resgrp)
               kubernetesCluster: $(aks-cluster)
-              namespace: default
+              namespace: test
               command: upgrade
               chartType: FilePath
               chartPath: 'kubernetes/helm/smilr'
-              releaseName: 'test'
+              releaseName: 'rel$(Build.BuildId)'
               overrideValues: 'registryPrefix=$(acr-name).azurecr.io/,domainSuffix=$(dns-name),dataApi.imageTag=latest,frontend.imageTag=latest,mongo.usePersistence=false'              
