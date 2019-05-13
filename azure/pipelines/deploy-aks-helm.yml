@@ -29,10 +29,10 @@ stages:
     parameters:
       envName: test
 
-  - template: templates/wait-job.yml
+  - template: templates/dns-wait.yml
     parameters:
       dependsOn: deployWithHelm      
-      waitTime: 90
+      dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:
@@ -50,10 +50,10 @@ stages:
     parameters:
       envName: staging
 
-  - template: templates/wait-job.yml
+  - template: templates/dns-wait.yml
     parameters:
       dependsOn: deployWithHelm
-      waitTime: 90
+      dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:
@@ -72,10 +72,10 @@ stages:
     parameters:
       envName: prod
 
-  - template: templates/wait-job.yml
+  - template: templates/dns-wait.yml
     parameters:
       dependsOn: deployWithHelm      
-      waitTime: 90
+      dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:
