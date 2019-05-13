@@ -70,7 +70,7 @@ stages:
   jobs:
   - template: templates/helm-install.yml
     parameters:
-      envName: production
+      envName: prod
 
   - template: templates/wait-job.yml
     parameters:
@@ -80,5 +80,5 @@ stages:
   - template: templates/run-postman-tests.yml
     parameters:
       dependsOn: waitJob
-      apiHost: 'production-$(Build.BuildId).$(dns-suffix)'
-      frontHost: 'production-$(Build.BuildId).$(dns-suffix)'
+      apiHost: 'prod-$(Build.BuildId).$(dns-suffix)'
+      frontHost: 'prod-$(Build.BuildId).$(dns-suffix)'
