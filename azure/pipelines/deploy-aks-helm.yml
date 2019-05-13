@@ -19,7 +19,10 @@ stages:
   displayName: Deploy to AKS Test
   
   variables:
-    dns-prefix: smilr.56539f01234e4e00981e.westeurope
+    dns-prefix: 'smilr.56539f01234e4e00981e.westeurope'
+    azureSub: 'Azure (AIRS)'
+    aksCluster: 'aks2019'
+    aksResGrp: 'Demo.Containers'
 
   jobs:
   - deployment: deployToTest
@@ -29,9 +32,19 @@ stages:
     strategy:
       runOnce:
         deploy:
-          steps:    
+          steps:
+          - checkout: self
+
           - task: HelmInstaller@0
             displayName: 'Install Helm Version'
             inputs:
               helmVersion: 2.11.0
           
+          - task: HelmDeploy@0
+            displayName: 'Helm Update Dependencies'
+            inputs:
+              azureSubscription: '$(azureSub)'
+              azureResourceGroup: '$(aksResGrp)'
+              kubernetesCluster: '$(aksCluster)'
+              command: dependency
+              arguments: 'update kubernetes/helm/smilr'
