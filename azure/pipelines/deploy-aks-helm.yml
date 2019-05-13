@@ -30,8 +30,4 @@ stages:
       runOnce:
         deploy:
           steps:    
-          - task: HelmInstaller@0
-            displayName: 'Install Helm Version'
-            inputs:
-              helmVersion: 2.11.0
-          
+          - script: echo Hello world
