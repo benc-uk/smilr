@@ -53,7 +53,7 @@ stages:
   - template: templates/dns-wait.yml
     parameters:
       dependsOn: deployWithHelm
-      dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
+      dnsName: 'staging-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:
@@ -75,7 +75,7 @@ stages:
   - template: templates/dns-wait.yml
     parameters:
       dependsOn: deployWithHelm      
-      dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
+      dnsName: 'prod-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:
