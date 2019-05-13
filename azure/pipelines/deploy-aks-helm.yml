@@ -10,7 +10,7 @@ trigger: none
 # - Expected variables: acr-name, acr-password, azure-sub, aks-resgrp, aks-cluster
 variables:
   - group: shared-variables
-  - name: dns-name
+  - name: dns-suffix
     value: 'smilr.56539f01234e4e00981e.westeurope.aksapp.io'
 
 stages:
@@ -18,90 +18,31 @@ stages:
 # Deploy stage 1 - AKS test namespace
 #
 - stage: deployToTest
-  displayName: Deploy to AKS Test
+  displayName: AKS Test
 
   jobs:
-  - deployment: deployToTest
-    environment: AKS-Test
-
-    pool:
-      vmImage: Ubuntu-16.04
-
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - checkout: self
-
-          - task: HelmInstaller@1
-            displayName: 'Install Helm version'
-            inputs:
-              helmVersionToInstall: 2.12.3
-          
-          - task: HelmDeploy@0
-            displayName: 'Helm update dependencies'
-            inputs:
-              azureSubscriptionEndpoint: $(azure-connection)
-              azureResourceGroup: $(aks-resgrp)
-              kubernetesCluster: $(aks-cluster)
-              command: dependency
-              arguments: 'update kubernetes/helm/smilr'
-
-          - task: HelmDeploy@0
-            displayName: 'Helm install to test namespace'
-            inputs:
-              azureSubscriptionEndpoint: $(azure-connection)
-              azureResourceGroup: $(aks-resgrp)
-              kubernetesCluster: $(aks-cluster)
-              namespace: test
-              command: upgrade
-              chartType: FilePath
-              chartPath: 'kubernetes/helm/smilr'
-              releaseName: 'rel-$(Build.BuildId)-test'
-              overrideValues: 'registryPrefix=$(acr-name).azurecr.io/,domainSuffix=$(dns-name),dataApi.imageTag=latest,frontend.imageTag=latest,mongo.usePersistence=false'
+  - template: templates/helm-install.yml
+    parameters:
+      envName: test
 
 #
 # Deploy stage 2 - AKS staging namespace
 #
 - stage: deployToStaging
-  displayName: Deploy to AKS Staging
-  
+  displayName: AKS Staging
+
   jobs:
-  - deployment: deployToStaging
-    environment: AKS-Staging
+  - template: templates/helm-install.yml
+    parameters:
+      envName: staging
 
-    pool:
-      vmImage: Ubuntu-16.04
+#
+# Deploy stage 23 - AKS production namespace
+#
+- stage: deployToProduction
+  displayName: AKS Production
 
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - checkout: self
-
-          - task: HelmInstaller@1
-            displayName: 'Install Helm version'
-            inputs:
-              helmVersionToInstall: 2.12.3
-          
-          - task: HelmDeploy@0
-            displayName: 'Helm update dependencies'
-            inputs:
-              azureSubscriptionEndpoint: $(azure-connection)
-              azureResourceGroup: $(aks-resgrp)
-              kubernetesCluster: $(aks-cluster)
-              command: dependency
-              arguments: 'update kubernetes/helm/smilr'
-
-          - task: HelmDeploy@0
-            displayName: 'Helm install to staging namespace'
-            inputs:
-              azureSubscriptionEndpoint: $(azure-connection)
-              azureResourceGroup: $(aks-resgrp)
-              kubernetesCluster: $(aks-cluster)
-              namespace: staging
-              command: upgrade
-              chartType: FilePath
-              chartPath: 'kubernetes/helm/smilr'
-              releaseName: 'rel-$(Build.BuildId)-staging'
-              overrideValues: 'registryPrefix=$(acr-name).azurecr.io/,domainSuffix=$(dns-name),dataApi.imageTag=latest,frontend.imageTag=latest,mongo.usePersistence=false'          
+  jobs:
+  - template: templates/helm-install.yml
+    parameters:
+      envName: production

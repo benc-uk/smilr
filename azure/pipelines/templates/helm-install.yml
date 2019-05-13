@@ -1,0 +1,43 @@
+parameters:
+  envName: ''
+  
+jobs:
+- deployment: deployWithHelm
+  displayName: Helm deploy to ${{ parameters.envName }}
+  environment: AKS-${{ parameters.envName }}
+
+  pool:
+    vmImage: Ubuntu-16.04
+
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - checkout: self
+
+        - task: HelmInstaller@1
+          displayName: 'Install Helm version'
+          inputs:
+            helmVersionToInstall: 2.12.3
+        
+        - task: HelmDeploy@0
+          displayName: 'Helm update dependencies'
+          inputs:
+            azureSubscriptionEndpoint: $(azure-connection)
+            azureResourceGroup: $(aks-resgrp)
+            kubernetesCluster: $(aks-cluster)
+            command: dependency
+            arguments: 'update kubernetes/helm/smilr'
+
+        - task: HelmDeploy@0
+          displayName: 'Helm install to test namespace'
+          inputs:
+            azureSubscriptionEndpoint: $(azure-connection)
+            azureResourceGroup: $(aks-resgrp)
+            kubernetesCluster: $(aks-cluster)
+            namespace: test
+            command: upgrade
+            chartType: FilePath
+            chartPath: 'kubernetes/helm/smilr'
+            releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
+            overrideValues: 'registryPrefix=$(acr-name).azurecr.io/,domainSuffix=$(dns-suffix),dataApi.imageTag=latest,frontend.imageTag=latest,mongo.usePersistence=false'
