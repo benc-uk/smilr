@@ -41,7 +41,7 @@ stages:
           - task: HelmDeploy@0
             displayName: 'Helm update dependencies'
             inputs:
-              azureSubscriptionEndpoint: $(azure-sub)
+              azureSubscriptionEndpoint: $(azure-connection)
               azureResourceGroup: $(aks-resgrp)
               kubernetesCluster: $(aks-cluster)
               command: dependency
@@ -96,7 +96,7 @@ stages:
           - task: HelmDeploy@0
             displayName: 'Helm install to staging namespace'
             inputs:
-              azureSubscriptionEndpoint: $(azure-sub)
+              azureSubscriptionEndpoint: $(azure-connection)
               azureResourceGroup: $(aks-resgrp)
               kubernetesCluster: $(aks-cluster)
               namespace: staging
