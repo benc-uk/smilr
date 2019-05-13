@@ -23,7 +23,7 @@ stages:
 
   jobs:
   - deployment: deployToTest
-    environment: 'aks-test'
+    environment: 'AKS Test'
 
     pool:
       vmImage: Ubuntu-16.04

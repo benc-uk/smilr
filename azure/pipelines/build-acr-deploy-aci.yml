@@ -9,7 +9,7 @@ trigger:
 - master
 
 # NOTE! This variable group must be pre-created and populated
-# - Expected variables: acr-name, acr-password
+# - Expected variables: acr-name, acr-password, azure-sub
 variables:
   - group: shared-variables
 
@@ -53,7 +53,6 @@ stages:
 #
 - stage: deployToTest
   displayName: Deploy to Test
-  #condition: true
   
   variables:
     location: westeurope
@@ -62,11 +61,10 @@ stages:
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
-      envName: Test
+      envName: ACI-Test
 
   - template: templates/run-postman-tests.yml
     parameters:
-      envName: Test
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
@@ -76,7 +74,6 @@ stages:
 #
 - stage: deployToStaging
   displayName: Deploy to Staging
-  #condition: true
   
   variables:
     location: westeurope
@@ -85,11 +82,10 @@ stages:
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
-      envName: Staging
+      envName: ACI-Staging
 
   - template: templates/run-postman-tests.yml
     parameters:
-      envName: Staging
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
@@ -99,7 +95,6 @@ stages:
 #
 - stage: deployToProduction
   displayName: Deploy to Production
-  #condition: true
   
   variables:
     location: westeurope
@@ -108,11 +103,10 @@ stages:
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
-      envName: Production
+      envName: ACI-Production
 
   - template: templates/run-postman-tests.yml
     parameters:
-      envName: Production
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
