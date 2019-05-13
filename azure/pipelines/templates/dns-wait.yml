@@ -15,7 +15,7 @@ jobs:
     - bash: |
         i=0
         while [ $i -le 100 ]; do
-          ip=$(dig +short ${{ parameters.dnsName }})
+          ip=$(dig +short ${{ parameters.dnsName }} @8.8.8.8)
           echo "Returned IP was $ip"
           if [ -n "$ip" ]; then
             exit
