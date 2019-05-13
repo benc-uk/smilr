@@ -34,11 +34,11 @@ stages:
     # Update tags
     - bash: |
         docker tag $(acr-name).azurecr.io/smilr/frontend:latest $(acr-name).azurecr.io/smilr/frontend:stable
-        docker tag $(acr-name).azurecr.io/smilr/data-api:latest $(acr-name).azurecr.io/smilr/frontend:stable
+        docker tag $(acr-name).azurecr.io/smilr/data-api:latest $(acr-name).azurecr.io/smilr/data-api:stable
         docker tag $(acr-name).azurecr.io/smilr/frontend:latest smilr/frontend:latest
-        docker tag $(acr-name).azurecr.io/smilr/data-api:latest smilr/frontend:latest
+        docker tag $(acr-name).azurecr.io/smilr/data-api:latest smilr/data-api:latest
         docker tag $(acr-name).azurecr.io/smilr/frontend:latest smilr/frontend:stable
-        docker tag $(acr-name).azurecr.io/smilr/data-api:latest smilr/frontend:stable
+        docker tag $(acr-name).azurecr.io/smilr/data-api:latest smilr/data-api:stable
       displayName: 'Tag images'
 
     # Push to ACR
