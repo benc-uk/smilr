@@ -2,7 +2,7 @@
 // Main Express server for Smilr frontend
 // ----------------------------------------------
 // Ben C, March 2018
-// - Updated: Dec 2018
+// - Updated: May 2019
 //
 
 // Load .env file if it exists
@@ -14,7 +14,7 @@ var app = express();
 
 // Serve static content from working directory ('.') by default
 // - Optional parameter can specify different location, use when debugging & running locally
-// - e.g. `node server.js ../angular/dist/`
+// - e.g. `node server.js ../vue/dist/`
 var staticContentDir = process.argv[2] || __dirname;
 // resolve to an absolute path
 staticContentDir = require('path').resolve(staticContentDir)
@@ -37,7 +37,7 @@ app.get('/.config/:vars', function (req, res) {
 
 // Redirect all other requests to Vue.js app - i.e. index.html
 // This allows us to do in-app, client side routing and deep linking 
-// - see https://angular.io/guide/deployment#server-configuration
+// - see https://cli.vuejs.org/guide/deployment.html#general-guidelines
 app.use('*', function(req, res) {
    res.sendFile(`${staticContentDir}/index.html`);
 });
