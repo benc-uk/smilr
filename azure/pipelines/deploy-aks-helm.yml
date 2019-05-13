@@ -34,10 +34,10 @@ stages:
           steps:
           - checkout: self
 
-          - task: HelmInstaller@0
+          - task: HelmInstaller@1
             displayName: 'Install Helm Version'
             inputs:
-              helmVersion: 2.12.3
+              helmVersionToInstall: 2.12.3
           
           - task: HelmDeploy@0
             displayName: 'Helm Update Dependencies'
