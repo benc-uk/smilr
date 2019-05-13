@@ -7,7 +7,7 @@
 trigger: none
 
 # NOTE! This variable group must be pre-created and populated
-# - Expected variables: acr-name, acr-password
+# - Expected variables: acr-name, acr-password, azure-sub, aks-resgrp, aks-cluster
 variables:
   - group: shared-variables
 
@@ -19,18 +19,15 @@ stages:
   displayName: Deploy to AKS Test
   
   variables:
-    dns-prefix: 'smilr.56539f01234e4e00981e.westeurope'
-    azureSub: 'Azure (AIRS)'
-    aksCluster: aks2019
-    aksResGrp: Demo.Containers
+    dns-name: 'smilr.56539f01234e4e00981e.westeurope.aksapp.io'
 
   jobs:
   - deployment: deployToTest
     environment: 'aks-test'
+
     pool:
       vmImage: Ubuntu-16.04
-    variables:
-      azureSub: 'Azure (AIRS)'
+
     strategy:
       runOnce:
         deploy:
@@ -46,7 +43,20 @@ stages:
             displayName: 'Helm Update Dependencies'
             inputs:
               azureSubscriptionEndpoint: $(azure-sub)
-              azureResourceGroup: $(aksResGrp)
-              kubernetesCluster: $(aksCluster)
+              azureResourceGroup: $(aks-resgrp)
+              kubernetesCluster: $(aks-cluster)
               command: dependency
               arguments: 'update kubernetes/helm/smilr'
+
+          - task: HelmDeploy@0
+            displayName: 'Helm Install/Upgrade Smilr'
+            inputs:
+              azureSubscriptionEndpoint: $(azure-sub)
+              azureResourceGroup: $(aks-resgrp)
+              kubernetesCluster: $(aks-cluster)
+              namespace: default
+              command: upgrade
+              chartType: FilePath
+              chartPath: 'kubernetes/helm/smilr'
+              releaseName: 'test'
+              overrideValues: 'registryPrefix=$(acr-name).azurecr.io/,domainSuffix=$(dns-name),dataApi.imageTag=latest,frontend.imageTag=latest,mongo.usePersistence=false'              
