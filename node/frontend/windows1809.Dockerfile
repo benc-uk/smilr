@@ -5,7 +5,7 @@
 # Using Stefan Scherer's semi offical Node for Windows images https://hub.docker.com/r/stefanscherer/node-windows
 FROM stefanscherer/node-windows:10.15.3-nanoserver-1809 as spabuild
 ARG vue_root="vue"
-ARG build_info="Docker Windows Nanoserver container build"
+ARG build_info="Windows Nanoserver 1809 LTS container build"
 
 WORKDIR /build
 
