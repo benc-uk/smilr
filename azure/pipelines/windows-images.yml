@@ -9,7 +9,7 @@ trigger:
 - master
 
 # NOTE! This variable group must be pre-created and populated
-# - Expected variables: acr-name, acr-password
+# - Expected variables: acr-name, acr-password, dockerhub-user, dockerhub-password
 variables:
   - group: shared-variables
 
