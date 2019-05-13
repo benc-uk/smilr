@@ -7,11 +7,15 @@
 trigger: none
 
 # NOTE! This variable group must be pre-created and populated
-# - Expected variables: acr-name, acr-password, azure-sub, aks-resgrp, aks-cluster
+# - Expected variables: acr-name, acr-password, azure-connection
 variables:
   - group: shared-variables
   - name: dns-suffix
     value: 'smilr.56539f01234e4e00981e.westeurope.aksapp.io'
+  - name: aks-resgrp
+    value: 'Demo.Containers'
+  - name: aks-cluster
+    value: 'aks2019'
 
 stages:
 #
@@ -37,7 +41,7 @@ stages:
       envName: staging
 
 #
-# Deploy stage 23 - AKS production namespace
+# Deploy stage 3 - AKS production namespace
 #
 - stage: deployToProduction
   displayName: AKS Production
