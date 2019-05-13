@@ -10,28 +10,3 @@ trigger: none
 # - Expected variables: acr-name, acr-password
 variables:
   - group: shared-variables
-
-stages:
-#
-# Deploy stage 1 - AKS test environment
-#
-- stage: deployToTest
-  displayName: Deploy to AKS Test
-  
-  variables:
-    dns-prefix: smilr.56539f01234e4e00981e.westeurope
-
-  jobs:
-  - deployment: deployToTest
-    environment: 'aks-test'
-    pool:
-      vmImage: Ubuntu-16.04    
-    strategy:
-      runOnce:
-        deploy:
-          steps:    
-          - task: HelmInstaller@0
-            displayName: 'Install Helm Version'
-            inputs:
-              helmVersion: 2.11.0
-          
