@@ -1,0 +1,58 @@
+#
+# Azure Pipelines
+# - Pull both Smilr Node.js images from ACR
+# - Retag as stable and push to ACR and Dockerhub
+# Ben C, 2019
+#
+
+# No CI or automated runs
+trigger: none 
+
+# NOTE! This variable group must be pre-created and populated
+# - Expected variables: acr-name, acr-password, dockerhub-user, dockerhub-password
+variables:
+  - group: shared-variables
+
+stages:
+- stage: docker
+  displayName: 'Update Stable Dockerhub'
+  jobs:
+  - job: dockerJob
+    displayName: 'Docker Job'
+
+    pool:
+      vmImage: Ubuntu-16.04
+
+    steps:
+    # Pull latest from ACR
+    - bash: |
+        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+        docker pull $(acr-name).azurecr.io/smilr/data-api:latest
+        docker pull $(acr-name).azurecr.io/smilr/frontend:latest
+      displayName: 'Pull latest images'
+
+    # Update tags
+    - bash: |
+        docker tag $(acr-name).azurecr.io/smilr/frontend:latest $(acr-name).azurecr.io/smilr/frontend:stable
+        docker tag $(acr-name).azurecr.io/smilr/data-api:latest $(acr-name).azurecr.io/smilr/data-api:stable
+        docker tag $(acr-name).azurecr.io/smilr/frontend:latest smilr/frontend:latest
+        docker tag $(acr-name).azurecr.io/smilr/data-api:latest smilr/data-api:latest
+        docker tag $(acr-name).azurecr.io/smilr/frontend:latest smilr/frontend:stable
+        docker tag $(acr-name).azurecr.io/smilr/data-api:latest smilr/data-api:stable
+      displayName: 'Tag images'
+
+    # Push to ACR
+    - bash: |
+        docker login -u $(dockerhub-user) -p $(dockerhub-password)
+        docker push $(acr-name).azurecr.io/smilr/frontend:stable
+        docker push $(acr-name).azurecr.io/smilr/data-api:stable      
+      displayName: 'Push stable images to ACR'
+
+    # Push to public Dockerhub
+    - bash: |
+        docker login -u $(dockerhub-user) -p $(dockerhub-password)
+        docker push smilr/frontend:stable
+        docker push smilr/data-api:stable
+        docker push smilr/frontend:latest
+        docker push smilr/data-api:latest        
+      displayName: 'Push stable/latest images to Dockerhub'
