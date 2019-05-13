@@ -1,8 +1,8 @@
 #
 # Azure Pipelines
-# - Build both Smilr Node.js as Windows container images
-# - Push to ACR and Dockerhub
-# Ben C, 2019
+# - Build both Smilr Node.js as Windows container images, 2016 LTS and 1809
+# - Then push up to ACR and Dockerhub
+# Ben C, May 2019
 #
 
 trigger:
