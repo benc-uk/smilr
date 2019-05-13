@@ -29,6 +29,16 @@ stages:
     parameters:
       envName: test
 
+  - template: templates/wait-job.yml
+    parameters:
+      dependsOn: deployWithHelm      
+      waitTime: 60
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: waitJob
+      apiHost: 'test-$(Build.BuildId).$(dns-suffix)'
+      frontHost: 'test-$(Build.BuildId).$(dns-suffix)'
 #
 # Deploy stage 2 - AKS staging namespace
 #
@@ -40,6 +50,17 @@ stages:
     parameters:
       envName: staging
 
+  - template: templates/wait-job.yml
+    parameters:
+      dependsOn: deployWithHelm
+      waitTime: 60
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: waitJob
+      apiHost: 'staging-$(Build.BuildId).$(dns-suffix)'
+      frontHost: 'staging-$(Build.BuildId).$(dns-suffix)'
+
 #
 # Deploy stage 3 - AKS production namespace
 #
@@ -50,3 +71,14 @@ stages:
   - template: templates/helm-install.yml
     parameters:
       envName: production
+
+  - template: templates/wait-job.yml
+    parameters:
+      dependsOn: deployWithHelm      
+      waitTime: 60
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: waitJob
+      apiHost: 'production-$(Build.BuildId).$(dns-suffix)'
+      frontHost: 'production-$(Build.BuildId).$(dns-suffix)'
