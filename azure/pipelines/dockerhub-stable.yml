@@ -1,7 +1,7 @@
 #
 # Azure Pipelines
-# - Build both Smilr Node.js images
-# AND push to public Dockerhub
+# - Pull both Smilr Node.js images from ACR
+# - Retag as stable and push to ACR and Dockerhub
 # Ben C, 2019
 #
 
