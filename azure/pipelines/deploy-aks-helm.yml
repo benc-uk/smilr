@@ -43,8 +43,8 @@ stages:
           - task: HelmDeploy@0
             displayName: 'Helm Update Dependencies'
             inputs:
-              azureSubscription: '$(azureSub)'
-              azureResourceGroup: '$(aksResGrp)'
-              kubernetesCluster: '$(aksCluster)'
+              azureSubscription: $(azureSub)
+              azureResourceGroup: $(aksResGrp)
+              kubernetesCluster: $(aksCluster)
               command: dependency
               arguments: 'update kubernetes/helm/smilr'
