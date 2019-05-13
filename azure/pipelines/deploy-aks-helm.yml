@@ -24,6 +24,8 @@ stages:
   jobs:
   - deployment: deployToTest
     environment: 'aks-test'
+    pool:
+      vmImage: Ubuntu-16.04    
     strategy:
       runOnce:
         deploy:
