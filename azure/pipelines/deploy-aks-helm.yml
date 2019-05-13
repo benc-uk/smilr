@@ -24,8 +24,12 @@ stages:
   jobs:
   - deployment: deployToTest
     environment: 'aks-test'
-    steps:
-    - task: HelmInstaller@0
-      displayName: 'Install Helm Version'
-      inputs:
-        helmVersion: 2.11.0
+    strategy:
+      runOnce:
+        deploy:
+          steps:    
+          - task: HelmInstaller@0
+            displayName: 'Install Helm Version'
+            inputs:
+              helmVersion: 2.11.0
+          
