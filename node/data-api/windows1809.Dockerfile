@@ -6,7 +6,7 @@ FROM stefanscherer/node-windows:10.15.3-nanoserver-1809
 # Build time arguments
 LABEL version="4.1.0" 
 ARG basedir="node/data-api"
-ARG build_info="Docker Windows Nanoserver container build"
+ARG build_info="Windows Nanoserver 1809 LTS container build"
 ENV NODE_ENV production
 ENV BUILD_INFO $build_info
 

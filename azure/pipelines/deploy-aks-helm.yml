@@ -1,0 +1,84 @@
+#
+# Azure Pipelines
+# - Deploy to Kubernetes (AKS) using Helm chart
+# Ben C, 2019
+#
+
+trigger: none
+
+# NOTE! This variable group must be pre-created and populated
+# - Expected variables: acr-name, acr-password, azure-connection
+variables:
+  - group: shared-variables
+  - name: dns-suffix
+    value: 'smilr.56539f01234e4e00981e.westeurope.aksapp.io'
+  - name: aks-resgrp
+    value: 'Demo.Containers'
+  - name: aks-cluster
+    value: 'aks2019'
+
+stages:
+#
+# Deploy stage 1 - AKS test namespace
+#
+- stage: deployToTest
+  displayName: AKS Test
+
+  jobs:
+  - template: templates/helm-install.yml
+    parameters:
+      envName: test
+
+  - template: templates/wait-job.yml
+    parameters:
+      dependsOn: deployWithHelm      
+      waitTime: 60
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: waitJob
+      apiHost: 'test-$(Build.BuildId).$(dns-suffix)'
+      frontHost: 'test-$(Build.BuildId).$(dns-suffix)'
+#
+# Deploy stage 2 - AKS staging namespace
+#
+- stage: deployToStaging
+  displayName: AKS Staging
+
+  jobs:
+  - template: templates/helm-install.yml
+    parameters:
+      envName: staging
+
+  - template: templates/wait-job.yml
+    parameters:
+      dependsOn: deployWithHelm
+      waitTime: 60
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: waitJob
+      apiHost: 'staging-$(Build.BuildId).$(dns-suffix)'
+      frontHost: 'staging-$(Build.BuildId).$(dns-suffix)'
+
+#
+# Deploy stage 3 - AKS production namespace
+#
+- stage: deployToProduction
+  displayName: AKS Production
+
+  jobs:
+  - template: templates/helm-install.yml
+    parameters:
+      envName: production
+
+  - template: templates/wait-job.yml
+    parameters:
+      dependsOn: deployWithHelm      
+      waitTime: 60
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: waitJob
+      apiHost: 'production-$(Build.BuildId).$(dns-suffix)'
+      frontHost: 'production-$(Build.BuildId).$(dns-suffix)'
