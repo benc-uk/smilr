@@ -104,11 +104,7 @@ stages:
   
   variables:
     location: westeurope
-<<<<<<< HEAD
     dns-prefix: smilr-prod
-=======
-    dns-prefix: smilr
->>>>>>> devops-testing
 
   jobs:
   - template: templates/deploy-aci-arm.yml
@@ -120,8 +116,4 @@ stages:
       envName: Production
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-<<<<<<< HEAD
       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
-=======
-      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
->>>>>>> devops-testing
