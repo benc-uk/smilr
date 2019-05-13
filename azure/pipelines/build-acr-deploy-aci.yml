@@ -19,7 +19,6 @@ stages:
 #
 - stage: build
   displayName: 'Build containers'
-  #condition: false
 
   jobs:
   - job: buildJob
