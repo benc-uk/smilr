@@ -166,9 +166,9 @@ export default {
 
   directives: {
     focus: {
+      // Minor UX, new topics get focus automatically, 
       inserted: function (el) {
-        if(el.value == 'New Topic') { el.focus(); el.select() }
-        if(el.name == 'title') { el.focus() }
+        el.focus(); 
       }
     }
   }
