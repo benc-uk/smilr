@@ -37,7 +37,7 @@ stages:
           - task: HelmInstaller@0
             displayName: 'Install Helm Version'
             inputs:
-              helmVersion: 2.11.0
+              helmVersion: 2.12.3
           
           - task: HelmDeploy@0
             displayName: 'Helm Update Dependencies'
