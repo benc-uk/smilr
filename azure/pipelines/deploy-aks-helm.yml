@@ -20,14 +20,3 @@ stages:
   
   variables:
     dns-prefix: smilr.56539f01234e4e00981e.westeurope
-
-  jobs:
-  - deployment: deployToTest
-    environment: 'aks-test'
-    pool:
-      vmImage: Ubuntu-16.04    
-    strategy:
-      runOnce:
-        deploy:
-          steps:    
-          - script: echo Hello world
