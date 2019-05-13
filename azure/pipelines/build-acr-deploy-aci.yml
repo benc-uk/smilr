@@ -9,7 +9,7 @@ trigger:
 - master
 
 # NOTE! This variable group must be pre-created and populated
-# - Expected variables: acr-name, acr-password, azure-sub
+# - Expected variables: acr-name, acr-password, azure-connection
 variables:
   - group: shared-variables
 
