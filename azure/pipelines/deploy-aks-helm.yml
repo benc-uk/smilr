@@ -36,7 +36,7 @@ stages:
 
   - template: templates/run-postman-tests.yml
     parameters:
-      dependsOn: waitJob
+      dependsOn: dnsWaitJob
       apiHost: 'test-$(Build.BuildId).$(dns-suffix)'
       frontHost: 'test-$(Build.BuildId).$(dns-suffix)'
 #
@@ -57,7 +57,7 @@ stages:
 
   - template: templates/run-postman-tests.yml
     parameters:
-      dependsOn: waitJob
+      dependsOn: dnsWaitJob
       apiHost: 'staging-$(Build.BuildId).$(dns-suffix)'
       frontHost: 'staging-$(Build.BuildId).$(dns-suffix)'
 
@@ -79,6 +79,6 @@ stages:
 
   - template: templates/run-postman-tests.yml
     parameters:
-      dependsOn: waitJob
+      dependsOn: dnsWaitJob
       apiHost: 'prod-$(Build.BuildId).$(dns-suffix)'
       frontHost: 'prod-$(Build.BuildId).$(dns-suffix)'
