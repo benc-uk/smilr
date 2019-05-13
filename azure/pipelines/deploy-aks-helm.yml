@@ -16,8 +16,6 @@ variables:
     value: 'Demo.Containers'
   - name: aks-cluster
     value: 'aks2019'
-  - name: wait-time
-    value: '90'
 
 stages:
 #
@@ -34,7 +32,7 @@ stages:
   - template: templates/wait-job.yml
     parameters:
       dependsOn: deployWithHelm      
-      waitTime: $(wait-time)
+      waitTime: 90
 
   - template: templates/run-postman-tests.yml
     parameters:
@@ -55,7 +53,7 @@ stages:
   - template: templates/wait-job.yml
     parameters:
       dependsOn: deployWithHelm
-      waitTime: $(wait-time)
+      waitTime: 90
 
   - template: templates/run-postman-tests.yml
     parameters:
@@ -77,7 +75,7 @@ stages:
   - template: templates/wait-job.yml
     parameters:
       dependsOn: deployWithHelm      
-      waitTime: $(wait-time)
+      waitTime: 90
 
   - template: templates/run-postman-tests.yml
     parameters:
