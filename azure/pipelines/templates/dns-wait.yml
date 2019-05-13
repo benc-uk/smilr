@@ -16,8 +16,9 @@ jobs:
         i=0
         while [ $i -le 100 ]; do
           ip=$(dig +short ${{ parameters.dnsName }})
+          echo "Returned IP was $ip"
           if [ -n "$ip" ]; then
-            break
+            exit
           fi
           sleep 3
           i=$(( $i + 1 ))
