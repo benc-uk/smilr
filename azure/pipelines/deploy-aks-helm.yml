@@ -45,7 +45,7 @@ stages:
           - task: HelmDeploy@0
             displayName: 'Helm Update Dependencies'
             inputs:
-              azureSubscription: Azure (AIRS)
+              azureSubscriptionEndpoint: $(azureSub)
               azureResourceGroup: $(aksResGrp)
               kubernetesCluster: $(aksCluster)
               command: dependency
