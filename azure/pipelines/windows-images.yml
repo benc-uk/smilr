@@ -1,0 +1,62 @@
+#
+# Azure Pipelines
+# - Build both Smilr Node.js as Windows container images
+# - Push to ACR and Dockerhub
+# Ben C, 2019
+#
+
+trigger:
+- master
+
+# NOTE! This variable group must be pre-created and populated
+# - Expected variables: acr-name, acr-password
+variables:
+  - group: shared-variables
+
+stages:
+#
+# Build stage
+#
+- stage: build
+  displayName: 'Build containers'
+  #condition: false
+
+  jobs:
+  - job: buildJob
+    displayName: 'Docker builds'
+
+    pool:
+      vmImage: 'vs2017-win2016'
+
+    steps:
+    - bash: |
+        docker build . -f node/data-api/windows2016.Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:windows2016 -t smilr/data-api:windows2016
+      displayName: 'Build data API, Win 2016 LTS'
+
+    - bash: |
+        docker build . -f node/data-api/windows1809.Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:windows1809 -t smilr/data-api:windows1809
+      displayName: 'Build data API, Win 1809'
+
+    - bash: |
+        docker build . -f node/frontend/windows2016.Dockerfile -t $(acr-name).azurecr.io/smilr/frontend:windows2016 -t smilr/frontend:windows2016
+      displayName: 'Build data API, Win 2016 LTS'
+
+    - bash: |
+        docker build . -f node/frontend/windows1809.Dockerfile -t $(acr-name).azurecr.io/smilr/frontend:windows1809 -t smilr/frontend:windows1809
+      displayName: 'Build data API, Win 1809'
+
+    - bash: |
+        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+        docker push $(acr-name).azurecr.io/smilr/data-api:windows2016
+        docker push $(acr-name).azurecr.io/smilr/data-api:windows1809
+        docker push $(acr-name).azurecr.io/smilr/frontend:windows2016
+        docker push $(acr-name).azurecr.io/smilr/frontend:windows1809
+      displayName: 'Push to ACR'
+
+    - bash: |
+        docker login -u $(dockerhub-user) -p $(dockerhub-password)
+        docker push smilr/data-api:windows2016
+        docker push smilr/data-api:windows1809
+        docker push smilr/frontend:windows2016
+        docker push smilr/frontend:windows1809
+      displayName: 'Push to Dockerhub'
