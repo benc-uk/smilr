@@ -1,4 +1,5 @@
-# Azure DevOps Pipelines
+# Azure Pipelines :warning: ! OUT OF DATE ! :warning: 
+
 
 This directory contains YAML definitions for use with [Azure DevOps Pipelines](https://azure.microsoft.com/en-gb/services/devops/pipelines/) to build Smilr
 
