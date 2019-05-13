@@ -20,7 +20,7 @@ stages:
   
   variables:
     dns-prefix: 'smilr.56539f01234e4e00981e.westeurope'
-    azureSub: Azure (AIRS)
+    azureSub: 'Azure (AIRS)'
     aksCluster: aks2019
     aksResGrp: Demo.Containers
 
@@ -30,7 +30,7 @@ stages:
     pool:
       vmImage: Ubuntu-16.04
     variables:
-      azureSub: Azure (AIRS)
+      azureSub: 'Azure (AIRS)'
     strategy:
       runOnce:
         deploy:
