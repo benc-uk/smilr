@@ -1,22 +1,17 @@
-# Azure Pipelines :warning: ! OUT OF DATE ! :warning: 
+# Azure Pipelines
 
 
-This directory contains YAML definitions for use with [Azure DevOps Pipelines](https://azure.microsoft.com/en-gb/services/devops/pipelines/) to build Smilr
 
-## Build definitions
+## Pipeline definitions
+These are a set of CI/CD pipeline definitions for use with [Azure DevOps Pipelines](https://azure.microsoft.com/en-gb/services/devops/pipelines/) to automatically build and deploy Smilr
 
-These are found in the `azure\pipelines\builds` sub-directory:
+:warning: May 2019, These are multi-stage YAML pipelines which currently are in preview, and need to be enabled as a "preview feature" in Azure DevOps
 
-| Filename | Purpose | Notes |
-|----------|---------|-------|
-|`acr-dockerhub.yml`|Build both frontend and data API as container images. Push tags `latest` & `{build-id}` to Azure Container Registry & `latest` to Dockerhub|Used by project, ignore unless you want to host images on Dockerhub too|
-|`acr-dockerhub-win.yml`|Build both frontend and data API as Windows container images. Push `windows` tag to Azure Container Registry & Dockerhub|Used by project, ignore unless you want to host images on Dockerhub too|
-|`acr-only.yml`|Build both frontend and data API as container images. Push tags `latest` & `{build-id}` to Azure Container Registry|If building your own images this is the pipeline to start with|
-|`update-stable.yml`|Re-tags `latest` images as `stable` and pushes to both Azure Container Registry & Dockerhub|Ignore if not using `stable` tag|
-|`api-tests.yml`|Deploys MongoDB with ACI, then stands up the data API, then runs Postman tests with newman runner|Please don't run your tests in a separate pipeline like this|
+The contents of the `azure\pipelines` directory are:
 
-## Release definitions
-
-These will eventually found in the `azure\pipelines\releases` sub-directory:
-
-***Pending Azure DevOps supporting YAML for releases***
+| Filename | Purpose | Trigger |
+|----------|---------|---------|
+|`build-acr-deploy-aci.yml`|Build both frontend and data API as container images. Push tags `latest` & `{build-id}` to Azure Container Registry. Deploys to Azure Container Instances in test/staging/prod environments with functional tests at each stage|CI triggered by any push to master branch|
+|`deploy-aks-helm.yml`|Deployment only. Deploys to Kubernetes AKS using Helm in test/staging/prod namespaces with functional tests at each stage|Manually triggered|
+|`dockerhub-stable.yml`|Updates the image tags, and re-tags `latest` as `stable`, pushes `stable` to ACR and also pushes `latest` and `stable` to public Dockerhub|Manually triggered|
+|`windows-images.yml`|Builds Windows containers versions of the frontend and data API. Both "2016 LTS" and "1809" versions are built. All images are pushed to both ACR and Dockerhub|Manually triggered|
