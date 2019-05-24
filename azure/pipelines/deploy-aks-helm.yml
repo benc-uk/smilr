@@ -11,11 +11,11 @@ trigger: none
 variables:
   - group: shared-variables
   - name: dns-suffix
-    value: 'smilr.56539f01234e4e00981e.westeurope.aksapp.io'
+    value: 'smilr.f0dfafed36164c7faac0.westeurope.aksapp.io'
   - name: aks-resgrp
-    value: 'Demo.Containers'
+    value: 'demo.aks'
   - name: aks-cluster
-    value: 'aks2019'
+    value: 'aksnew'
 
 stages:
 #
