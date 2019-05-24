@@ -1,7 +1,5 @@
 # Azure Pipelines
 
-
-
 ## Pipeline definitions
 These are a set of CI/CD pipeline definitions for use with [Azure DevOps Pipelines](https://azure.microsoft.com/en-gb/services/devops/pipelines/) to automatically build and deploy Smilr
 
