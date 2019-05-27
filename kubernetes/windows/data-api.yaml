@@ -20,6 +20,11 @@ spec:
       labels:
         app: data-api
     spec:
+      tolerations:
+        - key: "windows"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

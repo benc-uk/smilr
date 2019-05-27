@@ -21,6 +21,11 @@ spec:
       labels:
         app: mongodb
     spec:
+      tolerations:
+        - key: "windows"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"    
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -41,7 +46,7 @@ spec:
         - containerPort: 27017
 
         volumeMounts:
-          - name: mongo-storage
+          - name: mongo-storage-win
             mountPath: /data/db
 
         livenessProbe:
@@ -60,7 +65,7 @@ spec:
 
   volumeClaimTemplates:
     - metadata:
-        name: mongo-storage
+        name: mongo-storage-win
         annotations:
           volume.beta.kubernetes.io/storage-class: default
       spec:

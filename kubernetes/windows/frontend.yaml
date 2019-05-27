@@ -20,6 +20,11 @@ spec:
       labels:
         app: frontend
     spec:
+      tolerations:
+        - key: "windows"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"    
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
