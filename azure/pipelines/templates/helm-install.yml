@@ -18,7 +18,7 @@ jobs:
         - task: HelmInstaller@1
           displayName: 'Install Helm version'
           inputs:
-            helmVersionToInstall: 2.12.3
+            helmVersionToInstall: 2.14.0
         
         - task: HelmDeploy@0
           displayName: 'Helm update dependencies'

@@ -31,3 +31,6 @@ mongodb:
   persistence:
     enabled: false
   usePassword: false
+  # image:
+  #   tag: 3.6
+    
