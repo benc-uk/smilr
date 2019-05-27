@@ -30,11 +30,13 @@ stages:
       envName: test
 
   - template: templates/dns-wait.yml
+    condition: and(succeeded(), ne(variables['skip-tests'], 'true'))
     parameters:
       dependsOn: deployWithHelm      
       dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
+    condition: and(succeeded(), ne(variables['skip-tests'], 'true'))
     parameters:
       dependsOn: dnsWaitJob
       apiHost: 'test-$(Build.BuildId).$(dns-suffix)'
