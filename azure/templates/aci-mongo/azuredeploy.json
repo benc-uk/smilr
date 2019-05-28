@@ -48,7 +48,7 @@
     "containerDataApi": "smilr-data",
     "imageFrontend": "[concat(parameters('acrName'), '.azurecr.io/smilr/frontend:', parameters('frontendImageTag'))]",
     "imageDataApi": "[concat(parameters('acrName'), '.azurecr.io/smilr/data-api:', parameters('dataApiImageTag'))]",
-    "imageMongo": "mongo:3.4-jessie",
+    "imageMongo": "mongo:4-xenial",
     "memory": 1.0,
     "cpu": 1.0,
     "dnsLabelFrontend": "[concat(parameters('dnsPrefix'), '-frontend')]",

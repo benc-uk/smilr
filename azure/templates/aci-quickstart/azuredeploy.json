@@ -15,7 +15,7 @@
     "containerDataApi": "smilr-data",
     "imageFrontend": "smilr/frontend:latest",
     "imageDataApi": "smilr/data-api:latest",
-    "imageMongo": "mongo:3.4-jessie",
+    "imageMongo": "mongo:4-xenial",
     "memory": 1.0,
     "cpu": 1.0,
     "dnsLabelFrontend": "[concat(parameters('dnsPrefix'), '-frontend')]",

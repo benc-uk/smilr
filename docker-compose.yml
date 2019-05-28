@@ -47,7 +47,7 @@ services:
       - smilr-net
   
   smilrdb:
-    image: mongo:3.4-jessie
+    image: mongo:4-xenial
     ports: 
       - 27017:27017
     volumes:
