@@ -27,4 +27,4 @@ fqdn=$(kubectl get ingress/smilr-ingress -o json | jq -r ".spec.rules[0].host")
 
 printf "\n### Checking DNS\n"
 nslookup $fqdn
-printf "\nApp should be available at $ingressType://$fqdn \n\n"
+printf "\nApp should be available at $ingressType://$fqdn/ \n\n"
