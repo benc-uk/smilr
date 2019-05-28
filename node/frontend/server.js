@@ -8,6 +8,8 @@
 // Load .env file if it exists
 require('dotenv').config()
 
+console.log(`### Smilr frontend service starting...`);
+
 // Load in modules, and create Express app 
 var express = require('express');
 var app = express();
@@ -28,18 +30,23 @@ app.use('/', express.static(staticContentDir));
 // Allow Vue.js to fetch a comma separated set of environmental vars from the server
 //
 app.get('/.config/:vars', function (req, res) {
-    let data = {};
-    req.params.vars.split(",").forEach(varname =>{
-        data[varname] = process.env[varname];
-    })
-    res.send(data);
+  let data = {};
+  req.params.vars.split(",").forEach(varname =>{
+      data[varname] = process.env[varname];
+  })
+  res.send(data);
 });
+
+// Extra info for debugging
+if(process.env['API_ENDPOINT']) {
+  console.log(`### Will use API endpoint: ${process.env['API_ENDPOINT']}`);
+}
 
 // Redirect all other requests to Vue.js app - i.e. index.html
 // This allows us to do in-app, client side routing and deep linking 
 // - see https://cli.vuejs.org/guide/deployment.html#general-guidelines
 app.use('*', function(req, res) {
-   res.sendFile(`${staticContentDir}/index.html`);
+  res.sendFile(`${staticContentDir}/index.html`);
 });
 
 //
@@ -47,6 +54,5 @@ app.use('*', function(req, res) {
 //
 var port = process.env.PORT || 3000;
 var server = app.listen(port, function () {
-    var port = server.address().port;
-    console.log(`### Server listening on ${server.address().port}`);
- });
+  console.log(`### Frontend server listening on ${server.address().port}`);
+});

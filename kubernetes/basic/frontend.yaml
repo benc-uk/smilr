@@ -34,7 +34,7 @@ spec:
         env:       
         - name: API_ENDPOINT
           # !CHANGE THIS! To the external IP of data-api-svc or DNS name if using external DNS, don't forget /api 
-          value: http://smilrbasic-api.56539f01234e4e00981e.westeurope.aksapp.io/api
+          value: http://13.95.30.23/api
 
         resources:
           limits:

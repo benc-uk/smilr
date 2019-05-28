@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": "https://github.com/benc-uk/smilr",
   "dependencies": {
-    "dotenv": "^5.0.0",
+    "dotenv": "^8.0.0",
     "express": "^4.16.2"
   }
 }
