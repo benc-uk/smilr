@@ -1,5 +1,4 @@
 dependencies:
 - name: mongodb
-  # This is an ANCIENT version of the chart but it works
-  version: "0.4.12"
+  version: "^5.0.0"
   repository: "@stable"
