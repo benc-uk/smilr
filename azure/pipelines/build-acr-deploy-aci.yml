@@ -24,6 +24,8 @@ stages:
   - job: buildJob
     displayName: 'Docker build & ACR push'
 
+    condition: and(succeeded(), ne(variables['skip-build'], 'true'))
+
     pool:
       vmImage: Ubuntu-16.04
 
