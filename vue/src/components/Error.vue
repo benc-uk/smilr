@@ -2,14 +2,14 @@
   Component: Error
   Purpose:   Generic error view that can display any message
   Author:    Ben Coleman, Dec 2018
-  Updated:   Dec 2018
+  Updated:   May 2019
 -->
 
 <template>
   <b-jumbotron header="Error 😢" lead="Something bad has happened" >
     <div class="error-message">{{ message }}</div>
     <br/>
-    <b-button :href="rootUrl" variant="danger">Try to Reload App</b-button>
+    <b-button onclick="window.location.reload()" variant="danger">Try to Reload App</b-button>
   </b-jumbotron>
 </template>
 

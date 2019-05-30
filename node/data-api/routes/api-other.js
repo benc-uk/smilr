@@ -13,7 +13,7 @@ const utils = require('../lib/utils');
 //
 // GET info - Return system info and other debugging details 
 //
-routes.get('/api/info', async function (req, res, next) {
+routes.get('(/api)?/info', async function (req, res, next) {
   try {
     var info = { 
       // General info
