@@ -3,14 +3,14 @@ domainSuffix: #smilr.f0dfafed36164c7faac0.westeurope.aksapp.io
 cmCertIssuer: 
 
 dataApi:
-  imageTag: stable
+  imageTag: '20190530.1'
   replicas: 2
   # Leave blank to use the internal service, override if using external database
   mongoConnStr: 
   imagePullPolicy: Always
 
 frontend:
-  imageTag: stable
+  imageTag: '20190530.1'
   replicas: 2
   imagePullPolicy: Always
 
