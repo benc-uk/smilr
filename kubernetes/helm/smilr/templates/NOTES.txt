@@ -11,6 +11,6 @@ Check DNS with: dig +short {{ .Release.Name }}.{{ .Values.domainSuffix }}
 Get the IP address of your Ingress by running these commands:
 
 export INGRESS_IP=$(kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}')
-echo "The app is accessible at http://$INGRESS_IP/{{ .Release.Name }}/"
+echo -e "\n\nSmilr deployment is accessible at http://$INGRESS_IP/{{ .Release.Name }}/\n\n"
 {{ end }}
 Have fun, bye!
