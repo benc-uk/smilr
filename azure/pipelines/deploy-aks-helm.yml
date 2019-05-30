@@ -10,12 +10,14 @@ trigger: none
 # - Expected variables: acr-name, acr-password, azure-connection
 variables:
   - group: shared-variables
-  - name: dns-suffix
-    value: 'smilr.f0dfafed36164c7faac0.westeurope.aksapp.io'
+  - name: ingress-host
+    value: 'aks.benco.io'
   - name: aks-resgrp
     value: 'demo.aks'
   - name: aks-cluster
     value: 'aksnew'
+  - name: image-tag
+    value: 'latest'
 
 stages:
 #
@@ -29,16 +31,16 @@ stages:
     parameters:
       envName: test
 
-  - template: templates/dns-wait.yml
-    parameters:
-      dependsOn: deployWithHelm      
-      dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
+  # - template: templates/dns-wait.yml
+  #   parameters:
+  #     dependsOn: deployWithHelm      
+  #     dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:
-      dependsOn: dnsWaitJob
-      apiHost: 'test-$(Build.BuildId).$(dns-suffix)'
-      frontHost: 'test-$(Build.BuildId).$(dns-suffix)'
+      dependsOn: deployWithHelm
+      apiHost: '$(ingress-host)/test-$(Build.BuildId)'
+      frontHost: '$(ingress-host)/test-$(Build.BuildId)'
 #
 # Deploy stage 2 - AKS staging namespace
 #
@@ -50,16 +52,16 @@ stages:
     parameters:
       envName: staging
 
-  - template: templates/dns-wait.yml
-    parameters:
-      dependsOn: deployWithHelm
-      dnsName: 'staging-$(Build.BuildId).$(dns-suffix)'
+  # - template: templates/dns-wait.yml
+  #   parameters:
+  #     dependsOn: deployWithHelm
+  #     dnsName: 'staging-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:
-      dependsOn: dnsWaitJob
-      apiHost: 'staging-$(Build.BuildId).$(dns-suffix)'
-      frontHost: 'staging-$(Build.BuildId).$(dns-suffix)'
+      dependsOn: deployWithHelm
+      apiHost: '$(ingress-host)/staging-$(Build.BuildId)'
+      frontHost: '$(ingress-host)/staging-$(Build.BuildId)'
 
 #
 # Deploy stage 3 - AKS production namespace
@@ -72,13 +74,13 @@ stages:
     parameters:
       envName: prod
 
-  - template: templates/dns-wait.yml
-    parameters:
-      dependsOn: deployWithHelm      
-      dnsName: 'prod-$(Build.BuildId).$(dns-suffix)'
+  # - template: templates/dns-wait.yml
+  #   parameters:
+  #     dependsOn: deployWithHelm      
+  #     dnsName: 'prod-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:
-      dependsOn: dnsWaitJob
-      apiHost: 'prod-$(Build.BuildId).$(dns-suffix)'
-      frontHost: 'prod-$(Build.BuildId).$(dns-suffix)'
+      dependsOn: deployWithHelm
+      apiHost: '$(ingress-host)/prod-$(Build.BuildId)'
+      frontHost: '$(ingress-host)/prod-$(Build.BuildId)'
