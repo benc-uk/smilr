@@ -15,9 +15,20 @@ jobs:
 
     steps:
     - checkout: self
-    - bash: sleep 30
+    
+    # Wait until URL is ready or 60 seconds
+    - bash: etc/bash/urlWait.sh http://{{ parameters.apiHost }}/ 60
+    
+    # Install Newman CLI tool
     - bash: npm install -g newman --prefix $(System.DefaultWorkingDirectory)
-    - bash: $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/Smilr.postman_collection.json -r junit -n 3 --global-var smilr-api-host="${{ parameters.apiHost }}" --global-var smilr-front-host="${{ parameters.frontHost }}" --timeout 180000
+    
+    # Run the tests with Newman
+    - bash: $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/Smilr.postman_collection.json /
+      --reporters junit --iteration-count 3 --timeout 180000 /
+      --global-var smilr-api-host="${{ parameters.apiHost }}" /
+      --global-var smilr-front-host="${{ parameters.frontHost }}"
+    
+    # Publish test results
     - task: PublishTestResults@2
       inputs:
         testResultsFiles: 'newman/*.xml'
