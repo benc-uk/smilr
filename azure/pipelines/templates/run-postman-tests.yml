@@ -17,7 +17,7 @@ jobs:
     - checkout: self
     
     # Wait until URL is ready or 60 seconds
-    - bash: ./etc/bash/urlWait.sh http://{{ parameters.apiHost }}/ 60
+    - bash: bash ./etc/bash/urlWait.sh http://{{ parameters.apiHost }}/ 60
     
     # Install Newman CLI tool
     - bash: npm install -g newman --prefix $(System.DefaultWorkingDirectory)
