@@ -1,5 +1,5 @@
 registryPrefix: bcdemo.azurecr.io/
-domainSuffix: smilr.f0dfafed36164c7faac0.westeurope.aksapp.io
+domainSuffix: #smilr.f0dfafed36164c7faac0.westeurope.aksapp.io
 cmCertIssuer: 
 
 dataApi:

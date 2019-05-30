@@ -12,7 +12,7 @@ const ApiError = require('../lib/api-error');
 //
 // GET feedback - return array of feedback for specific eventid and topicid
 //
-routes.get('/api/feedback/:eventid/:topicid', async function (req, res, next) {
+routes.get('(/api)?/feedback/:eventid/:topicid', async function (req, res, next) {
   try {
     let result = await res.app.get('data').listFeedbackForEventTopic(req.params.eventid, parseInt(req.params.topicid))
     utils.sendData(res, result)
@@ -24,7 +24,7 @@ routes.get('/api/feedback/:eventid/:topicid', async function (req, res, next) {
 //
 // POST feedback - submit feedback, body should include: event, topic, rating & comment
 //
-routes.post('/api/feedback', async function(req, res, next) {
+routes.post('(/api)?/feedback', async function(req, res, next) {
   let feedback = req.body;
   let topicId = feedback.topic;
   let eventId = feedback.event;

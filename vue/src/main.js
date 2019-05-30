@@ -40,7 +40,7 @@ export { userProfile, config }
 // In production mode fetch config at runtime from /.config endpoint
 // This REQUIRES the SPA is being served by the Smilr frontend Node server
 if(process.env.NODE_ENV != 'development') {
-  fetch(`/.config/API_ENDPOINT,AAD_CLIENT_ID,ADMIN_USER_LIST`)
+  fetch(`.config/API_ENDPOINT,AAD_CLIENT_ID,ADMIN_USER_LIST`)
   .then(resp => {
     resp.json()
     .then(result => {
