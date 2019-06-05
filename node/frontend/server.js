@@ -11,8 +11,9 @@ require('dotenv').config()
 console.log(`### Smilr frontend service starting...`);
 
 // Load in modules, and create Express app 
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
+const cors = require('cors');
 
 // Serve static content from working directory ('.') by default
 // - Optional parameter can specify different location, use when debugging & running locally
@@ -24,6 +25,7 @@ console.log(`### Content dir = '${staticContentDir}'`);
 
 // Serve all Angular app static content (index.html, js, css, assets, etc.)
 app.use('/', express.static(staticContentDir));
+app.use(cors());
 
 //
 // MICRO API allowing dynamic configuration of the client side Vue.js
