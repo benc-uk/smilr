@@ -1,6 +1,7 @@
 <template>
   <div class="facebox" ref="facebox">
-    <img class="face" @click="clicked" :src="utilsFaceSVG(number)" 
+    <img class="face" @click="clicked" 
+      :src="faceSVG(number)" 
       :class="{ 
         'animated': true, 
         'slower': selected, 
@@ -10,19 +11,16 @@
         'unselected': unselected }">
   </div>
 </template>
-
+      
 <script>
 /* eslint-disable */
-
 import '../assets/css/animate.css'
-import utils from "../mixins/utils"
+import f1 from "../assets/img/face-1.svg"
 
 export default {
   name: 'Face',
 
   props: ['number', 'unselected', 'selected'],
-
-  mixins: [ utils ],
 
   computed: {
     fade: function() {
@@ -33,7 +31,11 @@ export default {
   methods: {
     clicked: function() {
       this.$emit('clicked', this.number);
-    }
+    },
+    
+    faceSVG: function(rating) {
+      return require(`@/assets/img/face-${rating}.svg`);
+    }    
   }
 }
 </script>
