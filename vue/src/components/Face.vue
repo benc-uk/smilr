@@ -12,6 +12,8 @@
 </template>
 
 <script>
+/* eslint-disable */
+
 import '../assets/css/animate.css'
 import utils from "../mixins/utils"
 
@@ -31,7 +33,7 @@ export default {
   methods: {
     clicked: function() {
       this.$emit('clicked', this.number);
-    },
+    }
   }
 }
 </script>
