@@ -14,11 +14,6 @@ export default {
 
     getEventTypes: function() {
       return ['event', 'lab', 'hack', 'workshop']
-    },
-
-    utilsFaceSVG: function(rating) {
-      let f = require(`@/assets/img/face-${rating}.svg`);
-      return f;
     }
   }
 }

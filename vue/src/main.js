@@ -3,6 +3,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+// Experiment
+
+
 // Bootstrap and theme
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
@@ -86,6 +89,9 @@ function initApp() {
       isAdmin: true
     }
   }
+
+  // Since changing to abtract router, need to force initial navigation
+  router.replace('/')
 
   // Mount the top level App component
   new Vue({

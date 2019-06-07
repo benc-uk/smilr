@@ -14,7 +14,9 @@ import { config, userProfile } from './main'
 Vue.use(Router)
 
 var router = new Router({
-  mode: 'history',
+  // Changed so that no URL changes occur
+  // Change back to 'history'
+  mode: 'abstract',
   routes: [
     {
       meta: {title: 'Smilr'},
