@@ -28,11 +28,11 @@
       <div v-for="topic in selectedEvent.topics" :key="topic.id" class="topicbox">
         <h2 class="topichead">{{ topic.desc }}</h2>
         Responses: {{ topic.feedback.length }} <br/>
-        <span v-if="topic.feedback.length > 0">&nbsp;Average Rating: {{ topicAvgRating(topic) }} <img :src="faceSVG(Math.round(topicAvgRating(topic)))"/> </span>
+        <span v-if="topic.feedback.length > 0">&nbsp;Average Rating: {{ topicAvgRating(topic) }} <img :src="utilsFaceSVG(Math.round(topicAvgRating(topic)))"/> </span>
         
         <b-table sort-by="rating" sort-desc v-if="topic.feedback.length > 0" hover :items="topic.feedback" :fields="feedBackTableFields">
           <template slot="rating" slot-scope="data">
-            <img :src="faceSVG(data.item.rating)"/> {{ data.item.rating }} 
+            <img :src="utilsFaceSVG(data.item.rating)"/> {{ data.item.rating }} 
           </template>
           <template slot="sentiment" slot-scope="data">
             {{ data.item.sentiment ? Math.round(data.item.sentiment * 100) + "%" : '-' }} 
@@ -118,11 +118,7 @@ export default {
       }
 
       return Number(rating / topic.feedback.length).toFixed(2);
-    },
-
-    faceSVG: function(rating) {
-      return require(`@/assets/img/face-${rating}.svg`);
-    }  
+    }
   }
 }
 </script>

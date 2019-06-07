@@ -1,7 +1,7 @@
 <template>
   <div class="facebox" ref="facebox">
     <img class="face" @click="clicked" 
-      :src="faceSVG(number)" 
+      :src="utilsFaceSVG(number)" 
       :class="{ 
         'animated': true, 
         'slower': selected, 
@@ -13,12 +13,13 @@
 </template>
       
 <script>
-/* eslint-disable */
 import '../assets/css/animate.css'
-import f1 from "../assets/img/face-1.svg"
+import utils from "../mixins/utils"
 
 export default {
   name: 'Face',
+
+  mixins: [ utils ],
 
   props: ['number', 'unselected', 'selected'],
 
@@ -31,13 +32,7 @@ export default {
   methods: {
     clicked: function() {
       this.$emit('clicked', this.number);
-    },
-    
-    faceSVG: function(rating) {
-      // I hate this but ...
-      // It was the only way I could find to get this to work when publicPath wasn't set to '/'
-      return "../../" + require(`@/assets/img/face-${rating}.svg`);
-    }    
+    }   
   }
 }
 </script>

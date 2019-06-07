@@ -14,8 +14,7 @@ import { config, userProfile } from './main'
 Vue.use(Router)
 
 var router = new Router({
-  // Changed so that no URL changes occur
-  // Change back to 'history' blah argh I hate everything
+  // Assumes we being served via something "SPA aware" with index.html redirects
   mode: 'history',
   routes: [
     {
@@ -37,7 +36,7 @@ var router = new Router({
       component: Events
     },
     {
-      path: '/feedback/:eventId/:topicId',
+      path: '/feedback/', //:eventId/:topicId',
       name: 'feedback',
       component: Feedback,
       props: true
