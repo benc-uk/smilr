@@ -34,7 +34,9 @@ export default {
     },
     
     faceSVG: function(rating) {
-      return require(`@/assets/img/face-${rating}.svg`);
+      // I hate this but ...
+      // It was the only way I could find to get this to work when publicPath wasn't set to '/'
+      return "../../" + require(`@/assets/img/face-${rating}.svg`);
     }    
   }
 }

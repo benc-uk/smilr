@@ -19,6 +19,7 @@ export default class AuthService {
       '',
       () => {
         // callback for login redirect
+        console.log("~~~~~~~~~~~~~~~~")
       },
       {
         redirectUri

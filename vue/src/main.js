@@ -90,9 +90,6 @@ function initApp() {
     }
   }
 
-  // Since changing to abtract router, need to force initial navigation
-  router.replace('/')
-
   // Mount the top level App component
   new Vue({
     router,
