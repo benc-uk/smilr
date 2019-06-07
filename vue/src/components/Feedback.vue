@@ -40,7 +40,8 @@ import Face from "./Face"
 export default {
   name: 'Feedback',
 
-  props: ['eventId', 'topicId'],
+  // These are not longer used, kept just in case, query params used now
+  props: ['eventIdProp', 'topicIdProp'],
 
   mixins: [ api, cookies ],
 
@@ -57,6 +58,12 @@ export default {
       rating: null,
       comment: ""
     }
+  },
+
+  computed: {
+    // Our main ids, are computed from either the props or query params on the route
+    eventId: function() { return this.eventIdProp || this.$route.query.eventId },
+    topicId: function() { return this.topicIdProp || this.$route.query.topicId }
   },
 
   methods: {
@@ -89,7 +96,7 @@ export default {
     }
   },
 
-  mounted() {
+  mounted() {   
     // Check feedback cookie
     let fbCookie = this.cookieRead(`feedback_${this.eventId}_${this.topicId}`)
 
@@ -99,8 +106,13 @@ export default {
       return
     } 
 
-    if(!this.eventId) {
-      this.$router.push("/");
+    // Check we have the two IDs we need, if not throw error
+    if(!this.eventId || !this.topicId) {
+      this.$router.push({
+        name: 'error', 
+        replace: true, 
+        params: { message: `You shouldn't be here! No event or topic id provided!` }
+      })
       return;
     }
 
