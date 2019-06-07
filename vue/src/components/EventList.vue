@@ -12,7 +12,8 @@
 
           <ul>
             <li v-for="topic in event.topics" :key="topic.id">
-              <router-link v-if="filter == 'active'" :to="{ name: 'feedback', params: { eventId: event._id, topicId: topic.id }}">{{ topic.desc }}</router-link>
+              <!-- <router-link v-if="filter == 'active'" :to="{ name: 'feedback', params: { eventIdProp: event._id, topicIdProp: topic.id }}">{{ topic.desc }}</router-link> -->
+              <router-link v-if="filter == 'active'" :to="{ name: 'feedback', query: { eventId: event._id, topicId: topic.id }}">{{ topic.desc }}</router-link>
               <span v-else>{{ topic.desc }}</span>
             </li>
           </ul>
