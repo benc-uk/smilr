@@ -15,8 +15,8 @@ Vue.use(Router)
 
 var router = new Router({
   // Changed so that no URL changes occur
-  // Change back to 'history'
-  mode: 'abstract',
+  // Change back to 'history' blah argh I hate everything
+  mode: 'history',
   routes: [
     {
       meta: {title: 'Smilr'},

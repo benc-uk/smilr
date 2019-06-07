@@ -3,7 +3,7 @@
     <b-navbar toggleable="md" type="dark" variant="primary">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-      <b-navbar-brand :to="{name:'home'}" style="font-size:32px;"><img src="./assets/img/logo-white.svg" class="logo"> &nbsp;Smilr</b-navbar-brand>
+      <b-navbar-brand :to="{name:'home'}" style="font-size:32px;"><img src="@/assets/img/logo-white.svg" class="logo"> &nbsp;Smilr</b-navbar-brand>
        <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav >
             <b-button size="lg" :to="{name:'events'}" class="bigger" variant="success"><fa icon="coffee" /> Events</b-button> 
