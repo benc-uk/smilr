@@ -99,6 +99,11 @@ export default {
       return
     } 
 
+    if(!this.eventId) {
+      this.$router.push("/");
+      return;
+    }
+
     this.apiGetEvent(this.eventId)
     .then(resp => {
       if (resp.data) {
