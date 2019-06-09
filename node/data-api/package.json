@@ -18,9 +18,10 @@
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.4.0",
-    "request": "^2.88.0",
     "mongodb": "^3.2.6",
     "morgan": "^1.9.1",
+    "passport-azure-ad": "^4.1.0",
+    "request": "^2.88.0",
     "swagger-ui-express": "^4.0.5"
   }
 }

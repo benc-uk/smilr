@@ -8,7 +8,7 @@
       &nbsp;&nbsp; <fa icon="user"/> LOGIN WITH AZURE ACTIVE DIRECTORY &nbsp;&nbsp; </b-button>
     </p>
     
-    <b-alert v-if="loginFailed" show>Login failed, please try again!</b-alert>
+    <b-alert v-if="loginFailed" show> <b>Login failed!</b> <br>{{ loginError }}</b-alert>
   </b-card>
 </template>
 
@@ -17,6 +17,10 @@
 import AuthService from '../lib/auth-service'
 import { userProfile } from '../main'
 import { config } from '../main'
+import * as Msal from 'msal'
+import axios from 'axios'
+
+var msalApp = null;
 
 export default {
   name: 'Login',
@@ -26,51 +30,72 @@ export default {
   data() {
     return {
       authService: null,
-      loginFailed: false
+      loginFailed: false,
+      loginError: null
     }
   },
 
   created() {
-    this.authService = new AuthService(config.AAD_CLIENT_ID, '/login')
+    let redirectUri = window.location.origin + '/login'
+
+    const msalApplicationConfig = {
+      auth: {
+        clientId: config.AAD_CLIENT_ID,
+        redirectUri: redirectUri,
+        authority: 'https://login.microsoftonline.com/common'
+      }
+    }
+
+    // create UserAgentApplication instance
+    msalApp = new Msal.UserAgentApplication(msalApplicationConfig);
   },
 
   methods: {
     login() {
       this.loginFailed = false;
-      this.authService.login().then(
-        resp => {
-          if (resp) {
-            // Access tokens are sometimes encrypted, I give up with them
-            //this.authService.getToken(resp.user).then(accessToken => console.log("$$$ AT", accessToken) )
-            
-            // Store everything, including idToken
-            userProfile.user = resp.user
-            userProfile.idToken = resp.idToken
-            userProfile.isAdmin = false
-            
-            // Check against list of admins
-            if(config.ADMIN_USER_LIST) {
-              for(let userName of config.ADMIN_USER_LIST.split(',')) {
-                if(userName.trim().toLowerCase() == userProfile.user.displayableId.toLowerCase()) {
-                  userProfile.isAdmin = true
-                  break
-                }          
-              }
-            }
 
-            // Redirect if we have a route to forward onto
-            if(this.redir)
-              this.$router.push({ name: this.redir })
-            else
-              this.$router.push({ name: 'admin' })
-          } else {
-            this.loginFailed = true;
+      let loginRequest = {
+        scopes: ["user.read", "offline_access", "profile"],
+      }
+
+      let accessTokenRequest = {
+        scopes: ["user.read", "offline_access", "profile"]
+      }
+
+      msalApp.loginPopup(loginRequest).then(loginResponse => {   
+        userProfile.token = loginResponse.idToken.rawIdToken
+        console.log(loginResponse.idToken.rawIdToken);
+        userProfile.user = msalApp.getAccount(); 
+                    
+        // Normally we'd call msalApp.acquireTokenSilent(accessTokenRequest) here
+        // But AAD is a fucking nightmare. After two days of trying I can not validate those tokens
+        // Using the id token instead isn't great but it works
+        msalApp.acquireTokenSilent(accessTokenRequest).then(resp => {
+          console.log(resp.accessToken);
+          
+        })
+
+        userProfile.isAdmin = false;   
+
+        // Check against list of admins
+        if(config.ADMIN_USER_LIST) {
+          for(let userName of config.ADMIN_USER_LIST.split(',')) {
+            if(userName.trim().toLowerCase() == userProfile.user.userName.toLowerCase()) {
+              userProfile.isAdmin = true
+              break
+            }          
           }
-        },
-        () => {
-          this.loginFailed = true;
-        }
-      );
+        }   
+
+        if(this.redir)
+          this.$router.push({ name: this.redir })
+        else
+          this.$router.push({ name: 'home' })  
+      }).catch(error => {  
+        console.log("### MSAL Error "+error.toString());
+        this.loginFailed = true;
+        this.loginError = error.toString()
+      });
     }     
   }
 }

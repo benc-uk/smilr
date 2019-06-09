@@ -40,7 +40,7 @@ import Face from "./Face"
 export default {
   name: 'Feedback',
 
-  // These are not longer used, kept just in case, query params used now
+  // These are no longer used, kept just in case, query params used now
   props: ['eventIdProp', 'topicIdProp'],
 
   mixins: [ api, cookies ],
@@ -62,8 +62,8 @@ export default {
 
   computed: {
     // Our main ids, are computed from either the props or query params on the route
-    eventId: function() { return this.eventIdProp || this.$route.query.eventId },
-    topicId: function() { return this.topicIdProp || this.$route.query.topicId }
+    eventId: function() { return this.eventIdProp || this.$route.query.e },
+    topicId: function() { return this.topicIdProp || this.$route.query.t }
   },
 
   methods: {

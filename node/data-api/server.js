@@ -47,6 +47,9 @@ if(!process.env.MONGO_CONNSTR) {
 app.use(cors());
 app.use(bodyParser.json())
 
+// Initialize Passport and AAD authentication 
+if(process.env.SECURE_CLIENT_ID) require('./lib/aad-init')(app)
+
 // Enable Swagger UI, load in JSON definition doc
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
