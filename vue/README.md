@@ -83,8 +83,6 @@ This also means when running in production mode the app must be served from the 
 | ------------- | ----------- |
 | API_ENDPOINT |**Required setting!** This points to URL endpoint of the data service API, e.g. `https://myapi.azurewebsites.net/api`. It must end with `/api` |
 | AAD_CLIENT_ID | Optional. The client ID of an app registered in Azure AD, setting this to anything other than blank will "switch security on". Further details are provided in the [Security section below](#security). *Default: 'blank'* |
-| ADMIN_USER_LIST | Optional. A comma separated list of usernames that can use the app. Further details are provided in the [Security section below](#security). *Default: 'blank'* |
-
 
 # Mock API
 When running & testing locally it's often inconvenient to have a functioning instance of the data API service, as it also requires MonogDB. To this end a mock API is provided which acts like the real data API and doesn't require MonogDB. The mock API uses [JSON Server](https://github.com/typicode/json-server) as a simple REST server
@@ -114,16 +112,11 @@ Setting the configuration `AAD_CLIENT_ID` (or `VUE_APP_AAD_CLIENT_ID` when runni
 The Login component uses the MSAL.js library to authenticate using the configured `AAD_CLIENT_ID`. As we are a SPA this is done with a popup rather than a redirect.
 
 The user is held as global object exported from `main.js` called `userProfile` It is checks against this object that determines if a user is logged in. This object holds three things
-- `user`: MSAL **User** object, [described here](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-core/src/User.ts)
+- `user`: MSAL **Account** object, [described here](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-core/src/Account.ts)
 - `isAdmin`: Boolean flag set at login after user is checked against the list of users in `ADMIN_USER_LIST`
-- `token`: The token returned by MSAL, which is a Base64 encoded JWT string
+- `token`: The *access* token returned by MSAL, which is a Base64 encoded JWT string
 
 > Note. When `AAD_CLIENT_ID` is unset and security disabled, then a fake shallow `userProfile` is created with `isAdmin` set to true and a dummy MSAL user object. This results in passing all the user checks, so the app functions as if you are logged in.
-
-The configuration variable `ADMIN_USER_LIST` determines which users can actually access the *Report* and *Admin* components. This is a simple permission mechanism, and just consists of a comma separated list of usernames, e.g. `bob@example.net,dave@example.net`  
-
-Setting `ADMIN_USER_LIST` without also configuring `AAD_CLIENT_ID` has no effect
-
 
 # Design notes
 Todo

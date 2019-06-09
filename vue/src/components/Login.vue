@@ -14,7 +14,6 @@
 
 <script>
 /* eslint-disable */
-import AuthService from '../lib/auth-service'
 import { userProfile } from '../main'
 import { config } from '../main'
 import * as Msal from 'msal'
@@ -41,8 +40,7 @@ export default {
     const msalApplicationConfig = {
       auth: {
         clientId: config.AAD_CLIENT_ID,
-        redirectUri: redirectUri,
-        authority: 'https://login.microsoftonline.com/common'
+        redirectUri: redirectUri
       }
     }
 
@@ -55,42 +53,35 @@ export default {
       this.loginFailed = false;
 
       let loginRequest = {
-        scopes: ["user.read", "offline_access", "profile"],
+        scopes: [ 'user.read', 'offline_access', 'profile', `api://${config.AAD_CLIENT_ID}/smilr.events`  ]
       }
 
       let accessTokenRequest = {
-        scopes: ["user.read", "offline_access", "profile"]
+        scopes: [ 'offline_access', `api://${config.AAD_CLIENT_ID}/smilr.events`  ] 
       }
 
       msalApp.loginPopup(loginRequest).then(loginResponse => {   
-        userProfile.token = loginResponse.idToken.rawIdToken
-        console.log(loginResponse.idToken.rawIdToken);
-        userProfile.user = msalApp.getAccount(); 
-                    
-        // Normally we'd call msalApp.acquireTokenSilent(accessTokenRequest) here
-        // But AAD is a fucking nightmare. After two days of trying I can not validate those tokens
-        // Using the id token instead isn't great but it works
-        msalApp.acquireTokenSilent(accessTokenRequest).then(resp => {
-          console.log(resp.accessToken);
-          
+        return msalApp.acquireTokenSilent(accessTokenRequest).then(tokenResp => {
+          userProfile.token = tokenResp.accessToken;
+          userProfile.user = msalApp.getAccount();  
+          userProfile.isAdmin = true;
+          //console.log(userProfile.token);
+
+          // Check against list of admins
+          // if(config.ADMIN_USER_LIST) {
+          //   for(let userName of config.ADMIN_USER_LIST.split(',')) {
+          //     if(userName.trim().toLowerCase() == userProfile.user.userName.toLowerCase()) {
+          //       userProfile.isAdmin = true
+          //       break
+          //     }          
+          //   }
+          // }   
+
+          if(this.redir)
+            this.$router.push({ name: this.redir })
+          else
+            this.$router.push({ name: 'home' })  
         })
-
-        userProfile.isAdmin = false;   
-
-        // Check against list of admins
-        if(config.ADMIN_USER_LIST) {
-          for(let userName of config.ADMIN_USER_LIST.split(',')) {
-            if(userName.trim().toLowerCase() == userProfile.user.userName.toLowerCase()) {
-              userProfile.isAdmin = true
-              break
-            }          
-          }
-        }   
-
-        if(this.redir)
-          this.$router.push({ name: this.redir })
-        else
-          this.$router.push({ name: 'home' })  
       }).catch(error => {  
         console.log("### MSAL Error "+error.toString());
         this.loginFailed = true;

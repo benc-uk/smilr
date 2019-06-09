@@ -47,6 +47,7 @@ class Utils {
   //
   // Security check function, attempts to validate JWT tokens
   //
+  /*
   verifyAuthentication(req) {
 
     return new Promise(function(resolve, reject) {
@@ -93,7 +94,7 @@ class Utils {
       });
         
     });
-  }
+  }*/
 
   //
   // Simple random ID generator, good enough, with len=6 it's a 1:56 billion chance of a clash

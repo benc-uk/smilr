@@ -109,10 +109,10 @@ function validateAdminUser(to, from, next) {
     next({name: 'login', params: { redir: to.name}})
   } else {
     // Now check if their name is on the list
-    if(!userProfile.isAdmin) {
-      next({name: 'error', replace: true, params: { message: `ACCESS DENIED.\nUser '${userProfile.user.userName}' is not an administrator for this application` }})
-      return;      
-    }
+    // if(!userProfile.isAdmin) {
+    //   next({name: 'error', replace: true, params: { message: `ACCESS DENIED.\nUser '${userProfile.user.userName}' is not an administrator for this application` }})
+    //   return;      
+    // }
     next()
   }
 }
