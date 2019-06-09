@@ -18,15 +18,29 @@ module.exports = function(app) {
     clientID: process.env.SECURE_CLIENT_ID,
     allowMultiAudiencesInToken: true,
     validateIssuer: false,
-    loggingLevel: 'debug',
+    loggingLevel: 'error',
   }, gotValidToken)
 
   passport.use(strategy);
 };
 
-async function gotValidToken(token, done) {
-  console.log(`### Protected API route called by: ${token.name}`);
+function gotValidToken(token, done) {
+  console.log(`### Protected API route called by: ${token.name} with scope: ${token.scp}`);
 
+  // Check scopes are valid
+  if(!token.scp.toLowerCase().includes("smilr.events")) {
+    console.log("### ERROR! Token doesn't include 'smilr.events' scope permissions")
+    console.log(token)
+    return done(null, false);
+  }
+  
+  // Check audience is valid
+  if(token.aud != process.env.SECURE_CLIENT_ID) {
+    console.log("### ERROR! Token audience doesn't match app client id "+process.env.SECURE_CLIENT_ID)
+    console.log(token)
+    return done(null, false);
+  }
+    
   return done(null, token);
 }
 

@@ -109,14 +109,6 @@ routes.post(['(/api)?/events'], authHandler, async function(req, res, next) {
 //
 routes.put(['(/api)?/events/:id'], authHandler, async function(req, res, next) {
   try {
-    if(!await utils.verifyAuthentication(req)) throw new ApiError('Auth failed, unknown reason', 401)
-  } catch(err) {
-    err.code = 401;
-    utils.sendError(res, err, 'auth-failed');
-    return;
-  }
-
-  try {
     // Event object must be the body
     let event = req.body;
     // Ensure event id is in body, URL params take priority
@@ -150,14 +142,6 @@ routes.put(['(/api)?/events/:id'], authHandler, async function(req, res, next) {
 // DELETE event - delete single event by ID
 //
 routes.delete('(/api)?/events/:id', authHandler, async function(req, res, next) {
-  try {
-    if(!await utils.verifyAuthentication(req)) throw new Error('Auth failed, unknown reason')
-  } catch(err) {
-    err.code = 401;
-    utils.sendError(res, err, 'auth-failed');
-    return;
-  }
-
   try {
     let event = await res.app.get('data').getEvent(req.params.id);  
     if(event) {
