@@ -29,6 +29,7 @@
       Active user: 
       <span v-if="userProfile.user">{{ userProfile.user.name }}</span>
       <span v-else>[No user logged in]</span>
+      <span v-if="userProfile.isAdmin"> (Smilr admin)</span>
     </div>
   </div>
 </template>

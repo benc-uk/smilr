@@ -28,7 +28,6 @@ The server listens on port 4000 by default and requires just one mandatory confi
 |MONGO_RETRIES|Optional. How many times the server will retry connecting to MongoDB. *Default: 5*|
 |MONGO_RETRY_DELAY|Optional. How long to wait in seconds, before retry connecting to MongoDB. *Default: 5*|
 |SECURE_CLIENT_ID|Optional. When set, certain admin API calls will be validated, leave blank or unset to disable security and validation. Details below. *Default: 'blank'*|
-|AAD_V1|Optional. Use older Azure AD v1 issuer when validating tokens. Only used when SECURE_CLIENT_ID is set. Change this to true if you get 401 errors even with a valid user. *Default: false*|
 |APPINSIGHTS_INSTRUMENTATIONKEY|Optional. Enables data collection and monitoring with Azure App Insights, set to the key of the instance you want to send data to. *Default: 'blank'*|
 
 

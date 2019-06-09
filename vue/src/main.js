@@ -3,9 +3,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-// Experiment
-
-
 // Bootstrap and theme
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
@@ -40,7 +37,7 @@ var userProfile = {}
 
 export { userProfile, config }
 
-// In production mode fetch config at runtime from /.config endpoint
+// In production mode fetch config at runtime from special .config endpoint
 // This REQUIRES the SPA is being served by the Smilr frontend Node server
 if(process.env.NODE_ENV != 'development') {
   fetch(`.config/API_ENDPOINT,AAD_CLIENT_ID,ADMIN_USER_LIST`)
@@ -62,6 +59,7 @@ if(process.env.NODE_ENV != 'development') {
   })
 } else {
   // In dev mode fetch config from static .env file, note the VUE_APP_ prefix
+  // The Vue CLI webpack bundling will populate these from `.env.development.local`
   config.API_ENDPOINT = process.env.VUE_APP_API_ENDPOINT
   config.AAD_CLIENT_ID = process.env.VUE_APP_AAD_CLIENT_ID
   config.ADMIN_USER_LIST = process.env.VUE_APP_ADMIN_USER_LIST
@@ -72,7 +70,7 @@ if(process.env.NODE_ENV != 'development') {
 // It all starts here, create the Vue instance and mount the app component
 //
 function initApp() {
-  console.log(`### App starting running in ${process.env.NODE_ENV} mode`)
+  console.log(`### App running in ${process.env.NODE_ENV} mode`)
   console.log('### App config is', config)
 
   // Check if security enabled
@@ -91,6 +89,7 @@ function initApp() {
   }
 
   // Mount the top level App component
+  // Taken from Vue CLI template app, don't really understand what it all does
   new Vue({
     router,
     render: function (h) { return h(App) },

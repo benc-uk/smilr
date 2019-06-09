@@ -8,6 +8,7 @@ const express = require('express');
 const routes = express.Router();
 const utils = require('../lib/utils');
 const ApiError = require('../lib/api-error');
+const passport = require('passport');
 
 //
 // GET events - return array of events; with time range filter (active, future, past)
@@ -70,17 +71,19 @@ routes.get('(/api)?/events/:id', async function(req, res, next) {
 })
 
 //
+// Setup protected routes or bypass auth if SECURE_CLIENT_ID isn't set
+//
+// Default is a passthrough handler, with means no auth or protection on routes
+let authHandler = function(req, res, next) { next(); }
+if(process.env.SECURE_CLIENT_ID) {
+  // Validate bearer token with oauth scheme see lib/aad-init.js
+  authHandler = passport.authenticate('oauth-bearer', { session: false })
+} 
+
+//
 // POST event - create a new event, call with event body with no id
 //
-routes.post('(/api)?/events', async function(req, res, next) {
-  try {
-    if(!await utils.verifyAuthentication(req)) throw new ApiError('Auth failed, unknown reason', 401)
-  } catch(err) {
-    err.code = 401;
-    utils.sendError(res, err, 'auth-failed');
-    return;
-  }
-    
+routes.post(['(/api)?/events'], authHandler, async function(req, res, next) {
   try {
     let event = req.body;
     // Don't send me an id, we don't want it
@@ -99,12 +102,12 @@ routes.post('(/api)?/events', async function(req, res, next) {
   } catch(err) {
     utils.sendError(res, err, 'event-create');
   }  
-})
+});
 
 //
 // PUT event - update an existing event, call with event id
 //
-routes.put(['(/api)?/events/:id'], async function(req, res, next) {
+routes.put(['(/api)?/events/:id'], authHandler, async function(req, res, next) {
   try {
     if(!await utils.verifyAuthentication(req)) throw new ApiError('Auth failed, unknown reason', 401)
   } catch(err) {
@@ -141,12 +144,12 @@ routes.put(['(/api)?/events/:id'], async function(req, res, next) {
     utils.sendError(res, err, 'event-update');
     return;
   }
-})
+});
 
 //
 // DELETE event - delete single event by ID
 //
-routes.delete('(/api)?/events/:id', async function(req, res, next) {
+routes.delete('(/api)?/events/:id', authHandler, async function(req, res, next) {
   try {
     if(!await utils.verifyAuthentication(req)) throw new Error('Auth failed, unknown reason')
   } catch(err) {
@@ -169,6 +172,6 @@ routes.delete('(/api)?/events/:id', async function(req, res, next) {
   } catch(err) {
     utils.sendError(res, err, 'event-delete');
   }
-})
+});
 
 module.exports = routes;

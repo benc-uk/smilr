@@ -73,9 +73,9 @@ export default {
       var headers = {}
 
       // Send token as per the OAuth 2.0 bearer token scheme
-      if(userProfile.idToken) {
+      if(userProfile.token) {
         headers = {
-          'Authorization': `Bearer ${userProfile.idToken}`
+          'Authorization': `Bearer ${userProfile.token}`
         }
       }
 
