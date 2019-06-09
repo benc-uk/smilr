@@ -38,12 +38,7 @@ The event PUT, POST and DELETE calls result in data modification, and are only c
 
 To switch on security for these three calls, set the `SECURE_CLIENT_ID` environmental variable to the client id of an [app registered with Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
 
-HTTP request validation is done in `lib/utils.js` and the ***verifyAuthentication()*** method, validation is skipped entirely if SECURE_CLIENT_ID is unset or blank (Note. This is the default). This method calls on a library called 'azure-ad-jwt' in order to validate the tokens.  
-
-> :speech_balloon: **Node.** At the time of writing (Dec 2018) there are some issues with the public version of 'azure-ad-jwt', so a locally modified copy is provided in `lib/azure-ad-jwt/`. The modifications are [detailed in this pull request](https://github.com/dei79/node-azure-ad-jwt/pull/13)
-
-The validation logic first checks for the `authorization` header in the HTTP request, the bearer token is extracted and treated as a JWT, which is validated that it is signed and issued and signed by Azure AD. Lastly the token's 'audience claim' is checked that it matches the client id provided in `SECURE_CLIENT_ID`. This means the token was issued to our known registered app.  
-Failure of any of these checks will result in no data being modified and a HTTP 401 error being returned (with a reason message in the body)
+Request & token validation is done in by Passport.js (standard authenication middleware for Node.js Express) and the [Azure AD plugin](https://github.com/AzureAD/passport-azure-ad). This is configured as middleware to validate bearer tokens supplied on the certain sensitive routes mentioned above. `passport.authenicate` is called before those routes are run and the tokens fetched and checked with the logic in `lib/auth.js`. We ensure the tokens are signed and valid, contain the `smilr.events` scope and also come from our registered app (audience)
 
 Once security is enabled, the Vue.js client will also need to be [similarly configured, with the matching AAD app client id used for validation](../../vue/#security)
 
