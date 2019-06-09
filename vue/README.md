@@ -102,21 +102,29 @@ Note. Admin views are denoted with yellow buttons on the navbar, over on the rig
 
 Should you want to host Smilr permanently somewhere or to investigate how to secure SPA apps, then authentication & security can be enabled
 
-To secure the Smilr client app we use Azure Active Directory v2 and the OAuth 2.0 Implicit Grant flow. [As described in the Azure docs here](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-implicit-grant-flow)
+To secure the Smilr client app we use the Microsoft identity platform (aka 'Azure Active Directory v2') and the OAuth 2.0 Implicit Grant flow. [As described in the Azure docs here](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-implicit-grant-flow)
 
 Setting the configuration `AAD_CLIENT_ID` (or `VUE_APP_AAD_CLIENT_ID` when running locally) will switch on security. The value should be the client id of an [app registered with Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app). Setting this changes the app behavior in two ways
 
 - The *Report* and *Admin* components will be protected by a Vue route guard. This guard checks that there is a logged in user and the user is in the list of admins. If there is no logged in user, they are redirected to the *Login* component.
 - If there is a logged in user, all HTTP requests to the data API will include that user's access token as a JWT in the **authorization** header, as described in the standard [OAuth 2.0 Bearer Token scheme](https://tools.ietf.org/html/rfc6750).
 
-The Login component uses the MSAL.js library to authenticate using the configured `AAD_CLIENT_ID`. As we are a SPA this is done with a popup rather than a redirect.
+The Login component uses the [MSAL.js library](https://github.com/AzureAD/microsoft-authentication-library-for-js) to authenticate using the configured `AAD_CLIENT_ID`. As we are a SPA this is done with a popup rather than a redirect.
 
 The user is held as global object exported from `main.js` called `userProfile` It is checks against this object that determines if a user is logged in. This object holds three things
-- `user`: MSAL **Account** object, [described here](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-core/src/Account.ts)
-- `isAdmin`: Boolean flag set at login after user is checked against the list of users in `ADMIN_USER_LIST`
-- `token`: The *access* token returned by MSAL, which is a Base64 encoded JWT string
+- `user`: The returned MSAL **Account** object, [described here](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-core/src/Account.ts)
+- `isAdmin`: Deprecated flag no longer used
+- `token`: The *access token* (not id token) returned by MSAL, which is a Base64 encoded JWT string
 
 > Note. When `AAD_CLIENT_ID` is unset and security disabled, then a fake shallow `userProfile` is created with `isAdmin` set to true and a dummy MSAL user object. This results in passing all the user checks, so the app functions as if you are logged in.
+
+## Azure AD App Registration
+When creating/registering the app in Azure AD it is very important to set the following options:
+- Enable 'Access tokens' and 'ID tokens'
+- Set the correct return URL, which will end `/login`
+- Add a scope to the app via the "Expose and API" section. 
+  - Set the App ID URI to be `api://{app-client-id-guid}` (This might be the default)
+  - Add a scope called: **smilr.events**
 
 # Design notes
 Todo
