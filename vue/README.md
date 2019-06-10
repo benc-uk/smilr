@@ -123,8 +123,9 @@ The user is held as global object exported from `main.js` called `userProfile` I
 
 ## Azure AD App Registration
 When creating/registering the app in Azure AD it is very important to set the following options:
+- For supported account types, pick *"Accounts in any organizational directory and personal Microsoft accounts"*
 - Enable 'Access tokens' and 'ID tokens'
-- Set the correct return URL, which will end `/login`
+- Set the correct redirect URI, which should end `/login`
 - Add a scope to the app via the "Expose and API" section. 
   - Set the App ID URI to be `api://{app-client-id-guid}` (This might be the default)
   - Add a scope called: **smilr.events**
