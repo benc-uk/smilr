@@ -1,24 +1,17 @@
 <template>
-  <div class="mx-auto spinner">
-    <looping-rhombuses-spinner :animation-duration="1500" :rhombus-size="35" color="#666" />
+  <div style="text-align: center">
+    <hollow-dots-spinner :animation-duration="800" :dot-size="35" :dots-num="3" color="#666" style="display: inline-block; width: 14rem"/>
   </div>
 </template>
 
 <script>
-import { LoopingRhombusesSpinner  } from 'epic-spinners'
+import { HollowDotsSpinner } from 'epic-spinners'
 
 export default {
   name: "Spinner",
 
   components: {
-    LoopingRhombusesSpinner
+    HollowDotsSpinner
   }
 }
 </script>
-
-<style>
-.spinner {
-   font-size: 6rem;
-   width: 9rem;
-}
-</style>

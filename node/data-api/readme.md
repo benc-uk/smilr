@@ -38,7 +38,7 @@ The event PUT, POST and DELETE calls result in data modification, and are only c
 
 To switch on security for these three calls, set the `SECURE_CLIENT_ID` environmental variable to the client id of an [app registered with Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
 
-Request & token validation is done in by Passport.js (standard authenication middleware for Node.js Express) and the [Azure AD plugin](https://github.com/AzureAD/passport-azure-ad). This is configured as middleware to validate bearer tokens supplied on the certain sensitive routes mentioned above. `passport.authenicate` is called before those routes are run and the tokens fetched and checked with the logic in `lib/auth.js`. We ensure the tokens are signed and valid, contain the `smilr.events` scope and also come from our registered app (audience)
+Request & token validation is done by Passport.js (standard authenication middleware for Node.js Express) and the [Azure AD plugin](https://github.com/AzureAD/passport-azure-ad). This is configured as middleware to validate bearer tokens supplied on the certain sensitive routes mentioned above. `passport.authenicate` is called before those routes are run, and the tokens fetched and checked with the logic in `lib/auth.js`. We ensure the tokens are signed and valid, contain the `smilr.events` scope and also come from our registered app (audience)
 
 Once security is enabled, the Vue.js client will also need to be [similarly configured, with the matching AAD app client id used for validation](../../vue/#security)
 

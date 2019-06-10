@@ -35,7 +35,7 @@ server.use(jsonServer.rewriter({
 
 // Fake real network with a slight random delay
 server.use('/api', function(req, res, next) {
-  setTimeout(next, Math.random()*1000)
+  setTimeout(next, Math.random()*1500)
 })
 
 // Set the main router up

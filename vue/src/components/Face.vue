@@ -1,5 +1,5 @@
 <template>
-  <div class="facebox" ref="facebox">
+  <div class="facebox">
     <img class="face" @click="clicked" 
       :src="utilsFaceSVG(number)" 
       :class="{ 
@@ -7,8 +7,8 @@
         'slower': selected, 
         'infinite': selected, 
         'tada': selected, 
-        'zoomInDown': fade, 
-        'unselected': unselected }">
+        'flipInX': appear, 
+        'unselected': unselected }" :ref="`face${number}`">
   </div>
 </template>
       
@@ -24,15 +24,21 @@ export default {
   props: ['number', 'unselected', 'selected'],
 
   computed: {
-    fade: function() {
+    appear: function() {
       return (!this.selected && !this.unselected)
+    }
+  },
+
+  mounted() {
+    for(let faceRef in this.$refs) {
+      this.$refs[faceRef].style.animationDelay = (Math.random() * 600 + "ms")
     }
   },
 
   methods: {
     clicked: function() {
       this.$emit('clicked', this.number);
-    }   
+    }
   }
 }
 </script>

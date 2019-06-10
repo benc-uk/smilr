@@ -116,7 +116,10 @@ The user is held as global object exported from `main.js` called `userProfile` I
 - `isAdmin`: Deprecated flag no longer used
 - `token`: The *access token* (not id token) returned by MSAL, which is a Base64 encoded JWT string
 
-> Note. When `AAD_CLIENT_ID` is unset and security disabled, then a fake shallow `userProfile` is created with `isAdmin` set to true and a dummy MSAL user object. This results in passing all the user checks, so the app functions as if you are logged in.
+> Note. When `AAD_CLIENT_ID` is unset and security disabled, then a fake shallow `userProfile` is created with a dummy MSAL user object. This results in passing all the user checks, so the app functions as if you are logged in.
+
+> Known Limitations. Currently the user session is not persisted locally in any way. This means that refreshing the browser will result in you being logged out. This is considered acceptable for how the app is used. 
+
 
 ## Azure AD App Registration
 When creating/registering the app in Azure AD it is very important to set the following options:
