@@ -8,6 +8,7 @@ import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 // Select Bootswatch Cosmo theme :)
 import 'bootswatch/dist/cosmo/bootstrap.css'
+//import 'bootswatch/dist/slate/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // Other plugins
