@@ -9,9 +9,6 @@
   },
   "debug.internalConsoleOptions": "neverOpen",
   "workbench.colorCustomizations": {
-    "terminal.background": "#0e1018",
-    "terminal.ansiBlack": "#000",
-    "terminal.ansiBlue": "#59a1ff",
     "titleBar.activeBackground": "#4fb860",
     "titleBar.inactiveBackground": "#287a36",
     "titleBar.activeForeground": "#000000",

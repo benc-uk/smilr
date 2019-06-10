@@ -26,11 +26,19 @@
     </b-container>
     
     <div class="appFooter">
-      Active user: 
-      <span v-if="userProfile.user">{{ userProfile.user.name }}</span>
-      <span v-else>[No user logged in]</span>
-      <span v-if="userProfile.isAdmin"> (Smilr admin)</span>
+      <b-button v-b-modal.userModal variant="outline-primary" v-if="userProfile.user"><fa icon="user"/> {{ userProfile.user.name }}</b-button>
+      <b-button v-else disabled variant="outline-primary">No user logged in</b-button>
     </div>
+
+    <b-modal v-if="userProfile.user && userProfile.user.idToken" id="userModal" title="User Details" ok-only>
+      <p>Name: {{ userProfile.user.name }}</p>
+      <p>User Name: {{ userProfile.user.userName }}</p>
+      <p>User ID: {{ userProfile.user.idToken.oid }}</p>
+      <p>Tenant: {{ userProfile.user.idToken.aud }}</p>
+      <p>Version: {{ userProfile.user.idToken.ver }}</p>
+      <!-- There is no real logout as we don't persist the session in cookies, reloading the page works as logout! -->
+      <b-button variant="warning" onClick="window.location.assign('/')">Logout</b-button>
+    </b-modal>
   </div>
 </template>
 
