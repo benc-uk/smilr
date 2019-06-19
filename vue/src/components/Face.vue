@@ -1,9 +1,8 @@
 <template>
   <div class="facebox">
-    <img class="face" @click="clicked" 
+    <img class="face animated" @click="clicked" 
       :src="utilsFaceSVG(number)" 
       :class="{ 
-        'animated': true, 
         'slower': selected, 
         'infinite': selected, 
         'tada': selected, 
@@ -47,12 +46,13 @@ export default {
 .face {
   width: 18%;
   filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.75));
-  transition: 0.3s ease-in-out;
+  /* transition: 0.3s ease-in-out; */
 }
 .face:hover {
-  filter: drop-shadow(0px 1em 0.6em rgba(0, 0, 0, 0.75));
-  transform: translate(0px, -16px);
-  transition: 0.3s ease-in-out;
+  filter: drop-shadow(0px 0.8em 0.6em rgba(0, 0, 0, 0.75));
+  transform: translate(0px, -16px) !important;
+  transition: 0.3s ease-in-out !important;
+  animation: flipInX;
 }
 .facebox {
   display:inline;

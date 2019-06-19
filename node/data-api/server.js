@@ -76,7 +76,7 @@ app.get(['/favicon.ico', '/robots*.txt'], function (req, res, next) {
 // Global catch all for all requests not caught by other routes
 // Just return a HTTP 404
 app.use('*', function (req, res, next) {
-  Utils.sendError(res, new ApiError("No matching route not found", 404));
+  Utils.sendError(res, new ApiError(`No matching route for ${req.originalUrl}`, 404));
 })
 
 // Get values from env vars or defaults where not provided
