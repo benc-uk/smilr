@@ -93,15 +93,6 @@ export default {
 .fade-enter-active {
   animation: fadeInRight 0.8s;
 }
-/* @keyframes fadeAnim {
-  0% {
-    opacity: 0;
-    transform: translate(0, 2rem)
-  }
-  100% {
-    opacity: 1;
-  }
-} */
 
 .spinner {
    font-size: 6rem;

@@ -1,4 +1,8 @@
-# :warning: Docs need updating!
+# :warning: NO LONGER MAINTAINED! 
+### THIS CODE & ASSOCIATED DOCS ARE NO LONGER MAINTAINED.  
+This section of the repo is only kept for historical purposes
+
+----
 
 There are two serverless components to Smilr, and both are optional
 

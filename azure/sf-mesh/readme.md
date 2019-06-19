@@ -1,3 +1,9 @@
+# :warning: NO LONGER MAINTAINED! 
+### THIS CODE & ASSOCIATED DOCS ARE NO LONGER MAINTAINED.  
+This section of the repo is only kept for historical purposes
+
+---
+
 # Service Fabric Mesh Experiments
 
 - These are templates to deploy Smilr using the "Resource model"

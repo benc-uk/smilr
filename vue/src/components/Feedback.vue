@@ -3,7 +3,7 @@
     <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white" v-if="event">
       <h2 slot="header" class="text-truncate">{{ topic.desc }} ({{ event.title }})</h2>  
       <div class="card-body">  
-        <h3>Please provide your feedback</h3><br/>
+        <h3>Please provide your feedback, click on a face</h3><br/>
         <div class="facegroup">
           <face number="1" :unselected="unselected[0]" :selected="selected[0]" @clicked="clickFace"></face> 
           <face number="2" :unselected="unselected[1]" :selected="selected[1]" @clicked="clickFace"></face> 
@@ -147,7 +147,7 @@ export default {
   padding: 0.5rem !important;
 }
 #submitbut {
-  font-size: calc(14px + 1.5vw);
+  font-size: calc(14px + 1.2vw);
 }
 .card-body {
   padding: 1.5vw !important;
