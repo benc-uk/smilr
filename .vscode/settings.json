@@ -6,12 +6,5 @@
   "files.exclude": {
     "obj": true,
     "bin": true
-  },
-  "debug.internalConsoleOptions": "neverOpen",
-  "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "#4fb860",
-    "titleBar.inactiveBackground": "#287a36",
-    "titleBar.activeForeground": "#000000",
-    "titleBar.inactiveForeground": "#7ace89"
   }
 }
