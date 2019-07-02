@@ -148,9 +148,9 @@ Automated CI/CD pipelines have been created using Azure Pipelines. These automat
 
 | Automated Build | Status |
 |---|---|
-|Linux Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=31)|
-|Windows Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub%20(Win)?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=32)|
-|API Tests|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Run%20API%20Tests?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=34)|
+|Linux Images & Tests|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20to%20ACR%20and%20Deploy%20to%20ACI?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=73&branchName=master)|
+|Windows Images & Dockerhub|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20to%20ACR%20and%20Deploy%20to%20ACI?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=73&branchName=master)|
+
 
 You can visit the Azure Devops Public Project where these pipelines reside, although keep in mind the source code repo remains here on GitHub.
 ##### [DevOps Public Project - Smilr 🡽](https://dev.azure.com/bencoleman/Smilr)

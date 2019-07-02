@@ -3,7 +3,7 @@ This is a simple server for serving the bundled/minified Vue.js static files. It
 
 
 # Building & Running Locally
-Make sure you have Node.js v8.9+ and NPM installed.
+Make sure you have Node.js v10+ and NPM installed.
 
 You will need to build/bundle the Vue.js app so you have something to actually serve, refer to the [Vue.js SPA docs](../../vue) and the section 'Compile & Bundle for Production'. We assume you leave the bundled output in the default location of `vue/dist`
 
