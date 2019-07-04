@@ -41,14 +41,13 @@ export { userProfile, config }
 // In production mode fetch config at runtime from special .config endpoint
 // This REQUIRES the SPA is being served by the Smilr frontend Node server
 if(process.env.NODE_ENV != 'development') {
-  fetch(`.config/API_ENDPOINT,AAD_CLIENT_ID,ADMIN_USER_LIST`)
+  fetch(`.config/API_ENDPOINT,AAD_CLIENT_ID`)
   .then(resp => {
     resp.json()
     .then(result => {
       // Store results as our global config object, then init the app
       config.API_ENDPOINT = result.API_ENDPOINT
       config.AAD_CLIENT_ID = result.AAD_CLIENT_ID
-      config.ADMIN_USER_LIST = result.ADMIN_USER_LIST
       initApp()
     })
     .catch(err => {
@@ -63,7 +62,6 @@ if(process.env.NODE_ENV != 'development') {
   // The Vue CLI webpack bundling will populate these from `.env.development.local`
   config.API_ENDPOINT = process.env.VUE_APP_API_ENDPOINT
   config.AAD_CLIENT_ID = process.env.VUE_APP_AAD_CLIENT_ID
-  config.ADMIN_USER_LIST = process.env.VUE_APP_ADMIN_USER_LIST
   initApp()
 }
 
