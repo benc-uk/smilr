@@ -74,7 +74,9 @@ routes.get('(/api)?/events/:id', async function(req, res, next) {
 // Setup protection on 'admin' routes or bypass if SECURE_CLIENT_ID isn't set
 //
 // Default is a passthrough handler, with means no auth or protection on routes
-let authHandler = function(req, res, next) { next(); }
+let authHandler = function(req, res, next) { 
+  next(); 
+}
 if(process.env.SECURE_CLIENT_ID) {
   // Validate bearer token with oauth scheme see lib/auth.js
   authHandler = passport.authenticate('oauth-bearer', { session: false })

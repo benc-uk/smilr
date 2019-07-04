@@ -18,7 +18,8 @@ const cors = require('cors');
 // Serve static content from working directory ('.') by default
 // - Optional parameter can specify different location, use when debugging & running locally
 // - e.g. `node server.js ../vue/dist/`
-var staticContentDir = process.argv[2] || __dirname;
+//var staticContentDir = process.argv[2] || __dirname;
+var staticContentDir = process.env.STATIC_DIR || __dirname;
 // resolve to an absolute path
 staticContentDir = require('path').resolve(staticContentDir)
 console.log(`### Content dir = '${staticContentDir}'`);
