@@ -10,7 +10,120 @@ import (
   "net/http"
   "os"
   "runtime"
+  "io/ioutil"
+  "fmt"
+
+  "github.com/benc-uk/smilr/data-api/dal"
+  "github.com/benc-uk/smilr/data-api/utils"
+
+  "github.com/gorilla/mux"
 )
+
+//
+//
+//
+func routeEventsGetAll(resp http.ResponseWriter, req *http.Request) {
+  events, err := dal.QueryEvents("all")
+  if err != nil {
+    utils.SendError(resp, 500, "Failed to get events: "+ err.Error(), "event-get")
+    return
+  }
+
+  utils.SendData(resp, events)
+}
+
+//
+//
+//
+func routeEventsGetSingle(resp http.ResponseWriter, req *http.Request) {
+  id := mux.Vars(req)["id"]
+
+  event, err := dal.GetEvent(id)
+  if err != nil { 
+    utils.SendError(resp, 404, "Event with id '"+id+"' not found", "event-get")
+    return
+  }
+  
+  utils.SendData(resp, event)
+}
+
+
+//
+//
+//
+func routeEventsGetFiltered(resp http.ResponseWriter, req *http.Request) {
+  filter := mux.Vars(req)["filter"]
+
+  events, err := dal.QueryEvents(filter)
+  if err != nil {
+    utils.SendError(resp, 500, "Failed to get events: "+ err.Error(), "event-get")
+    return
+  }
+
+  utils.SendData(resp, events)
+}
+
+//
+//
+//
+func routeEventsPost(resp http.ResponseWriter, req *http.Request) {
+  body, err := ioutil.ReadAll(req.Body)
+  if err != nil {
+    utils.SendError(resp, 500, "Failed to create event: "+ err.Error(), "event-create")
+    return
+  }
+
+  newEvent, err := dal.CreateEvent(body)
+  if err != nil {
+    utils.SendError(resp, 500, "Failed to create event: "+ err.Error(), "event-create")
+    return
+  }
+
+  utils.SendData(resp, newEvent)
+}
+
+//
+//
+//
+func routeEventsPut(resp http.ResponseWriter, req *http.Request) {
+  body, err := ioutil.ReadAll(req.Body)
+  if err != nil {
+    utils.SendError(resp, 500, "Failed to update event: "+ err.Error(), "event-update")
+    return
+  }
+
+  updatedEvent, err := dal.UpdateEvent(body, mux.Vars(req)["id"])
+  if err != nil {
+    utils.SendError(resp, 500, "Failed to update event: "+ err.Error(), "event-update")
+    return
+  }
+
+  utils.SendData(resp, updatedEvent)
+}
+
+//
+//
+//
+func routeEventsDelete(resp http.ResponseWriter, req *http.Request) {
+  id := mux.Vars(req)["id"]
+  event, err := dal.GetEvent(id)
+  if err != nil {
+    utils.SendError(resp, 404, "Failed to delete event: "+ err.Error(), "event-delete")
+    return
+  }
+
+  _, err = dal.DeleteEvent(id, fmt.Sprintf("%v", event["type"]))
+  if err != nil {
+    utils.SendError(resp, 500, "Failed to update event: "+ err.Error(), "event-delete")
+    return
+  }
+
+  type msg struct{ Message string `json:"message"`}
+  respMsg := &msg{Message: "Deleted event '"+id+"' ok"}
+  fmt.Println(respMsg)
+
+  utils.SendData(resp, respMsg)
+}
 
 //
 // Simple health check endpoint, returns 204 when healthy

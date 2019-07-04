@@ -32,7 +32,7 @@ func main() {
   log.Printf("### Smilr frontend server [Golang] v%v starting...", version)
 
   // Port to listen on, change the default as you see fit
-  serverPort := envhelper.GetEnvInt("PORT", 8000)  
+  serverPort := envhelper.GetEnvInt("PORT", 3000)  
 
   // Use gorilla/mux for routing  
   router := mux.NewRouter()     
