@@ -31,5 +31,3 @@ mongodb:
   persistence:
     enabled: false
   usePassword: false
-  # If you enable IPv6 which is the default, liveness probe will fail!
-  mongodbEnableIPv6: false
