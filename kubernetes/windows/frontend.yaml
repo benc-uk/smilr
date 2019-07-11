@@ -39,7 +39,7 @@ spec:
       - name: frontend-pods
 
         # !CHANGE THIS! To your real image reference for the frontend 
-        image: bcdemo.azurecr.io/smilr/frontend:windows1809
+        image: bcdemo.azurecr.io/smilr/frontend:windows
         imagePullPolicy: IfNotPresent
 
         ports:

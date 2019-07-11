@@ -114,6 +114,6 @@ This will push the latest images to the registry.
 
 Windows Containers are currently in a state of flux and running them locally on Windows 10 is extremely problematic on numerous fronts. The use of Windows Containers has not been fully tested. Proceed at your own risk.
 
-Docker build files for creating Windows containers are  provided, with the filename `windows.Dockerfile`.  
+Docker build files for creating Windows containers are provided, with the filename `windows.Dockerfile`.  
 
-These Dockerfiles use the [Node on Windows base images from Stefan Scherer](https://hub.docker.com/r/stefanscherer/node-windows/). For compatibility with Azure Container Instances, currently the Dockerfile is set to use the `nanoserver-2016` tag however this can be changed to any of the *many* tags available for this image
+These Dockerfiles use the [Node on Windows base images from Stefan Scherer](https://hub.docker.com/r/stefanscherer/node-windows/). They currently use **Windows Server 2019 Nanoserver 1809** (SAC) as the base in order to be compatible with AKS and Azure Container Instances 

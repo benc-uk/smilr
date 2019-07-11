@@ -1,12 +1,12 @@
-# Base Windows Nanoserver image with Node 8.x
+# Base Windows Nanoserver image with Node
 # Using Stefan Scherer's semi offical Node for Windows images https://hub.docker.com/r/stefanscherer/node-windows
 
-FROM stefanscherer/node-windows:10.15.3-nanoserver-1809
+FROM stefanscherer/node-windows:10.16.0-nanoserver-1809
 
 # Build time arguments
 LABEL version="4.1.0" 
 ARG basedir="node/data-api"
-ARG build_info="Windows Nanoserver 1809 LTS container build"
+ARG build_info="Windows Nanoserver 1809 container build"
 ENV NODE_ENV production
 ENV BUILD_INFO $build_info
 

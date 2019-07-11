@@ -3,7 +3,7 @@
 #
 # Base Windows Nanoserver image with Node 8.x
 # Using Stefan Scherer's semi offical Node for Windows images https://hub.docker.com/r/stefanscherer/node-windows
-FROM stefanscherer/node-windows:10.15.3-nanoserver-1809 as spabuild
+FROM stefanscherer/node-windows:10.16.0-nanoserver-1809 as spabuild
 ARG vue_root="vue"
 ARG build_info="Windows Nanoserver 1809 LTS container build"
 
@@ -31,7 +31,7 @@ RUN npm run build-modern
 #
 # Base Windows Nanoserver image with Node 8.x
 # Using Stefan Scherer's semi offical Node for Windows images https://hub.docker.com/r/stefanscherer/node-windows
-FROM stefanscherer/node-windows:10.15.3-nanoserver-1809
+FROM stefanscherer/node-windows:10.16.0-nanoserver-1809 
 
 LABEL version="2.2.0" 
 ARG basedir="node/frontend"
