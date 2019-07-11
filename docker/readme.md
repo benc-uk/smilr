@@ -25,6 +25,8 @@ You will require the [Azure CLI installed](https://aka.ms/azure-cli) (either in 
 
 In the bash command snippet below modify the *myAcrName* parameter to match the name of ACR instance you have setup or are using, and modify *myAcrResGroup* to the resource group it resides in
 
+Run from the root of this repo/project:
+
 ```
 # Build data API
 az acr build --registry myAcrName -g myAcrResGroup --file node/data-api/Dockerfile --image smilr/data-api https://github.com/benc-uk/smilr.git
@@ -38,8 +40,18 @@ az acr build --registry myAcrName -g myAcrResGroup --file node/frontend/Dockerfi
 ---
 
 # Option 2 - Build Images Using Local Docker
+This options require that you have Docker installed and functional on you location machine
 
-# Docker Compose
+# Option 2a - Building Manually
+If you want to build the images individually with `docker build`, rather than using Docker Compose, you can do so. When running the command ensure the build context set to the root of the project, and point to the Dockerfile. E.g. from the root of the project run the commands:
+```
+docker build . -f /node/data-api/Dockerfile -t changeme
+docker build . -f /node/frontend/Dockerfile -t changeme
+```
+
+You can then run or push the images as you see fit
+
+# Option 2b - Docker Compose
 Docker Compose allows us to simplify the building and running of the two images, so a [docker-compose.yml](./docker-compose.yml) file has been created.  
 The compose file is relatively simple, so even if you are unfamiliar with Docker Compose, I recommend taking a look at it. Some notes:
 - The compose file is setup to build and tag the images (see the `build` section)
@@ -74,12 +86,6 @@ Fully tagged images with registry prefix:
 - `myregistry.azurecr.io/smilr/data-api` 
 - `myregistry.azurecr.io/smilr/frontend`
 
-#### Building using 'docker build'
-If you want to build the images individually with `docker build`, rather than using Docker Compose, you can do so. When running the command ensure the build context set to the root of the project, and point to the Dockerfile. E.g. from the root of the project run the commands:
-```
-docker build . -f /node/data-api/Dockerfile -t changeme
-docker build . -f /node/frontend/Dockerfile -t changeme
-```
 
 ## Docker Compose - Running Containers
 To run all containers and stand up a complete local running instance of Smilr, simply run:
