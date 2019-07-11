@@ -125,7 +125,7 @@ There are numerous ways to set & override environmental variables; in the operat
 # Containers & Kubernetes 
 As containers and Kubernetes represents such an important build & deployment scenario, they have dedicated guides and documentation
 
-#### [:page_with_curl: Building Smilr as Containers](./docs/containers.md)
+#### [:page_with_curl: Building Smilr as Containers](./docker)
 #### [:page_with_curl: Running and deploying in Kubernetes](./kubernetes)
 
 ### Public Images
