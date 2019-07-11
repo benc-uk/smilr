@@ -25,6 +25,7 @@ node_modules
 
 # Project specific folders
 azure/
+archive/
 docs/
 kubernetes/
 etc/
