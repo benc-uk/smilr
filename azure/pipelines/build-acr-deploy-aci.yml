@@ -4,7 +4,7 @@
 # - Deploy to Azure Container Instances across multiple stages
 # Ben C, 2019
 #
-name: $(Date:yyyy-MM-dd).$(Rev:.r)
+name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 
 trigger:
   branches:
@@ -49,6 +49,18 @@ stages:
         tags: |
           latest
           $(Build.BuildNumber)
+
+    - task: Docker@2
+      displayName: 'Build and push frontend'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/frontend/Dockerfile
+        buildContext: .
+        repository: smilr/frontend
+        tags: |
+          latest
+          $(Build.BuildNumber)          
       
 # #
 # # Deploy stage 1 - test environment
