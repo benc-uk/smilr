@@ -69,7 +69,7 @@ stages:
       inputs:
         command: push
         containerRegistry: $(acr-connection)
-        repository: smilr/frontend
+        repository: smilr/data-api
         tags: |
           latest
           $(Build.BuildNumber) 
