@@ -4,6 +4,7 @@
 # - Deploy to Azure Container Instances across multiple stages
 # Ben C, 2019
 #
+name: $(Date:yyyy-MM-dd).$(Rev:.r)
 
 trigger:
   branches:
