@@ -6,6 +6,7 @@
 #
 
 # No CI or automated runs
+name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none 
 
 # NOTE! This variable group must be pre-created and populated

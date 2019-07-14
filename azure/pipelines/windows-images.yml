@@ -4,7 +4,7 @@
 # - Then push up to ACR and Dockerhub
 # Ben C, May 2019
 #
-
+name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none
 
 # NOTE! This variable group must be pre-created and populated
@@ -45,13 +45,10 @@ stages:
       displayName: 'Build data API'
       inputs:
         command: buildAndPush
-        containerRegistry: $(acr-connection)
         Dockerfile: node/data-api/windows.Dockerfile
         buildContext: .
         repository: smilr/data-api
-        tags: |
-          latest
-          $(Build.BuildNumber)
+        tags: "windows"
 
     # - bash: |
     #     docker build . -f node/data-api/windows.Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:$(tag) -t smilr/data-api:$(tag)
