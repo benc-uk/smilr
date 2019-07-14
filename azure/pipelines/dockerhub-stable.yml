@@ -13,8 +13,6 @@ trigger: none
 # - Expected variables: acr-name, acr-password, dockerhub-user, dockerhub-password
 variables:
   - group: shared-variables
-  - name: acr-name
-    value: bcdemo
 
 stages:
 - stage: docker
