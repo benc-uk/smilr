@@ -21,6 +21,8 @@ jobs:
         # Checkout git source
         - checkout: self
 
+        - template: acr-connection.yml
+
         # Deploy an ARM template from the repo and inject parameters
         - task: AzureResourceGroupDeployment@2
           displayName: 'Deploy ARM Template'
@@ -30,4 +32,4 @@ jobs:
             location: $(location)
             csmFile: azure/templates/aci-mongo/azuredeploy.json
             csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
-            overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix $(dns-prefix) -dataApiImageTag latest -frontendImageTag latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
+            overrideParameters: '-acrName $(ACR_NAME) -acrUser $(ACR_USER) -acrPassword $(ACR_PASSWORD) -dnsPrefix $(dns-prefix) -dataApiImageTag latest -frontendImageTag latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'

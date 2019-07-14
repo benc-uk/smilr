@@ -4,6 +4,7 @@
 # - Deploy to Azure Container Instances across multiple stages
 # Ben C, 2019
 #
+name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 
 trigger:
   branches:
@@ -16,7 +17,7 @@ trigger:
       - azure/pipelines/*
 
 # NOTE! This variable group must be pre-created and populated
-# - Expected variables: acr-name, acr-password, azure-connection
+# - Expected variables: acr-connection
 variables:
   - group: shared-variables
 
@@ -29,40 +30,59 @@ stages:
 
   jobs:
   - job: buildJob
-    displayName: 'Docker build & ACR push'
+    displayName: 'Build & push to ACR'
 
-    condition: and(succeeded(), ne(variables['skip-build'], 'true'))
+    condition: and(succeeded(), ne(variables['skipbuild'], 'true'))
 
     pool:
       vmImage: Ubuntu-16.04
 
     steps:
-    # Data API build, tag as both latest and BuildNumber
-    - bash: |
-        docker build . -f node/data-api/Dockerfile \
-        -t $(acr-name).azurecr.io/smilr/data-api:latest \
-        -t $(acr-name).azurecr.io/smilr/data-api:$(Build.BuildNumber) \
-        --build-arg build_info="CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
-      displayName: 'Build data API image'
+    - task: Docker@2
+      displayName: 'Build data API'
+      inputs:
+        command: build
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/data-api/Dockerfile
+        buildContext: .
+        repository: smilr/data-api
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
+        tags: |
+          latest
+          $(Build.BuildNumber)
 
-    - bash: |
-        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-        docker push $(acr-name).azurecr.io/smilr/data-api
-      displayName: 'Push data API image(s) to ACR'
+    - task: Docker@2
+      displayName: 'Build frontend'
+      inputs:
+        command: build
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/frontend/Dockerfile
+        buildContext: .
+        repository: smilr/frontend
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
+        tags: |
+          latest
+          $(Build.BuildNumber)  
 
-    # Frontend build, tag as both latest and BuildNumber
-    - bash: |
-        docker build . -f node/frontend/Dockerfile \
-        -t $(acr-name).azurecr.io/smilr/frontend:latest \
-        -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber) \
-        --build-arg build_info="CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
-      displayName: 'Build frontend image'
+    - task: Docker@2
+      displayName: 'Push data API'
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/data-api
+        tags: |
+          latest
+          $(Build.BuildNumber) 
 
-    - bash: |
-        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-        docker push $(acr-name).azurecr.io/smilr/frontend
-      displayName: 'Push frontend image(s) to ACR'
-
+    - task: Docker@2
+      displayName: 'Push frontend'
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/frontend
+        tags: |
+          latest
+          $(Build.BuildNumber)             
 #
 # Deploy stage 1 - test environment
 #
