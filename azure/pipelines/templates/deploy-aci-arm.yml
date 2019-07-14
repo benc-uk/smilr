@@ -21,6 +21,25 @@ jobs:
         # Checkout git source
         - checkout: self
 
+        # Login to ACR
+        - task: Docker@2
+          displayName: Login to ACR
+          inputs:
+            command: login
+            containerRegistry: $(acr-connection) 
+
+        # Extract registry connection details as variables for next step
+        - bash: |
+            registry=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("azurecr.io")) ) | keys[0]')
+            secret=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("azurecr.io")) ) [].auth' | python -m base64 -d)
+            user=$(echo $secret | awk -F':' '{print $1}')
+            password=$(echo $secret | awk -F':' '{print $2}')
+
+            echo "##vso[task.setvariable variable=DOCKER_REG]$registry"
+            echo "##vso[task.setvariable variable=DOCKER_USER]$user"
+            echo "##vso[task.setvariable variable=DOCKER_PASSWORD]$password"
+          displayName: Extract Docker registry details        
+
         # Deploy an ARM template from the repo and inject parameters
         - task: AzureResourceGroupDeployment@2
           displayName: 'Deploy ARM Template'
@@ -30,4 +49,4 @@ jobs:
             location: $(location)
             csmFile: azure/templates/aci-mongo/azuredeploy.json
             csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
-            overrideParameters: '-acrName $(acr-name) -acrPassword $(acr-password) -dnsPrefix $(dns-prefix) -dataApiImageTag latest -frontendImageTag latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
+            overrideParameters: '-acrName $(DOCKER_USER) -acrPassword $(DOCKER_PASSWORD) -dnsPrefix $(dns-prefix) -dataApiImageTag latest -frontendImageTag latest -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
