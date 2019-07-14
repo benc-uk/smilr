@@ -21,6 +21,8 @@ steps:
       containerRegistry: $(acr-connection) 
 
   # Extract registry connection details as variables for next step
+  # - Using bash, jq, sed, awk and a tiny bit of python
+  # - I'm not sure if I'm proud or ashamed of this ...
   - bash: |
       registry=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("${{ parameters.filter }}")) ) | keys[0]')
       secret=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("${{ parameters.filter }}")) ) [].auth' | python -m base64 -d)
