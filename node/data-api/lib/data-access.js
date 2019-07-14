@@ -29,16 +29,15 @@ class DataAccess {
     let mongoHost = require('url').parse(connectionString).host;
 
     while(true) {
-      console.log(`### Connection attempt ${retry+1} to MongoDB server ${mongoHost}`)
+      console.log(`### Connection attempt ${retry+1} to MongoDB instance: ${mongoHost}`)
 
       if(!this.db || force) {
-
         // Use await and connect to Mongo
-        await this.MongoClient.connect(connectionString)
+        await this.MongoClient.connect(connectionString, { useNewUrlParser: true, reconnectInterval: 5000, reconnectTries: 20 })
         .then(db => {
           // Switch DB to smilr, which will create it, if it doesn't exist
           this.db = db.db(this.DBNAME);
-          console.log(`### Yay! Connected to MongoDB server`)
+          console.log(`### Yay! Connected to MongoDB`)
         })
         .catch(err => {
           mongoErr = err

@@ -1,0 +1,175 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "dnsPrefix": {
+      "type": "string",
+      "defaultValue": "smilr-quickstart",
+      "metadata": {
+        "description": "Prefix for container DNS labels, change to ensure global DNS uniqueness"
+      }      
+    } 
+  },
+  "variables": {
+    "containerFrontend": "smilr-frontend",
+    "containerDataApi": "smilr-data",
+    "containerMongo": "smilr-mongo",
+    "imageFrontend": "smilr/frontend:windows",
+    "imageDataApi": "smilr/data-api:windows",
+    "imageMongo": "bencuk/mongo:windows1809",
+    "memory": 1.0,
+    "cpu": 1.0,
+    "dnsLabelFrontend": "[concat(parameters('dnsPrefix'), '-frontend')]",
+    "dnsLabelDataApi": "[concat(parameters('dnsPrefix'), '-api')]",
+    "dnsLabelMongo": "[concat(parameters('dnsPrefix'), '-db')]"
+  },
+  "resources": [
+    {
+      "name": "[variables('containerDataApi')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2018-04-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "containers": [
+          {
+            "name": "[variables('containerDataApi')]",
+            "properties": {
+              "image": "[variables('imageDataApi')]",
+              "ports": [
+                {
+                  "port": 80
+                }
+              ],              
+              "resources": {
+                "requests": {
+                  "cpu": "[variables('cpu')]",
+                  "memoryInGB": "[variables('memory')]"
+                }
+              },
+              "environmentVariables": [
+                {
+                  "name": "MONGO_CONNSTR",
+                  "value": "[concat('mongodb://', reference(variables('containerMongo')).ipAddress.ip)]"
+                },
+                {
+                  "name": "PORT",
+                  "value": "80"
+                }            
+              ]
+            }
+          }         
+        ],
+        "osType": "Windows",
+        "ipAddress": {
+          "type": "Public",
+          "dnsNameLabel": "[variables('dnsLabelDataApi')]",
+          "ports": [
+            {
+              "protocol": "TCP",
+              "port": 80
+            }
+          ]            
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ContainerInstance/containerGroups', variables('containerMongo'))]"
+      ]
+    },
+    {
+      "name": "[variables('containerMongo')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2018-04-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "containers": [
+          {
+            "name": "[variables('containerMongo')]",
+            "properties": {
+              "image": "[variables('imageMongo')]",
+              "ports": [
+                {
+                  "port": 27017
+                }
+              ],              
+              "resources": {
+                "requests": {
+                  "cpu": "[variables('cpu')]",
+                  "memoryInGB": "[variables('memory')]"
+                }
+              }
+            }
+          }         
+        ],
+        "osType": "Windows",
+        "ipAddress": {
+          "type": "Public",
+          "dnsNameLabel": "[variables('dnsLabelMongo')]",
+          "ports": [
+            {
+              "protocol": "TCP",
+              "port": 27017
+            }
+          ]            
+        }
+      }
+    },
+    {
+      "name": "[variables('containerFrontend')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2018-04-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "containers": [
+          {
+            "name": "[variables('containerFrontend')]",
+            "properties": {
+              "image": "[variables('imageFrontend')]",
+              "ports": [
+                {
+                  "port": 80
+                }
+              ],              
+              "resources": {
+                "requests": {
+                  "cpu": "[variables('cpu')]",
+                  "memoryInGB": "[variables('memory')]"
+                }
+              },
+              "environmentVariables": [
+                {
+                  "name": "API_ENDPOINT",
+                  "value": "[concat('http://', variables('dnsLabelDataApi'), '.', resourceGroup().location, '.azurecontainer.io/api')]"
+                },
+                {
+                  "name": "PORT",
+                  "value": "80"
+                }                
+              ]
+            }
+          }
+        ],
+        "osType": "Windows",
+        "ipAddress": {
+          "type": "Public",
+          "dnsNameLabel": "[variables('dnsLabelFrontend')]",
+          "ports": [
+            {
+              "protocol": "TCP",
+              "port": 80
+            }
+          ]          
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "frontendURL": {
+      "value": "[concat('http://', variables('dnsLabelFrontend'), '.', resourceGroup().location, '.azurecontainer.io')]",
+      "type": "string"
+    },
+    "apiURL": {
+      "value": "[concat('http://', variables('dnsLabelDataApi'), '.', resourceGroup().location, '.azurecontainer.io/api')]",
+      "type": "string"
+    } 
+  }
+}

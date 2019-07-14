@@ -20,6 +20,11 @@ spec:
       labels:
         app: data-api
     spec:
+      tolerations:
+        - key: "windows"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -34,7 +39,7 @@ spec:
       - name: data-api-pods
 
         # !CHANGE THIS! To your real image reference for the data-api  
-        image: bcdemo.azurecr.io/smilr/data-api:windows1809
+        image: bcdemo.azurecr.io/smilr/data-api:windows
         imagePullPolicy: IfNotPresent
 
         ports:

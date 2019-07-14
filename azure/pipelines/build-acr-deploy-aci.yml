@@ -6,7 +6,14 @@
 #
 
 trigger:
-- master
+  branches:
+    include: 
+    - master
+  paths:
+    include:
+      - node/*
+      - vue/*
+      - azure/pipelines/*
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-name, acr-password, azure-connection
@@ -24,13 +31,18 @@ stages:
   - job: buildJob
     displayName: 'Docker build & ACR push'
 
+    condition: and(succeeded(), ne(variables['skip-build'], 'true'))
+
     pool:
       vmImage: Ubuntu-16.04
 
     steps:
     # Data API build, tag as both latest and BuildNumber
     - bash: |
-        docker build . -f node/data-api/Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:latest -t $(acr-name).azurecr.io/smilr/data-api:$(Build.BuildNumber)
+        docker build . -f node/data-api/Dockerfile \
+        -t $(acr-name).azurecr.io/smilr/data-api:latest \
+        -t $(acr-name).azurecr.io/smilr/data-api:$(Build.BuildNumber) \
+        --build-arg build_info="CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
       displayName: 'Build data API image'
 
     - bash: |
@@ -40,7 +52,10 @@ stages:
 
     # Frontend build, tag as both latest and BuildNumber
     - bash: |
-        docker build . -f node/frontend/Dockerfile -t smilr/frontend:latest -t smilr/frontend:$(Build.BuildNumber) -t $(acr-name).azurecr.io/smilr/frontend:latest -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber)
+        docker build . -f node/frontend/Dockerfile \
+        -t $(acr-name).azurecr.io/smilr/frontend:latest \
+        -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber) \
+        --build-arg build_info="CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
       displayName: 'Build frontend image'
 
     - bash: |

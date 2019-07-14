@@ -13,7 +13,8 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-  - host: smilr.k.benco.io
+    # !CHANGE THIS! To match the DNS zone / domain name you are using
+  - host: smilr.changeme.changeme.aksapp.io
     http:
       paths:
       - path: /api

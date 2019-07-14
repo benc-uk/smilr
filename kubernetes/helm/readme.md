@@ -51,6 +51,10 @@ helm upgrade -i <<release-name>> smilr -f values.yaml
 
 ## MongoDB Settings
 
+Full list of settings available here https://github.com/helm/charts/tree/master/stable/mongodb
+
+A common one is turn persistence on/off, for speed in demos it's set to off
+
 |  Setting  |  Description           | Type | Default |
 | --------- | ---------------------- | ---- | ------- |
-| **mongodb.persistence.enabled** | Boolean. If true, then a persistent volume claim will be requested and mounted to persist MongoDB data. | Boolean | true |
+| **mongodb.persistence.enabled** | Boolean. If true, then a persistent volume claim will be requested and mounted to persist MongoDB data. | Boolean | false |

@@ -5,7 +5,7 @@
 
 title: "Smilr: Microservices Reference App"
 remote_theme: benc-uk/theme-msdark
-favicon: /angular/src/assets/img/logo.png
+favicon: /vue/public/favicon.png
 plugins:
   - jemoji
 buttons:

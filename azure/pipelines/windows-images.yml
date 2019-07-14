@@ -5,8 +5,7 @@
 # Ben C, May 2019
 #
 
-trigger:
-- master
+trigger: none
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-name, acr-password, dockerhub-user, dockerhub-password
@@ -21,58 +20,31 @@ stages:
   displayName: 'Build Windows containers'
 
   jobs:
-  - job: buildJob2016
-    displayName: 'Docker builds 2016 LTS'
-
-    pool:
-      vmImage: 'vs2017-win2016'
-
-    steps:
-    - bash: |
-        docker build . -f node/data-api/windows2016.Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:windows2016 -t smilr/data-api:windows2016
-      displayName: 'Build data API, Win 2016 LTS'
-
-    - bash: |
-        docker build . -f node/frontend/windows2016.Dockerfile -t $(acr-name).azurecr.io/smilr/frontend:windows2016 -t smilr/frontend:windows2016
-      displayName: 'Build frontend, Win 2016 LTS'
-
-    - bash: |
-        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-        docker push $(acr-name).azurecr.io/smilr/data-api:windows2016
-        docker push $(acr-name).azurecr.io/smilr/frontend:windows2016
-      displayName: 'Push to ACR'
-
-    - bash: |
-        docker login -u $(dockerhub-user) -p $(dockerhub-password)
-        docker push smilr/data-api:windows2016
-        docker push smilr/frontend:windows2016
-      displayName: 'Push to Dockerhub'
-
-  # =======================================================================================================
-
   - job: buildJob1809
-    displayName: 'Docker builds 1809'
+    displayName: 'Windows Nanoserver 1809'
+    variables:
+      tag: windows
 
     pool:
       vmImage: 'windows-2019'
 
     steps:
     - bash: |
-        docker build . -f node/data-api/windows1809.Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:windows1809 -t smilr/data-api:windows1809
-      displayName: 'Build data API, Win 1809'
+        docker build . -f node/data-api/windows.Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:$(tag) -t smilr/data-api:$(tag)
+      displayName: 'Build data API, Nanoserver 1809'
 
     - bash: |
-        docker build . -f node/frontend/windows1809.Dockerfile -t $(acr-name).azurecr.io/smilr/frontend:windows1809 -t smilr/frontend:windows1809
-      displayName: 'Build frontend, Win 1809'
+        docker build . -f node/frontend/windows.Dockerfile -t $(acr-name).azurecr.io/smilr/frontend:$(tag) -t smilr/frontend:$(tag)
+      displayName: 'Build frontend, Nanoserver 1809'
 
     - bash: |
         docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-        docker push $(acr-name).azurecr.io/smilr/data-api:windows1809
-        docker push $(acr-name).azurecr.io/smilr/frontend:windows1809
+        docker push $(acr-name).azurecr.io/smilr/data-api:$(tag)
+        docker push $(acr-name).azurecr.io/smilr/frontend:$(tag)
       displayName: 'Push to ACR'
 
     - bash: |
         docker login -u $(dockerhub-user) -p $(dockerhub-password)
-        docker push smilr/data-api:windows1809
-        docker push smilr/frontend:windows1809
+        docker push smilr/data-api:$(tag)
+        docker push smilr/frontend:$(tag)
       displayName: 'Push to Dockerhub'      

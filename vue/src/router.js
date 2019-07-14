@@ -14,6 +14,7 @@ import { config, userProfile } from './main'
 Vue.use(Router)
 
 var router = new Router({
+  // Assumes we being served via something "SPA aware" with index.html redirects
   mode: 'history',
   routes: [
     {
@@ -35,7 +36,7 @@ var router = new Router({
       component: Events
     },
     {
-      path: '/feedback/:eventId/:topicId',
+      path: '/feedback/', //:eventId/:topicId',
       name: 'feedback',
       component: Feedback,
       props: true
@@ -108,10 +109,10 @@ function validateAdminUser(to, from, next) {
     next({name: 'login', params: { redir: to.name}})
   } else {
     // Now check if their name is on the list
-    if(!userProfile.isAdmin) {
-      next({name: 'error', replace: true, params: { message: `User '${userProfile.user.displayableId}' is not an administrator for this application` }})
-      return;      
-    }
+    // if(!userProfile.isAdmin) {
+    //   next({name: 'error', replace: true, params: { message: `ACCESS DENIED.\nUser '${userProfile.user.userName}' is not an administrator for this application` }})
+    //   return;      
+    // }
     next()
   }
 }

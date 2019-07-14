@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export default {
   methods: {
     utilsFaIcon: function(type) {
@@ -15,7 +17,7 @@ export default {
     },
 
     utilsFaceSVG: function(rating) {
-      return require(`../assets/img/face-${rating}.svg`);
-    }
+      return require(`@/assets/img/face-${rating}.svg`);
+    }    
   }
 }

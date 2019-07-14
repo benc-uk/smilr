@@ -23,7 +23,7 @@ properties:
 
   - name: mongo-db
     properties:
-      image: mongo:3.4-jessie
+      image: mongo:4-xenial
       resources:
         requests:
           cpu: 0.5
