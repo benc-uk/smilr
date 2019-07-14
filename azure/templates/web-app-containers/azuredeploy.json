@@ -20,6 +20,12 @@
         "description": "Name of ACR instance holding your images"
       }
     },
+    "acrUser": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for ACR"
+      }
+    },     
     "acrPassword": {
       "type": "string",
       "metadata": {
@@ -87,7 +93,7 @@
             },
             {
               "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-              "value": "[parameters('acrName')]"
+              "value": "[parameters('acrUser')]"
             },
             {
               "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
@@ -125,7 +131,7 @@
             },
             {
               "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-              "value": "[parameters('acrName')]"
+              "value": "[parameters('acrUser')]"
             },
             {
               "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
