@@ -43,6 +43,7 @@ stages:
         command: buildAndPush
         containerRegistry: $(acr-connection)
         Dockerfile: node/data-api/Dockerfile
+        buildContext: .
         repository: smilr/data-api
         tags: |
           latest
