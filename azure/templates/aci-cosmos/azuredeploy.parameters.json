@@ -8,6 +8,9 @@
     "acrName": {
       "value": "myACR"
     },
+    "acrUser": {
+      "value": "change-me"
+    },       
     "acrPassword": {
       "value": "change-me"
     },
