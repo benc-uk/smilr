@@ -50,8 +50,7 @@ stages:
       inputs:
         command: pull
         containerRegistry: $(acr-connection)
-        repository: smilr/data-api
-        tags: latest
+        arguments: smilr/data-api:latest
 
     # # Update tags
     # - bash: |
