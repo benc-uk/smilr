@@ -29,22 +29,46 @@ stages:
       vmImage: 'windows-2019'
 
     steps:
-    - bash: |
-        docker build . -f node/data-api/windows.Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:$(tag) -t smilr/data-api:$(tag)
-      displayName: 'Build data API, Nanoserver 1809'
+    - task: Docker@2
+      displayName: Login to ACR
+      inputs:
+        command: login
+        containerRegistry: $(acr-connection)
 
-    - bash: |
-        docker build . -f node/frontend/windows.Dockerfile -t $(acr-name).azurecr.io/smilr/frontend:$(tag) -t smilr/frontend:$(tag)
-      displayName: 'Build frontend, Nanoserver 1809'
+    - task: Docker@2
+      displayName: Login to Docker Hub
+      inputs:
+        command: login
+        containerRegistry: $(dockerhub-connection)
 
-    - bash: |
-        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-        docker push $(acr-name).azurecr.io/smilr/data-api:$(tag)
-        docker push $(acr-name).azurecr.io/smilr/frontend:$(tag)
-      displayName: 'Push to ACR'
+    - task: Docker@2
+      displayName: 'Build data API'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/data-api/windows.Dockerfile
+        buildContext: .
+        repository: smilr/data-api
+        tags: |
+          latest
+          $(Build.BuildNumber)
 
-    - bash: |
-        docker login -u $(dockerhub-user) -p $(dockerhub-password)
-        docker push smilr/data-api:$(tag)
-        docker push smilr/frontend:$(tag)
-      displayName: 'Push to Dockerhub'      
+    # - bash: |
+    #     docker build . -f node/data-api/windows.Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:$(tag) -t smilr/data-api:$(tag)
+    #   displayName: 'Build data API, Nanoserver 1809'
+
+    # - bash: |
+    #     docker build . -f node/frontend/windows.Dockerfile -t $(acr-name).azurecr.io/smilr/frontend:$(tag) -t smilr/frontend:$(tag)
+    #   displayName: 'Build frontend, Nanoserver 1809'
+
+    # - bash: |
+    #     docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+    #     docker push $(acr-name).azurecr.io/smilr/data-api:$(tag)
+    #     docker push $(acr-name).azurecr.io/smilr/frontend:$(tag)
+    #   displayName: 'Push to ACR'
+
+    # - bash: |
+    #     docker login -u $(dockerhub-user) -p $(dockerhub-password)
+    #     docker push smilr/data-api:$(tag)
+    #     docker push smilr/frontend:$(tag)
+    #   displayName: 'Push to Dockerhub'      
