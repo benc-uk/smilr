@@ -12,7 +12,7 @@
 
           <ul>
             <li v-for="topic in event.topics" :key="topic.id">
-              <router-link v-if="filter == 'active'" :to="{ name: 'feedback', params: { eventId: event._id, topicId: topic.id }}">{{ topic.desc }}</router-link>
+              <router-link v-if="filter == 'active'" :to="{ name: 'feedback', query: { e: event._id, t: topic.id }}">{{ topic.desc }}</router-link>
               <span v-else>{{ topic.desc }}</span>
             </li>
           </ul>
@@ -93,15 +93,6 @@ export default {
 .fade-enter-active {
   animation: fadeInRight 0.8s;
 }
-/* @keyframes fadeAnim {
-  0% {
-    opacity: 0;
-    transform: translate(0, 2rem)
-  }
-  100% {
-    opacity: 1;
-  }
-} */
 
 .spinner {
    font-size: 6rem;

@@ -25,7 +25,7 @@ spec:
       - name: data-api-pods
 
         # !CHANGE THIS! To your real image reference for the data-api  
-        image: bcdemo.azurecr.io/smilr/data-api:stable
+        image: changeme.azurecr.io/smilr/data-api:stable
         imagePullPolicy: Always
 
         ports:

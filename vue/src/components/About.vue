@@ -9,16 +9,20 @@
       <hr/>
 
       <b>Version: {{ ver }} (Vue.js)</b><br/>
-      &copy; Ben Coleman, 2017/2018<br/>
-      Provided under the <a target="_blank" href="https://opensource.org/licenses/MIT">MIT License</a><br/>
-      <b-button variant="primary" href="https://smilr.benco.io" target="_blank">Project details &amp; source code</b-button>
+      &copy; Ben Coleman, 2017 - 2019<br/>
+      Provided under the <a target="_blank" href="https://opensource.org/licenses/MIT">MIT License</a><br/><br/>
+      <b-button size="lg" variant="primary" href="https://smilr.benco.io" target="_blank">Project details &amp; source code (GitHub)</b-button>
       
       <hr/>
 
-      <b>Debug Info:</b><br>
-      API Endpoint: <a :href="apiEndpoint">{{ apiEndpoint }}</a> <br/>
-      Mode: {{ mode }} <br/>
-      Build Info: {{ buildInfo }}
+      <pre>
+<b>API Endpoint:</b> {{ apiEndpoint }}
+<b>Mode:</b> {{ mode }}
+<b>Build Info:</b> {{ buildInfo }}
+
+<b>More Details:</b> <a :href="infoUrl" target="_blank">{{ apiEndpoint }}/info</a></pre>
+
+
     </b-card>
   </div>
 </template>
@@ -36,6 +40,7 @@ export default {
   data: function() {
     return {
       apiEndpoint: config.API_ENDPOINT,
+      infoUrl: `${config.API_ENDPOINT}/info`,
       mode: process.env.NODE_ENV,
       buildInfo: process.env.VUE_APP_BUILD_INFO || 'No build info',
       egg: "",
@@ -49,7 +54,7 @@ export default {
       this.egg = 'This is probably where I could put a clever hidden easter egg. But I haven\'t bothered. Bye!'
       this.faceRating--
       if(this.faceRating <= 0) this.faceRating = 5
-    }
+    }     
   }
 }
 </script>
@@ -57,5 +62,10 @@ export default {
 <style scoped>
 .aboutface {
   width: 100px;
+}
+pre {
+  background-color: rgb(228, 228, 228);
+  padding: 1rem;
+  font-size: 70%;
 }
 </style>

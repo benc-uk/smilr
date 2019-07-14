@@ -8,11 +8,12 @@ const express = require('express');
 const routes = express.Router();
 const utils = require('../lib/utils');
 const ApiError = require('../lib/api-error');
+const passport = require('passport');
 
 //
 // GET events - return array of events; with time range filter (active, future, past)
 //
-routes.get('/api/events/filter/:time', async function(req, res, next) {
+routes.get('(/api)?/events/filter/:time', async function(req, res, next) {
   let time = req.params.time;
   let today = new Date().toISOString().substring(0, 10);
   let query = {}
@@ -44,7 +45,7 @@ routes.get('/api/events/filter/:time', async function(req, res, next) {
 //
 // GET events - return array of all events, probably should have pagination at some point
 //
-routes.get('/api/events', async function(req, res, next) {
+routes.get('(/api)?/events', async function(req, res, next) {
   try {
     let events = await res.app.get('data').queryEvents({});
     if(!events) events = [];
@@ -58,7 +59,7 @@ routes.get('/api/events', async function(req, res, next) {
 //
 // GET event - return a single event by ID
 //
-routes.get('/api/events/:id', async function(req, res, next) {
+routes.get('(/api)?/events/:id', async function(req, res, next) {
   try {
     let event = await res.app.get('data').getEvent(req.params.id);
     if(!event) throw new ApiError(`Event with id '${req.params.id}' not found`, 404);
@@ -70,17 +71,21 @@ routes.get('/api/events/:id', async function(req, res, next) {
 })
 
 //
+// Setup protection on 'admin' routes or bypass if SECURE_CLIENT_ID isn't set
+//
+// Default is a passthrough handler, with means no auth or protection on routes
+let authHandler = function(req, res, next) { 
+  next(); 
+}
+if(process.env.SECURE_CLIENT_ID) {
+  // Validate bearer token with oauth scheme see lib/auth.js
+  authHandler = passport.authenticate('oauth-bearer', { session: false })
+} 
+
+//
 // POST event - create a new event, call with event body with no id
 //
-routes.post('/api/events', async function(req, res, next) {
-  try {
-    if(!await utils.verifyAuthentication(req)) throw new ApiError('Auth failed, unknown reason', 401)
-  } catch(err) {
-    err.code = 401;
-    utils.sendError(res, err, 'auth-failed');
-    return;
-  }
-    
+routes.post(['(/api)?/events'], authHandler, async function(req, res, next) {
   try {
     let event = req.body;
     // Don't send me an id, we don't want it
@@ -99,20 +104,12 @@ routes.post('/api/events', async function(req, res, next) {
   } catch(err) {
     utils.sendError(res, err, 'event-create');
   }  
-})
+});
 
 //
 // PUT event - update an existing event, call with event id
 //
-routes.put(['/api/events/:id'], async function(req, res, next) {
-  try {
-    if(!await utils.verifyAuthentication(req)) throw new ApiError('Auth failed, unknown reason', 401)
-  } catch(err) {
-    err.code = 401;
-    utils.sendError(res, err, 'auth-failed');
-    return;
-  }
-
+routes.put(['(/api)?/events/:id'], authHandler, async function(req, res, next) {
   try {
     // Event object must be the body
     let event = req.body;
@@ -141,20 +138,12 @@ routes.put(['/api/events/:id'], async function(req, res, next) {
     utils.sendError(res, err, 'event-update');
     return;
   }
-})
+});
 
 //
 // DELETE event - delete single event by ID
 //
-routes.delete('/api/events/:id', async function(req, res, next) {
-  try {
-    if(!await utils.verifyAuthentication(req)) throw new Error('Auth failed, unknown reason')
-  } catch(err) {
-    err.code = 401;
-    utils.sendError(res, err, 'auth-failed');
-    return;
-  }
-
+routes.delete('(/api)?/events/:id', authHandler, async function(req, res, next) {
   try {
     let event = await res.app.get('data').getEvent(req.params.id);  
     if(event) {
@@ -169,6 +158,6 @@ routes.delete('/api/events/:id', async function(req, res, next) {
   } catch(err) {
     utils.sendError(res, err, 'event-delete');
   }
-})
+});
 
 module.exports = routes;

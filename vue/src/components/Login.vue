@@ -8,15 +8,18 @@
       &nbsp;&nbsp; <fa icon="user"/> LOGIN WITH AZURE ACTIVE DIRECTORY &nbsp;&nbsp; </b-button>
     </p>
     
-    <b-alert v-if="loginFailed" show>Login failed, please try again!</b-alert>
+    <b-alert v-if="loginFailed" show> <b>Login failed!</b> <br>{{ loginError }}</b-alert>
   </b-card>
 </template>
 
 <script>
 /* eslint-disable */
-import AuthService from '../lib/auth-service'
 import { userProfile } from '../main'
 import { config } from '../main'
+import * as Msal from 'msal'
+import axios from 'axios'
+
+var msalApp = null;
 
 export default {
   name: 'Login',
@@ -26,51 +29,64 @@ export default {
   data() {
     return {
       authService: null,
-      loginFailed: false
+      loginFailed: false,
+      loginError: null
     }
   },
 
   created() {
-    this.authService = new AuthService(config.AAD_CLIENT_ID, '/login')
+    let redirectUri = window.location.origin + '/login'
+
+    const msalApplicationConfig = {
+      auth: {
+        clientId: config.AAD_CLIENT_ID,
+        redirectUri: redirectUri
+      }
+    }
+
+    // create UserAgentApplication instance
+    msalApp = new Msal.UserAgentApplication(msalApplicationConfig);
   },
 
   methods: {
     login() {
       this.loginFailed = false;
-      this.authService.login().then(
-        resp => {
-          if (resp) {
-            // Access tokens are sometimes encrypted, I give up with them
-            //this.authService.getToken(resp.user).then(accessToken => console.log("$$$ AT", accessToken) )
-            
-            // Store everything, including idToken
-            userProfile.user = resp.user
-            userProfile.idToken = resp.idToken
-            userProfile.isAdmin = false
-            
-            // Check against list of admins
-            if(config.ADMIN_USER_LIST) {
-              for(let userName of config.ADMIN_USER_LIST.split(',')) {
-                if(userName.trim().toLowerCase() == userProfile.user.displayableId.toLowerCase()) {
-                  userProfile.isAdmin = true
-                  break
-                }          
-              }
-            }
 
-            // Redirect if we have a route to forward onto
-            if(this.redir)
-              this.$router.push({ name: this.redir })
-            else
-              this.$router.push({ name: 'admin' })
-          } else {
-            this.loginFailed = true;
-          }
-        },
-        () => {
-          this.loginFailed = true;
-        }
-      );
+      let loginRequest = {
+        scopes: [ 'user.read', 'offline_access', 'profile', `api://${config.AAD_CLIENT_ID}/smilr.events`  ]
+      }
+
+      let accessTokenRequest = {
+        scopes: [ 'offline_access', `api://${config.AAD_CLIENT_ID}/smilr.events`  ] 
+      }
+
+      msalApp.loginPopup(loginRequest).then(loginResponse => {   
+        return msalApp.acquireTokenSilent(accessTokenRequest).then(tokenResp => {
+          userProfile.token = tokenResp.accessToken;
+          userProfile.user = msalApp.getAccount();  
+          userProfile.isAdmin = true;
+          //console.log(userProfile.token);
+
+          // Check against list of admins
+          // if(config.ADMIN_USER_LIST) {
+          //   for(let userName of config.ADMIN_USER_LIST.split(',')) {
+          //     if(userName.trim().toLowerCase() == userProfile.user.userName.toLowerCase()) {
+          //       userProfile.isAdmin = true
+          //       break
+          //     }          
+          //   }
+          // }   
+
+          if(this.redir)
+            this.$router.push({ name: this.redir })
+          else
+            this.$router.push({ name: 'home' })  
+        })
+      }).catch(error => {  
+        console.log("### MSAL Error "+error.toString());
+        this.loginFailed = true;
+        this.loginError = error.toString()
+      });
     }     
   }
 }

@@ -38,7 +38,7 @@ This application supports a range of demonstration, and learning scenarios, such
 - [Fundamentals](#fundamentals)
 - [Containers & Kubernetes](#containers--kubernetes)
 - [Deploying to Azure](#deploying-to-azure)
-- [DevOps CI/CD Pipeline](#devops-cicd-pipeline)
+- [DevOps & CI/CD](#devops--cicd)
 - [Experimental Implementations](#experimental-implementations)
 - [Changelog](#changelog)
 
@@ -69,25 +69,26 @@ There are a number of ways to get started with this project depending on your go
 This repo contains multiple discreet but loosely dependant code bases. The top levels of the project repository directory tree are laid out as follows 
 ```
 /
-├── angular            (Deprecated) The old frontend Angular app
+├── archive            Older and experimental code archive 
 ├── azure              Supporting files for Azure deployment etc
-│   ├── appservice       Script to deploy frontend to Azure App Service
-│   ├── functions        Azure Functions implementation of the data-api service
+│   ├── functionsv2      Azure Functions serverless implementation
+│   ├── pipelines        Azure Pipelines for CI/CD
 │   └── templates        Example ARM templates
 ├── docs               Documentation
-├── dotnet             .NET Core ASP implementation of the services - WIP
 ├── etc                Supporting files, pictures and other artefacts 
+├── go                 Work in progress re-write of the main services in Go
+│   ├── data-api         Data API in Go
+│   └── frontend         Frontend service in Go
 ├── kubernetes         Docs and files to support deployment to Kubernetes & AKS
 │   ├── helm             Helm chart for deploying Smilr with Helm
 │   ├── using-ingress    Deployment YAML for use with K8S Ingress
 │   └── using-lb         Deployment YAML for use with K8S LoadBalancer
+├── mobile             Nativescript + Vue.js mobile client 
 ├── node               Main microservices, written in Node.js
 │   ├── data-api         Data API service source code
 │   └── frontend         Frontend service source code
-├── orleans            Orleans actor model implementation of the services  - WIP
 ├── scripts            Supporting helper scripts
 │   └── demoData         Load the database with demo data
-├── servicefabric      Service Fabric implementation of the services - WIP
 └── vue                The main app frontend, a Vue.js SPA
     ├── src              Source code of Vue.js app
     └── mock-api         Provides a fake API and database for local testing
@@ -124,7 +125,7 @@ There are numerous ways to set & override environmental variables; in the operat
 # Containers & Kubernetes 
 As containers and Kubernetes represents such an important build & deployment scenario, they have dedicated guides and documentation
 
-#### [:page_with_curl: Building Smilr as Containers](./docs/containers.md)
+#### [:page_with_curl: Building Smilr as Containers](./docker)
 #### [:page_with_curl: Running and deploying in Kubernetes](./kubernetes)
 
 ### Public Images
@@ -148,9 +149,9 @@ Automated CI/CD pipelines have been created using Azure Pipelines. These automat
 
 | Automated Build | Status |
 |---|---|
-|Linux Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=31)|
-|Windows Images|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20for%20ACR%20&%20Dockerhub%20(Win)?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=32)|
-|API Tests|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Run%20API%20Tests?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=34)|
+|Linux Images & Tests|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20to%20ACR%20and%20Deploy%20to%20ACI?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=73&branchName=master)|
+|Windows Images & Dockerhub|[![Build Status](https://dev.azure.com/bencoleman/Smilr/_apis/build/status/Build%20to%20ACR%20and%20Deploy%20to%20ACI?branchName=master)](https://dev.azure.com/bencoleman/Smilr/_build/latest?definitionId=73&branchName=master)|
+
 
 You can visit the Azure Devops Public Project where these pipelines reside, although keep in mind the source code repo remains here on GitHub.
 ##### [DevOps Public Project - Smilr 🡽](https://dev.azure.com/bencoleman/Smilr)
@@ -158,19 +159,19 @@ You can visit the Azure Devops Public Project where these pipelines reside, alth
 If you want to try using Azure DevOps to build Smilr, [the pipelines are provided as YAML for your own use](./azure/pipelines). An Azure DevOps account/organisation is required to use these, but can be setup for free.
 
 
-# Experimental Implementations
-There are several re-implementations of the Smilr architecture. Either at the backend, providing an API compatible with the data-api REST specification. Also the frontend has been implemented as a mobile app. All of these alternatives are considered experimental and for technology demo use cases 
+# Sub Projects
+There are several sub-projects and re-implementations of the Smilr architecture. Either at the backend, providing an API compatible with the data-api REST specification. Also the frontend has been implemented as a mobile app. All of these alternatives are considered experimental and for technology demo use cases 
 
-- [**Serverless - Azure Functions**](./azure/functions)
-- [**Bots and Bot Framework**](./bot)
+- [**Serverless - Azure Functions**](./azure/functionsv2)
+- [**Go aka Golang**](./go)
 - [**Native Mobile App**](./mobile)
-- [**Service Fabric**](./servicefabric)
-- [**Actors with Orleans**](./orleans)
 
 
 # Changelog 
 High level project changes and overall history are recorded here:
 
+- *Jul 2019* - Start of Go implementation. Archived old sub-projects
+- *Jun 2019* - Security improvements, MSAL and token validation
 - *Dec 2018* - Total rewrite of SPA in Vue.js and proper AAD security
 - *May 2018* - Major updates for Kubernetes deployment & Angular 6
 - *Mar 2018* - Switched to MongoDB for database

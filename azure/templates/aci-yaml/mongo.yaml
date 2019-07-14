@@ -6,7 +6,7 @@ properties:
   containers:
   - name: mongo-db
     properties:
-      image: mongo:3.4-jessie
+      image: mongo:4-xenial
       ports:
       - port: 27017
       resources:

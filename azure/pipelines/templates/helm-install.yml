@@ -18,7 +18,7 @@ jobs:
         - task: HelmInstaller@1
           displayName: 'Install Helm version'
           inputs:
-            helmVersionToInstall: 2.12.3
+            helmVersionToInstall: 2.14.0
         
         - task: HelmDeploy@0
           displayName: 'Helm update dependencies'
@@ -40,4 +40,4 @@ jobs:
             chartType: FilePath
             chartPath: 'kubernetes/helm/smilr'
             releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
-            overrideValues: 'registryPrefix=$(acr-name).azurecr.io/,domainSuffix=$(dns-suffix),dataApi.imageTag=latest,frontend.imageTag=latest,mongo.usePersistence=false'
+            overrideValues: 'registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(image-tag),frontend.imageTag=$(image-tag),mongo.usePersistence=false'

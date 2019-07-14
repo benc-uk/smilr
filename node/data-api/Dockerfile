@@ -11,10 +11,6 @@ ENV BUILD_INFO $build_info
 # Place our app here
 WORKDIR /home/app
 
-# Copy in demoData script in case we need it, just a nice to have
-COPY scripts/demoData/demoData.js scripts/demoData/source-data.json ./demoData/
-RUN sed -i 's/..\/node\/data-api\///g' -i ./demoData/demoData.js
-
 # Install bash inside container just for debugging 
 RUN apk update && apk add bash
 

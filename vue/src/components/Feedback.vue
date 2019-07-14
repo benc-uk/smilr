@@ -3,7 +3,7 @@
     <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white" v-if="event">
       <h2 slot="header" class="text-truncate">{{ topic.desc }} ({{ event.title }})</h2>  
       <div class="card-body">  
-        <h3>Please provide your feedback</h3><br/>
+        <h3>Please provide your feedback, click on a face</h3><br/>
         <div class="facegroup">
           <face number="1" :unselected="unselected[0]" :selected="selected[0]" @clicked="clickFace"></face> 
           <face number="2" :unselected="unselected[1]" :selected="selected[1]" @clicked="clickFace"></face> 
@@ -40,7 +40,8 @@ import Face from "./Face"
 export default {
   name: 'Feedback',
 
-  props: ['eventId', 'topicId'],
+  // These are no longer used, kept just in case, query params used now
+  props: ['eventIdProp', 'topicIdProp'],
 
   mixins: [ api, cookies ],
 
@@ -57,6 +58,12 @@ export default {
       rating: null,
       comment: ""
     }
+  },
+
+  computed: {
+    // Our main ids, are computed from either the props or query params on the route
+    eventId: function() { return this.eventIdProp || this.$route.query.e },
+    topicId: function() { return this.topicIdProp || this.$route.query.t }
   },
 
   methods: {
@@ -89,7 +96,7 @@ export default {
     }
   },
 
-  mounted() {
+  mounted() {   
     // Check feedback cookie
     let fbCookie = this.cookieRead(`feedback_${this.eventId}_${this.topicId}`)
 
@@ -98,6 +105,16 @@ export default {
       this.$refs.nopeModal.show()
       return
     } 
+
+    // Check we have the two IDs we need, if not throw error
+    if(!this.eventId || !this.topicId) {
+      this.$router.push({
+        name: 'error', 
+        replace: true, 
+        params: { message: `You shouldn't be here! No event or topic id provided!` }
+      })
+      return;
+    }
 
     this.apiGetEvent(this.eventId)
     .then(resp => {
@@ -130,7 +147,7 @@ export default {
   padding: 0.5rem !important;
 }
 #submitbut {
-  font-size: calc(14px + 1.5vw);
+  font-size: calc(14px + 1.2vw);
 }
 .card-body {
   padding: 1.5vw !important;

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { config, userProfile } from '../main'
 import axios from 'axios'
 import router from '../router'
@@ -73,9 +74,9 @@ export default {
       var headers = {}
 
       // Send token as per the OAuth 2.0 bearer token scheme
-      if(userProfile.idToken) {
+      if(userProfile.token) {
         headers = {
-          'Authorization': `Bearer ${userProfile.idToken}`
+          'Authorization': `Bearer ${userProfile.token}`
         }
       }
 
@@ -86,14 +87,16 @@ export default {
         headers: headers
       })
       .catch(err => {
-        //console.log("### API CALL ERROR "+ err);
-        let extra = ''
-        if(err.response && err.response.data) extra = JSON.stringify(err.response.data)
+        let errorData = ''
+        // Grab extra error message if content type is JSON
+        if(err.response && err.response.data && err.response.headers['content-type'].includes('json')) {
+          errorData = JSON.stringify(err.response.data, null, 2)
+        }
         // Handle errors here, rather than up at caller level
         router.push({
           name: 'error', 
           replace: true, 
-          params: { message: `API_ERROR:\n${apiUrl}\n${err.toString()} [${extra}]` }
+          params: { message: `API_ERROR: ${apiUrl}\n${err.toString()}\n${errorData}` }
         })
       })          
     },

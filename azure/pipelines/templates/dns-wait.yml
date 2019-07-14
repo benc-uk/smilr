@@ -1,0 +1,29 @@
+parameters:
+  dnsName: ''
+  dependsOn: ''
+
+jobs:
+  - job: dnsWaitJob
+    dependsOn: ${{ parameters.dependsOn }}
+    displayName: 'Waiting for DNS'
+
+    condition: and(succeeded(), ne(variables['skip-tests'], 'true'))
+
+    pool:
+      vmImage: Ubuntu-16.04
+
+    steps:
+    - bash: echo "Waiting for ${{ parameters.dnsName }} to propogate in DNS"
+    - bash: |
+        i=0
+        while [ $i -le 100 ]; do
+          ip=$(dig +short ${{ parameters.dnsName }} @8.8.8.8)
+          echo "Returned IP was $ip"
+          if [ -n "$ip" ]; then
+            exit
+          fi
+          sleep 3
+          i=$(( $i + 1 ))
+        done
+        echo "Found DNS record pointing to $ip"
+

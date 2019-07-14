@@ -17,7 +17,7 @@ metadata:
 spec:
   tls:
   - hosts:
-    - smilr.k.benco.io #smilr.56539f01234e4e00981e.westeurope.aksapp.io
+    - smilr-win.k.benco.io #smilr.56539f01234e4e00981e.westeurope.aksapp.io
     #secretName: smilr-cert-staging
     secretName: smilr-cert-prod
   rules:

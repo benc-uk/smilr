@@ -2,10 +2,13 @@
 // Main Express server for Smilr Data API
 // ---------------------------------------------
 // Ben C, March 2018
+// - Updated May 2019
 //
 
 // Load .env file if it exists
 require('dotenv').config()
+
+console.log(`### Smilr data API service starting...`);
 
 // App Insights. Set APPINSIGHTS_INSTRUMENTATIONKEY as App Setting or env var
 if(process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
@@ -44,6 +47,9 @@ if(!process.env.MONGO_CONNSTR) {
 app.use(cors());
 app.use(bodyParser.json())
 
+// Initialize Passport for bearer token validation
+if(process.env.SECURE_CLIENT_ID) require('./lib/auth')(app)
+
 // Enable Swagger UI, load in JSON definition doc
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
@@ -70,14 +76,14 @@ app.get(['/favicon.ico', '/robots*.txt'], function (req, res, next) {
 // Global catch all for all requests not caught by other routes
 // Just return a HTTP 404
 app.use('*', function (req, res, next) {
-  Utils.sendError(res, new ApiError("No matching route not found", 404));
+  Utils.sendError(res, new ApiError(`No matching route for ${req.originalUrl}`, 404));
 })
 
 // Get values from env vars or defaults where not provided
 var port = process.env.PORT || 4000;
 var monogUrl = process.env.MONGO_CONNSTR;  // Note. NO DEFAULT!
-var retries = process.env.MONGO_RETRIES || 5;
-var retryDelay = process.env.MONGO_RETRY_DELAY || 30;
+var retries = process.env.MONGO_RETRIES || 6;
+var retryDelay = process.env.MONGO_RETRY_DELAY || 15;
 
 //
 // Connect to Mongo and start server
@@ -89,7 +95,7 @@ dataAccess.connectMongo(monogUrl, retries, retryDelay)
 
   var server = app.listen(port, function () {
     var port = server.address().port;
-    console.log(`### Server listening on ${server.address().port}`);
+    console.log(`### API server listening on ${server.address().port}`);
   });
 })
 .catch(err => {

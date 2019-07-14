@@ -61,7 +61,7 @@ export default {
     },
 
     newEvent: function() {
-      this.$router.push({name: 'admin-event', params: { action: 'new', editEvent: null}})
+      this.$router.push({name: 'admin-event', params: { action: 'new', editEvent: null }})
     },
 
     preDeleteEvent: function(row) {
