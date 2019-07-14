@@ -36,8 +36,8 @@ stages:
 
     - bash: |
         ls -R $HOME
-        export ACR_NAME=$(cat $HOME/.docker/config.json | jq -r '.auths | with_entries( select(.key|contains("azurecr.io")) ) | keys[0]')
-        secret=$(cat $HOME/.docker/config.json | jq -r '.auths | with_entries( select(.key|contains("azurecr.io")) ) [].auth' | python -m base64 -d)
+        export ACR_NAME=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("azurecr.io")) ) | keys[0]')
+        secret=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("azurecr.io")) ) [].auth' | python -m base64 -d)
         export ACR_USER=$(echo $secret | awk -F':' '{print $1}')
         export ACR_PASSWORD=$(echo $secret | awk -F':' '{print $2}')
 
