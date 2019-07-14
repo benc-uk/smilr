@@ -32,7 +32,7 @@ stages:
   - job: buildJob
     displayName: 'Build & push to ACR'
 
-    condition: and(succeeded(), ne(variables['skipbuild'], '1'))
+    condition: and(succeeded(), ne(variables['skipbuild'], 'true'))
 
     pool:
       vmImage: Ubuntu-16.04
