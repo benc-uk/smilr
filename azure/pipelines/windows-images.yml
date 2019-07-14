@@ -8,7 +8,7 @@ name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none
 
 # NOTE! This variable group must be pre-created and populated
-# - Expected variables: acr-name, acr-password, dockerhub-user, dockerhub-password
+# - Expected variables: acr-connection, dockerhub-connection
 variables:
   - group: shared-variables
 
@@ -22,8 +22,6 @@ stages:
   jobs:
   - job: buildJob1809
     displayName: 'Windows Nanoserver 1809'
-    variables:
-      tag: windows
 
     pool:
       vmImage: 'windows-2019'
@@ -48,24 +46,5 @@ stages:
         Dockerfile: node/data-api/windows.Dockerfile
         buildContext: .
         repository: smilr/data-api
-        tags: "windows"
-
-    # - bash: |
-    #     docker build . -f node/data-api/windows.Dockerfile -t $(acr-name).azurecr.io/smilr/data-api:$(tag) -t smilr/data-api:$(tag)
-    #   displayName: 'Build data API, Nanoserver 1809'
-
-    # - bash: |
-    #     docker build . -f node/frontend/windows.Dockerfile -t $(acr-name).azurecr.io/smilr/frontend:$(tag) -t smilr/frontend:$(tag)
-    #   displayName: 'Build frontend, Nanoserver 1809'
-
-    # - bash: |
-    #     docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-    #     docker push $(acr-name).azurecr.io/smilr/data-api:$(tag)
-    #     docker push $(acr-name).azurecr.io/smilr/frontend:$(tag)
-    #   displayName: 'Push to ACR'
-
-    # - bash: |
-    #     docker login -u $(dockerhub-user) -p $(dockerhub-password)
-    #     docker push smilr/data-api:$(tag)
-    #     docker push smilr/frontend:$(tag)
-    #   displayName: 'Push to Dockerhub'      
+        tags: windows
+ 
