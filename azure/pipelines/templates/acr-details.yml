@@ -1,0 +1,35 @@
+#
+# This is a crazy bit of workaround
+# Extracts connection parameters for a Docker service connection connected to ACR
+#
+# Populates the following variables for subsequent steps:
+#  - ACR_NAME       Short service instance name of ACR, e.g. myacr1
+#  - ACR_HOST       Registry hostname of ACR, e.g. myacr1.azurecr.io
+#  - ACR_USER       Username or service principal ID connected to ACR
+#  - ACR_PASSWORD   Password or service principal secret connected to ACR
+#
+
+parameters:
+  filter: 'azurecr.io'
+
+steps:
+  # Login to ACR
+  - task: Docker@2
+    displayName: Login to ACR
+    inputs:
+      command: login
+      containerRegistry: $(acr-connection) 
+
+  # Extract registry connection details as variables for next step
+  - bash: |
+      registry=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("${{ parameters.filter }}")) ) | keys[0]')
+      secret=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("${{ parameters.filter }}")) ) [].auth' | python -m base64 -d)
+      user=$(echo $secret | awk -F':' '{print $1}')
+      password=$(echo $secret | awk -F':' '{print $2}')
+      short=$(echo $registry | sed "s/.${{ parameters.filter }}//")
+
+      echo "##vso[task.setvariable variable=ACR_NAME]$short"
+      echo "##vso[task.setvariable variable=ACR_HOST]$registry"
+      echo "##vso[task.setvariable variable=ACR_USER]$user"
+      echo "##vso[task.setvariable variable=ACR_PASSWORD]$password"
+    displayName: Extract ACR connection variables
