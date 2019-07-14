@@ -1,3 +1,0 @@
-bcdemo.azurecr.io
-bcdemo
-eCFLYR75ljM=A5FPwRo8IpP6DOyFRUi4
