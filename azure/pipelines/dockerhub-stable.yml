@@ -6,6 +6,7 @@
 #
 
 # No CI or automated runs
+name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none 
 
 # NOTE! This variable group must be pre-created and populated
@@ -15,43 +16,87 @@ variables:
 
 stages:
 - stage: docker
-  displayName: 'Update Stable Dockerhub'
+  displayName: Update Stable Dockerhub
   jobs:
   - job: dockerJob
-    displayName: 'Docker Job'
+    displayName: Docker Job
 
     pool:
       vmImage: Ubuntu-16.04
 
     steps:
-    # Pull latest from ACR
-    - bash: |
-        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-        docker pull $(acr-name).azurecr.io/smilr/data-api:latest
-        docker pull $(acr-name).azurecr.io/smilr/frontend:latest
-      displayName: 'Pull latest images'
+
+    - template: templates/acr-connection.yml
+
+    - task: Docker@2
+      displayName: Pull data-api from ACR
+      inputs:
+        command: pull
+        arguments: $(ACR_HOST)/smilr/data-api:latest
+
+    - task: Docker@2
+      displayName: Pull frontend from ACR
+      inputs:
+        command: pull
+        arguments: $(ACR_HOST)/smilr/frontend:latest
 
     # Update tags
     - bash: |
-        docker tag $(acr-name).azurecr.io/smilr/frontend:latest $(acr-name).azurecr.io/smilr/frontend:stable
-        docker tag $(acr-name).azurecr.io/smilr/data-api:latest $(acr-name).azurecr.io/smilr/data-api:stable
-        docker tag $(acr-name).azurecr.io/smilr/frontend:latest smilr/frontend:latest
-        docker tag $(acr-name).azurecr.io/smilr/data-api:latest smilr/data-api:latest
-        docker tag $(acr-name).azurecr.io/smilr/frontend:latest smilr/frontend:stable
-        docker tag $(acr-name).azurecr.io/smilr/data-api:latest smilr/data-api:stable
-      displayName: 'Tag images'
+        docker tag $(ACR_HOST)/smilr/frontend:latest $(ACR_HOST)/smilr/frontend:stable
+        docker tag $(ACR_HOST)/smilr/data-api:latest $(ACR_HOST)/smilr/data-api:stable
+        docker tag $(ACR_HOST)/smilr/frontend:latest smilr/frontend:latest
+        docker tag $(ACR_HOST)/smilr/data-api:latest smilr/data-api:latest
+        docker tag $(ACR_HOST)/smilr/frontend:latest smilr/frontend:stable
+        docker tag $(ACR_HOST)/smilr/data-api:latest smilr/data-api:stable
+      displayName: Tag images
 
-    # Push to ACR
-    - bash: |
-        docker push $(acr-name).azurecr.io/smilr/frontend:stable
-        docker push $(acr-name).azurecr.io/smilr/data-api:stable      
-      displayName: 'Push stable images to ACR'
+    - task: Docker@2
+      displayName: Push data-api stable image to ACR
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/data-api
+        tags: stable
 
-    # Push to public Dockerhub
-    - bash: |
-        docker login -u $(dockerhub-user) -p $(dockerhub-password)
-        docker push smilr/frontend:stable
-        docker push smilr/data-api:stable
-        docker push smilr/frontend:latest
-        docker push smilr/data-api:latest        
-      displayName: 'Push stable/latest images to Dockerhub'
+    - task: Docker@2
+      displayName: Push frontend stable image to ACR
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/frontend
+        tags: stable        
+
+    - task: Docker@2
+      displayName: Push data-api stable/latest images to Dockerhub
+      inputs:
+        command: push
+        containerRegistry: $(dockerhub-connection)
+        repository: smilr/data-api
+        tags: |
+          stable
+          latest    
+
+    - task: Docker@2
+      displayName: Push frontend stable/latest images to Dockerhub
+      inputs:
+        command: push
+        containerRegistry: $(dockerhub-connection)
+        repository: smilr/frontend
+        tags: |
+          stable
+          latest
+
+    # # Push to ACR
+    # - bash: |
+    #     docker push $(acr-name).azurecr.io/smilr/frontend:stable
+    #     docker push $(acr-name).azurecr.io/smilr/data-api:stable      
+    #   displayName: 'Push stable images to ACR'
+
+    # # Push to public Dockerhub
+    # - bash: |
+    #     docker login -u $(dockerhub-user) -p $(dockerhub-password)
+    #     docker push smilr/frontend:stable
+    #     docker push smilr/data-api:stable
+    #     docker push smilr/frontend:latest
+    #     docker push smilr/data-api:latest        
+    #   displayName: 'Push stable/latest images to Dockerhub'

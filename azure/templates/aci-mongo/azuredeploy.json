@@ -8,6 +8,12 @@
         "description": "Name of ACR instance holding your images"
       }
     },
+    "acrUser": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for ACR"
+      }
+    },    
     "acrPassword": {
       "type": "securestring",
       "metadata": {
@@ -108,7 +114,7 @@
         ],
         "imageRegistryCredentials": [{
           "server": "[concat(parameters('acrName'), '.azurecr.io')]",
-          "username": "[parameters('acrName')]",
+          "username": "[parameters('acrUser')]",
           "password": "[parameters('acrPassword')]"
         }],
         "osType": "Linux",
@@ -161,7 +167,7 @@
         ],
         "imageRegistryCredentials": [{
           "server": "[concat(parameters('acrName'), '.azurecr.io')]",
-          "username": "[parameters('acrName')]",
+          "username": "[parameters('acrUser')]",
           "password": "[parameters('acrPassword')]"
         }],
         "osType": "Linux",
