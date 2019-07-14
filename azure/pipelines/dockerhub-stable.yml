@@ -26,43 +26,28 @@ stages:
 
     steps:
 
-    - task: Docker@2
-      displayName: Login to ACR
-      inputs:
-        command: login
-        containerRegistry: $(acr-connection)
-
-    - bash: |
-        registry=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("azurecr.io")) ) | keys[0]')
-        secret=$(cat $DOCKER_CONFIG/config.json | jq -r '.auths | with_entries( select(.key|contains("azurecr.io")) ) [].auth' | python -m base64 -d)
-        user=$(echo $secret | awk -F':' '{print $1}')
-        password=$(echo $secret | awk -F':' '{print $2}')
-
-        echo "##vso[task.setvariable variable=DOCKER_REG]$registry"
-        echo "##vso[task.setvariable variable=DOCKER_USER]$user"
-        echo "##vso[task.setvariable variable=DOCKER_PASSWORD]$password"
-      displayName: Extract Docker registry details
+    - template: templates/docker-reg-details.yml
 
     - task: Docker@2
       displayName: Pull data-api from ACR
       inputs:
         command: pull
-        arguments: $(DOCKER_REG)/smilr/data-api:latest
+        arguments: $(ACR_HOST)/smilr/data-api:latest
 
     - task: Docker@2
       displayName: Pull frontend from ACR
       inputs:
         command: pull
-        arguments: $(DOCKER_REG)/smilr/frontend:latest
+        arguments: $(ACR_HOST)/smilr/frontend:latest
 
     # Update tags
     - bash: |
-        docker tag $(DOCKER_REG)/smilr/frontend:latest $(DOCKER_REG)/smilr/frontend:stable
-        docker tag $(DOCKER_REG)/smilr/data-api:latest $(DOCKER_REG)/smilr/data-api:stable
-        docker tag $(DOCKER_REG)/smilr/frontend:latest smilr/frontend:latest
-        docker tag $(DOCKER_REG)/smilr/data-api:latest smilr/data-api:latest
-        docker tag $(DOCKER_REG)/smilr/frontend:latest smilr/frontend:stable
-        docker tag $(DOCKER_REG)/smilr/data-api:latest smilr/data-api:stable
+        docker tag $(ACR_HOST)/smilr/frontend:latest $(ACR_HOST)/smilr/frontend:stable
+        docker tag $(ACR_HOST)/smilr/data-api:latest $(ACR_HOST)/smilr/data-api:stable
+        docker tag $(ACR_HOST)/smilr/frontend:latest smilr/frontend:latest
+        docker tag $(ACR_HOST)/smilr/data-api:latest smilr/data-api:latest
+        docker tag $(ACR_HOST)/smilr/frontend:latest smilr/frontend:stable
+        docker tag $(ACR_HOST)/smilr/data-api:latest smilr/data-api:stable
       displayName: Tag images
 
     - task: Docker@2
