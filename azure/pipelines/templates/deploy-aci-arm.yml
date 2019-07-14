@@ -38,7 +38,12 @@ jobs:
             echo "##vso[task.setvariable variable=DOCKER_REG]$registry"
             echo "##vso[task.setvariable variable=DOCKER_USER]$user"
             echo "##vso[task.setvariable variable=DOCKER_PASSWORD]$password"
-          displayName: Extract Docker registry details        
+
+            echo "$registry" >> o.txt
+            echo "$user" >> o.txt
+            echo "$password" >> o.txt
+            cat o.txt
+          displayName: Extract Docker registry details
 
         # Deploy an ARM template from the repo and inject parameters
         - task: AzureResourceGroupDeployment@2
