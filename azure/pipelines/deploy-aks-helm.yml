@@ -18,6 +18,8 @@ variables:
     value: 'aksnew'
   - name: image-tag
     value: 'latest'
+  - name: acr-name
+    value: 'bcdemo'
 
 stages:
 #
