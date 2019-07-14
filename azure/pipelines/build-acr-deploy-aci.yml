@@ -46,6 +46,7 @@ stages:
         Dockerfile: node/data-api/Dockerfile
         buildContext: .
         repository: smilr/data-api
+        arguments: --build-arg build_info="CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
         tags: |
           latest
           $(Build.BuildNumber)
@@ -58,6 +59,7 @@ stages:
         Dockerfile: node/frontend/Dockerfile
         buildContext: .
         repository: smilr/frontend
+        arguments: --build-arg build_info="CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
         tags: |
           latest
           $(Build.BuildNumber)          
