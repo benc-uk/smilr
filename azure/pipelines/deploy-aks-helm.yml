@@ -3,7 +3,7 @@
 # - Deploy to Kubernetes (AKS) using Helm chart
 # Ben C, 2019
 #
-
+name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none
 
 # NOTE! This variable group must be pre-created and populated
