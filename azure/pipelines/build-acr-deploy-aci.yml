@@ -16,7 +16,7 @@ trigger:
       - azure/pipelines/*
 
 # NOTE! This variable group must be pre-created and populated
-# - Expected variables: acr-name, acr-password, azure-connection
+# - Expected variables: acr-connection
 variables:
   - group: shared-variables
 
@@ -37,91 +37,76 @@ stages:
       vmImage: Ubuntu-16.04
 
     steps:
-    # Data API build, tag as both latest and BuildNumber
-    - bash: |
-        docker build . -f node/data-api/Dockerfile \
-        -t $(acr-name).azurecr.io/smilr/data-api:latest \
-        -t $(acr-name).azurecr.io/smilr/data-api:$(Build.BuildNumber) \
-        --build-arg build_info="CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
-      displayName: 'Build data API image'
-
-    - bash: |
-        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-        docker push $(acr-name).azurecr.io/smilr/data-api
-      displayName: 'Push data API image(s) to ACR'
-
-    # Frontend build, tag as both latest and BuildNumber
-    - bash: |
-        docker build . -f node/frontend/Dockerfile \
-        -t $(acr-name).azurecr.io/smilr/frontend:latest \
-        -t $(acr-name).azurecr.io/smilr/frontend:$(Build.BuildNumber) \
-        --build-arg build_info="CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
-      displayName: 'Build frontend image'
-
-    - bash: |
-        docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
-        docker push $(acr-name).azurecr.io/smilr/frontend
-      displayName: 'Push frontend image(s) to ACR'
-
-#
-# Deploy stage 1 - test environment
-#
-- stage: deployToTest
-  displayName: Deploy to Test
+    - task: Docker@2
+      displayName: 'Build and push data API'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/data-api/Dockerfile
+        repository: smilr/data-api
+        tags: |
+          latest
+          $(Build.BuildNumber)
+      
+# #
+# # Deploy stage 1 - test environment
+# #
+# - stage: deployToTest
+#   displayName: Deploy to Test
   
-  variables:
-    location: westeurope
-    dns-prefix: smilr-$(Build.BuildId)-test
+#   variables:
+#     location: westeurope
+#     dns-prefix: smilr-$(Build.BuildId)-test
 
-  jobs:
-  - template: templates/deploy-aci-arm.yml
-    parameters:
-      envName: ACI-Test
+#   jobs:
+#   - template: templates/deploy-aci-arm.yml
+#     parameters:
+#       envName: ACI-Test
 
-  - template: templates/run-postman-tests.yml
-    parameters:
-      dependsOn: deployWithACI
-      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+#   - template: templates/run-postman-tests.yml
+#     parameters:
+#       dependsOn: deployWithACI
+#       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+#       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
-#
-# Deploy stage 2 - staging environment
-#
-- stage: deployToStaging
-  displayName: Deploy to Staging
+# #
+# # Deploy stage 2 - staging environment
+# #
+# - stage: deployToStaging
+#   displayName: Deploy to Staging
   
-  variables:
-    location: westeurope
-    dns-prefix: smilr-$(Build.BuildId)-staging
+#   variables:
+#     location: westeurope
+#     dns-prefix: smilr-$(Build.BuildId)-staging
 
-  jobs:
-  - template: templates/deploy-aci-arm.yml
-    parameters:
-      envName: ACI-Staging
+#   jobs:
+#   - template: templates/deploy-aci-arm.yml
+#     parameters:
+#       envName: ACI-Staging
 
-  - template: templates/run-postman-tests.yml
-    parameters:
-      dependsOn: deployWithACI
-      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+#   - template: templates/run-postman-tests.yml
+#     parameters:
+#       dependsOn: deployWithACI
+#       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+#       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
-#
-# Deploy stage 3 - prod environment
-#
-- stage: deployToProduction
-  displayName: Deploy to Production
+# #
+# # Deploy stage 3 - prod environment
+# #
+# - stage: deployToProduction
+#   displayName: Deploy to Production
   
-  variables:
-    location: westeurope
-    dns-prefix: smilr-prod
+#   variables:
+#     location: westeurope
+#     dns-prefix: smilr-prod
 
-  jobs:
-  - template: templates/deploy-aci-arm.yml
-    parameters:
-      envName: ACI-Production
+#   jobs:
+#   - template: templates/deploy-aci-arm.yml
+#     parameters:
+#       envName: ACI-Production
 
-  - template: templates/run-postman-tests.yml
-    parameters:
-      dependsOn: deployWithACI
-      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+#   - template: templates/run-postman-tests.yml
+#     parameters:
+#       dependsOn: deployWithACI
+#       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+#       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
