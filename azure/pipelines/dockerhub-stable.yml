@@ -40,13 +40,9 @@ stages:
         export ACR_USER=$(echo $secret | awk -F':' '{print $1}')
         export ACR_PASSWORD=$(echo $secret | awk -F':' '{print $2}')
 
-        echo "##vso[task.setvariable variable=ACR_NAME;isOutput=true]$ACR_NAME"
-        echo "##vso[task.setvariable variable=ACR_USER;isOutput=true]$ACR_USER"
-        echo "##vso[task.setvariable variable=ACR_PASSWORD;isOutput=true]$ACR_PASSWORD"
-
-        echo "#### $ACR_NAME"
-        echo "#### $ACR_USER"
-        echo "#### $ACR_PASSWORD"
+        echo "##vso[task.setvariable variable=ACR_NAME]$ACR_NAME"
+        echo "##vso[task.setvariable variable=ACR_USER]$ACR_USER"
+        echo "##vso[task.setvariable variable=ACR_PASSWORD]$ACR_PASSWORD"
 
     - bash: printenv
 
@@ -67,7 +63,7 @@ stages:
       displayName: Pull from ACR
       inputs:
         command: pull
-        arguments: $(acr-name).azurecr.io/smilr/data-api:latest
+        arguments: $(ACR_NAME)/smilr/data-api:latest
 
     # # Update tags
     # - bash: |
