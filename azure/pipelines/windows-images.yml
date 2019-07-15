@@ -7,7 +7,7 @@
 name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none
 
-# NOTE! This variable group must be pre-created and populated
+# NOTE! The 'shared-variables' variable group must be pre-created and populated
 # - Expected variables: acr-connection, dockerhub-connection
 variables:
   - group: shared-variables

@@ -8,7 +8,7 @@ jobs:
     dependsOn: ${{ parameters.dependsOn }}
     displayName: 'Functional API tests'
 
-    condition: and(succeeded(), ne(variables['skip-tests'], 'true'))
+    condition: and(succeeded(), ne(variables['skiptests'], 'true'))
 
     pool:
       vmImage: Ubuntu-16.04
