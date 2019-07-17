@@ -41,6 +41,8 @@ jobs:
               frontend.imageTag:$(image-tag)
               mongo.usePersistence:false
 
+        - bash: printenv
+        
         - bash: echo "##vso[task.setvariable variable=manifests]$KUBERNETESMANIFEST1_MANIFESTSBUNDLE"
 
         - task: KubernetesManifest@0
