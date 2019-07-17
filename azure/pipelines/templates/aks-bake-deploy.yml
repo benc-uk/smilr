@@ -14,7 +14,7 @@ jobs:
       deploy:
         steps:
         - checkout: self
-        
+
         - task: HelmInstaller@1
           displayName: 'Install Helm version'
           inputs:
@@ -41,6 +41,8 @@ jobs:
               frontend.imageTag:$(image-tag)
               mongo.usePersistence:false
 
+        - bash: printenv
+        
         - task: KubernetesManifest@0
           displayName: Deploy manifests
           inputs:
