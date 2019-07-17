@@ -14,12 +14,26 @@ jobs:
       deploy:
         steps:
         - checkout: self
+        
+        - task: HelmInstaller@1
+          displayName: 'Install Helm version'
+          inputs:
+            helmVersionToInstall: 2.14.0
+        
+        - task: HelmDeploy@0
+          displayName: 'Helm update dependencies'
+          inputs:
+            azureSubscriptionEndpoint: $(azure-connection)
+            azureResourceGroup: $(aks-resgrp)
+            kubernetesCluster: $(aks-cluster)
+            command: dependency
+            arguments: 'update kubernetes/helm/smilr'
 
         - task: KubernetesManifest@0
           displayName: Bake manifests from Helm chart
           inputs:
             action: bake
-            releaseName: 'foo' #'${{ parameters.envName }}-$(Build.BuildId)'
+            releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
             helmChart: kubernetes/helm/smilr
             overrides: |
               registryPrefix:$(acr-name).azurecr.io/
