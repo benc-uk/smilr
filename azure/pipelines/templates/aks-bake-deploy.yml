@@ -42,11 +42,11 @@ jobs:
   - bash: printenv
     displayName: Print envs
 
-  - bash: echo $(KUBERNETESMANIFEST1_MANIFESTSBUNDLE)
+  - bash: echo "##vso[task.setvariable variable=foo]$KUBERNETESMANIFEST1_MANIFESTSBUNDLE"
 
   - task: KubernetesManifest@0
     displayName: Deploy manifests
     inputs:
       kubernetesServiceConnection: $(aks-connection)
       namespace: ${{ parameters.envName }}
-      manifests: $(KUBERNETESMANIFEST1_MANIFESTSBUNDLE)
+      manifests: $(foo)
