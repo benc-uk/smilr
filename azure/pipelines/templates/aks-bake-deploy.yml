@@ -33,6 +33,7 @@ jobs:
           displayName: Bake manifests from Helm chart
           inputs:
             action: bake
+            renderType: helm2
             releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
             helmChart: kubernetes/helm/smilr
             overrides: |
@@ -41,12 +42,9 @@ jobs:
               frontend.imageTag:$(image-tag)
               mongo.usePersistence:false
 
-        - bash: printenv
-          displayName: what
-
         - task: KubernetesManifest@0
           displayName: Deploy manifests
           inputs:
             kubernetesServiceConnection: $(aks-connection)
             namespace: ${{ parameters.envName }}
-            manifests: $(KUBERNETESMANIFEST_MANIFESTSBUNDLE)
+            manifests: $(bake.manifestsBundle)
