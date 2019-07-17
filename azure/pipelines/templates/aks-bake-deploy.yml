@@ -3,7 +3,7 @@ parameters:
   
 jobs:
 - deployment: deployToAKS
-  displayName: Helm deploy to ${{ parameters.envName }}
+  displayName: Deploy to AKS ${{ parameters.envName }}
   environment: AKS-${{ parameters.envName }}
 
   pool:
