@@ -16,7 +16,6 @@ jobs:
         - checkout: self
 
         - task: KubernetesManifest@0
-          name: bake
           displayName: Bake manifests from Helm chart
           inputs:
             action: bake
