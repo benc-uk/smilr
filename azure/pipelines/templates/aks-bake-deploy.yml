@@ -31,6 +31,7 @@ jobs:
 
         - task: KubernetesManifest@0
           displayName: Bake manifests from Helm chart
+          name: bake
           inputs:
             action: bake
             releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
@@ -41,12 +42,12 @@ jobs:
               frontend.imageTag:$(image-tag)
               mongo.usePersistence:false
         
-        - bash: echo "##vso[task.setvariable variable=manifests]$KUBERNETESMANIFEST_MANIFESTSBUNDLE"
-          displayName: Grab manifest bundle location
+        # - bash: echo "##vso[task.setvariable variable=manifests]$KUBERNETESMANIFEST_MANIFESTSBUNDLE"
+        #   displayName: Grab manifest bundle location
 
         - task: KubernetesManifest@0
           displayName: Deploy manifests
           inputs:
             kubernetesServiceConnection: $(aks-connection)
             namespace: ${{ parameters.envName }}
-            manifests: $(manifests)
+            manifests: $(bake.manifestsBundle)
