@@ -1,0 +1,31 @@
+parameters:
+  envName: ''
+  
+jobs:
+- deployment: deployToAKS
+  displayName: Helm deploy to ${{ parameters.envName }}
+  environment: AKS-${{ parameters.envName }}
+
+  pool:
+    vmImage: Ubuntu-16.04
+
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - checkout: self
+
+        - task: KubernetesManifest@0
+          name: bake
+          displayName: Bake manifests from Helm chart
+          inputs:
+            action: bake
+            helmChart: kubernetes/helm/smilr
+            overrides: 'registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(image-tag),frontend.imageTag=$(image-tag),mongo.usePersistence=false'
+
+        - task: KubernetesManifest@0
+          displayName: Deploy manifests
+          inputs:
+            kubernetesServiceConnection: $(aks-connection)
+            namespace: ${{ parameters.envName }}
+            manifests: $(bake.manifestsBundle)
