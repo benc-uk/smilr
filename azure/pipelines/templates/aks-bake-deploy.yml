@@ -42,9 +42,11 @@ jobs:
   - bash: printenv
     displayName: Print envs
 
+  - bash: echo $(KUBERNETESMANIFEST1_MANIFESTSBUNDLE)
+
   - task: KubernetesManifest@0
     displayName: Deploy manifests
     inputs:
       kubernetesServiceConnection: $(aks-connection)
       namespace: ${{ parameters.envName }}
-      manifests: $(manifestsBundle)
+      manifests: $(KUBERNETESMANIFEST1_MANIFESTSBUNDLE)
