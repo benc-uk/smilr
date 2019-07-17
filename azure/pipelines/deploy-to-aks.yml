@@ -1,0 +1,88 @@
+#
+# Azure Pipelines
+# - Deploy to Kubernetes (AKS) using Helm chart
+# Ben C, 2019
+#
+name: $(Date:yyyy-MM-dd)$(Rev:.rr)
+trigger: none
+
+# NOTE! The 'shared-variables' variable group must be pre-created and populated
+# - Expected variables: acr-connection, azure-connection
+variables:
+  - group: shared-variables
+  - name: ingress-host
+    value: 'aks.benco.io'
+  - name: aks-resgrp
+    value: 'demo.aks'
+  - name: aks-cluster
+    value: 'aksnew'
+  - name: image-tag
+    value: 'latest'
+  - name: acr-name
+    value: 'bcdemo'
+
+stages:
+#
+# Deploy stage 1 - AKS test namespace
+#
+- stage: deployToTest
+  displayName: AKS Test
+
+  jobs:
+  - template: templates/aks-deploy.yml
+    parameters:
+      envName: test
+
+  # - template: templates/dns-wait.yml
+  #   parameters:
+  #     dependsOn: deployWithHelm      
+  #     dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: deployWithHelm
+      apiHost: '$(ingress-host)/test-$(Build.BuildId)'
+      frontHost: '$(ingress-host)/test-$(Build.BuildId)'
+#
+# Deploy stage 2 - AKS staging namespace
+#
+- stage: deployToStaging
+  displayName: AKS Staging
+
+  jobs:
+  - template: templates/aks-deploy.yml
+    parameters:
+      envName: staging
+
+  # - template: templates/dns-wait.yml
+  #   parameters:
+  #     dependsOn: deployWithHelm
+  #     dnsName: 'staging-$(Build.BuildId).$(dns-suffix)'
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: deployWithHelm
+      apiHost: '$(ingress-host)/staging-$(Build.BuildId)'
+      frontHost: '$(ingress-host)/staging-$(Build.BuildId)'
+
+#
+# Deploy stage 3 - AKS production namespace
+#
+- stage: deployToProduction
+  displayName: AKS Production
+
+  jobs:
+  - template: templates/aks-deploy.yml
+    parameters:
+      envName: prod
+
+  # - template: templates/dns-wait.yml
+  #   parameters:
+  #     dependsOn: deployWithHelm      
+  #     dnsName: 'prod-$(Build.BuildId).$(dns-suffix)'
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: deployWithHelm
+      apiHost: '$(ingress-host)/prod-$(Build.BuildId)'
+      frontHost: '$(ingress-host)/prod-$(Build.BuildId)'
