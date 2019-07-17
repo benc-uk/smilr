@@ -39,8 +39,8 @@ jobs:
         frontend.imageTag:$(image-tag)
         mongo.usePersistence:false
 
-  - bash: echo $(aks-resgrp)
-  - bash: echo $(aks-cluster)
+  - bash: printenv
+    displayName: Print envs
 
   - task: KubernetesManifest@0
     displayName: Deploy manifests
