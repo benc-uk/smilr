@@ -47,4 +47,4 @@ jobs:
     inputs:
       kubernetesServiceConnection: $(aks-connection)
       namespace: ${{ parameters.envName }}
-      manifests: $(bake.manifestsBundle)
+      manifests: $(manifestsBundle)
