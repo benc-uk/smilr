@@ -40,7 +40,7 @@ stages:
 
   - template: templates/run-postman-tests.yml
     parameters:
-      dependsOn: deployWithHelm
+      dependsOn: deployToAKS
       apiHost: '$(ingress-host)/test-$(Build.BuildId)'
       frontHost: '$(ingress-host)/test-$(Build.BuildId)'
 #
@@ -61,7 +61,7 @@ stages:
 
   - template: templates/run-postman-tests.yml
     parameters:
-      dependsOn: deployWithHelm
+      dependsOn: deployToAKS
       apiHost: '$(ingress-host)/staging-$(Build.BuildId)'
       frontHost: '$(ingress-host)/staging-$(Build.BuildId)'
 
@@ -83,6 +83,6 @@ stages:
 
   - template: templates/run-postman-tests.yml
     parameters:
-      dependsOn: deployWithHelm
+      dependsOn: deployToAKS
       apiHost: '$(ingress-host)/prod-$(Build.BuildId)'
       frontHost: '$(ingress-host)/prod-$(Build.BuildId)'
