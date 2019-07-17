@@ -42,7 +42,8 @@ jobs:
               mongo.usePersistence:false
 
         - bash: printenv
-        
+          displayName: what
+
         - task: KubernetesManifest@0
           displayName: Deploy manifests
           inputs:
