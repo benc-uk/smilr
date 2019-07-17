@@ -21,7 +21,11 @@ jobs:
             action: bake
             releaseName: 'foo' #'${{ parameters.envName }}-$(Build.BuildId)'
             helmChart: kubernetes/helm/smilr
-            #overrides: 'registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(image-tag),frontend.imageTag=$(image-tag),mongo.usePersistence=false'
+            overrides: |
+              registryPrefix:$(acr-name).azurecr.io/
+              dataApi.imageTag:$(image-tag)
+              frontend.imageTag:$(image-tag)
+              mongo.usePersistence:false
 
         - task: KubernetesManifest@0
           displayName: Deploy manifests
