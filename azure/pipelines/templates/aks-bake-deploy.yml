@@ -43,7 +43,7 @@ jobs:
 
         - bash: printenv
         
-        - bash: echo "##vso[task.setvariable variable=manifests]$KUBERNETESMANIFEST1_MANIFESTSBUNDLE"
+        - bash: echo "##vso[task.setvariable variable=manifests]$KUBERNETESMANIFEST_MANIFESTSBUNDLE"
 
         - task: KubernetesManifest@0
           displayName: Deploy manifests
