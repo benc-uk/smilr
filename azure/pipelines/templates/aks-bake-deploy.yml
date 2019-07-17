@@ -42,7 +42,7 @@ jobs:
               frontend.imageTag:$(image-tag)
               mongo.usePersistence:false
 
-        - bash: echo BAKED_BUNDLE= $(bake.manifestsBundle)
+        - bash: echo BAKED_BUNDLE= $(manifestsBundle)
 
         - task: KubernetesManifest@0
           displayName: Deploy manifests
