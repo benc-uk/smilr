@@ -34,6 +34,7 @@ jobs:
           name: bake
           inputs:
             action: bake
+            kubernetesServiceConnection: $(aks-connection)
             releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
             helmChart: kubernetes/helm/smilr
             overrides: |
@@ -41,9 +42,6 @@ jobs:
               dataApi.imageTag:$(image-tag)
               frontend.imageTag:$(image-tag)
               mongo.usePersistence:false
-        
-        # - bash: echo "##vso[task.setvariable variable=manifests]$KUBERNETESMANIFEST_MANIFESTSBUNDLE"
-        #   displayName: Grab manifest bundle location
 
         - task: KubernetesManifest@0
           displayName: Deploy manifests
