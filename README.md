@@ -66,7 +66,7 @@ There are a number of ways to get started with this project depending on your go
 
 
 # Repository Structure
-This repo contains multiple discreet but loosely dependant code bases. The top levels of the project repository directory tree are laid out as follows 
+This is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) so contains multiple discreet but loosely dependant projects. The top levels of the repository directory tree are laid out as follows 
 ```
 /
 ├── archive            Older and experimental code archive 

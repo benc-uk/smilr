@@ -32,7 +32,7 @@ spec:
 
         env:     
         - name: MONGO_CONNSTR
-          value: mongodb://mongodb-svc.default
+          value: mongodb://mongodb-svc
         - name: MONGO_RETRY_DELAY
           value: "10"
 

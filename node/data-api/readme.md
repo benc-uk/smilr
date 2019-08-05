@@ -18,6 +18,11 @@ npm start
 All data is held in MongoDB, the data access layer is a plain ES6 class **DataAccess** in [`lib/data-access.js`](lib/data-access.js). This is a singleton which encapsulates all MongoDB specific code and logic (e.g. connecting and creating the database, collections etc) and also operations on the event and feedback entities. See [Database](../../docs/database.md) for more details.
 
 
+# Sentiment Analysis
+Optionally the service can pass feedback comments through Azure cognitive services (Text Analytics) for sentiment analysis. Any comments in the feedback POSTed to the API will be sent over to an external text analytics API endpoint. The resulting scores will be stored with the feedback objects in the database 
+
+Enabling of this feature is done by setting the `SENTIMENT_API_ENDPOINT` environmental variable. By default this feature is not enabled
+
 # Configuration
 The server listens on port 4000 by default and requires just one mandatory configuration environmental variable to be set.
 
@@ -29,7 +34,8 @@ The server listens on port 4000 by default and requires just one mandatory confi
 |MONGO_RETRY_DELAY|Optional. How long to wait in seconds, before retry connecting to MongoDB. *Default: 5*|
 |SECURE_CLIENT_ID|Optional. When set, certain admin API calls will be validated, leave blank or unset to disable security and validation. Details below. *Default: 'blank'*|
 |APPINSIGHTS_INSTRUMENTATIONKEY|Optional. Enables data collection and monitoring with Azure App Insights, set to the key of the instance you want to send data to. *Default: 'blank'*|
-
+|SENTIMENT_API_ENDPOINT|Optional. When set, the feedback comment text will be processed for sentiment analysis using Azure Cognitive Services. Endpoint can point to a self hosted instance running in a container, or a Azure hosted API endpoint *Default: 'blank'*|
+|SENTIMENT_API_KEY|Optional. If `SENTIMENT_API_ENDPOINT` points to Azure hosted Cognitive Service (e.g. `https://westeurope.api.cognitive.microsoft.com`), place the API key here, otherwise can be omitted *Default: 'blank'*|
 
 # Security
 For demos it is suggested that the API is left open for ease of showing the API and the working app, however for a permanent or live instance it should be restricted.
