@@ -46,11 +46,12 @@ Topic {
 
 ```ts
 Feedback {
-  _id:      string  // Twelve character UID string
-  event:    string  // Event id
-  topic:    number  // Topic id
-  rating:   number  // Feedback rating 1 to 5
-  comment:  string  // Feedback comments
+  _id:       string  // Twelve character UID string
+  event:     string  // Event id
+  topic:     number  // Topic id
+  rating:    number  // Feedback rating 1 to 5
+  comment:   string  // Feedback comments
+  sentiment: string  // OPTIONAL FIELD. Sentiment score of comment
 }
 ``` 
 
