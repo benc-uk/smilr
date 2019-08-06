@@ -29,6 +29,7 @@ routes.get('(/api)?/info', async function (req, res, next) {
       appVersion: require('../package.json').version,
       appBuildInfo: process.env.BUILD_INFO || "No build info",
       appReleaseInfo: process.env.RELEASE_INFO || "No release info",
+      sentimentAPI: process.env.SENTIMENT_API_ENDPOINT || "Sentiment API not enabled",
 
       // Some info about the DB
       mongoDb: {
