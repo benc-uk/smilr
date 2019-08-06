@@ -10,11 +10,11 @@ trigger:
   branches:
     include: 
     - master
-  paths:
-    include:
-      - node/
-      - vue/
-      - azure/pipelines/
+  # paths:
+  #   include:
+  #     - node/
+  #     - vue/
+  #     - azure/pipelines/
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
