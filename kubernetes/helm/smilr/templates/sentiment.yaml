@@ -27,7 +27,7 @@ spec:
       - name: {{ $name }}
 
         image: {{ .Values.sentiment.image }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         
         env:       
         - name: Eula
