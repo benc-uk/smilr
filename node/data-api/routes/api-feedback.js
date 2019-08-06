@@ -103,14 +103,13 @@ function sentimentScore(feedback) {
           reject({statusCode: res.statusCode, error: apiResp.errors || 'Unknown API problem'})
           return;
         }
-
         console.log(`### sentimentScore: ${apiResp.documents[0].score}`);
 
         // Mutate feedback object and inject sentiment score
         feedback.sentiment = apiResp.documents[0].score;
         resolve(feedback);
       } else {
-        reject({statusCode: res.statusCode, error: error});
+        reject({statusCode: res.statusCode || '-1', error: error});
       }
     });
   });
