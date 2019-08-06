@@ -54,6 +54,7 @@ The app consists of four logical components
 - **Frontend Service** - Serves the above client SPA and acts as runtime config API
 - **Data API Service** - Main REST API used by the app for all data access
 - **Database** - Backend MongoDB database & persistent store
+- **Sentiment Service** - *Optional* service for sentiment scoring of user feedback comments. Only used when deploying to Kubernetes. [Read more](kubernetes#optional-appendix---enable-sentiment-microservice)
 
 ## Screenshot
 ![screenshot](./etc/screen.png){: .framed .padded}
