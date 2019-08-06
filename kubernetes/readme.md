@@ -127,6 +127,7 @@ The steps for deployment of this scenario are:
 If you wish to use HTTPS and have certs issued via Let's Encrypt the instuctions for setting that up are below
 #### [:page_with_curl: Enabling HTTPS with cert-manager](cert-manager/) 
 
+
 # Optional Appendix - Enable sentiment microservice
 If you wish to enable sentiment analysis of feedback comments with an additional cognitive microservice, the steps are:
 - Deploy Cognitive Service to Azure (changing *myResGrp* and *myRegion* as required)  
