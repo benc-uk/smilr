@@ -27,7 +27,7 @@ frontend:
 
 # sentiment:
 #   enabled: false
-#   key: 
+#   key: changeme
 #   region: changeme
 
 # These are the defaults anyhow, change if you wish
