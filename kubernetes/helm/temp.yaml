@@ -1,0 +1,492 @@
+[debug] Created tunnel using local port: '46259'
+
+[debug] SERVER: "127.0.0.1:46259"
+
+[debug] Original chart version: ""
+[debug] CHART PATH: /home/ben/dev/smilr/kubernetes/helm/smilr
+
+NAME:   foo
+REVISION: 1
+RELEASED: Tue Aug  6 08:50:34 2019
+CHART: smilr-1.7.0
+USER-SUPPLIED VALUES:
+cmCertIssuer: null
+dataApi:
+  imagePullPolicy: Always
+  imageTag: stable
+  mongoConnStr: null
+  replicas: 2
+domainSuffix: smilr.f0dfafed36164c7faac0.westeurope.aksapp.io
+frontend:
+  imagePullPolicy: Always
+  imageTag: stable
+  replicas: 2
+registryPrefix: bcdemo.azurecr.io/
+sentiment:
+  enabled: true
+  key: 6448edcffeff4ce3a75403baa2fb671e
+  region: uksouth
+
+COMPUTED VALUES:
+dataApi:
+  imagePullPolicy: Always
+  imageTag: stable
+  mongoConnStr: null
+  replicas: 2
+domainSuffix: smilr.f0dfafed36164c7faac0.westeurope.aksapp.io
+frontend:
+  imagePullPolicy: Always
+  imageTag: stable
+  replicas: 2
+ingressClass: addon-http-application-routing
+mongodb:
+  affinity: {}
+  clusterDomain: cluster.local
+  global: {}
+  image:
+    debug: false
+    pullPolicy: IfNotPresent
+    registry: docker.io
+    repository: bitnami/mongodb
+    tag: 4.0.11-debian-9-r0
+  ingress:
+    annotations: {}
+    enabled: false
+    hosts: []
+    labels: {}
+    paths:
+    - /
+    tls:
+    - hosts: []
+      secretName: secret-tls
+  initConfigMap: {}
+  livenessProbe:
+    enabled: true
+    failureThreshold: 6
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  metrics:
+    enabled: false
+    extraArgs: ""
+    image:
+      pullPolicy: Always
+      registry: docker.io
+      repository: forekshub/percona-mongodb-exporter
+      tag: latest
+    livenessProbe:
+      enabled: false
+      failureThreshold: 3
+      initialDelaySeconds: 15
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    podAnnotations:
+      prometheus.io/port: "9216"
+      prometheus.io/scrape: "true"
+    readinessProbe:
+      enabled: false
+      failureThreshold: 3
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 1
+    serviceMonitor:
+      additionalLabels: {}
+      alerting:
+        additionalLabels: {}
+        rules: {}
+      enabled: false
+  mongodbDirectoryPerDB: false
+  mongodbDisableSystemLog: false
+  mongodbEnableIPv6: false
+  mongodbExtraFlags: []
+  mongodbSystemLogVerbosity: 0
+  nodeSelector: {}
+  persistence:
+    accessModes:
+    - ReadWriteOnce
+    annotations: {}
+    enabled: false
+    mountPath: /bitnami/mongodb
+    size: 8Gi
+    subPath: ""
+  podAnnotations: {}
+  podLabels: {}
+  readinessProbe:
+    enabled: true
+    failureThreshold: 6
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  replicaSet:
+    enabled: false
+    name: rs0
+    pdb:
+      enabled: true
+      minAvailable:
+        arbiter: 1
+        primary: 1
+        secondary: 1
+    replicas:
+      arbiter: 1
+      secondary: 1
+    useHostnames: true
+  resources: {}
+  securityContext:
+    enabled: true
+    fsGroup: 1001
+    runAsUser: 1001
+  service:
+    annotations: {}
+    port: 27017
+    type: ClusterIP
+  tolerations: []
+  updateStrategy:
+    type: RollingUpdate
+  usePassword: false
+  volumePermissions:
+    enabled: false
+    image:
+      pullPolicy: Always
+      registry: docker.io
+      repository: bitnami/minideb
+      tag: latest
+    resources: {}
+registryPrefix: bcdemo.azurecr.io/
+sentiment:
+  enabled: true
+  image: mcr.microsoft.com/azure-cognitive-services/sentiment:1.1.009301-amd64-preview
+  key: 6448edcffeff4ce3a75403baa2fb671e
+  region: uksouth
+
+HOOKS:
+MANIFEST:
+
+---
+# Source: smilr/templates/sentiment.yaml
+kind: Secret
+apiVersion: v1
+metadata:
+  name: foo-smilr-sentiment-secret
+type: Opaque
+data:
+  sentiment-key: NjQ0OGVkY2ZmZWZmNGNlM2E3NTQwM2JhYTJmYjY3MWU=
+---
+# Source: smilr/charts/mongodb/templates/svc-standalone.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: foo-mongodb
+  labels:
+    app: mongodb
+    chart: mongodb-6.3.1
+    release: "foo"
+    heritage: "Tiller"
+spec:
+  type: ClusterIP
+  ports:
+  - name: mongodb
+    port: 27017
+    targetPort: mongodb
+  selector:
+    app: mongodb
+    release: "foo"
+---
+# Source: smilr/templates/data-api.svc.yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: foo-smilr-data-api
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4000
+  selector:
+    app: smilr-data-api
+    release: foo
+---
+# Source: smilr/templates/frontend.svc.yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: foo-smilr-frontend
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  selector:
+    app: smilr-frontend
+    release: foo
+---
+# Source: smilr/templates/sentiment.yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: foo-smilr-sentiment
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  selector:
+    app: smilr-sentiment
+    release: foo
+---
+# Source: smilr/charts/mongodb/templates/deployment-standalone.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: foo-mongodb
+  labels:
+    app: mongodb
+    chart: mongodb-6.3.1
+    release: "foo"
+    heritage: "Tiller"
+spec:
+  selector:
+    matchLabels:
+      app: mongodb
+      release: "foo"
+  template:
+    metadata:
+      labels:
+        app: mongodb
+        release: "foo"
+        chart: mongodb-6.3.1
+    spec:
+      securityContext:
+        fsGroup: 1001      
+      initContainers:
+      containers:
+      - name: foo-mongodb
+        image: docker.io/bitnami/mongodb:4.0.11-debian-9-r0
+        imagePullPolicy: "IfNotPresent"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+        env:
+        - name: MONGODB_SYSTEM_LOG_VERBOSITY
+          value: "0"
+        - name: MONGODB_DISABLE_SYSTEM_LOG
+          value: "no"
+        - name: MONGODB_ENABLE_IPV6
+          value: "no"
+        - name: MONGODB_ENABLE_DIRECTORY_PER_DB
+          value: "no"
+        ports:
+        - name: mongodb
+          containerPort: 27017
+        livenessProbe:
+          exec:
+            command:
+            - mongo
+            - --eval
+            - "db.adminCommand('ping')"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 6
+        readinessProbe:
+          exec:
+            command:
+            - mongo
+            - --eval
+            - "db.adminCommand('ping')"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 6
+        volumeMounts:
+        - name: data
+          mountPath: /bitnami/mongodb
+          subPath: 
+        resources:
+          {}
+          
+      volumes:
+      - name: data
+        emptyDir: {}
+---
+# Source: smilr/templates/data-api.deploy.yaml
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: foo-smilr-data-api
+  labels:
+    app: smilr-data-api
+    chart: smilr-1.7.0
+    release: foo
+    heritage: Tiller
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: smilr-data-api
+      release: foo
+  template:
+    metadata:
+      labels:
+        app: smilr-data-api
+        release: foo
+    spec:
+      containers:
+      - name: smilr-data-api
+ 
+        image: "bcdemo.azurecr.io/smilr/data-api:stable"
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 4000
+
+        env:     
+        - name: MONGO_CONNSTR
+          value:  "mongodb://foo-mongodb" 
+
+        - name: RELEASE_INFO
+          value: 'Helm release: foo, namespace: default, revision: 1, chart: smilr-1.7.0'
+
+        
+        - name: SENTIMENT_API_ENDPOINT
+          value: http://foo-smilr-sentiment:5000
+        
+
+        livenessProbe:
+          httpGet:
+            path: /api/info
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+        resources:
+          limits:
+            memory: "256M"
+            cpu: "0.125"
+---
+# Source: smilr/templates/frontend.deploy.yaml
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: foo-smilr-frontend
+  labels:
+    app: smilr-frontend
+    chart: smilr-1.7.0
+    release: foo
+    heritage: Tiller
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: smilr-frontend
+      release: foo
+  template:
+    metadata:
+      labels:
+        app: smilr-frontend
+        release: foo
+    spec:
+      containers:
+      - name: smilr-frontend
+
+        image: "bcdemo.azurecr.io/smilr/frontend:stable"
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 3000
+
+        env:
+        - name: API_ENDPOINT
+          value:  "/api"  
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+        resources:
+          requests:
+            memory: "64M"
+            cpu: "0.1"
+---
+# Source: smilr/templates/sentiment.yaml
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: foo-smilr-sentiment
+  labels:
+    app: smilr-sentiment
+    chart: smilr-1.7.0
+    release: foo
+    heritage: Tiller    
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smilr-sentiment
+      release: foo
+  template:
+    metadata:
+      labels:
+        app: smilr-sentiment
+        release: foo
+    spec:
+      containers:
+      - name: smilr-sentiment
+
+        image: mcr.microsoft.com/azure-cognitive-services/sentiment:1.1.009301-amd64-preview
+        imagePullPolicy: IfNotPresent
+        
+        env:       
+        - name: Eula
+          value: accept
+        - name: Billing
+          value: https://uksouth.api.cognitive.microsoft.com/text/analytics/v2.1
+        - name: ApiKey
+          valueFrom:
+            secretKeyRef:
+              name: foo-smilr-sentiment-secret
+              key: sentiment-key
+
+        ports:
+        - containerPort: 5000
+
+        resources:
+          limits:
+            memory: "2G" # Wow! Anything less and the pod won't start
+            cpu: "0.25"
+---
+# Source: smilr/templates/ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "foo-smilr-ingress"
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+    
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    
+spec:
+  
+  rules:
+  - host: "foo.smilr.f0dfafed36164c7faac0.westeurope.aksapp.io"
+    http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: foo-smilr-data-api
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: foo-smilr-frontend
+          servicePort: 80

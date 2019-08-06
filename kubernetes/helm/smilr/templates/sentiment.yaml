@@ -1,0 +1,77 @@
+{{- $fullName := (printf "%s-sentiment" (include "smilr.fullname" .)) -}}
+{{- $name := (printf "%s-sentiment" (include "smilr.name" .)) -}}
+
+{{ if .Values.sentiment.enabled }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ $name }}
+    chart: {{ template "smilr.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}    
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $name }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ $name }}
+
+        image: {{ .Values.sentiment.image }}
+        imagePullPolicy: IfNotPresent
+        
+        env:       
+        - name: Eula
+          value: accept
+        - name: Billing
+          value: https://{{ .Values.sentiment.region }}.api.cognitive.microsoft.com/text/analytics/v2.1
+        - name: ApiKey
+          valueFrom:
+            secretKeyRef:
+              name: {{ $fullName }}-secret
+              key: sentiment-key
+
+        ports:
+        - containerPort: 5000
+
+        resources:
+          limits:
+            memory: "2G" # Wow! Anything less and the pod won't start
+            cpu: "0.25"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ $fullName }}
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  selector:
+    app: {{ $name }}
+    release: {{ .Release.Name }}
+
+---
+
+kind: Secret
+apiVersion: v1
+metadata:
+  name: {{ $fullName }}-secret
+type: Opaque
+data:
+  sentiment-key: {{ .Values.sentiment.key | b64enc }}
+
+{{ end }}
