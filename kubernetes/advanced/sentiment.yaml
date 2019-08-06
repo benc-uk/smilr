@@ -1,0 +1,63 @@
+#
+# Deploy Azure Cognitive Service Text Analytics (Sentiment Analysis) as a container
+# 
+
+# ------------------- Deployment ------------------- #
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sentiment
+  labels:
+    app: sentiment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sentiment
+  template:
+    metadata:
+      labels:
+        app: sentiment
+    spec:
+      containers:
+      - name: sentiment-pods
+
+        image: mcr.microsoft.com/azure-cognitive-services/sentiment:1.1.009301-amd64-preview
+        imagePullPolicy: IfNotPresent
+        
+        env:       
+        - name: Eula
+          value: accept
+        - name: Billing
+          value: https://changemeRegion.api.cognitive.microsoft.com/text/analytics/v2.1
+        - name: ApiKey
+          valueFrom:
+            secretKeyRef:
+              name: smilr-secrets
+              key: sentiment-key
+
+        ports:
+        - containerPort: 5000
+
+        resources:
+          limits:
+            memory: "2G" # Wow! Anything less and the pod won't start
+            cpu: "0.25"
+
+---
+
+# ------------------- Internal Cluster IP ------------------- #
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: sentiment-svc
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  selector:
+    app: sentiment

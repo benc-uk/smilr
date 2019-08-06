@@ -103,6 +103,7 @@ function sentimentScore(feedback) {
           reject({statusCode: res.statusCode, error: apiResp.errors || 'Unknown API problem'})
           return;
         }
+        
         console.log(`### sentimentScore: ${apiResp.documents[0].score}`);
 
         // Mutate feedback object and inject sentiment score

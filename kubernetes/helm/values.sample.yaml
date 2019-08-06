@@ -25,6 +25,12 @@ frontend:
   replicas: 1
   imagePullPolicy: Always
 
+# sentiment:
+#   enabled: false
+#   key: 
+#   region: changeme
+
+# These are the defaults anyhow, change if you wish
 mongodb:
   persistence:
     enabled: false
