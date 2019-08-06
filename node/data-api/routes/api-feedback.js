@@ -109,7 +109,10 @@ function sentimentScore(feedback) {
         feedback.sentiment = apiResp.documents[0].score;
         resolve(feedback);
       } else {
-        reject({statusCode: res.statusCode || '-1', error: error});
+        if(res)
+          reject({statusCode: res.statusCode, error: error});
+        else
+          reject({statusCode: '-1', error: error});
       }
     });
   });
