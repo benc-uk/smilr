@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="2.3.6" />
+    <PackageReference Include="Microsoft.Orleans.Core.Legacy" Version="2.3.6" />
+    <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.3.6" />
+    <PackageReference Include="Microsoft.Orleans.Reminders.AzureStorage" Version="2.3.6" />
+    <PackageReference Include="Microsoft.Orleans.Runtime.Legacy" Version="2.3.6" />
+    <PackageReference Include="Microsoft.Orleans.Server" Version="2.3.6" />
+    
+    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="2.3.6" />
+
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GrainInterfaces\GrainInterfaces.csproj" />
+    <ProjectReference Include="..\Grains\Grains.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
