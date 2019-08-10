@@ -5,6 +5,7 @@ class ApiError extends Error {
     this.code = code;
   }
 
+  // This makes .toString() return the msg not [Object object]
   get [Symbol.toStringTag]() {
     return this.msg;
   }
