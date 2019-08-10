@@ -9,7 +9,7 @@ const routes = express.Router();
 const os = require('os');
 const fs = require('fs');
 const utils = require('../lib/utils');
-const passport = require('passport');
+const ApiError = require('../lib/api-error');
 
 //
 // GET info - Return system info and other debugging details 
@@ -52,20 +52,17 @@ routes.get('(/api)?/info', async function (req, res, next) {
   }
 })
 
-
 //
-// POST bulk - load data in bulk, secured route
+// POST bulk - load data in bulk, only allow from localhost
 //
-let authHandler = function(req, res, next) { 
-  next(); 
-}
-if(process.env.SECURE_CLIENT_ID) {
-  // Validate bearer token with oauth scheme see lib/auth.js
-  authHandler = passport.authenticate('oauth-bearer', { session: false })
-} 
-
-routes.post('(/api)?/bulk', authHandler, async function (req, res, next) {
+routes.post('(/api)?/bulk', async function (req, res, next) {
+  var trustedIps = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
   try {
+    console.log(`### Bulk load request from ${req.connection.remoteAddress}`);
+    if(trustedIps.indexOf(req.connection.remoteAddress) == -1) {
+      throw new ApiError(`Not authorized, only ${trustedIps} allowed`, 401);
+    }
+
     let bulkData = req.body;
     let eventData = bulkData.events;   
     let feedbackData = bulkData.feedback;
