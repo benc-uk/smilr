@@ -9,6 +9,7 @@ const routes = express.Router();
 const os = require('os');
 const fs = require('fs');
 const utils = require('../lib/utils');
+const passport = require('passport');
 
 //
 // GET info - Return system info and other debugging details 
@@ -48,6 +49,42 @@ routes.get('(/api)?/info', async function (req, res, next) {
     utils.sendData(res, info)
   } catch(err) {
     utils.sendError(res, err, 'info-failed');
+  }
+})
+
+
+//
+// POST bulk - load data in bulk, secured route
+//
+let authHandler = function(req, res, next) { 
+  next(); 
+}
+if(process.env.SECURE_CLIENT_ID) {
+  // Validate bearer token with oauth scheme see lib/auth.js
+  authHandler = passport.authenticate('oauth-bearer', { session: false })
+} 
+
+routes.post('(/api)?/bulk', authHandler, async function (req, res, next) {
+  try {
+    let bulkData = req.body;
+    let eventData = bulkData.events;   
+    let feedbackData = bulkData.feedback;
+    let eventCount = 0; feedbackCount = 0;
+
+    for(let event of eventData) {        
+      var e = await res.app.get('data').createOrUpdateEvent(event, true);
+      console.log(`### Created event ${e.result}`);
+      eventCount++;
+    }
+    for(let feedback of feedbackData) {        
+      var f = await res.app.get('data').createFeedback(feedback);
+      console.log(`### Created feedback ${f.ops[0]._id}`);
+      feedbackCount++;
+    }
+    
+    utils.sendData(res, { eventsLoaded: eventCount, feedbackLoaded: feedbackCount})
+  } catch(err) {
+    utils.sendError(res, err, 'bulk-failed');
   }
 })
 
