@@ -207,3 +207,5 @@ src/SetupTestScriptOutput.txt
 
 # Binary MSBuild Log files
 *.binlog
+
+kubernetes/secret.yaml
