@@ -14,12 +14,14 @@ schedules:
     - master  
   always: true
 
-# NOTE! This variable group must be pre-created and populated
+# NOTE! The 'shared-variables' variable group must be pre-created and populated
 # - Expected variables: acr-connection
 variables:
   - group: shared-variables
   - name: cleanup
     value: true
+  - name: resGroupPrefix
+    value: temp.dave
 
 stages:
 #
@@ -29,13 +31,16 @@ stages:
   displayName: Deploy to Test
   
   variables:
-    location: westeurope
     dns-prefix: smilr-$(Build.BuildId)-test
 
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Staging
+      location: westeurope
+      imageTag: $(Build.BuildId)
+      resGroupPrefix: $(resGroupPrefix)
+      dnsPrefix: $(dns-prefix)
 
   - template: templates/run-postman-tests.yml
     parameters:
@@ -48,15 +53,18 @@ stages:
 #
 - stage: deployToStaging
   displayName: Deploy to Staging
-  
+
   variables:
-    location: westeurope
-    dns-prefix: smilr-$(Build.BuildId)-staging
+    dns-prefix: smilr-prod
 
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Staging
+      location: westeurope
+      imageTag: $(Build.BuildId)
+      resGroupPrefix: $(resGroupPrefix)
+      dnsPrefix: $(dns-prefix)
 
   - template: templates/run-postman-tests.yml
     parameters:
@@ -71,13 +79,16 @@ stages:
   displayName: Deploy to Production
   
   variables:
-    location: westeurope
     dns-prefix: smilr-prod
 
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Production
+      location: westeurope      
+      imageTag: $(Build.BuildId)
+      resGroupPrefix: $(resGroupPrefix)
+      dnsPrefix: $(dns-prefix)
 
   - template: templates/run-postman-tests.yml
     parameters:
@@ -99,6 +110,6 @@ stages:
         inputs:
           azureSubscription: $(azure-connection)
           inlineScript: |
-            az group deelete -g temp.smilr.ACI-Production --yes --no-wait
-            az group deelete -g temp.smilr.ACI-Staging --yes --no-wait
-            az group deelete -g temp.smilr.ACI-Test --yes --no-wait
+            az group delete -g $(resGroupPrefix).ACI-Production --yes --no-wait
+            az group delete -g $(resGroupPrefix).ACI-Staging --yes --no-wait
+            az group delete -g $(resGroupPrefix).ACI-Test --yes --no-wait
