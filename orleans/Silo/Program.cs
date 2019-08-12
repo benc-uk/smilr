@@ -44,6 +44,8 @@ namespace Silo
               options.ClusterId = appSettings["Orleans:ClusterId"];
               options.ServiceId = appSettings["Orleans:ServiceId"];
           })
+          // Setting SiloName is more reliable when running in Kubernetes, the hostname will be the podname
+          // When run in a StatefulSet, we'll get stable pod and hostnames
           .Configure<SiloOptions>(options => {
               options.SiloName = System.Environment.MachineName;                            
           })

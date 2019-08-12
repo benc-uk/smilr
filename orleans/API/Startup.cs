@@ -65,6 +65,7 @@ namespace API
                 Console.WriteLine($"##### Will use DNS name '{this.Configuration["Orleans:SiloHost"]}' for silo connection");
                 
                 // DNS entry could have multiple IP addresses, built an IPEndPoint array of them all
+                // Orleans is hard work, this shouldn't be our job!
                 IPHostEntry dnsHostEntry = Dns.GetHostEntry(this.Configuration["Orleans:SiloHost"]);
                 IPEndPoint[] endpoints = new IPEndPoint[dnsHostEntry.AddressList.Length];
                 for(int ipIndex = 0; ipIndex < dnsHostEntry.AddressList.Length; ipIndex++) {
