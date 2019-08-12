@@ -38,7 +38,7 @@ stages:
     parameters:
       envName: ACI-Staging
       location: westeurope
-      imageTag: $(Build.BuildId)
+      imageTag: latest
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
@@ -62,7 +62,7 @@ stages:
     parameters:
       envName: ACI-Staging
       location: westeurope
-      imageTag: $(Build.BuildId)
+      imageTag: latest
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
@@ -86,7 +86,7 @@ stages:
     parameters:
       envName: ACI-Production
       location: westeurope      
-      imageTag: $(Build.BuildId)
+      imageTag: latest
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
