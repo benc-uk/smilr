@@ -1,0 +1,62 @@
+#
+# Azure Pipelines
+# - Deploy to Azure Container Instances across multiple stages
+# Ben C, 2019
+#
+name: $(Date:yyyy-MM-dd)$(Rev:.rr)
+
+schedules:
+- cron: "30 5 * * 1"
+  displayName: Weekly build
+  branches:
+    include:
+    - master  
+  always: true
+
+# NOTE! This variable group must be pre-created and populated
+# - Expected variables: acr-connection
+variables:
+  - group: shared-variables
+
+stages:
+#
+# Deploy stage - staging environment
+#
+- stage: deployToStaging
+  displayName: Deploy to Staging
+  
+  variables:
+    location: westeurope
+    dns-prefix: smilr-$(Build.BuildId)-staging
+
+  jobs:
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: ACI-Staging
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+
+#
+# Deploy stage - prod environment
+#
+- stage: deployToProduction
+  displayName: Deploy to Production
+  
+  variables:
+    location: westeurope
+    dns-prefix: smilr-prod
+
+  jobs:
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: ACI-Production
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
