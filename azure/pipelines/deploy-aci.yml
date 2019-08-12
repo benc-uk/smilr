@@ -37,7 +37,7 @@ stages:
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
-      envName: ACI-Staging
+      envName: ACI-Test
       location: $(location)
       imageTag: latest
       resGroupPrefix: $(resGroupPrefix)
@@ -56,7 +56,7 @@ stages:
   displayName: Deploy to Staging
 
   variables:
-    dns-prefix: smilr-prod
+    dns-prefix: smilr-$(Build.BuildId)-staging
     location: westeurope
 
   jobs:
@@ -81,9 +81,9 @@ stages:
   displayName: Deploy to Production
   
   variables:
-    dns-prefix: smilr-prod
+    dns-prefix: smilr-$(Build.BuildId)-prod
     location: westeurope
-    
+
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
