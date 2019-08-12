@@ -34,4 +34,4 @@ jobs:
             location: ${{ parameters.location }}
             csmFile: azure/templates/aci-mongo/azuredeploy.json
             csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
-            overrideParameters: '-acrName $(ACR_NAME) -acrUser $(ACR_USER) -acrPassword $(ACR_PASSWORD) -dnsPrefix ${{ parameters.dnsPrefix }} -dataApiImageTag $(imageTag) -frontendImageTag ${{ parameters.imageTag }} -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
+            overrideParameters: '-acrName $(ACR_NAME) -acrUser $(ACR_USER) -acrPassword $(ACR_PASSWORD) -dnsPrefix ${{ parameters.dnsPrefix }} -dataApiImageTag ${{ parameters.imageTag }} -frontendImageTag ${{ parameters.imageTag }} -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
