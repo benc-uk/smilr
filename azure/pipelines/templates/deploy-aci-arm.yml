@@ -36,6 +36,7 @@ jobs:
             csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
             overrideParameters: '-acrName $(ACR_NAME) -acrUser $(ACR_USER) -acrPassword $(ACR_PASSWORD) -dnsPrefix ${{ parameters.dnsPrefix }} -dataApiImageTag ${{ parameters.imageTag }} -frontendImageTag ${{ parameters.imageTag }} -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
 
+        # SANITY CHECK. Can be removed
         - task: AzureCLI@1
           inputs:
             azureSubscription: $(azure-connection)
