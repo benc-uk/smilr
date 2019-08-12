@@ -35,3 +35,11 @@ jobs:
             csmFile: azure/templates/aci-mongo/azuredeploy.json
             csmParametersFile: azure/templates/aci-mongo/azuredeploy.parameters.json
             overrideParameters: '-acrName $(ACR_NAME) -acrUser $(ACR_USER) -acrPassword $(ACR_PASSWORD) -dnsPrefix ${{ parameters.dnsPrefix }} -dataApiImageTag ${{ parameters.imageTag }} -frontendImageTag ${{ parameters.imageTag }} -releaseInfo "Deployed via pipelines: $(Agent.JobName) $(Build.BuildNumber) $(Build.Reason)"'
+
+        - task: AzureCLI@1
+          inputs:
+            azureSubscription: $(azure-connection)
+            inlineScript: |
+              az account show -o table
+              az container list -o table
+              az group list -o table
