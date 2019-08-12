@@ -113,6 +113,7 @@ stages:
         continueOnError: true
         inputs:
           azureSubscription: $(azure-connection)
+          scriptLocation: inlineScript
           inlineScript: |
             az group delete -g $(resGroupPrefix).ACI-Production --yes --no-wait
             az group delete -g $(resGroupPrefix).ACI-Staging --yes --no-wait
