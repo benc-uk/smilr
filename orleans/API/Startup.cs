@@ -61,15 +61,15 @@ namespace API
                 .ConfigureLogging(options => options.SetMinimumLevel((LogLevel)this.Configuration.GetValue<int>("Orleans:LogLevel")).AddConsole());
 
             if(this.Configuration["Orleans:SiloHost"] != null) {
-                Console.WriteLine($"##### SiloHost = {this.Configuration["Orleans:SiloHost"]}");
                 Console.WriteLine($"##### Configuring static clustering");
+                Console.WriteLine($"##### Will use DNS name '{this.Configuration["Orleans:SiloHost"]}' for silo connection");
                 
                 // DNS entry could have multiple IP addresses, built an IPEndPoint array of them all
                 IPHostEntry dnsHostEntry = Dns.GetHostEntry(this.Configuration["Orleans:SiloHost"]);
                 IPEndPoint[] endpoints = new IPEndPoint[dnsHostEntry.AddressList.Length];
                 for(int ipIndex = 0; ipIndex < dnsHostEntry.AddressList.Length; ipIndex++) {
                     IPAddress ip = dnsHostEntry.AddressList[ipIndex];
-                    Console.WriteLine($"##### Resolved '{this.Configuration["Orleans:SiloHost"]}' to IP: {ip}");
+                    Console.WriteLine($"##### - Resolved name '{this.Configuration["Orleans:SiloHost"]}' to IP: {ip}");
                     endpoints[ipIndex] = new IPEndPoint(ip, gatewayPort);
                 }
                 builder.UseStaticClustering(endpoints);
