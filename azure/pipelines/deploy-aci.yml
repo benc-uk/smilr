@@ -21,7 +21,7 @@ variables:
   - name: cleanup
     value: true
   - name: resGroupPrefix
-    value: temp.foobar
+    value: blah.foobar
 
 stages:
 #
