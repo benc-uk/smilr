@@ -4,6 +4,7 @@
 # Ben C, 2019
 #
 name: $(Date:yyyy-MM-dd)$(Rev:.rr)
+trigger: none
 
 schedules:
 - cron: "30 5 * * 1"
@@ -17,8 +18,31 @@ schedules:
 # - Expected variables: acr-connection
 variables:
   - group: shared-variables
+  - name: cleanup
+    value: true
 
 stages:
+#
+# Deploy stage - test environment
+#
+- stage: deployToTest
+  displayName: Deploy to Test
+  
+  variables:
+    location: westeurope
+    dns-prefix: smilr-$(Build.BuildId)-test
+
+  jobs:
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: ACI-Staging
+
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+
 #
 # Deploy stage - staging environment
 #
@@ -60,3 +84,21 @@ stages:
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+
+#
+# Cleanup stage - remove resources after run
+#
+- stage: cleanup
+  displayName: Remove Resources
+  condition: eq(variables['cleanup'], 'true')
+
+  jobs:
+  - job: clanupJob
+    steps:
+      - task: AzureCLI@1
+        inputs:
+          azureSubscription: $(azure-connection)
+          inlineScript: |
+            az group deelete -g temp.smilr.ACI-Production --yes --no-wait
+            az group deelete -g temp.smilr.ACI-Staging --yes --no-wait
+            az group deelete -g temp.smilr.ACI-Test --yes --no-wait
