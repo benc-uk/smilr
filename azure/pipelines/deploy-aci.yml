@@ -111,6 +111,7 @@ stages:
     displayName: Remove Resources Job
     steps:
       - task: AzureCLI@1
+        continueOnError: true
         inputs:
           azureSubscription: $(azure-connection)
           inlineScript: |
