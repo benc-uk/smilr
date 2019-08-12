@@ -105,6 +105,7 @@ stages:
 
   jobs:
   - job: clanupJob
+    displayName: Remove Resources Job
     steps:
       - task: AzureCLI@1
         inputs:
