@@ -27,7 +27,15 @@ frontend:
   replicas: 1
   imagePullPolicy: Always
 
+sentiment:
+  enabled: false
+  key: 
+  region: westeurope
+  image: mcr.microsoft.com/azure-cognitive-services/sentiment:1.1.009301-amd64-preview
+
 mongodb:
   persistence:
     enabled: false
   usePassword: false
+  replicaSet:
+    enabled: false  

@@ -121,9 +121,26 @@ The steps for deployment of this scenario are:
     kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}'
     ```
 
-
 ---
 
 # Optional Appendix - Enable HTTPS with cert-manager
 If you wish to use HTTPS and have certs issued via Let's Encrypt the instuctions for setting that up are below
 #### [:page_with_curl: Enabling HTTPS with cert-manager](cert-manager/) 
+
+
+# Optional Appendix - Enable sentiment microservice
+If you wish to enable sentiment analysis of feedback comments with an additional cognitive microservice, the steps are:
+- Deploy Cognitive Service to Azure (changing *myResGrp* and *myRegion* as required)  
+  ```
+  az cognitiveservices account create --kind TextAnalytics -g myResGrp -n text-analysis -l myRegion --sku F0 --yes
+  ```
+  
+- Create Kubernetes secret called `smilr-secrets` holding the API key of the cognitive service (changing *myResGrp* as required)  
+    ```
+    cogServiceKey=$(az cognitiveservices account keys list -n text-analysis -g myResGrp --query "key1" -o tsv)
+    kubectl create secret generic smilr-secrets --from-literal=sentiment-key=$cogServiceKey`
+    ```
+- Edit `sentiment.yaml` and change the value for the URL in the `Billing` env var, so that it points to the correct region where you have deployed your Cognitive Service
+- Edit `data-api.yaml` and simply uncomment the lines for the `SENTIMENT_API_ENDPOINT` env var and value. You don't need to change the value
+- Deploy sentiment container and service with `kubectl apply -f sentiment.yaml`
+- Deploy (or redeploy) the data API with `kubectl apply -f data-api.yaml`

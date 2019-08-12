@@ -54,6 +54,7 @@ The app consists of four logical components
 - **Frontend Service** - Serves the above client SPA and acts as runtime config API
 - **Data API Service** - Main REST API used by the app for all data access
 - **Database** - Backend MongoDB database & persistent store
+- **Sentiment Service** - *Optional* service for sentiment scoring of user feedback comments. Only used when deploying to Kubernetes. [Read more](kubernetes#optional-appendix---enable-sentiment-microservice)
 
 ## Screenshot
 ![screenshot](./etc/screen.png){: .framed .padded}
@@ -66,7 +67,7 @@ There are a number of ways to get started with this project depending on your go
 
 
 # Repository Structure
-This repo contains multiple discreet but loosely dependant code bases. The top levels of the project repository directory tree are laid out as follows 
+This is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) so contains multiple discreet but loosely dependant projects. The top levels of the repository directory tree are laid out as follows 
 ```
 /
 ├── archive            Older and experimental code archive 

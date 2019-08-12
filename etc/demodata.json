@@ -1,0 +1,87 @@
+{
+  "events": [
+    {
+      "_id": "demo01",
+      "title": "Test Demo Event",
+      "type": "event",
+      "start": "2018-01-09",
+      "end": "2018-12-20",
+      "topics": [
+        {
+          "id": 1,
+          "desc": "Introduction"
+        },
+        {
+          "id": 2,
+          "desc": "Main Session"
+        }
+      ]
+    },
+    {
+      "_id": "demo02",
+      "title": "An Example Workshop",
+      "type": "workshop",
+      "start": "2017-12-02",
+      "end": "2025-12-08",
+      "topics": [
+        {
+          "id": 1,
+          "desc": "Architecture Design"
+        },
+        {
+          "id": 2,
+          "desc": "Cloud Computing"
+        }
+      ]
+    },
+    {
+      "_id": "demo03",
+      "title": "How To Use A Mouse",
+      "type": "lab",
+      "start": "2025-09-25",
+      "end": "2030-09-29",
+      "topics": [
+        {
+          "id": 1,
+          "desc": "Left Clicking"
+        },
+        {
+          "id": 2,
+          "desc": "Advanced Session: Right Clicking"
+        }
+      ]
+    }
+  ],
+  "feedback": [
+    {
+      "event": "demo02",
+      "topic": 1,
+      "rating": 4,
+      "comment": "Best workshop, I've been to this week!"
+    },
+    {
+      "event": "demo02",
+      "topic": 1,
+      "rating": 3,
+      "comment": "I loved the morning session! You guys are the best"
+    },
+    {
+      "event": "demo02",
+      "topic": 2,
+      "rating": 1,
+      "comment": "I hated the afternoon, and I don't know why."
+    },
+    {
+      "event": "demo02",
+      "topic": 2,
+      "rating": 2,
+      "comment": "The afternoon was ok, but I wasn't listening"
+    },
+    {
+      "event": "demo01",
+      "topic": 1,
+      "rating": 5,
+      "comment": "Blah blah I hate leaving feedback"
+    }    
+  ]
+}

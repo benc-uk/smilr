@@ -1,5 +1,5 @@
 #
-# Deploy the back end databse in Kubernetes, as StatefulSet with a volume claim
+# Deploy the back end database in Kubernetes, as StatefulSet with a volume claim
 #
 
 # ------------------- Deployment ------------------- #

@@ -1,6 +1,7 @@
 {{- $fullName := (printf "%s-data-api" (include "smilr.fullname" .)) -}}
 {{- $name := (printf "%s-data-api" (include "smilr.name" .)) -}}
 {{- $mongoFullName := (printf "%s-mongodb" (include "smilr.fullname" .)) -}}
+{{- $sentimentSvcName := (printf "%s-sentiment" (include "smilr.fullname" .)) -}}
 
 kind: Deployment
 apiVersion: apps/v1
@@ -39,6 +40,11 @@ spec:
         - name: RELEASE_INFO
           value: 'Helm release: {{ .Release.Name }}, namespace: {{ .Release.Namespace }}, revision: {{ .Release.Revision }}, chart: {{ .Chart.Name }}-{{ .Chart.Version }}'
 
+        {{ if .Values.sentiment.enabled }}
+        - name: SENTIMENT_API_ENDPOINT
+          value: http://{{ $sentimentSvcName }}:5000
+        {{ end }}
+
         livenessProbe:
           httpGet:
             path: /api/info
@@ -50,14 +56,3 @@ spec:
           limits:
             memory: "256M"
             cpu: "0.125"
-            
-      # Wipe & initialize the database with demo data, remove if unwanted
-      #initContainers:
-      #  - name: init-demodata
-      #    image: bcdemo.azurecr.io/smilr/data-api
-      #    command: ['sh', '-c', 'cd demoData && node demoData.js']
-      #    env:
-      #      - name: MONGO_CONNSTR
-      #        value: mongodb://mongodb-svc.default
-      #      - name: WIPE_DB
-      #        value: "1"
