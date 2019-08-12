@@ -21,7 +21,7 @@ variables:
   - name: cleanup
     value: true
   - name: resGroupPrefix
-    value: temp.dave
+    value: temp.foobar
 
 stages:
 #
@@ -32,7 +32,7 @@ stages:
   
   variables:
     dns-prefix: smilr-$(Build.BuildId)-test
-    location: westeurope
+    location: uksouth
 
   jobs:
   - template: templates/deploy-aci-arm.yml
@@ -57,7 +57,7 @@ stages:
 
   variables:
     dns-prefix: smilr-$(Build.BuildId)-staging
-    location: westeurope
+    location: uksouth
 
   jobs:
   - template: templates/deploy-aci-arm.yml
@@ -82,7 +82,7 @@ stages:
   
   variables:
     dns-prefix: smilr-$(Build.BuildId)-prod
-    location: westeurope
+    location: uksouth
 
   jobs:
   - template: templates/deploy-aci-arm.yml
