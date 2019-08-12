@@ -32,12 +32,13 @@ stages:
   
   variables:
     dns-prefix: smilr-$(Build.BuildId)-test
+    location: westeurope
 
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Staging
-      location: westeurope
+      location: $(location)
       imageTag: latest
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
@@ -56,12 +57,13 @@ stages:
 
   variables:
     dns-prefix: smilr-prod
+    location: westeurope
 
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Staging
-      location: westeurope
+      location: $(location)
       imageTag: latest
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
@@ -80,12 +82,13 @@ stages:
   
   variables:
     dns-prefix: smilr-prod
-
+    location: westeurope
+    
   jobs:
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Production
-      location: westeurope      
+      location: $(location)  
       imageTag: latest
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
