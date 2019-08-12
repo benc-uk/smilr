@@ -39,7 +39,4 @@ jobs:
         - task: AzureCLI@1
           inputs:
             azureSubscription: $(azure-connection)
-            inlineScript: |
-              az account show -o table
-              az container list -o table
-              az group list -o table
+            inlineScript: az group list -o table
