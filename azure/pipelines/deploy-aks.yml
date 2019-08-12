@@ -33,11 +33,6 @@ stages:
     parameters:
       envName: test
 
-  # - template: templates/dns-wait.yml
-  #   parameters:
-  #     dependsOn: deployWithHelm      
-  #     dnsName: 'test-$(Build.BuildId).$(dns-suffix)'
-
   - template: templates/run-postman-tests.yml
     parameters:
       dependsOn: deployToAKS
@@ -53,11 +48,6 @@ stages:
   - template: templates/aks-bake-deploy.yml
     parameters:
       envName: staging
-
-  # - template: templates/dns-wait.yml
-  #   parameters:
-  #     dependsOn: deployWithHelm
-  #     dnsName: 'staging-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:
@@ -75,11 +65,6 @@ stages:
   - template: templates/aks-bake-deploy.yml
     parameters:
       envName: prod
-
-  # - template: templates/dns-wait.yml
-  #   parameters:
-  #     dependsOn: deployWithHelm      
-  #     dnsName: 'prod-$(Build.BuildId).$(dns-suffix)'
 
   - template: templates/run-postman-tests.yml
     parameters:

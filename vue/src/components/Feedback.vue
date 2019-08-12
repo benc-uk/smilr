@@ -1,22 +1,30 @@
 <template>
   <div>
+    <div v-if="!event">
+      <h1>Fetching topic data...</h1>
+      <spinner></spinner> 
+    </div>
     <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white" v-if="event">
       <h2 slot="header" class="text-truncate">{{ topic.desc }} ({{ event.title }})</h2>  
       <div class="card-body">  
         <h3>Please provide your feedback, click on a face</h3><br/>
-        <div class="facegroup">
+        <div class="facegroup" v-if="!sending">
           <face number="1" :unselected="unselected[0]" :selected="selected[0]" @clicked="clickFace"></face> 
           <face number="2" :unselected="unselected[1]" :selected="selected[1]" @clicked="clickFace"></face> 
           <face number="3" :unselected="unselected[2]" :selected="selected[2]" @clicked="clickFace"></face> 
           <face number="4" :unselected="unselected[3]" :selected="selected[3]" @clicked="clickFace"></face> 
           <face number="5" :unselected="unselected[4]" :selected="selected[4]" @clicked="clickFace"></face> 
         </div>
+        <div v-if="sending">
+          <h1>Sending feedback...</h1>
+        </div>
+        <div v-if="!sending">
+          <b-form-textarea class="commentbox" v-model="comment" :rows="2" placeholder="Any comments (optional)" no-resize></b-form-textarea>
+          <b-button @click="submitFeedback" id="submitbut" variant="success" size="lg" class="pullUp float-right" v-if="rating">SUBMIT</b-button>
+        </div>
+        <spinner v-if="sending"></spinner> 
+      </div>  
 
-        <b-form-textarea class="commentbox" v-model="comment" :rows="2" placeholder="Any comments (optional)" no-resize></b-form-textarea>
-        <b-button @click="submitFeedback" id="submitbut" variant="success" size="lg" class="pullUp float-right" v-if="rating">SUBMIT</b-button>
-
-      </div>    
-      
       <b-modal ref="successModal" centered hide-header-close ok-only header-bg-variant="success" @ok="done" @hidden="done" ok-title="All Done" title="Feedback Received">
         <div class="d-block text-center">
           <h3>Thanks for submitting your feedback! 😊</h3>
@@ -36,6 +44,7 @@
 import api from "../mixins/api";
 import cookies from "../mixins/cookies";
 import Face from "./Face"
+import Spinner from './Spinner'
 
 export default {
   name: 'Feedback',
@@ -46,7 +55,8 @@ export default {
   mixins: [ api, cookies ],
 
   components: {
-    'face': Face
+    'face': Face,
+    Spinner
   },
 
   data: function() {
@@ -56,7 +66,8 @@ export default {
       unselected: [false, false, false, false, false],
       selected: [false, false, false, false, false],
       rating: null,
-      comment: ""
+      comment: "",
+      sending: false
     }
   },
 
@@ -78,6 +89,7 @@ export default {
     },
 
     submitFeedback: function() {
+      this.sending = true
       this.apiPostFeedback({
         rating: parseInt(this.rating),
         topic: this.topicId,

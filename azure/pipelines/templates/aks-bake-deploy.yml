@@ -3,7 +3,7 @@ parameters:
   
 jobs:
 - deployment: deployToAKS
-  displayName: Deploy to AKS ${{ parameters.envName }}
+  displayName: Deploy to namespace ${{ parameters.envName }}
   environment: AKS-${{ parameters.envName }}
 
   pool:
@@ -31,8 +31,10 @@ jobs:
 
         - task: KubernetesManifest@0
           displayName: Bake manifests from Helm chart
+          name: bake
           inputs:
             action: bake
+            kubernetesServiceConnection: $(aks-connection)
             releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
             helmChart: kubernetes/helm/smilr
             overrides: |
@@ -41,13 +43,9 @@ jobs:
               frontend.imageTag:$(image-tag)
               mongo.usePersistence:false
 
-        - bash: printenv
-        
-        - bash: echo "##vso[task.setvariable variable=manifests]$KUBERNETESMANIFEST_MANIFESTSBUNDLE"
-
         - task: KubernetesManifest@0
           displayName: Deploy manifests
           inputs:
             kubernetesServiceConnection: $(aks-connection)
             namespace: ${{ parameters.envName }}
-            manifests: $(manifests)
+            manifests: $(bake.manifestsBundle)

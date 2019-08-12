@@ -48,6 +48,17 @@ routes.post('(/api)?/feedback', async function(req, res, next) {
       if(!topicFound) 
         throw new ApiError(`Topic does not exist in event`, 400); 
 
+      // Sentiment scoring - optional
+      // Only score feedback with comment text and API endpoint is set
+      if(process.env.SENTIMENT_API_ENDPOINT && feedback.comment && feedback.comment.length > 0)  {
+        try {
+          feedback = await sentimentScore(feedback);
+        } catch(err) {
+          console.log(`### WARN! sentimentScore failed, but it won't prevent feedback being saved`)
+          console.log(err); 
+        }
+      }
+
       let result = await res.app.get('data').createFeedback(feedback)
       utils.sendData(res, result.ops[0])
     }    
@@ -55,5 +66,56 @@ routes.post('(/api)?/feedback', async function(req, res, next) {
     utils.sendError(res, err, 'feedback-post'); 
   }
 })
+
+//
+// Process feedback for sentiment analysis using Azure cognitive services
+//
+function sentimentScore(feedback) {
+  // API payload
+  let payload = {
+    documents: [
+      {
+        language: "en",
+        id: "1",
+        text: feedback.comment
+      }
+    ]
+  }
+  
+  // API request
+  let req = {
+    method: 'POST',
+    uri: `${process.env.SENTIMENT_API_ENDPOINT}/text/analytics/v2.1/sentiment`,
+    headers: {
+      'Ocp-Apim-Subscription-Key': process.env.SENTIMENT_API_KEY || "",
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  }
+  
+  // Call API wrapped in a promise
+  return new Promise(function (resolve, reject) {
+    require('request')(req, function (error, res, body) {
+      if (!error && res.statusCode == 200) {        
+        let apiResp = JSON.parse(body);
+        
+        if(!apiResp.documents || apiResp.documents.length == 0) {
+          reject({statusCode: res.statusCode, error: apiResp.errors || 'Unknown API problem'})
+          return;
+        }
+        console.log(`### sentimentScore: ${apiResp.documents[0].score}`);
+
+        // Mutate feedback object and inject sentiment score
+        feedback.sentiment = apiResp.documents[0].score;
+        resolve(feedback);
+      } else {
+        if(res)
+          reject({statusCode: res.statusCode, error: error});
+        else
+          reject({statusCode: '-1', error: error});
+      }
+    });
+  });
+}
 
 module.exports = routes;

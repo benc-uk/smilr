@@ -56,6 +56,10 @@ app.use('*', function(req, res) {
 // Start the Express server
 //
 var port = process.env.PORT || 3000;
-var server = app.listen(port, function () {
-  console.log(`### Frontend server listening on ${server.address().port}`);
-});
+var server = require('http').createServer(app);
+server.keepAliveTimeout = 0; // This is a workaround for WSL v2 issues
+server.listen(port);
+console.log(`### Frontend server listening on ${server.address().port}`);
+// var server = app.listen(port, function () {
+//   console.log(`### Frontend server listening on ${server.address().port}`);
+// });
