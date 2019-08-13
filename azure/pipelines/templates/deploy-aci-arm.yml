@@ -20,9 +20,6 @@ jobs:
     runOnce:
       deploy:
         steps:
-        # Checkout git source
-        - checkout: none
-
         - template: acr-connection.yml
 
         # Deploy an ARM template from the repo and inject parameters
