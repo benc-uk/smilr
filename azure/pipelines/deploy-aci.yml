@@ -23,7 +23,7 @@ variables:
   - name: resGroupPrefix
     value: Temp.Smilr
   - name: location
-    value: northeurope
+    value: westeurope
 
 stages:
 #
@@ -109,6 +109,7 @@ stages:
   - job: clanupJob
     displayName: Remove Resources Job
     steps:
+      - checkout: none
       - task: AzureCLI@1
         continueOnError: true
         inputs:
