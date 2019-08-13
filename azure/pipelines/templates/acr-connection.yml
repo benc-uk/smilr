@@ -13,7 +13,6 @@ parameters:
   filter: 'azurecr.io'
 
 steps:
-  - checkout: none
   # Login to ACR
   - task: Docker@2
     displayName: Login to ACR
