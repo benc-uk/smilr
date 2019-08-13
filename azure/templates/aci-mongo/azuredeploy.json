@@ -89,6 +89,14 @@
                   "value": "mongodb://localhost"
                 },
                 {
+                  "name": "MONGO_RETRY_DELAY",
+                  "value": "3"
+                },
+                {
+                  "name": "MONGO_RETRIES",
+                  "value": "20"
+                },
+                {
                   "name": "PORT",
                   "value": "80"
                 },
