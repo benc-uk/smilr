@@ -21,9 +21,9 @@ variables:
   - name: cleanup
     value: true
   - name: resGroupPrefix
-    value: temp.smilr-cd
+    value: Temp.Smilr
   - name: location
-    value: uksouth
+    value: northeurope
 
 stages:
 #

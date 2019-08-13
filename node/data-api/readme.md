@@ -30,8 +30,8 @@ The server listens on port 4000 by default and requires just one mandatory confi
 |-------------|-------|
 |MONGO_CONNSTR|**Required setting!** A valid [MongoDB connection string](https://docs.mongodb.com/v3.4/reference/connection-string/), e.g. `mongodb://localhost` or `mongodb://myhost.example.net:27017`. When using Azure Cosmos DB, obtain the full Mongo connection string from the Cosmos instance in the portal, which will include the username & password.
 |PORT|Optional. Port the server will listen on. *Default: 4000*|
-|MONGO_RETRIES|Optional. How many times the server will retry connecting to MongoDB. *Default: 5*|
-|MONGO_RETRY_DELAY|Optional. How long to wait in seconds, before retry connecting to MongoDB. *Default: 5*|
+|MONGO_RETRIES|Optional. How many times the server will retry connecting to MongoDB. *Default: 6*|
+|MONGO_RETRY_DELAY|Optional. How long to wait in seconds, before retry connecting to MongoDB. *Default: 15*|
 |SECURE_CLIENT_ID|Optional. When set, certain admin API calls will be validated, leave blank or unset to disable security and validation. Details below. *Default: 'blank'*|
 |APPINSIGHTS_INSTRUMENTATIONKEY|Optional. Enables data collection and monitoring with Azure App Insights, set to the key of the instance you want to send data to. *Default: 'blank'*|
 |SENTIMENT_API_ENDPOINT|Optional. When set, the feedback comment text will be processed for sentiment analysis using Azure Cognitive Services. Endpoint can point to a self hosted instance running in a container, or a Azure hosted API endpoint *Default: 'blank'*|
