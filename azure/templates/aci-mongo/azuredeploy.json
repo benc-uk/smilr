@@ -55,8 +55,8 @@
     "imageFrontend": "[concat(parameters('acrName'), '.azurecr.io/smilr/frontend:', parameters('frontendImageTag'))]",
     "imageDataApi": "[concat(parameters('acrName'), '.azurecr.io/smilr/data-api:', parameters('dataApiImageTag'))]",
     "imageMongo": "mongo:4-xenial",
-    "memory": 1.0,
-    "cpu": 1.0,
+    "memory": 0.2,
+    "cpu": 0.1,
     "dnsLabelFrontend": "[concat(parameters('dnsPrefix'), '-frontend')]",
     "dnsLabelDataApi": "[concat(parameters('dnsPrefix'), '-api')]"
   },
@@ -181,10 +181,7 @@
             }
           ]          
         }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.ContainerInstance/containerGroups', variables('containerDataApi'))]"
-      ]
+      }
     }
   ],
   "outputs": {
