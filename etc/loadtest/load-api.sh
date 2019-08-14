@@ -7,9 +7,9 @@ chmod a+x bin/hey
 bin/hey -n 10 -c 1 -m POST -H "Content-Type: application/json" -D event.json $1/api/events > /dev/null
 
 # API read
-bin/hey -z $2s -c 50 $1/api/events > results/api-read.txt
+bin/hey -z $2s -c 50 -o csv $1/api/events > results/api-read.csv
 
 # API write
-bin/hey -z $2s -c 10 -m POST -H "Content-Type: application/json" -D event.json $1/api/events > results/api-write-10.txt
-bin/hey -z $2s -c 50 -m POST -H "Content-Type: application/json" -D event.json $1/api/events > results/api-write-50.txt
-bin/hey -z $2s -c 100 -m POST -H "Content-Type: application/json" -D event.json $1/api/events > results/api-write-100.txt
+bin/hey -z $2s -c 10 -m POST -H "Content-Type: application/json" -D event.json -o csv $1/api/events > results/api-write-10.csv
+bin/hey -z $2s -c 50 -m POST -H "Content-Type: application/json" -D event.json -o csv $1/api/events > results/api-write-50.csv
+bin/hey -z $2s -c 100 -m POST -H "Content-Type: application/json" -D event.json -o csv $1/api/events > results/api-write-100.csv
