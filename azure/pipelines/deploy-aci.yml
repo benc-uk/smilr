@@ -7,8 +7,8 @@ name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none
 
 schedules:
-- cron: "30 5 * * 1"
-  displayName: Weekly build
+- cron: "5 8 * * *"
+  displayName: Daily build
   branches:
     include:
     - master  
