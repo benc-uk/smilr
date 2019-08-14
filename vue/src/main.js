@@ -6,10 +6,11 @@ import router from './router'
 // Bootstrap and theme
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
-// Select Bootswatch Cosmo theme :)
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+// Select Bootswatch theme :)
 import 'bootswatch/dist/cosmo/bootstrap.css'
 //import 'bootswatch/dist/slate/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 
 // Other plugins
 Vue.use(require('vue-moment'))

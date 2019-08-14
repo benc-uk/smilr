@@ -79,3 +79,5 @@ tmp.zip
 newman/*
 requirements.lock
 **/smilr/charts
+etc/loadtest/results
+!etc/loadtest/bin
