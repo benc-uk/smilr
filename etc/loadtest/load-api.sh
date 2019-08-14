@@ -4,7 +4,7 @@ mkdir -p results
 chmod a+x bin/hey
 
 # Create 10 events
-hey -n 10 -c 1 -m POST -H "Content-Type: application/json" -D event.json $1/api/events > /dev/null
+bin/hey -n 10 -c 1 -m POST -H "Content-Type: application/json" -D event.json $1/api/events > /dev/null
 
 # API read
 bin/hey -z $2s -c 50 $1/api/events > results/api-read.txt
