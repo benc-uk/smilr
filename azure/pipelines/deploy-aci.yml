@@ -74,8 +74,8 @@ stages:
     steps:
       - bash: |
           ls -R
-          load-frontend.sh http://$(dns-prefix)-frontend.$(location).azurecontainer.io 30
-          load-api.sh http://$(dns-prefix)-api.$(location).azurecontainer.io 10
+          bash ./load-frontend.sh http://$(dns-prefix)-frontend.$(location).azurecontainer.io 30
+          bash ./load-api.sh http://$(dns-prefix)-api.$(location).azurecontainer.io 10
         displayName: Run loadtest scripts
         workingDirectory: etc/loadtest
 
