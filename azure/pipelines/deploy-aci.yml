@@ -100,12 +100,6 @@ stages:
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
-  # - template: templates/run-postman-tests.yml
-  #   parameters:
-  #     dependsOn: deployWithACI
-  #     apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-  #     frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
-
 #
 # Cleanup stage - remove resources after run
 #
