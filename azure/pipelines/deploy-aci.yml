@@ -19,7 +19,7 @@ schedules:
 variables:
   - group: shared-variables
   - name: cleanup
-    value: true
+    value: false
   - name: resGroupPrefix
     value: Temp.Smilr
   - name: location
@@ -68,11 +68,17 @@ stages:
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
-  - template: templates/run-postman-tests.yml
-    parameters:
-      dependsOn: deployWithACI
-      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+  - job: loadtestJob
+    displayName: Load Test
+    steps:
+      - bash: |
+          ./load-frontend.sh http://$(dns-prefix)-frontend.$(location).azurecontainer.io 30
+          ./load-api.sh http://$(dns-prefix)-api.$(location).azurecontainer.io 10
+        displayName: Run loadtest scripts
+        workingDirectory: etc/loadtest
+
+      - publish: etc/loadtest/results
+        artifact: loadtest-results
 
 #
 # Deploy stage - prod environment
@@ -92,11 +98,11 @@ stages:
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
-  - template: templates/run-postman-tests.yml
-    parameters:
-      dependsOn: deployWithACI
-      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+  # - template: templates/run-postman-tests.yml
+  #   parameters:
+  #     dependsOn: deployWithACI
+  #     apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+  #     frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
 #
 # Cleanup stage - remove resources after run
