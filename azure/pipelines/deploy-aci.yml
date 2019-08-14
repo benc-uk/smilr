@@ -60,19 +60,20 @@ stages:
     dns-prefix: smilr-$(Build.BuildId)-staging
 
   jobs:
-  - template: templates/deploy-aci-arm.yml
-    parameters:
-      envName: ACI-Staging
-      location: $(location)
-      imageTag: latest
-      resGroupPrefix: $(resGroupPrefix)
-      dnsPrefix: $(dns-prefix)
+  # - template: templates/deploy-aci-arm.yml
+  #   parameters:
+  #     envName: ACI-Staging
+  #     location: $(location)
+  #     imageTag: latest
+  #     resGroupPrefix: $(resGroupPrefix)
+  #     dnsPrefix: $(dns-prefix)
 
   - job: loadtestJob
     displayName: Run Load Test
-    dependsOn: deployWithACI
+    #dependsOn: deployWithACI
     steps:
       - bash: |
+          ls -R
           load-frontend.sh http://$(dns-prefix)-frontend.$(location).azurecontainer.io 30
           load-api.sh http://$(dns-prefix)-api.$(location).azurecontainer.io 10
         displayName: Run loadtest scripts
