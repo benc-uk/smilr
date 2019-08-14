@@ -1,6 +1,7 @@
 #!/bin/bash
 
 mkdir -p results
+chmod a+x bin/hey
 
 # Create 10 events
 hey -n 10 -c 1 -m POST -H "Content-Type: application/json" -D event.json $1/api/events > /dev/null
