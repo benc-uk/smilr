@@ -1,22 +1,38 @@
-name: Build Node Images & Push to ACR
-#on: [push]
+name: CI/CD Build, Release & Test
+
+on: 
+  push:
+    branches:
+    - actions
 
 jobs:
   build-job:
+    # runs-on: ubuntu-latest
+    # steps:
+    # - uses: actions/checkout@v1
+
+    # - uses: azure/container-actions/docker-login@master
+    #   with:
+    #     login-server: bcdemo.azurecr.io
+    #     username: bcdemo
+    #     password: ${{ secrets.ACR_PASSWORD }}
+    
+    # - run: |
+    #     docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:latest
+    #     docker push bcdemo.azurecr.io/smilr/data-api:latest
+
+    # - run: |
+    #     docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:latest
+    #     docker push bcdemo.azurecr.io/smilr/frontend:latest
+
+  release-job:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
 
-    - uses: azure/container-actions/docker-login@master
+    - uses: azure/actions/login@master
       with:
-        login-server: bcdemo.azurecr.io
-        username: bcdemo
-        password: ${{ secrets.ACR_PASSWORD }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
     
     - run: |
-        docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:${{ github.sha }}
-        docker push bcdemo.azurecr.io/smilr/data-api:${{ github.sha }}
-
-    - run: |
-        docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:${{ github.sha }}
-        docker push bcdemo.azurecr.io/smilr/frontend:${{ github.sha }}
+        az webapp list -o table
