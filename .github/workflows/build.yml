@@ -1,5 +1,5 @@
 name: Build Node Images & Push to ACR
-on: [push]
+#on: [push]
 
 jobs:
   build-job:
