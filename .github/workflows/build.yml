@@ -7,23 +7,23 @@ on:
 
 jobs:
   build-job:
-    # runs-on: ubuntu-latest
-    # steps:
-    # - uses: actions/checkout@v1
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
 
-    # - uses: azure/container-actions/docker-login@master
-    #   with:
-    #     login-server: bcdemo.azurecr.io
-    #     username: bcdemo
-    #     password: ${{ secrets.ACR_PASSWORD }}
+    - uses: azure/container-actions/docker-login@master
+      with:
+        login-server: bcdemo.azurecr.io
+        username: bcdemo
+        password: ${{ secrets.ACR_PASSWORD }}
     
-    # - run: |
-    #     docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:latest
-    #     docker push bcdemo.azurecr.io/smilr/data-api:latest
+    - run: |
+        docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:latest
+        docker push bcdemo.azurecr.io/smilr/data-api:latest
 
-    # - run: |
-    #     docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:latest
-    #     docker push bcdemo.azurecr.io/smilr/frontend:latest
+    - run: |
+        docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:latest
+        docker push bcdemo.azurecr.io/smilr/frontend:latest
 
   release-job:
     runs-on: ubuntu-latest
