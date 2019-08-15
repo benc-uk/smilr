@@ -30,9 +30,60 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - uses: azure/container-actions/docker-login@master
+      with:
+        login-server: bcdemo.azurecr.io
+        username: bcdemo
+        password: ${{ secrets.ACR_PASSWORD }}
+    
+    - name: Build Data API
+      run: |
+        docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:latest
+        docker push bcdemo.azurecr.io/smilr/data-api:latest
+
+    - name: Build Frontend
+      run: |
+        docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:latest
+        docker push bcdemo.azurecr.io/smilr/frontend:latest
+
+  release-job:
+    needs: build-job
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
     - uses: azure/actions/login@master
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - run: |
-        az webapp list -o table
+    - name: Deploy to Azure Container Instances
+      run: |
+        az group create -n temp.smilr-cicd -l westeurope -o table
+
+        az container create -n mongo -g temp.smilr-cicd \
+         --image mongo:4-xenial \
+         --ip-address public --port 27017 \
+         --cpu 0.1 --memory 0.3 \
+         --dns-name-label smilrmongo \
+         --no-wait
+
+        az container create -n data-api -g temp.smilr-cicd \
+         --image bcdemo.azurecr.io/smilr/data-api:latest \
+         --ip-address public --port 4000 \
+         --cpu 0.1 --memory 0.1 \
+         --registry-password ${{ secrets.ACR_PASSWORD }} \
+         --registry-username bcdemo \
+         -e MONGO_CONNSTR=mongodb://smilrmongo.westeurope.azurecontainer.io \
+         --dns-name-label smilrdataapi \
+         --no-wait
+
+        az container create -n frontend -g temp.smilr-cicd \
+         --image bcdemo.azurecr.io/smilr/frontend:latest \
+         --ip-address public --port 3000 \
+         --cpu 0.1 --memory 0.1 \
+         --registry-password ${{ secrets.ACR_PASSWORD }} \
+         --registry-username bcdemo \
+         -e API_ENDPOINT=http://smilrdataapi.westeurope.azurecontainer.io:4000/api \
+         --dns-name-label smilrfront \
+         --no-wait
+
