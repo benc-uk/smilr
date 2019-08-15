@@ -1,5 +1,5 @@
 name: Build Node Images & Push to ACR
-#on: [push]
+on: [push]
 
 jobs:
   build-job:
@@ -16,3 +16,7 @@ jobs:
     - run: |
         docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:${{ github.sha }}
         docker push bcdemo.azurecr.io/smilr/data-api:${{ github.sha }}
+
+    - run: |
+        docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:${{ github.sha }}
+        docker push bcdemo.azurecr.io/smilr/frontend:${{ github.sha }}
