@@ -23,9 +23,10 @@ jobs:
     - bash: npm install -g newman --prefix $(System.DefaultWorkingDirectory)
     
     # Run the tests with Newman
-    - bash: $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/Smilr.postman_collection.json /
-        --reporters junit --iteration-count 3 --timeout 180000 /
-        --global-var smilr-api-host="${{ parameters.apiHost }}" /
+    - bash: >
+        $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/Smilr.postman_collection.json 
+        --reporters junit --iteration-count 3 --timeout 180000 
+        --global-var smilr-api-host="${{ parameters.apiHost }}" 
         --global-var smilr-front-host="${{ parameters.frontHost }}"
     
     # Publish test results
