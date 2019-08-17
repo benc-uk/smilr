@@ -14,3 +14,4 @@ The contents of the `azure\pipelines` directory are:
 |`deploy-aks.yml`|Deployment only. Deploys to Kubernetes AKS using Helm in test/staging/prod namespaces with functional tests at each stage|Manually triggered|
 |`dockerhub-stable.yml`|Updates the image tags, and re-tags `latest` as `stable`, pushes `stable` to ACR and also pushes `latest` and `stable` to public Dockerhub|Manually triggered|
 |`windows-images.yml`|Builds Windows containers versions of the frontend and data API. Both "2016 LTS" and "1809" versions are built. All images are pushed to both ACR and Dockerhub|Manually triggered|
+
