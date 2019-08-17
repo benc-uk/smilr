@@ -7,13 +7,14 @@ name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 
 trigger:
   branches:
-    include: 
-    - master
+    exclude: 
+    - foo
   paths:
     include:
       - node/*
       - vue/*
       - azure/pipelines/*
+
 pr:
 - master
 
