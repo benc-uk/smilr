@@ -7,8 +7,8 @@ name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 
 trigger:
   branches:
-    exclude: 
-    - foo
+    include: 
+    - master
   paths:
     include:
       - node/*
