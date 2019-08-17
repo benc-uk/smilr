@@ -26,6 +26,7 @@ Enabling of this feature is done by setting the `SENTIMENT_API_ENDPOINT` environ
 # Configuration
 The server listens on port 4000 by default and requires just one mandatory configuration environmental variable to be set.
 
+
 |Variable Name|Purpose|
 |-------------|-------|
 |MONGO_CONNSTR|**Required setting!** A valid [MongoDB connection string](https://docs.mongodb.com/v3.4/reference/connection-string/), e.g. `mongodb://localhost` or `mongodb://myhost.example.net:27017`. When using Azure Cosmos DB, obtain the full Mongo connection string from the Cosmos instance in the portal, which will include the username & password.
