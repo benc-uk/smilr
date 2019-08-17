@@ -1,6 +1,6 @@
 #
 # Azure Pipelines
-# - Build both Smilr Node.js as Windows container images, 2016 LTS and 1809
+# - Build both Smilr Node.js as Windows Nanoserver 1809
 # - Then push up to ACR and Dockerhub
 # Ben C, May 2019
 #
@@ -48,4 +48,12 @@ stages:
         buildContext: .
         repository: smilr/data-api
         tags: windows
- 
+
+    - task: Docker@2
+      displayName: 'Build frontend'
+      inputs:
+        command: buildAndPush
+        Dockerfile: node/frontend/windows.Dockerfile
+        buildContext: .
+        repository: smilr/frontend
+        tags: windows
