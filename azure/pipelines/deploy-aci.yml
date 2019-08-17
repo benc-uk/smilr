@@ -5,6 +5,7 @@
 #
 name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none
+pr: none
 
 schedules:
 - cron: "15 5 * * *"
