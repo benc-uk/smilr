@@ -7,7 +7,7 @@ name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none
 
 schedules:
-- cron: "5 8 * * *"
+- cron: "15 5 * * *"
   displayName: Daily build
   branches:
     include:
