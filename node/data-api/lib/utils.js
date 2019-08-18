@@ -40,7 +40,7 @@ class Utils {
     if(appInsights.defaultClient) appInsights.defaultClient.trackEvent({name: "dataEvent", properties: {data: JSON.stringify(data)}});
     
     res.type('application/json');
-    res.status(205).send(data)
+    res.status(200).send(data)
     return;    
   }
 
