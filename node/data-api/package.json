@@ -10,7 +10,7 @@
     "start": "node server.js",
     "test": "NODE_ENV=test mocha --exit",
     "test-report": "NODE_ENV=test MONGO_CONNSTR=not-used mocha --exit --reporter mocha-junit-reporter",
-    "code-coverage": "node ./node_modules/nyc/bin/nyc.js npm test"
+    "code-coverage": "NODE_ENV=test MONGO_CONNSTR=not-used node ./node_modules/nyc/bin/nyc.js npm test"
   },
   "license": "MIT",
   "repository": "https://github.com/benc-uk/smilr",
