@@ -74,7 +74,7 @@ describe('Smilr API: events', function() {
       .expect(function(res) {
         expect(res.body).to.be.an.an('object')
         expect(res.body).to.have.property('error').equals(true)
-        expect(res.body).to.have.property('details').includes('not found')
+        expect(res.body).to.have.property('title').includes('event-get')
       })
       .expect(404, done)
   });
@@ -102,7 +102,7 @@ describe('Smilr API: events', function() {
       .expect(function(res) {
         expect(res.body).to.be.an.an('object')
         expect(res.body).to.have.property('error').equals(true)
-        expect(res.body).to.have.property('details').includes('not valid')
+        expect(res.body).to.have.property('title').includes('event-get')
       })
       .expect(400, done)
   });
@@ -132,7 +132,7 @@ describe('Smilr API: events', function() {
       .expect(function(res) {
         expect(res.body).to.be.an.an('object')
         expect(res.body).to.have.property('error').equals(true)
-        expect(res.body).to.have.property('details').includes('Should not POST')
+        expect(res.body).to.have.property('title').includes('event-create')
       })
       .expect(400, done)
   });
@@ -147,7 +147,7 @@ describe('Smilr API: events', function() {
       .expect(function(res) {
         expect(res.body).to.be.an.an('object')
         expect(res.body).to.have.property('error').equals(true)
-        expect(res.body).to.have.property('details').includes('Event start date')
+        expect(res.body).to.have.property('title').includes('event-create')
       })
       .expect(400, done)
   });
@@ -177,7 +177,7 @@ describe('Smilr API: events', function() {
       .expect(function(res) {       
         expect(res.body).to.be.an.an('object')
         expect(res.body).to.have.property('error').equals(true)
-        expect(res.body).to.have.property('details').includes('type can not be changed')
+        expect(res.body).to.have.property('title').includes('event-update')
       })
       .expect(400, done)
   });
@@ -192,7 +192,7 @@ describe('Smilr API: events', function() {
       .expect(function(res) {       
         expect(res.body).to.be.an.an('object')
         expect(res.body).to.have.property('error').equals(true)
-        expect(res.body).to.have.property('details').includes('does not exist')
+        expect(res.body).to.have.property('title').includes('event-update')
       })
       .expect(404, done)
   });
@@ -219,7 +219,7 @@ describe('Smilr API: events', function() {
       .expect(function(res) {       
         expect(res.body).to.be.an.an('object')
         expect(res.body).to.have.property('error').equals(true)
-        expect(res.body).to.have.property('details').includes('No event with id')
+        expect(res.body).to.have.property('title').includes('event-delete')
       })
       .expect(404, done)
   });      
