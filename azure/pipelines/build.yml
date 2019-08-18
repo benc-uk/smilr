@@ -39,8 +39,9 @@ stages:
         
     steps:
     - bash: |
-        npm install 
+        npm install --silent
         npm run test-report
+        npm run code-coverage
       displayName: Run tests for data-api
       workingDirectory: node/data-api
 
