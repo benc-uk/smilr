@@ -57,7 +57,7 @@ describe('Smilr events API', () => {
   });
 
   // GET /api/events/fake01
-  it('returns a single event by id', function(done) {
+  it('returns a single event by id', (done) => {
     let id = 'fake01';
     request(app)
       .get(`/api/events/${id}`)
@@ -73,7 +73,7 @@ describe('Smilr events API', () => {
   });
 
   // GET /api/events/fake01
-  it('fails on non-existent event', function(done) {
+  it('fails on non-existent event', (done) => {
     request(app)
       .get('/api/events/bad')
       .set('Accept', 'application/json')
@@ -89,7 +89,7 @@ describe('Smilr events API', () => {
 
 
   // GET /api/events/filter/past
-  it('returns time filtered events', function(done) {
+  it('returns time filtered events', (done) => {
     let today = new Date().toISOString().substring(0, 10);
 
     request(app)
@@ -106,7 +106,7 @@ describe('Smilr events API', () => {
   });
 
   // GET /api/events/filter/blah
-  it('fails if time filter is invalid', function(done) {
+  it('fails if time filter is invalid', (done) => {
     queryEventsStub.resetHistory()
     request(app)
       .get('/api/events/filter/blah')
@@ -122,7 +122,7 @@ describe('Smilr events API', () => {
   });
 
   // POST /api/events
-  it('stores a new event', function(done) {
+  it('stores a new event', (done) => {
     let event = {title:"new event", type:"event", start:"2019-01-01", end:"2019-01-02"};
     request(app)
       .post('/api/events')
@@ -139,7 +139,7 @@ describe('Smilr events API', () => {
   });
 
   // POST /api/events
-  it('rejects new events with id field', function(done) {
+  it('rejects new events with id field', (done) => {
     createOrUpdateEventStub.resetHistory()
     request(app)
       .post('/api/events')
@@ -156,7 +156,7 @@ describe('Smilr events API', () => {
   });
 
   // POST /api/events
-  it('rejects events with invalid dates', function(done) {
+  it('rejects events with invalid dates', (done) => {
     createOrUpdateEventStub.resetHistory()
     request(app)
       .post('/api/events')
@@ -173,7 +173,7 @@ describe('Smilr events API', () => {
   });
 
   // PUT /api/events
-  it('PUT valid event', function(done) {
+  it('PUT valid event', (done) => {
     createOrUpdateEventStub.resetHistory()
     let event = {_id:"fake01", title:"updated event", type:"workshop", start:"2019-01-01", end:"2019-01-02"}
     request(app)
@@ -191,7 +191,7 @@ describe('Smilr events API', () => {
   });
 
   // PUT /api/events
-  it('PUT invalid event type', function(done) {
+  it('PUT invalid event type', (done) => {
     createOrUpdateEventStub.resetHistory()
     request(app)
       .put('/api/events/fake01')
@@ -208,7 +208,7 @@ describe('Smilr events API', () => {
   });
   
   // PUT /api/events
-  it('PUT invalid event does not exist', function(done) {
+  it('PUT invalid event does not exist', (done) => {
     createOrUpdateEventStub.resetHistory()
     request(app)
       .put('/api/events/fake05')
@@ -225,7 +225,7 @@ describe('Smilr events API', () => {
   });
 
   // DELETE /api/events
-  it('DELETE event', function(done) {
+  it('DELETE event', (done) => {
     let id = 'fake01'
     request(app)
       .delete(`/api/events/${id}`)
@@ -240,7 +240,7 @@ describe('Smilr events API', () => {
   });    
 
   // DELETE /api/events
-  it('DELETE non existent event', function(done) {
+  it('DELETE non existent event', (done) => {
     deleteEventStub.resetHistory();
     request(app)
       .delete('/api/events/fake77')

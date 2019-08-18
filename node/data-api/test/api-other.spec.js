@@ -13,7 +13,7 @@ const utils = require('../lib/utils');
 //
 // Tests for other API
 //
-describe('Smilr API: other', function() {
+describe('Smilr API: other', () => {
   // GET /api/info
   it('GET system info', function(done) {
     request(app)

@@ -24,9 +24,9 @@ app.set('data', dataAccess);
 //
 // Tests for feedback API
 //
-describe('Smilr feedback API', function() {
+describe('Smilr feedback API', () => {
   // GET /api/feedback/fake01/1
-  it('returns feedback for event', function(done) {
+  it('returns feedback for event', (done) => {
     request(app)
       .get('/api/feedback/fake01/1')
       .set('Accept', 'application/json')
@@ -39,7 +39,7 @@ describe('Smilr feedback API', function() {
   });
 
   // POST /api/feedback
-  it('stores valid feedback', function(done) {
+  it('stores valid feedback', (done) => {
     let feedback = {rating: 5, comment: "blah blah", event: 'fake01', topic: 1}
     request(app)
       .post('/api/feedback')
@@ -54,7 +54,7 @@ describe('Smilr feedback API', function() {
   });
 
   // POST /api/feedback
-  it('rejects feedback with no rating', function(done) {
+  it('rejects feedback with no rating', (done) => {
     createFeedbackStub.resetHistory();
     request(app)
       .post('/api/feedback')
@@ -71,7 +71,7 @@ describe('Smilr feedback API', function() {
   });  
 
   // POST /api/feedback
-  it('rejects feedback if the event does not exist', function(done) {
+  it('rejects feedback if the event does not exist', (done) => {
     createFeedbackStub.resetHistory();
     request(app)
       .post('/api/feedback')

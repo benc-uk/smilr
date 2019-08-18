@@ -8,7 +8,7 @@ chai.use(sinonChai);
 const ApiError = require('../lib/api-error');
 const utils = require('../lib/utils');
 
-mockResponse = function() {
+mockResponse = () => {
   const res = {};
   res.status = sinon.stub().returns(res);
   res.send = sinon.stub().returns(res);
@@ -16,15 +16,15 @@ mockResponse = function() {
   return res;
 };
 
-describe('Utils library', function() {
-  it('makeId creates valid id', function() {
+describe('Utils library', () => {
+  it('makeId creates valid id', () => {
     expect(utils.makeId).to.be.an('function');
     id = utils.makeId(5);
     expect(id).to.be.an('string');
     expect(id).to.have.lengthOf(5);
   });
 
-  it('sendError defaults validation', function() {
+  it('sendError defaults validation', () => {
     expect(utils.sendError).to.be.an('function');
 
     var res = mockResponse()
@@ -38,7 +38,7 @@ describe('Utils library', function() {
     expect(res.status).to.have.been.calledWith(500)
   });  
 
-  it('sendError custom validation', function() {
+  it('sendError custom validation', () => {
     expect(utils.sendError).to.be.an('function');
 
     var res = mockResponse()
@@ -52,7 +52,7 @@ describe('Utils library', function() {
     expect(res.status).to.have.been.calledWith(404)
   });   
 
-  it('sendData validation', function() {
+  it('sendData validation', () => {
     expect(utils.sendData).to.be.an('function');
 
     var res = mockResponse()
