@@ -50,6 +50,9 @@ stages:
       inputs:
         testResultsFiles: 'node/data-api/*.xml'
         testResultsFormat: JUnit
+        failTaskOnFailedTests: true
+        testRunTitle: Data API Tests
+      continueOnError: true
 
     - bash: |
         npm install --silent
@@ -62,6 +65,7 @@ stages:
       inputs:
         testResultsFiles: 'vue/*.xml'
         testResultsFormat: JUnit
+        testRunTitle: Vue SPA Tests
         failTaskOnFailedTests: true
 
   - job: buildJob
