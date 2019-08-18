@@ -51,6 +51,18 @@ stages:
         testResultsFiles: 'node/data-api/*.xml'
         testResultsFormat: JUnit
 
+    - bash: |
+        npm install --silent
+        npm run test:unit-report
+      displayName: Run tests for Vue SPA client
+      workingDirectory: vue
+
+    - task: PublishTestResults@2
+      condition: always()
+      inputs:
+        testResultsFiles: 'vue/*.xml'
+        testResultsFormat: JUnit
+
   - job: buildJob
     dependsOn: testJob
     displayName: 'Build & push to ACR'
