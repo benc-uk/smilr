@@ -44,9 +44,9 @@ stages:
         npm run code-coverage
       displayName: Run tests for data-api
       workingDirectory: node/data-api
+      continueOnError: true
 
     - task: PublishTestResults@2
-      condition: always()
       inputs:
         testResultsFiles: 'node/data-api/*.xml'
         testResultsFormat: JUnit
@@ -56,12 +56,13 @@ stages:
         npm run test:unit-report
       displayName: Run tests for Vue SPA client
       workingDirectory: vue
+      continueOnError: true
 
     - task: PublishTestResults@2
-      condition: always()
       inputs:
         testResultsFiles: 'vue/*.xml'
         testResultsFormat: JUnit
+        failTaskOnFailedTests: true
 
   - job: buildJob
     dependsOn: testJob
