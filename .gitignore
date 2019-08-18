@@ -82,3 +82,4 @@ requirements.lock
 **/smilr/charts
 etc/loadtest/results
 !etc/loadtest/bin
+**/.nyc_output

@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "NODE_ENV=test mocha --exit",
-    "test-report": "NODE_ENV=test mocha --exit --reporter mocha-junit-reporter",
+    "test-report": "NODE_ENV=test MONGO_CONNSTR=not-used mocha --exit --reporter mocha-junit-reporter",
     "code-coverage": "node ./node_modules/nyc/bin/nyc.js npm test"
   },
   "license": "MIT",
