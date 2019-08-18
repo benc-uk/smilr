@@ -1,6 +1,6 @@
 {
   "name": "smilr-spa",
-  "version": "2.6.5",
+  "version": "2.7.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
