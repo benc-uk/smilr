@@ -27,24 +27,28 @@ routes.get('(/api)?/info', async function (req, res, next) {
       cpuCount: os.cpus().length, 
       memory: Math.round(os.totalmem() / 1048576),
       nodeVer: process.version,
+      nodeEnv: process.env.NODE_ENV || "NODE_ENV is not set",
       appVersion: require('../package.json').version,
       appBuildInfo: process.env.BUILD_INFO || "No build info",
       appReleaseInfo: process.env.RELEASE_INFO || "No release info",
-      sentimentAPI: process.env.SENTIMENT_API_ENDPOINT || "Sentiment API not enabled",
+      sentimentAPI: process.env.SENTIMENT_API_ENDPOINT || "Sentiment API not enabled",     
+    }
 
+    if(req.app.get('data') && req.app.get('data').db) {
       // Some info about the DB
-      mongoDb: {
-        connected: req.app.get('data').db.serverConfig.isConnected(),
-        host: req.app.get('data').db.serverConfig.host,
-        port: req.app.get('data').db.serverConfig.port,
-        driverVer: req.app.get('data').db.serverConfig.clientInfo.driver.version
-      }      
-    }  
-
-    // MongoDB server version
-    var adminDb = req.app.get('data').db.admin();
-    let serverStatus = await adminDb.serverStatus();
-    info.mongoDb.serverVersion = serverStatus.version;
+      info.mongoDb = {
+        connected: req.app.get('data').db.serverConfig.isConnected() || 'unknown',
+        host: req.app.get('data').db.serverConfig.host || 'unknown',
+        port: req.app.get('data').db.serverConfig.port || 'unknown',
+        driverVer: req.app.get('data').db.serverConfig.clientInfo.driver.version || 'unknown'
+      } 
+      // MongoDB server version
+      var adminDb = req.app.get('data').db.admin();
+      let serverStatus = await adminDb.serverStatus();
+      info.mongoDb.serverVersion = serverStatus.version;
+    } else {
+      info.mongoDb = "No database connection"
+    }
     
     utils.sendData(res, info)
   } catch(err) {
