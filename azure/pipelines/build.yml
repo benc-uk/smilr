@@ -38,7 +38,9 @@ stages:
       vmImage: Ubuntu-16.04
         
     steps:
-    - bash: rpm run test-report
+    - bash: |
+        npm install 
+        npm run test-report
       displayName: Run tests for data-api
       workingDirectory: node/data-api
 
