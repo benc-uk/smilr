@@ -78,6 +78,7 @@ tmp.zip
 # Test rubbish
 newman/*
 requirements.lock
+**/test-results.xml
 **/smilr/charts
 etc/loadtest/results
 !etc/loadtest/bin
