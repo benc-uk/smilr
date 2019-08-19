@@ -81,7 +81,7 @@ stages:
         workingDirectory: etc/loadtest
 
       - publish: etc/loadtest/results
-        artifact: loadtest-results
+        artifact: loadtest-results-aci
 
 #
 # Deploy stage - prod environment

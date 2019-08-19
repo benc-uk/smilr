@@ -62,7 +62,7 @@ stages:
         workingDirectory: etc/loadtest
 
       - publish: etc/loadtest/results
-        artifact: loadtest-results
+        artifact: loadtest-results-aks
 #
 # Deploy stage 3 - AKS production namespace
 #
