@@ -11,7 +11,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'bootswatch/dist/cosmo/bootstrap.css'
 //import 'bootswatch/dist/slate/bootstrap.css'
 
-
 // Other plugins
 Vue.use(require('vue-moment'))
 import VeeValidate from 'vee-validate';

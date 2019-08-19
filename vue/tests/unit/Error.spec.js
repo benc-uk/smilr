@@ -10,7 +10,6 @@ localVue.use(BootstrapVue);
 describe('Error.vue', () => {
   it('renders message when passed', () => {
     let msg = "This is an error"
-    
    
     const wrapper = shallowMount(Error, {
       localVue, 
