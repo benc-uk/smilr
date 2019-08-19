@@ -1,13 +1,16 @@
 {
   "name": "smilr-data-api",
-  "version": "4.9.5",
+  "version": "5.0.0",
   "main": "server.js",
   "engines": {
     "node": "^10.15.0"
   },
   "description": "Main Smilr microservice, RESTful data API",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "NODE_ENV=test mocha --exit --sort",
+    "test-report": "NODE_ENV=test MONGO_CONNSTR=not-used mocha --exit --sort --reporter mocha-junit-reporter",
+    "code-coverage": "NODE_ENV=test MONGO_CONNSTR=not-used node ./node_modules/nyc/bin/nyc.js npm test"
   },
   "license": "MIT",
   "repository": "https://github.com/benc-uk/smilr",
@@ -23,5 +26,15 @@
     "passport-azure-ad": "^4.1.0",
     "request": "^2.88.0",
     "swagger-ui-express": "^4.0.5"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0",
+    "mocha-junit-reporter": "^1.23.1",
+    "mock-express-response": "^0.2.2",
+    "nyc": "^14.1.1",
+    "sinon": "^7.4.1",
+    "sinon-chai": "^3.3.0",
+    "supertest": "^4.0.2"
   }
 }

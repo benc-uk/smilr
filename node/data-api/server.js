@@ -2,11 +2,14 @@
 // Main Express server for Smilr Data API
 // ---------------------------------------------
 // Ben C, March 2018
-// - Updated May 2019
+// - Updated Aug 2019
 //
 
 // Load .env file if it exists
 require('dotenv').config()
+
+// Disable all console output when testing
+if(process.env.NODE_ENV === 'test') console.log = function() {}
 
 console.log(`### Smilr data API service starting...`);
 
@@ -56,10 +59,12 @@ const swaggerDocument = require('./swagger.json');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true));
 
 // Set up logging
-if (app.get('env') === 'production') {
-    app.use(logger('combined'));
-  } else {
-    app.use(logger('dev'));
+if(app.get('env') === 'production') {
+  app.use(logger('combined'));
+} else if(app.get('env') === 'test') {
+  // disable logging
+} else {
+  app.use(logger('dev'));
 }
 console.log(`### Node environment mode is '${app.get('env')}'`);
 
@@ -85,6 +90,14 @@ var monogUrl = process.env.MONGO_CONNSTR;  // Note. NO DEFAULT!
 var retries = process.env.MONGO_RETRIES || 6;
 var retryDelay = process.env.MONGO_RETRY_DELAY || 15;
 
+if(process.env.NODE_ENV == 'test') {
+  var server = require('http').createServer(app);
+  server.listen(port);
+  console.log(`### TEST MODE API server listening on ${server.address().port}`); 
+  module.exports = app;
+  return;
+}
+
 //
 // Connect to Mongo and start server
 //
@@ -107,3 +120,5 @@ dataAccess.connectMongo(monogUrl, retries, retryDelay)
   console.error(err.message);
   process.exit(-1);
 })
+
+module.exports = app;

@@ -5,7 +5,7 @@
   "engines": {
     "node": "^10.15.0"
   },
-  "description": "Simple static content server for Smilr SPA UI/frontent",
+  "description": "Simple static content server for Smilr SPA UI/frontend",
   "scripts": {
     "start": "node server.js"
   },

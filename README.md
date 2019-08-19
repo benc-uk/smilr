@@ -34,7 +34,7 @@ This application supports a range of demonstration, and learning scenarios, such
 - [Architecture & Core App Components](#architecture--core-app-components)
 - [Getting Started](#getting-started)
 - [Repository Structure](#repository-structure)
-- [Stable Core Implementation](#stable-core-implementation)
+- [Reference Implementation](#reference-implementation)
 - [Fundamentals](#fundamentals)
 - [Containers & Kubernetes](#containers--kubernetes)
 - [Deploying to Azure](#deploying-to-azure)
@@ -96,8 +96,8 @@ This is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) so contains multipl
 ```
 
 
-# Stable Core Implementation
-The stable & complete version of the Smilr app consists of Node.js implementations of the frontend server & data-api and the Vue.js SPA. There are alternative versions (detailed below) but currently the core of the project is represented this implementation:
+# Reference Implementation
+The reference implementation of the Smilr app consists of the frontend server & data-api written in Node.js and the client as a SPA written in Vue.js. There are alternative versions (detailed below) but currently the core of the project is represented this implementation:
 
 #### [:page_with_curl: Vue.js SPA - Documentation](./vue/) 
 #### [:page_with_curl: Frontend Server - Documentation](./node/frontend) 

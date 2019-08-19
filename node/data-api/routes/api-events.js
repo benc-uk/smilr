@@ -115,7 +115,7 @@ routes.put(['(/api)?/events/:id'], authHandler, async function(req, res, next) {
     let event = req.body;
     // Ensure event id is in body, URL params take priority
     event._id = req.params.id;
-
+    
     // Date validation
     if(event.start > event.end)
       throw new ApiError(`Event start date should be before end date`, 400);
@@ -131,7 +131,7 @@ routes.put(['(/api)?/events/:id'], authHandler, async function(req, res, next) {
     result = await res.app.get('data').createOrUpdateEvent(event, false)
     if(!result || result.result.n == 0) 
       throw new ApiError(`Failed to modify event '${event._id}', something bad happened`);
-      
+
     // Note we send back the same event object we receive, Mongo doesn't return it
     utils.sendData(res, event);
   } catch(err) {
