@@ -68,6 +68,8 @@ export default {
     //
 
     _apiRawCall: function(apiPath, method = 'get', data = null) {
+      if(process.env.NODE_ENV === 'test') return new Promise((resolve) => {resolve([])});
+
       var apiUrl = `${config.API_ENDPOINT}/${apiPath}`
       //console.log("### API CALL "+ apiUrl);
 

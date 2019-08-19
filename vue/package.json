@@ -1,13 +1,16 @@
 {
   "name": "smilr-spa",
-  "version": "2.6.5",
+  "version": "2.7.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
     "build": "vue-cli-service build",
-    "build-modern": "vue-cli-service build --modern",
+    "test": "mocha",
     "lint": "vue-cli-service lint",
-    "mock-api": "node mock-api/server.js"
+    "build-modern": "vue-cli-service build --modern",
+    "mock-api": "node mock-api/server.js",
+    "test:unit": "vue-cli-service test:unit --require tests/unit/init.js",
+    "test:unit-report": "vue-cli-service test:unit --require tests/unit/init.js --reporter mocha-junit-reporter"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
@@ -24,13 +27,22 @@
     "vue-router": "^3.0.6"
   },
   "devDependencies": {
-    "json-server": "^0.15.0",
     "@vue/cli-plugin-eslint": "^3.8.0",
+    "@vue/cli-plugin-unit-mocha": "^3.10.0",
     "@vue/cli-service": "^3.8.4",
+    "@vue/test-utils": "1.0.0-beta.29",
     "babel-eslint": "^10.0.1",
+    "chai": "^4.1.2",
     "eslint": "^6.0.0",
     "eslint-plugin-vue": "^5.2.3",
+    "isomorphic-fetch": "^2.2.1",
+    "json-server": "^0.15.0",
+    "mocha": "^6.2.0",
+    "mocha-junit-reporter": "^1.23.1",
     "vue-template-compiler": "^2.6.10"
+  },
+  "vue": {
+    "publicPath": ""
   },
   "eslintConfig": {
     "root": true,
@@ -55,8 +67,5 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "vue": {
-    "publicPath": ""
-  }
+  ]
 }
