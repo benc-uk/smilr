@@ -1,0 +1,69 @@
+#
+# Deploy the Orleans silo
+# 
+# Requires:
+# - Secret 'orleans-secrets' with key 'storageConnectionString' set to valid value
+#
+
+# ------------------- Silo Deployment ------------------- #
+
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: orleans-silo
+  labels:
+    app: orleans-silo
+spec:
+  replicas: 2
+  serviceName: orleans-silo
+  selector:
+    matchLabels:
+      app: orleans-silo
+  template:
+    metadata:
+      labels:
+        app: orleans-silo
+    spec:
+      containers:
+      - name: orleans-silo
+        image: bcdemo.azurecr.io/smilr-orleans/silo:latest
+        imagePullPolicy: Always
+
+        ports:
+        - name: gateway
+          containerPort: 30000
+        - name: silo
+          containerPort: 11111
+
+        env:     
+        - name: Orleans__ClusterId
+          value: smilr-kube
+        - name: Orleans__ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: orleans-secrets
+              key: storageConnectionString
+
+        resources:
+          limits:
+            memory: "1G"
+            cpu: "0.5"              
+
+---
+
+# ------------------- Internal headless service for Silo ------------------- #
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: silo-gateway-svc
+spec:
+  type: ClusterIP
+  # HEADLESS SERVICE 
+  clusterIP: None
+  ports:
+  - protocol: TCP
+    port: 30000
+    targetPort: 30000 
+  selector:
+    app: orleans-silo
