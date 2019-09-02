@@ -78,8 +78,9 @@ tmp.zip
 # Test rubbish
 newman/*
 requirements.lock
-**/test-results.xml
 **/smilr/charts
+orleans/API/run.ps1
+**/test-results.xml
 etc/loadtest/results
 !etc/loadtest/bin
 **/.nyc_output

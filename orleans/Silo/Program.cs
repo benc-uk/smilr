@@ -32,8 +32,6 @@ namespace Silo
           .AddEnvironmentVariables();
       IConfigurationRoot appSettings = appSettingsBuilder.Build();
 
-      Console.WriteLine(appSettings["Orleans:AdvertisedIPAddress"]);
-
       // start the silo
       // see https://dotnet.github.io/orleans/Documentation/Deployment-and-Operations/Configuration-Guide/Typical-Configurations.html 
       silo = new SiloHostBuilder()
