@@ -49,7 +49,7 @@ namespace API.Controllers
     // Update existing event
     // PUT api/events
     [HttpPut("{eventCode}")]
-    public async Task Put([FromBody] EventAPI body, string eventCode)
+    public async Task<EventAPI> Put([FromBody] EventAPI body, string eventCode)
     {
         logger.LogInformation($"PUT /api/events: Update existing event, event code = {eventCode}, body title = {body.title}");
 
@@ -57,7 +57,7 @@ namespace API.Controllers
         if (eventCode == "")
         {
             Response.StatusCode = 204;
-            return;
+            return body;
         }
 
         // update grain
@@ -65,7 +65,8 @@ namespace API.Controllers
         var grain = this.client.GetGrain<IEventGrain>(eventCode);
         await grain.Update(body.title, body.type, body.start, body.end, body.topics);
 
-        return;
+        body._id = eventCode;  // make sure we include the event code back into the body
+        return body;
     }
 
 
