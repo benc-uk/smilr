@@ -27,7 +27,7 @@ namespace Grains
           State.start = start;
           State.end = end;
           State.topics = topics;
-                
+          await base.WriteStateAsync();
           return; 
       }
 
