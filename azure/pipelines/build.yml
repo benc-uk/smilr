@@ -1,0 +1,120 @@
+#
+# Azure Pipelines
+# - Build both Smilr Node.js images and push to Azure Container Registry
+# Ben C, 2019
+#
+name: $(Date:yyyy-MM-dd)$(Rev:.rr)
+
+trigger:
+  branches:
+    include: 
+    - master
+  paths:
+    include:
+      - node/*
+      - vue/*
+      - azure/pipelines/*
+
+pr:
+- master
+
+# NOTE! This variable group must be pre-created and populated
+# - Expected variables: acr-connection
+variables:
+  - group: shared-variables
+
+stages:
+#
+# Build stage
+#
+- stage: build
+  displayName: 'Build containers'
+
+  jobs:
+  - job: testJob
+    displayName: 'Run unit tests'
+    
+    pool:
+      vmImage: Ubuntu-16.04
+        
+    steps:
+    - bash: |
+        npm install --silent
+        npm run test-report
+        npm run code-coverage
+      displayName: Run tests for data-api
+      workingDirectory: node/data-api
+
+    - task: PublishTestResults@2
+      condition: always()
+      inputs:
+        testResultsFiles: 'node/data-api/*.xml'
+        testResultsFormat: JUnit
+        testRunTitle: Data API Tests
+
+    - bash: |
+        npm install --silent
+        npm run test:unit-report
+      displayName: Run tests for Vue SPA client
+      workingDirectory: vue
+
+    - task: PublishTestResults@2
+      condition: always()
+      inputs:
+        testResultsFiles: 'vue/*.xml'
+        testResultsFormat: JUnit
+        testRunTitle: Vue SPA Tests
+
+  - job: buildJob
+    dependsOn: testJob
+    displayName: 'Build & push to ACR'
+    
+    pool:
+      vmImage: Ubuntu-16.04
+
+    steps:
+    - task: Docker@2
+      displayName: 'Build data API'
+      inputs:
+        command: build
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/data-api/Dockerfile
+        buildContext: .
+        repository: smilr/data-api
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
+        tags: |
+          latest
+          $(Build.BuildNumber)
+
+    - task: Docker@2
+      displayName: 'Build frontend'
+      inputs:
+        command: build
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/frontend/Dockerfile
+        buildContext: .
+        repository: smilr/frontend
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
+        tags: |
+          latest
+          $(Build.BuildNumber)  
+
+    - task: Docker@2
+      displayName: 'Push data API'
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/data-api
+        tags: |
+          latest
+          $(Build.BuildNumber) 
+
+    - task: Docker@2
+      displayName: 'Push frontend'
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/frontend
+        tags: |
+          latest
+          $(Build.BuildNumber)             

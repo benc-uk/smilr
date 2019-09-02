@@ -72,6 +72,11 @@ export default {
       .then(resp => {
         if(resp) this.events = resp.data;
       })
+      .catch(err => {
+        // Never should get here
+        console.log(err);
+        
+      })
     } 
   },
 
