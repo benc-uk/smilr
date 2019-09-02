@@ -26,33 +26,42 @@ namespace API.Controllers
 
 
 
-        // GET /api/feedback/{eventid}/{topicid} - Return all feedback for given event and topic
+        // GET /api/feedback/{eventid}/{topicid} - Return an array of feedback for specific event and topic
         [HttpGet("{eventid}/{topicid}", Name = "Get")]
-        public async Task<FeedbackAPI> Get(string eventid, int topicid)
+        public async Task<FeedbackAPI[]> Get(string eventid, int topicid)
         {
             logger.LogInformation($"GET /api/feedback: eventid {eventid}, topicid {topicid}");
 
-            // call grain
-            FeedbackAPI f;
+            // call approprate grain to get all feedback for a specific topic id
+
             await ConnectClientIfNeeded();
-            var grain = this.client.GetGrain<IEventGrain>(eventid);
-            f = await grain.GetFeedback(topicid);
+            var grain = this.client.GetGrain<IEventGrain>(eventid);  // grains are keyed on event id
+            FeedbackAPI[] f = await grain.GetFeedback(topicid);
 
             return f;
         }
         
+
         // POST: api/Feedback
         //  submit user feedback for an event + topic
         [HttpPost]
         public async Task Post([FromBody] FeedbackAPI body)
         {
-            logger.LogInformation($"POST /api/feedback: incoming body = {body}");
+            logger.LogInformation($"POST /api/feedback: incoming feedback for event {body.Event}, topic {body.topic}, comment {body.comment}");
+
+            string eventid = body.Event;
+            if (eventid == "")
+            {
+              Response.StatusCode = 400;
+              return;  
+            }
 
             // call grain with payload
-            string eventCode = body.Event;
+
             await ConnectClientIfNeeded();
-            var grain = this.client.GetGrain<IEventGrain>(eventCode);
-            await grain.SubmitFeedback(body.topic, body.rating, body.comment);
+            var grain = this.client.GetGrain<IEventGrain>(eventid);
+            int state;
+            state = await grain.SubmitFeedback(body.topic, body.rating, body.comment);
 
             return;
         }

@@ -18,10 +18,9 @@ namespace GrainInterfaces
         Task<EventAPI> Info();
 
         // submit event + topic feedback 
-        Task SubmitFeedback(int topic, int rating, string comment);
+        Task<int> SubmitFeedback(int topic, int rating, string comment);
 
         // get all feedback for specific topic
-        Task<FeedbackAPI> GetFeedback(int topicid);
-
-  }
+        Task<FeedbackAPI[]> GetFeedback(int topicid);
+    } 
 }
