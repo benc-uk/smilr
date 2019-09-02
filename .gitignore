@@ -79,3 +79,4 @@ tmp.zip
 newman/*
 requirements.lock
 **/smilr/charts
+orleans/API/run.ps1

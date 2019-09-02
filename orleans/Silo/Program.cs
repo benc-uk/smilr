@@ -31,6 +31,8 @@ namespace Silo
           .AddEnvironmentVariables();
       IConfigurationRoot appSettings = appSettingsBuilder.Build();
 
+      //Console.WriteLine(appSettings["Orleans:ConnectionString"]);
+
       // start the silo
       // see https://dotnet.github.io/orleans/Documentation/Deployment-and-Operations/Configuration-Guide/Typical-Configurations.html 
       silo = new SiloHostBuilder()

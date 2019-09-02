@@ -31,11 +31,9 @@ namespace API.Controllers
     [HttpPost("")]
     public async Task<EventAPI> Post([FromBody] EventAPI body)  
     {
-      logger.LogInformation($"POST /api/events: incoming body = {body}");
-
       // create new event code, which we tend to keep short to be more memorable
       string eventCode = makeId(6);
-      logger.LogInformation($"POST event code created = {eventCode}");
+      logger.LogInformation($"POST /api/events: Create new event, incoming body title = {body.title}, assigned to event code {eventCode}");
 
       // initialise grain with event info
       await ConnectClientIfNeeded();
@@ -43,23 +41,23 @@ namespace API.Controllers
       await grain.Update(body.title, body.type, body.start, body.end, body.topics);
 
       // return body with event code added
-      body.id = eventCode;
+      body._id = eventCode;
       return body;
     }
 
 
     // Update existing event
     // PUT api/events
-    [HttpPut("")]
-    public async Task Put([FromBody] EventAPI body)
+    [HttpPut("{eventCode}")]
+    public async Task Put([FromBody] EventAPI body, string eventCode)
     {
-        logger.LogInformation($"PUT /api/events: incoming body = {body}");
+        logger.LogInformation($"PUT /api/events: Update existing event, event code = {eventCode}, body title = {body.title}");
 
-        string eventCode = body.id;
+        //string eventCode = body._id;
         if (eventCode == "")
         {
-          Response.StatusCode = 204;
-          return;
+            Response.StatusCode = 204;
+            return;
         }
 
         // update grain
