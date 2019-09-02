@@ -1,6 +1,10 @@
-export Orleans__ConnectionString=''
-export Orleans__ClusterId='smilrcluster'
-export Orleans__ServiceId='smilr'
-export Orleans__LogLevel='3'
+#!/bin/bash
 
-dotnet run Silo.csproj
+if [ ! -f .env ]; then
+    echo ".env file not found"
+    exit
+fi
+
+export $(grep -v '^#' .env | xargs -0)
+
+dotnet run

@@ -4,7 +4,7 @@
       <h1>Fetching topic data...</h1>
       <spinner></spinner> 
     </div>
-    <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white" v-if="event">
+    <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white" v-if="event && topic">
       <h2 slot="header" class="text-truncate">{{ topic.desc }} ({{ event.title }})</h2>  
       <div class="card-body">  
         <h3>Please provide your feedback, click on a face</h3><br/>
