@@ -56,6 +56,7 @@ stages:
     steps:
       - bash: |
           go get -u github.com/rakyll/hey
+          cp /home/vsts/go/bin/hey .
           chmod a+x *.sh
           ./load-front.sh http://$(ingress-host)/staging-$(Build.BuildId) 30
           ./load-api.sh http://$(ingress-host)/staging-$(Build.BuildId) 20
