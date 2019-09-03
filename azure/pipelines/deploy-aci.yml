@@ -20,7 +20,7 @@ schedules:
 variables:
   - group: shared-variables
   - name: cleanup
-    value: false
+    value: true
   - name: resGroupPrefix
     value: Temp.Smilr
   - name: location
