@@ -10,6 +10,8 @@ trigger:
     include: 
     - master
   paths:
+    exclude:
+      - '*'
     include:
       - node/*
       - vue/*
@@ -19,6 +21,8 @@ pr:
     include:
     - master
   paths:
+    exclude:
+      - '*'
     include:
       - node/*
       - vue/*
