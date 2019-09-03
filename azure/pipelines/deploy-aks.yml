@@ -53,8 +53,8 @@ stages:
   - template: templates/run-loadtest.yml
     parameters:
       dependsOn: deployToAKS
-      apiHost: 'http://$(ingress-host)/staging-$(Build.BuildId)'
-      frontHost: 'http://$(ingress-host)/staging-$(Build.BuildId)'
+      apiHost: '$(ingress-host)/staging-$(Build.BuildId)'
+      frontHost: '$(ingress-host)/staging-$(Build.BuildId)'
 #
 # Deploy stage 3 - AKS production namespace
 #

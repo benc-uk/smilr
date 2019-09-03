@@ -32,8 +32,8 @@ jobs:
     # Run the tests
     - bash: >
         ./k6-v$(k6Ver)-linux64/k6 run -q 
-        -e API_HOST=${{ parameters.apiHost }}
-        -e FRONT_HOST=${{ parameters.frontHost }}
+        -e API_HOST=http://${{ parameters.apiHost }}
+        -e FRONT_HOST=http://${{ parameters.frontHost }}
         loadtest.js
       displayName: Run loadtest with k6
       workingDirectory: etc/loadtest
