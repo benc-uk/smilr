@@ -55,11 +55,12 @@ stages:
     dependsOn: deployToAKS
     steps:
       - bash: |
+          set -x
           go get -u github.com/rakyll/hey
-          cp /home/vsts/go/bin/hey .
+          export PATH=$PATH:/home/vsts/go/bin
           chmod a+x *.sh
-          ./load-front.sh http://$(ingress-host)/staging-$(Build.BuildId) 30
-          ./load-api.sh http://$(ingress-host)/staging-$(Build.BuildId) 20
+          ./load-front.sh http://$(dns-prefix)-frontend.$(location).azurecontainer.io 30
+          ./load-api.sh http://$(dns-prefix)-api.$(location).azurecontainer.io 20
         displayName: Call loadtest scripts
         workingDirectory: etc/loadtest
 
