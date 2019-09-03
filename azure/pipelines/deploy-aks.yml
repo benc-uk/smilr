@@ -55,6 +55,7 @@ stages:
     dependsOn: deployToAKS
     steps:
       - bash: |
+          go get -u github.com/rakyll/hey
           chmod a+x *.sh
           ./load-front.sh http://$(ingress-host)/staging-$(Build.BuildId) 30
           ./load-api.sh http://$(ingress-host)/staging-$(Build.BuildId) 20

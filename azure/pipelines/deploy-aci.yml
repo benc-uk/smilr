@@ -74,6 +74,7 @@ stages:
     dependsOn: deployWithACI
     steps:
       - bash: |
+          go get -u github.com/rakyll/hey
           chmod a+x *.sh
           ./load-front.sh http://$(dns-prefix)-frontend.$(location).azurecontainer.io 30
           ./load-api.sh http://$(dns-prefix)-api.$(location).azurecontainer.io 20
