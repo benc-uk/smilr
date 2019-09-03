@@ -78,12 +78,9 @@ stages:
           k6ver="0.25.1"
           wget -q https://github.com/loadimpact/k6/releases/download/v$k6ver/k6-v$k6ver-linux64.tar.gz
           tar -xzf k6-v$k6ver-linux64.tar.gz
-          ./k6-v$k6ver-linux64/k6 run -e API_HOST=http://$(dns-prefix)-api.$(location).azurecontainer.io -e FRONT_HOST=http://$(dns-prefix)-frontend.$(location).azurecontainer.io loadtest.js
+          ./k6-v$k6ver-linux64/k6 run -q -e API_HOST=http://$(dns-prefix)-api.$(location).azurecontainer.io -e FRONT_HOST=http://$(dns-prefix)-frontend.$(location).azurecontainer.io loadtest.js
         displayName: Call loadtest scripts
         workingDirectory: etc/loadtest
-
-      - publish: etc/loadtest/results
-        artifact: loadtest-results-aci
 
 #
 # Deploy stage - prod environment

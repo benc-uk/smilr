@@ -59,12 +59,10 @@ stages:
           k6ver="0.25.1"
           wget -q https://github.com/loadimpact/k6/releases/download/v$k6ver/k6-v$k6ver-linux64.tar.gz
           tar -xzf k6-v$k6ver-linux64.tar.gz
-          ./k6-v$k6ver-linux64/k6 run -e API_HOST=http://$(ingress-host)/staging-$(Build.BuildId) -e FRONT_HOST=http://$(ingress-host)/staging-$(Build.BuildId) loadtest.js
+          ./k6-v$k6ver-linux64/k6 run -q -e API_HOST=http://$(ingress-host)/staging-$(Build.BuildId) -e FRONT_HOST=http://$(ingress-host)/staging-$(Build.BuildId) loadtest.js
         displayName: Call loadtest scripts
         workingDirectory: etc/loadtest
 
-      - publish: etc/loadtest/results
-        artifact: loadtest-results-aks
 #
 # Deploy stage 3 - AKS production namespace
 #
