@@ -55,12 +55,11 @@ stages:
     dependsOn: deployToAKS
     steps:
       - bash: |
-          set -x
-          go get -u github.com/rakyll/hey
-          export PATH=$PATH:/home/vsts/go/bin
-          chmod a+x *.sh
-          ./load-front.sh http://$(ingress-host)/staging-$(Build.BuildId) 30
-          ./load-api.sh http://$(ingress-host)/staging-$(Build.BuildId) 20
+          set-x
+          k6ver="0.25.1"
+          wget -q https://github.com/loadimpact/k6/releases/download/v$k6ver/k6-v$k6ver-linux64.tar.gz
+          tar -xzf k6-v$k6ver-linux64.tar.gz
+          ./k6-v$k6ver-linux64/k6 run -e API_HOST=http://$(ingress-host)/staging-$(Build.BuildId) -e FRONT_HOST=http://$(ingress-host)/staging-$(Build.BuildId) loadtest.js
         displayName: Call loadtest scripts
         workingDirectory: etc/loadtest
 

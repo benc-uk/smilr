@@ -30,26 +30,26 @@ stages:
 #
 # Deploy stage - test environment
 #
-- stage: deployToTest
-  displayName: Deploy to Test
+# - stage: deployToTest
+#   displayName: Deploy to Test
   
-  variables:
-    dns-prefix: smilr-$(Build.BuildId)-test
+#   variables:
+#     dns-prefix: smilr-$(Build.BuildId)-test
 
-  jobs:
-  - template: templates/deploy-aci-arm.yml
-    parameters:
-      envName: ACI-Test
-      location: $(location)
-      imageTag: latest
-      resGroupPrefix: $(resGroupPrefix)
-      dnsPrefix: $(dns-prefix)
+#   jobs:
+#   - template: templates/deploy-aci-arm.yml
+#     parameters:
+#       envName: ACI-Test
+#       location: $(location)
+#       imageTag: latest
+#       resGroupPrefix: $(resGroupPrefix)
+#       dnsPrefix: $(dns-prefix)
 
-  - template: templates/run-postman-tests.yml
-    parameters:
-      dependsOn: deployWithACI
-      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+#   - template: templates/run-postman-tests.yml
+#     parameters:
+#       dependsOn: deployWithACI
+#       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+#       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
 #
 # Deploy stage - staging environment
@@ -74,12 +74,11 @@ stages:
     dependsOn: deployWithACI
     steps:
       - bash: |
-          set -x
-          go get -u github.com/rakyll/hey
-          export PATH=$PATH:/home/vsts/go/bin
-          chmod a+x *.sh
-          ./load-front.sh http://$(dns-prefix)-frontend.$(location).azurecontainer.io 30
-          ./load-api.sh http://$(dns-prefix)-api.$(location).azurecontainer.io 20
+          set-x
+          k6ver="0.25.1"
+          wget -q https://github.com/loadimpact/k6/releases/download/v$k6ver/k6-v$k6ver-linux64.tar.gz
+          tar -xzf k6-v$k6ver-linux64.tar.gz
+          ./k6-v$k6ver-linux64/k6 run -e API_HOST=http://$(dns-prefix)-api.$(location).azurecontainer.io -e FRONT_HOST=http://$(dns-prefix)-frontend.$(location).azurecontainer.io loadtest.js
         displayName: Call loadtest scripts
         workingDirectory: etc/loadtest
 
