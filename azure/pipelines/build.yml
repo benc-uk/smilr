@@ -10,19 +10,6 @@ trigger:
     include: 
     - master
   paths:
-    exclude:
-      - '*'
-    include:
-      - node/*
-      - vue/*
-      - azure/pipelines/build.yaml
-pr:
-  branches:
-    include:
-    - master
-  paths:
-    exclude:
-      - '*'
     include:
       - node/*
       - vue/*
