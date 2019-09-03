@@ -30,26 +30,26 @@ stages:
 #
 # Deploy stage - test environment
 #
-# - stage: deployToTest
-#   displayName: Deploy to Test
+- stage: deployToTest
+  displayName: Deploy to Test
   
-#   variables:
-#     dns-prefix: smilr-$(Build.BuildId)-test
+  variables:
+    dns-prefix: smilr-$(Build.BuildId)-test
 
-#   jobs:
-#   - template: templates/deploy-aci-arm.yml
-#     parameters:
-#       envName: ACI-Test
-#       location: $(location)
-#       imageTag: latest
-#       resGroupPrefix: $(resGroupPrefix)
-#       dnsPrefix: $(dns-prefix)
+  jobs:
+  - template: templates/deploy-aci-arm.yml
+    parameters:
+      envName: ACI-Test
+      location: $(location)
+      imageTag: latest
+      resGroupPrefix: $(resGroupPrefix)
+      dnsPrefix: $(dns-prefix)
 
-#   - template: templates/run-postman-tests.yml
-#     parameters:
-#       dependsOn: deployWithACI
-#       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
-#       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
+  - template: templates/run-postman-tests.yml
+    parameters:
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
 #
 # Deploy stage - staging environment
