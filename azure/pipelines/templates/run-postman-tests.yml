@@ -6,7 +6,7 @@ parameters:
 jobs:
   - job: runTestsJob
     dependsOn: ${{ parameters.dependsOn }}
-    displayName: 'Functional API tests'
+    displayName: 'Integration API tests'
 
     condition: and(succeeded(), ne(variables['skiptests'], 'true'))
 
