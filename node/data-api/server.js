@@ -60,7 +60,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true));
 
 // Set up logging
 if(app.get('env') === 'production') {
-  app.use(logger('combined'));
+  //app.use(logger('combined'));
+  app.use(logger('short'))
 } else if(app.get('env') === 'test') {
   // disable logging
 } else {
