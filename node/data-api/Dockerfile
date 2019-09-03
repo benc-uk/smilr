@@ -12,7 +12,7 @@ ENV BUILD_INFO $build_info
 WORKDIR /home/app
 
 # Install bash inside container just for debugging 
-RUN apk update && apk add bash
+RUN apk update && apk add bash && apk add curl
 
 # NPM install packages
 COPY ${basedir}/package*.json ./
