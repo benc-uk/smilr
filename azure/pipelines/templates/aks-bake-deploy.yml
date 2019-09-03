@@ -4,7 +4,7 @@ parameters:
 jobs:
 - deployment: deployToAKS
   displayName: Deploy to namespace ${{ parameters.envName }}
-  environment: AKS-${{ parameters.envName }}
+  environment: AKS-${{ parameters.envName }}.${{ parameters.envName }}
 
   pool:
     vmImage: Ubuntu-16.04
