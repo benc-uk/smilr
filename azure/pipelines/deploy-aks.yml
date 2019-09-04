@@ -17,8 +17,8 @@ variables:
     value: 'demo.aks'
   - name: aks-cluster
     value: 'aksnew'
-  - name: image-tag
-    value: 'latest'
+  # - name: image-tag
+  #   value: 'latest'
   - name: acr-name
     value: 'bcdemo'
 
