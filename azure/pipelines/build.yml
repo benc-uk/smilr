@@ -13,10 +13,7 @@ trigger:
     include:
       - node/*
       - vue/*
-      - azure/pipelines/*
-
-pr:
-- master
+      - azure/pipelines/build.yaml
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection

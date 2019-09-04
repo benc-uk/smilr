@@ -50,22 +50,11 @@ stages:
     parameters:
       envName: staging
 
-  - job: loadtestJob
-    displayName: Run Load Test
-    dependsOn: deployToAKS
-    steps:
-      - bash: |
-          set -x
-          go get -u github.com/rakyll/hey
-          export PATH=$PATH:/home/vsts/go/bin
-          chmod a+x *.sh
-          ./load-front.sh http://$(ingress-host)/staging-$(Build.BuildId) 30
-          ./load-api.sh http://$(ingress-host)/staging-$(Build.BuildId) 20
-        displayName: Call loadtest scripts
-        workingDirectory: etc/loadtest
-
-      - publish: etc/loadtest/results
-        artifact: loadtest-results-aks
+  - template: templates/run-loadtest.yml
+    parameters:
+      dependsOn: deployToAKS
+      apiHost: '$(ingress-host)/staging-$(Build.BuildId)'
+      frontHost: '$(ingress-host)/staging-$(Build.BuildId)'
 #
 # Deploy stage 3 - AKS production namespace
 #
