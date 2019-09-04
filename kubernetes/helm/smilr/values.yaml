@@ -17,14 +17,14 @@ cmCertIssuer:
 
 dataApi:
   imageTag: latest
-  replicas: 1
+  replicas: 2
   # Leave blank to use the internal service, override if using external database
   mongoConnStr: 
   imagePullPolicy: Always
   
 frontend:
   imageTag: latest
-  replicas: 1
+  replicas: 2
   imagePullPolicy: Always
 
 sentiment:
