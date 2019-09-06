@@ -107,14 +107,9 @@ dataAccess.connectMongo(monogUrl, retries, retryDelay)
   // This is important, pass our connected dataAccess 
   app.set('data', dataAccess);
 
-  var server = require('http').createServer(app);
-  server.keepAliveTimeout = 0; // This is a workaround for WSL v2 issues
-  server.listen(port);
-  console.log(`### API server listening on ${server.address().port}`);  
-  // var server = app.listen(port, function () {
-  //   var port = server.address().port;
-  //   console.log(`### API server listening on ${server.address().port}`);
-  // });
+  var server = app.listen(port, function () {
+    console.log(`### API server listening on ${server.address().port}`);
+  });
 })
 .catch(err => {
   console.error(`### ERROR! Unable to connect to MongoDB!, URL=${process.env.MONGO_CONNSTR}`);
