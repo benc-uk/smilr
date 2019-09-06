@@ -1,9 +1,13 @@
-const WORKSPACE_KEY = "KAI8338lcjQbARh+auMBKXxC68DnywnAPffE1La8o3PqccYgo2wdaxy3B9NgWcSgBKKYsapDSoTYZfR1qsa0tg=="
-const WORKSPACE_ID = "35f6f2a6-8ff2-4079-84c2-96bcf0ea95ce"
+//
+// Takes output JSON from k6 (k6.io) and pushes into Azure Log Analytics 
+// Requires: Node.js 10+ no other external or NPM libraries used
+// Author: Ben Coleman
+// Created: Sept 2019
+//
 
-const TABLE_NAME = "LoadTesting"
-const BATCH_SIZE = 40000  // Equates to very roughly 10mb chunks
-const DATE_TIME_FIELD = "data_time"
+const TABLE_NAME = "LoadTesting"      // Change if you feel like it
+const BATCH_SIZE = 40000              // Equates to very roughly 10mb chunks
+const DATE_TIME_FIELD = "data_time"   // From the standard K6 JSON output (data.time)
 
 //
 // Main send to Azure Log Analytics function
@@ -49,36 +53,37 @@ const buildSignature = function(sharedKey, date, contentLen, method, contentType
 };
 
 //
-// Mini HTTP client library so we don't have to import 'request'
+// Micro HTTP client library so we don't have to import 'request'
 //
-const httpClient = { }
-httpClient.postJSON = function(url, data, headers = {}) {
-  let req = require('url').parse(url);
-  req.headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-  Object.assign(req.headers, headers);
-  req.method = 'POST';
+const httpClient = {
+  postJSON(url, data, headers = {}) {
+    let req = require('url').parse(url);
+    req.headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+    Object.assign(req.headers, headers);
+    req.method = 'POST';
 
-  return this._rawHttpRequest(req, data)
-    .then((resp) => {return resp})
-    .catch((err) => console.error(err));
-};
-httpClient._rawHttpRequest = function(req, sendbody = null) {
-  return new Promise((resolve, reject) => {
-    const lib = req.protocol && req.protocol.startsWith('https') ? require('https') : require('http');
-    const request = lib.request(req, (response) => {
-      if (response.statusCode < 200 || response.statusCode > 299) {
-        reject(new Error('Failed, status code: ' + response.statusCode));
-      }
-      let body = [];
-      response.on('data', (chunk) => body.push(chunk));
-      response.on('end', () => resolve(response));
-    });
-    request.on('error', (err) => reject(err));
-    if(sendbody) request.write(sendbody);
-    request.end();
-  })
-};
+    return this._rawHttpRequest(req, data)
+      .then((resp) => {return resp})
+      .catch((err) => console.error(err));
+  },
 
+  _rawHttpRequest(req, sendbody = null) {
+    return new Promise((resolve, reject) => {
+      const lib = req.protocol && req.protocol.startsWith('https') ? require('https') : require('http');
+      const request = lib.request(req, (response) => {
+        if (response.statusCode < 200 || response.statusCode > 299) {
+          reject(new Error('Failed, status code: ' + response.statusCode));
+        }
+        let body = [];
+        response.on('data', (chunk) => body.push(chunk));
+        response.on('end', () => resolve(response));
+      });
+      request.on('error', (err) => reject(err));
+      if(sendbody) request.write(sendbody);
+      request.end();
+    })
+  }
+}
 
 /* =================================================================================== */
 
@@ -110,6 +115,8 @@ async function loadData(filename, runName, workspaceId, workspaceKey) {
 
 /* =================================================================================== */
 
+// We actually start down here...
+
 const fs = require('fs');
 const readline = require('readline');
 
@@ -135,5 +142,6 @@ if (!fs.existsSync(filename)) {
   process.exit(1)
 }
 
+// BEGIN!
 console.log(`### Will process file: ${filename}`)
 loadData(filename, runName, workspaceId, workspaceKey);
