@@ -96,9 +96,12 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "LoadTesting_CL \r\n| where runName_s  == \"{runName}\"\r\n| where  metric_s == \"http_req_duration\"\r\n| where isnotnull(data_value_d)\r\n| project TimeGenerated , data_value_d , data_tags_group_s, data_tags_method_s\r\n| summarize avg(data_value_d) by bin(TimeGenerated, {timeGrain}ms), data_tags_group_s, data_tags_method_s \r\n| render timechart ",
+        "query": "LoadTesting_CL \r\n| where runName_s == \"{runName}\"\r\n| where  metric_s == \"http_req_duration\"\r\n| where isnotnull(data_value_d)\r\n| project TimeGenerated, data_value_d, data_tags_group_s, data_tags_method_s\r\n| summarize avg(data_value_d) by bin(TimeGenerated, {timeGrain}ms), data_tags_group_s, data_tags_method_s \r\n| render timechart ",
         "size": 0,
         "title": "HTTP Response Times",
+        "timeContext": {
+          "durationMs": 2592000000
+        },        
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
         "crossComponentResources": [
@@ -134,9 +137,12 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "LoadTesting_CL \r\n| where runName_s  == \"{runName}\"\r\n| where  metric_s == \"vus\"\r\n| where isnotnull(data_value_d)\r\n| project TimeGenerated, data_value_d\r\n| summarize virtualUsers=avg(data_value_d) by bin(TimeGenerated, 500ms)\r\n| render barchart ",
+        "query": "LoadTesting_CL \r\n| where runName_s  == \"{runName}\"\r\n| where  metric_s == \"vus\"\r\n| where isnotnull(data_value_d)\r\n| project TimeGenerated, data_value_d\r\n| summarize virtualUsers=avg(data_value_d) by bin(TimeGenerated, {timeGrain}ms)\r\n| render barchart ",
         "size": 0,
         "title": "Virtual Users",
+        "timeContext": {
+          "durationMs": 2592000000
+        },        
         "color": "purple",
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
@@ -157,6 +163,9 @@
         "query": "LoadTesting_CL \r\n| where runName_s  == \"{runName}\"\r\n| where data_tags_status_s != \"200\"\r\n| where data_tags_status_s != \"\"\r\n| project TimeGenerated, data_tags_status_s\r\n| summarize errors=count() by bin(TimeGenerated, {timeGrain}ms), data_tags_status_s\r\n| render barchart ",
         "size": 0,
         "title": "Error Counts",
+        "timeContext": {
+          "durationMs": 2592000000
+        },        
         "color": "redBright",
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
@@ -176,7 +185,10 @@
         "version": "KqlItem/1.0",
         "query": "LoadTesting_CL \r\n| where runName_s == \"{runName}\"\r\n| where isnotnull(data_value_d)\r\n| where data_tags_status_s != \"\"\r\n| summarize count() by data_tags_status_s \r\n| render piechart ",
         "size": 2,
-        "noDataMessage": "Status Code Breakdown",
+        "title": "Status Code Breakdown",
+        "timeContext": {
+          "durationMs": 2592000000
+        },
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
         "crossComponentResources": [
@@ -197,6 +209,9 @@
         "query": "LoadTesting_CL\r\n| where runName_s  == \"{runName}\"\r\n| where data_tags_group_s != \"\"\r\n| where metric_s contains \"http_req_duration\" \r\n| summarize avg(data_value_d) by data_tags_group_s\r\n| render piechart ",
         "size": 2,
         "title": "Time Breakdown",
+        "timeContext": {
+          "durationMs": 2592000000
+        },        
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
         "crossComponentResources": [
