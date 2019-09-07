@@ -53,14 +53,13 @@ app.use(bodyParser.json())
 // Initialize Passport for bearer token validation
 if(process.env.SECURE_CLIENT_ID) require('./lib/auth')(app)
 
-// Enable Swagger UI, load in JSON definition doc
+// Enable Swagger UI, 
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true));
+const apiDoc = require('yamljs').load('./openapi.yaml'); // load in OpenAPi v3 YAML definition 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apiDoc, true));
 
 // Set up logging
 if(app.get('env') === 'production') {
-  //app.use(logger('combined'));
   app.use(logger('short'))
 } else if(app.get('env') === 'test') {
   // disable logging
