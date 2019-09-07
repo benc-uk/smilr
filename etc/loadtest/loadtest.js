@@ -26,7 +26,7 @@ const API_HOST = __ENV.API_HOST || `http://localhost:4000`
 const FRONT_HOST = __ENV.FRONT_HOST || `http://localhost:3000`
 
 // Globals
-var newEventId = ""
+var eventIds = {};
 
 export function setup() {
   console.log(`Data API host tested is: ${API_HOST}`)
@@ -58,12 +58,13 @@ export default function() {
       "POST /api/events: resp event is valid": (r) => JSON.parse(r.body).type === "event",
       "POST /api/events: resp event has ID": (r) => typeof JSON.parse(r.body)._id === "string"
     });
-    newEventId = JSON.parse(res.body)._id
+    eventIds[`${__VU}_${__ITER}`] = JSON.parse(res.body)._id;
   });
 
   group("API Reads", function() {
-    let url = `${API_HOST}/api/events/${newEventId}`;
-    let res = http.get(url);
+    let eventId = eventIds[`${__VU}_${__ITER}`]
+    let url = `${API_HOST}/api/events/${eventId}`;
+    let res = http.get(url, {tags: {name: 'GetEventUrl'}});
     check(res, {
       "GET /api/events/{id}: status 200": (r) => r.status === 200,
       "GET /api/events/{id}: fetched event is ok": (r) => JSON.parse(r.body)._id === newEventId
@@ -71,7 +72,8 @@ export default function() {
   });
 
   group("API Updates", function() {
-    let url = `${API_HOST}/api/events/${newEventId}`;
+    let eventId = eventIds[`${__VU}_${__ITER}`]
+    let url = `${API_HOST}/api/events/${eventId}`;
     let payload = JSON.stringify({
       "title": `Loadtesting data ${__VU}.${__ITER}`,
       "type": "event",
@@ -79,7 +81,7 @@ export default function() {
       "end": "2025-12-29",
       "topics": [ {"id": 1, "desc": "Blah blah"}, {"id": 2, "desc": "Test data is boring"} ]
     });
-    let res = http.put(url, payload, { headers: { "Content-Type": "application/json" } });
+    let res = http.put(url, payload, { tags: {name: 'PutEventUrl'}, headers: { "Content-Type": "application/json" } });
     check(res, {
       "PUT /api/events/{id}: status 200": (r) => r.status === 200,
       "PUT /api/events/{id}: updated date is ok": (r) => JSON.parse(r.body).end === "2025-12-29"
@@ -87,8 +89,9 @@ export default function() {
   });  
 
   group("API Deletes", function() {
-    let url = `${API_HOST}/api/events/${newEventId}`;
-    let res = http.request("DELETE", url);
+    let eventId = eventIds[`${__VU}_${__ITER}`]
+    let url = `${API_HOST}/api/events/${eventId}`;
+    let res = http.request("DELETE", url, null, {tags: {name: 'DeleteEventUrl'}});
     check(res, {
       "DELETE /api/events/{id}: status 200": (r) => r.status === 200,
       "DELETE /api/events/{id}: get deletion message": (r) => typeof JSON.parse(r.body).message === "string"
