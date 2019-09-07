@@ -35,5 +35,6 @@ jobs:
         -e API_HOST=http://${{ parameters.apiHost }}
         -e FRONT_HOST=http://${{ parameters.frontHost }}
         loadtest.js
+        --out json=result.json
       displayName: Run loadtest with k6
       workingDirectory: etc/loadtest

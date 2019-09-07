@@ -5,14 +5,15 @@ import { group } from "k6";
 //
 // Options, stages and thresholds for load test here
 //
+const STAGE_TIME = __ENV.STAGE_TIME || "20"
 export let options = { 
   maxRedirects: 4,
   stages: [
-    { duration: "30s", target: 10 },
-    { duration: "30s", target: 20 },
-    { duration: "30s", target: 50 },
-    { duration: "30s", target: 100 },
-    { duration: "30s", target: 0 },
+    { duration: `${STAGE_TIME}s`, target: 10 },
+    { duration: `${STAGE_TIME}s`, target: 20 },
+    { duration: `${STAGE_TIME}s`, target: 50 },
+    { duration: `${STAGE_TIME}s`, target: 80 },
+    { duration: `${STAGE_TIME}s`, target: 0 },
   ],
   thresholds: {
     "failed requests":   [ "rate < 0.1" ], 
