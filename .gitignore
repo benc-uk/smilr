@@ -75,12 +75,15 @@ dist/
 tmp/
 tmp.zip
 
-# Test rubbish
+# Unit test, code coverage and load test output
 newman/*
-requirements.lock
-**/smilr/charts
-orleans/API/run.ps1
-**/test-results.xml
-etc/loadtest/results
-!etc/loadtest/bin
 **/.nyc_output
+etc/loadtest/result.json
+**/test-results.xml
+
+# Helm reqs we don't want
+kubernetes/helm/**/requirements.lock
+kubernetes/helm/**/charts
+
+# Orleans things
+orleans/API/run.ps1
