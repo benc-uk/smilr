@@ -1,0 +1,216 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# 📈 K6 Load Test Reports 📊"
+      },
+      "name": "Hint Text"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "query": "",
+        "crossComponentResources": [
+          "{workspace}"
+        ],
+        "parameters": [
+          {
+            "id": "3677f4f1-7a4d-4c5b-880c-3f4cfc9e3fef",
+            "version": "KqlParameterItem/1.0",
+            "name": "subId",
+            "type": 6,
+            "isRequired": true,
+            "value": "",
+            "typeSettings": {
+              "additionalResourceOptions": [],
+              "includeAll": false
+            },
+            "label": "Subscription"
+          },
+          {
+            "id": "6cb58d80-19aa-4f63-94b1-199091e89b2c",
+            "version": "KqlParameterItem/1.0",
+            "name": "workspace",
+            "label": "Log Workspace",
+            "type": 5,
+            "isRequired": true,
+            "query": "project id, name, type",
+            "crossComponentResources": [
+              "{subId}"
+            ],
+            "typeSettings": {
+              "resourceTypeFilter": {
+                "microsoft.operationalinsights/workspaces": true
+              },
+              "additionalResourceOptions": [],
+              "showDefault": false
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "c29fb248-f978-4c67-ac0c-0ce4686c55c3",
+            "version": "KqlParameterItem/1.0",
+            "name": "timeGrain",
+            "label": "Time Granularity",
+            "type": 2,
+            "isRequired": true,
+            "value": "1000",
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "jsonData": "[\r\n    {\"value\":\"100\",   \"label\": \"100ms\"},\r\n    {\"value\":\"200\",   \"label\": \"200ms\"},\r\n    {\"value\":\"500\",   \"label\": \"500ms\"},\r\n    {\"value\":\"1000\",  \"label\": \"1s\"},\r\n    {\"value\":\"2000\",  \"label\": \"2s\"},\r\n    {\"value\":\"5000\",  \"label\": \"5s\"},\r\n    {\"value\":\"10000\", \"label\": \"10s\"}\r\n]"
+          },
+          {
+            "id": "26d30640-18aa-44ad-96a2-fb360ab3dd3b",
+            "version": "KqlParameterItem/1.0",
+            "name": "runName",
+            "label": "Load Test Run Name",
+            "type": 2,
+            "isRequired": true,
+            "query": "LoadTesting_CL \r\n| distinct runName_s\r\n| project RunName=runName_s\r\n| order by RunName desc",
+            "crossComponentResources": [
+              "{workspace}"
+            ],
+            "value": "",
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "timeContext": {
+              "durationMs": 2592000000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces"
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 6"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "LoadTesting_CL \r\n| where runName_s  == \"{runName}\"\r\n| where  metric_s == \"http_req_duration\"\r\n| where isnotnull(data_value_d)\r\n| project TimeGenerated , data_value_d , data_tags_group_s, data_tags_method_s\r\n| summarize avg(data_value_d) by bin(TimeGenerated, {timeGrain}ms), data_tags_group_s, data_tags_method_s \r\n| render timechart ",
+        "size": 0,
+        "title": "HTTP Response Times",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{workspace}"
+        ],
+        "visualization": "areachart",
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "data_tags_group_s",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "avg_data_value_d",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "runName",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "HTTP Response Times"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "LoadTesting_CL \r\n| where runName_s  == \"{runName}\"\r\n| where  metric_s == \"vus\"\r\n| where isnotnull(data_value_d)\r\n| project TimeGenerated, data_value_d\r\n| summarize virtualUsers=avg(data_value_d) by bin(TimeGenerated, 500ms)\r\n| render barchart ",
+        "size": 0,
+        "title": "Virtual Users",
+        "color": "purple",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "runName",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "Virtual Users"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "LoadTesting_CL \r\n| where runName_s  == \"{runName}\"\r\n| where data_tags_status_s != \"200\"\r\n| where data_tags_status_s != \"\"\r\n| project TimeGenerated, data_tags_status_s\r\n| summarize errors=count() by bin(TimeGenerated, {timeGrain}ms), data_tags_status_s\r\n| render barchart ",
+        "size": 0,
+        "title": "Error Counts",
+        "color": "redBright",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "runName",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "Error Counts"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "LoadTesting_CL \r\n| where runName_s == \"{runName}\"\r\n| where isnotnull(data_value_d)\r\n| where data_tags_status_s != \"\"\r\n| summarize count() by data_tags_status_s \r\n| render piechart ",
+        "size": 2,
+        "noDataMessage": "Status Code Breakdown",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "runName",
+        "comparison": "isNotEqualTo"
+      },
+      "customWidth": "50",
+      "name": "Status Code Breakdown"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "LoadTesting_CL\r\n| where runName_s  == \"{runName}\"\r\n| where data_tags_group_s != \"\"\r\n| where metric_s contains \"http_req_duration\" \r\n| summarize avg(data_value_d) by data_tags_group_s\r\n| render piechart ",
+        "size": 2,
+        "title": "Time Breakdown",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "runName",
+        "comparison": "isNotEqualTo"
+      },
+      "customWidth": "50",
+      "name": "Time Breakdown"
+    }
+  ],
+  "styleSettings": {},
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
