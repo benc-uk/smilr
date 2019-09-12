@@ -10,13 +10,13 @@ POST http://localhost:4000/api/events
 Content-Type: application/json
 
 {
-  "title": "Test Demo Event",
-  "type": "event",
-  "start": "2018-01-09",
-  "end": "2018-12-20",
+  "title": "API injected event",
+  "type": "lab",
+  "start": "2010-01-01",
+  "end": "2030-12-30",
   "topics": [
-    { "id": 1, "desc": "Introduction" },
-    { "id": 2, "desc": "Main Session" }
+    { "id": 1, "desc": "Topic A" },
+    { "id": 2, "desc": "Topic B" }
   ]
 }
 
