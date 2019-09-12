@@ -14,6 +14,8 @@ trigger:
       - node/*
       - vue/*
       - azure/pipelines/build.yaml
+pr:
+- master
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
@@ -21,12 +23,11 @@ variables:
   - group: shared-variables
 
 stages:
-#
-# Build stage
-#
+# Test, build and push stage
 - stage: build
   displayName: 'Build containers'
 
+  # Run unit tests
   jobs:
   - job: testJob
     displayName: 'Run unit tests'
@@ -43,7 +44,7 @@ stages:
       workingDirectory: node/data-api
 
     - task: PublishTestResults@2
-      condition: always()
+      condition: succeededOrFailed()
       inputs:
         testResultsFiles: 'node/data-api/*.xml'
         testResultsFormat: JUnit
@@ -56,13 +57,15 @@ stages:
       workingDirectory: vue
 
     - task: PublishTestResults@2
-      condition: always()
+      condition: succeededOrFailed()
       inputs:
         testResultsFiles: 'vue/*.xml'
         testResultsFormat: JUnit
         testRunTitle: Vue SPA Tests
 
+  # Build image and push to ACR only in master (i.e. merged PRs) 
   - job: buildJob
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     dependsOn: testJob
     displayName: 'Build & push to ACR'
     
