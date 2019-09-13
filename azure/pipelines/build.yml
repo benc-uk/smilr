@@ -15,11 +15,6 @@ trigger:
     - vue/*
     - azure/pipelines/build.yaml
 
-pr:
-  branches:
-    include:
-    - '*'
-
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
 variables:
@@ -76,7 +71,7 @@ stages:
   - job: containerBuildJob
     # NOTE! Only run in master branch (i.e. merged PRs) 
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    dependsOn: testJob
+    dependsOn: unitTestsJob
     displayName: 'Build & push to ACR'
     
     pool:
