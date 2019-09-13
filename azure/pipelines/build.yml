@@ -11,12 +11,14 @@ trigger:
     - master
   paths:
     include:
-      - node/*
-      - vue/*
-      - azure/pipelines/build.yaml
+    - node/*
+    - vue/*
+    - azure/pipelines/build.yaml
 
 pr:
-- master
+  branches:
+    include:
+    - master
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
