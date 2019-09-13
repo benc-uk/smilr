@@ -76,6 +76,7 @@ This is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) so contains multipl
 │   ├── pipelines        Azure Pipelines for CI/CD
 │   └── templates        Example ARM templates
 ├── docs               Documentation
+├── docker             Docker compose files, Note. Dockerfiles are elsewhere 
 ├── etc                Supporting files, pictures and other artefacts 
 ├── go                 Work in progress re-write of the main services in Go
 │   ├── data-api         Data API in Go
