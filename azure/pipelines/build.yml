@@ -34,7 +34,7 @@ stages:
 
   jobs:
     # =====================================================================================
-    # Run unit tests
+    # Run unit tests for Data API and Vue.js SPA/client
     # =====================================================================================  
   - job: unitTestsJob
     displayName: 'Run unit tests'
