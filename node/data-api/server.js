@@ -55,7 +55,7 @@ if(process.env.SECURE_CLIENT_ID) require('./lib/auth')(app)
 
 // Enable Swagger UI, 
 const swaggerUi = require('swagger-ui-express');
-const apiDoc = require('yamljs').load('./openapi.yaml'); // load in OpenAPi v3 YAML definition 
+const apiDoc = require('yamljs').load(`${__dirname}/openapi.yaml`); // load in OpenAPi v3 YAML definition 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(apiDoc, true));
 
 // Set up logging

@@ -10,7 +10,7 @@ jobs:
     condition: and(succeeded(), ne(variables['skip-tests'], 'true'))
 
     pool:
-      vmImage: Ubuntu-16.04
+      vmImage: ubuntu-latest
 
     steps:
     - bash: echo "Waiting for ${{ parameters.dnsName }} to propogate in DNS"

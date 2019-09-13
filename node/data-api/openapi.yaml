@@ -46,7 +46,7 @@ paths:
 
   # ========== Events API ==========
   /events:
-    # All events, not paginated because I'm lazy
+    # All events, not paginated because I'm lazy!
     get:
       description: Returns **all** events from the system, use with caution
       operationId: getAllEvents
