@@ -21,7 +21,7 @@ Content-Type: application/json
     { "id": 2, "desc": "Topic B" }
   ]
 }
-### store id of new event
+### Store the id of new event
 @eventId = {{create.response.body.$._id}}
 
 
