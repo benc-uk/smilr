@@ -46,7 +46,7 @@ This application supports a range of demonstration, and learning scenarios, such
 
 
 # Architecture & Core App Components
-![arch](./etc/architecture.png){: .framed .padded}
+![arch](./etc/img/architecture.png){: .framed .padded}
 
 ## Logical Components
 The app consists of four logical components
@@ -57,7 +57,7 @@ The app consists of four logical components
 - **Sentiment Service** - *Optional* service for sentiment scoring of user feedback comments. Only used when deploying to Kubernetes. [Read more](kubernetes#optional-appendix---enable-sentiment-microservice)
 
 ## Screenshot
-![screenshot](./etc/screen.png){: .framed .padded}
+![screenshot](./etc/img/screen.png){: .framed .padded}
 
 # Getting Started
 There are a number of ways to get started with this project depending on your goals. Below are some suggestions and pointers
@@ -82,8 +82,8 @@ This is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) so contains multipl
 │   └── frontend         Frontend service in Go
 ├── kubernetes         Docs and files to support deployment to Kubernetes & AKS
 │   ├── helm             Helm chart for deploying Smilr with Helm
-│   ├── using-ingress    Deployment YAML for use with K8S Ingress
-│   └── using-lb         Deployment YAML for use with K8S LoadBalancer
+│   ├── advanced         Deployment YAML for use with Ingress, SSL and persistence
+│   └── basic            Simple deployment without Ingress or persistence
 ├── mobile             Nativescript + Vue.js mobile client 
 ├── node               Main microservices, written in Node.js
 │   ├── data-api         Data API service source code

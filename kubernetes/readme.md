@@ -59,7 +59,7 @@ Deployment YAML files have been provided to directly stand up Smilr in your Kube
 Before deployment of either scenario the files `frontend.yaml` and `data-api.yaml` will require editing to point to your images and the relevant registry (i.e. ACR) & tag you are using. It is assumed you will be deploying to the default namespace
 
 ### Scenario A - Basic
-![kube2](../etc/kube-scenario-a.png){: .framed .padded}  
+![kube2](../etc/img/kube-scenario-a.png){: .framed .padded}  
 **[Deployment Files for this scenario are in /kubernetes/basic](./basic/)** 
 
 This method exposes the two Smilr services externally with their own external IP addresses, using the Kubernetes ***LoadBalancer*** service type. This has the advantage of not requiring any dependency on an Ingress controller but does require some manual editing of the YAML during deployment. 
@@ -91,7 +91,7 @@ The steps for deployment are:
 
 
 ### Scenario B - Advanced
-![kube1](../etc/kube-scenario-b.png){: .framed .padded}  
+![kube1](../etc/img/kube-scenario-b.png){: .framed .padded}  
 **[Deployment Files for this scenario are in /kubernetes/advanced](./advanced/)** 
 
 This method uses a Kubernetes *Ingress* to provide a single entrypoint into your cluster, and URL path rules to route traffic to the Smilr frontend and data-api as required. This simplifies config as the API endpoint is the same as where the Vue.js SPA is served from so it doesn't require any fiddling with IP addresses or DNS. 
