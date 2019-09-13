@@ -7,13 +7,12 @@ name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none
 pr: none
 
-schedules:
-- cron: "30 5 * * *"
-  displayName: Daily build
-  branches:
-    include:
-    - master  
-  always: true
+# schedules:
+# - cron: "30 5 * * *"
+#   displayName: Daily build
+#   branches:
+#     include:
+#     - master  
 
 # NOTE! The 'shared-variables' variable group must be pre-created and populated
 # - Expected variables: acr-connection
