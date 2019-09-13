@@ -26,6 +26,7 @@ variables:
   - group: shared-variables
 
 stages:
+# Single stage: test, build and push
 - stage: build
   displayName: 'Unit test & build containers'
 
@@ -67,7 +68,7 @@ stages:
 
   # Build image and push to ACR 
   - job: buildJob
-    # Only run in master branch (i.e. merged PRs) 
+    # NOTE! Only run in master branch (i.e. merged PRs) 
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     dependsOn: testJob
     displayName: 'Build & push to ACR'
