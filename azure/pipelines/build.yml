@@ -21,9 +21,8 @@ variables:
   - group: shared-variables
 
 stages:
-# Test, build and push stage
 - stage: build
-  displayName: 'Build containers'
+  displayName: 'Unit test & build containers'
 
   # Run unit tests
   jobs:
