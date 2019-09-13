@@ -26,9 +26,9 @@ variables:
     value: westeurope
 
 stages:
-#
+# *************************************************************************************
 # Deploy stage - test environment
-#
+# *************************************************************************************
 - stage: deployToTest
   displayName: Deploy to Test
   
@@ -36,6 +36,9 @@ stages:
     dns-prefix: smilr-$(Build.BuildId)-test
 
   jobs:
+    # =====================================================================================
+    # Deploy app in Azure Container Instances via ARM template
+    # =====================================================================================
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Test
@@ -44,15 +47,18 @@ stages:
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
+    # =====================================================================================
+    # Run integration tests against deployed system
+    # =====================================================================================
   - template: templates/run-postman-tests.yml
     parameters:
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
-#
+# *************************************************************************************
 # Deploy stage - staging environment
-#
+# *************************************************************************************
 - stage: deployToStaging
   displayName: Deploy to Staging
 
@@ -60,6 +66,9 @@ stages:
     dns-prefix: smilr-$(Build.BuildId)-staging
 
   jobs:
+    # =====================================================================================
+    # Deploy app in Azure Container Instances via ARM template
+    # =====================================================================================  
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Staging
@@ -68,15 +77,18 @@ stages:
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
+    # =====================================================================================
+    # Run load tests against deployed system
+    # =====================================================================================
   - template: templates/run-loadtest.yml
     parameters:
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
-#
+# *************************************************************************************
 # Deploy stage - prod environment
-#
+# *************************************************************************************
 - stage: deployToProduction
   displayName: Deploy to Production
   
@@ -84,6 +96,9 @@ stages:
     dns-prefix: smilr-$(Build.BuildId)-prod
 
   jobs:
+    # =====================================================================================
+    # Deploy app in Azure Container Instances via ARM template
+    # =====================================================================================    
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Production
@@ -92,9 +107,9 @@ stages:
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
-#
+# *************************************************************************************
 # Cleanup stage - remove resources after run
-#
+# *************************************************************************************
 - stage: cleanup
   displayName: Remove Resources
   condition: eq(variables['cleanup'], 'true')

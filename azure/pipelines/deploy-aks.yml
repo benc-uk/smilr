@@ -17,15 +17,15 @@ variables:
     value: 'demo.aks'
   - name: aks-cluster
     value: 'aksnew'
-  # - name: image-tag
+  # - name: image-tag     # As pipeline is manual - set at deploy time
   #   value: 'latest'
   - name: acr-name
     value: 'bcdemo'
 
 stages:
-#
+# *************************************************************************************
 # Deploy stage 1 - AKS test namespace
-#
+# *************************************************************************************
 - stage: deployToTest
   displayName: AKS Test
 
@@ -39,9 +39,10 @@ stages:
       dependsOn: deployToAKS
       apiHost: '$(ingress-host)/test-$(Build.BuildId)'
       frontHost: '$(ingress-host)/test-$(Build.BuildId)'
-#
+
+# *************************************************************************************
 # Deploy stage 2 - AKS staging namespace
-#
+# *************************************************************************************
 - stage: deployToStaging
   displayName: AKS Staging
 
@@ -55,9 +56,10 @@ stages:
       dependsOn: deployToAKS
       apiHost: '$(ingress-host)/staging-$(Build.BuildId)'
       frontHost: '$(ingress-host)/staging-$(Build.BuildId)'
-#
+
+# *************************************************************************************
 # Deploy stage 3 - AKS production namespace
-#
+# *************************************************************************************
 - stage: deployToProduction
   displayName: AKS Production
 

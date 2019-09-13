@@ -26,13 +26,17 @@ variables:
   - group: shared-variables
 
 stages:
+# *************************************************************************************
 # Single stage: test, build and push
+# *************************************************************************************
 - stage: build
   displayName: 'Unit test & build containers'
 
-  # Run unit tests
   jobs:
-  - job: testJob
+    # =====================================================================================
+    # Run unit tests
+    # =====================================================================================  
+  - job: unitTestsJob
     displayName: 'Run unit tests'
     
     pool:
@@ -66,8 +70,10 @@ stages:
         testResultsFormat: JUnit
         testRunTitle: Vue SPA Tests
 
-  # Build image and push to ACR 
-  - job: buildJob
+    # =====================================================================================
+    # Build container image and push to ACR 
+    # =====================================================================================
+  - job: containerBuildJob
     # NOTE! Only run in master branch (i.e. merged PRs) 
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     dependsOn: testJob
@@ -85,7 +91,7 @@ stages:
         Dockerfile: node/data-api/Dockerfile
         buildContext: .
         repository: smilr/data-api
-        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) [Linux container]"
         tags: |
           latest
           $(Build.BuildNumber)
