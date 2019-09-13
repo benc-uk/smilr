@@ -11,7 +11,7 @@ jobs:
   environment: ${{ parameters.envName }}
 
   pool:
-    vmImage: Ubuntu-16.04
+    vmImage: ubuntu-latest
 
   variables:
     resGroup: ${{ parameters.resGroupPrefix }}.$(Environment.Name)

@@ -4,10 +4,11 @@ parameters:
 jobs:
 - deployment: deployToAKS
   displayName: Deploy to namespace ${{ parameters.envName }}
+  # Dot here is very important, it targets the namespace in the environments view UI
   environment: AKS-${{ parameters.envName }}.${{ parameters.envName }}
 
   pool:
-    vmImage: Ubuntu-16.04
+    vmImage: ubuntu-latest
 
   strategy:
     runOnce:
