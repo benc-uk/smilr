@@ -15,11 +15,6 @@ trigger:
     - vue/*
     - azure/pipelines/build.yaml
 
-pr:
-  branches:
-    include:
-    - '*'
-
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
 variables:
