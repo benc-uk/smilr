@@ -26,9 +26,9 @@ variables:
   - group: shared-variables
 
 stages:
-# Test, build and push stage
+# Single stage: test, build and push
 - stage: build
-  displayName: 'Build containers'
+  displayName: 'Unit test & build containers'
 
   # Run unit tests
   jobs:
@@ -36,7 +36,7 @@ stages:
     displayName: 'Run unit tests'
     
     pool:
-      vmImage: Ubuntu-16.04
+      vmImage: ubuntu-latest
         
     steps:
     - bash: |
@@ -66,14 +66,15 @@ stages:
         testResultsFormat: JUnit
         testRunTitle: Vue SPA Tests
 
-  # Build image and push to ACR only in master (i.e. merged PRs) 
+  # Build image and push to ACR 
   - job: buildJob
+    # NOTE! Only run in master branch (i.e. merged PRs) 
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     dependsOn: testJob
     displayName: 'Build & push to ACR'
     
     pool:
-      vmImage: Ubuntu-16.04
+      vmImage: ubuntu-latest
 
     steps:
     - task: Docker@2
