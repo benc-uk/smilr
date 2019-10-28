@@ -3,29 +3,30 @@
 {{- $ingressName := (printf "%s-ingress" (include "smilr.fullname" .)) -}}
 {{- $certName := (printf "%s-cert" (include "smilr.fullname" .)) -}}
 
-{{ if .Values.domainSuffix }}
+{{ if .Values.ingress.domainSuffix }}
 
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: "{{ $ingressName }}"
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
-    {{ if .Values.cmCertIssuer }}
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    certmanager.k8s.io/cluster-issuer: {{ .Values.cmCertIssuer }}
-    {{ else }}
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    {{ if .Values.ingress.certIssuer }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.certIssuer }}
     {{ end }}
 spec:
-  {{ if .Values.cmCertIssuer }}
+  {{ if or .Values.ingress.certIssuer .Values.ingress.certName }}
   tls:
   - hosts:
-    - "{{ .Release.Name }}.{{ .Values.domainSuffix }}"
+    - "{{ .Release.Name }}-{{ .Values.ingress.domainSuffix }}"
+    {{ if .Values.ingress.certName }}
+    secretName: {{ .Values.ingress.certName }}
+    {{ else }}
     secretName: "{{ $certName }}"
+    {{ end }}
   {{ end }}
   rules:
-  - host: "{{ .Release.Name }}.{{ .Values.domainSuffix }}"
+  - host: "{{ .Release.Name }}-{{ .Values.ingress.domainSuffix }}"
     http:
       paths:
       - path: /api
@@ -44,7 +45,7 @@ kind: Ingress
 metadata:
   name: "{{ $ingressName }}-api"
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: "/api"
 spec:
@@ -63,7 +64,7 @@ kind: Ingress
 metadata:
   name: "{{ $ingressName }}-frontend"
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: "/"
     nginx.ingress.kubernetes.io/add-base-url: "true"

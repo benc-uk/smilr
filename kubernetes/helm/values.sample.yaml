@@ -5,14 +5,17 @@
 # Change to blank string to pull from prebuilt images on Docker Hub
 registryPrefix: changeme.azurecr.io/
 
-# Leave blank if not using DNS with your ingress
-# Get the name of your AKS DNS zone by running `az network dns zone list -o table`
-domainSuffix: smilr.<randomstuff>.<region>.aksapp.io
-
-# If using cert-manager to issue TLS certs for HTTPS support 
-# Leave blank if you haven't set up cert-manager to disable HTTPS
-cmCertIssuer: 
-
+ingress:
+  # If blank then path based routing will be used, and ingress IP can be used
+  # If set then release name will be prepended and host routing used 
+  domainSuffix: 
+  # Ingress class annotation
+  class: addon-http-application-routing
+  # Set to enable TLS, when using cert-manager and dynamically issued certs 
+  certIssuer:
+  # Set to enable TLS with a static secret
+  certName:
+    
 dataApi:
   imageTag: latest
   replicas: 1
