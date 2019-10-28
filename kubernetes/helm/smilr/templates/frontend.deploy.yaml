@@ -33,7 +33,7 @@ spec:
 
         env:
         - name: API_ENDPOINT
-          value: {{ if .Values.domainSuffix }} "/api"  {{ else }} "/{{ .Release.Name }}/api" {{ end }}
+          value: {{ if .Values.ingress.domainSuffix }} "/api"  {{ else }} "/{{ .Release.Name }}/api" {{ end }}
 
         livenessProbe:
           httpGet:
