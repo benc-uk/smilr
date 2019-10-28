@@ -12,15 +12,15 @@ pr: none
 variables:
   - group: shared-variables
   - name: ingress-host
-    value: 'aks.benco.io'
+    value: 'smilr.kube.benco.io'
   - name: aks-resgrp
     value: 'demo.aks'
   - name: aks-cluster
-    value: 'aksnew'
+    value: $(aks-connection)
   # - name: image-tag     # As pipeline is manual - set at deploy time
   #   value: 'latest'
   - name: acr-name
-    value: 'bcdemo'
+    value: $(aks-connection)
 
 stages:
 # *************************************************************************************
