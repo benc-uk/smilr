@@ -11,7 +11,7 @@ pr: none
 # - Expected variables: acr-connection, azure-connection
 variables:
   - group: shared-variables
-  - name: ingress-host
+  - name: dns-suffix
     value: 'smilr.kube.benco.io'
   - name: aks-resgrp
     value: 'demo.aks'
