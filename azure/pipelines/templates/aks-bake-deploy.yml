@@ -39,7 +39,8 @@ jobs:
             releaseName: ${{ parameters.envName }}-$(Build.BuildId)
             chartType: FilePath
             chartPath: kubernetes/helm/smilr
-            overrideValues: "registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(image-tag),frontend.imageTag=$(image-tag),ingress.domainSuffix=smilr.kube.benco.io,ingress.domainSuffix=kube-benco-io-cert"
+            namespace: ${{ parameters.envName }}
+            overrideValues: "registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(image-tag),frontend.imageTag=$(image-tag),ingress.domainSuffix=$(dns-suffix),ingress.certName=kube-benco-io-cert"
 
         # - task: KubernetesManifest@0
         #   displayName: Bake manifests from Helm chart
