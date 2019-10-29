@@ -75,18 +75,18 @@ The steps for deployment are:
     cd kubernetes/basic
     kubectl apply -f mongodb.yaml
     kubectl apply -f data-api.yaml
-    kubectl get svc data-api-svc -w
+    kubectl get svc data-api -w
     ```
-    Wait for `data-api-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting. **Note.** This can take about 5-10 minutes in some cases, so be patient.  
-    Copy the external IP address and edit `frontend.yaml` modify the `API_ENDPOINT` env URL to point to the data-api IP which was just assigned. You will need to have `/api` as part of the URL, e.g. **http://{data-api-svc-ip}/api**
+    Wait for service `data-api` to get an external IP address assigned, once it has, hit CTRL+C stop waiting. **Note.** This can take about 5-10 minutes in some cases, so be patient.  
+    Copy the external IP address and edit `frontend.yaml` modify the `API_ENDPOINT` env URL to point to the data-api IP which was just assigned. You will need to have `/api` as part of the URL, e.g. **http://{data-api-service-ip}/api**
 
 3. Deploy the frontend
     ```
     kubectl apply -f frontend.yaml
-    kubectl get svc frontend-svc -w
+    kubectl get svc frontend -w
     ```
-    Wait for `frontend-svc` to get an external IP address assigned, once it has, hit CTRL+C stop waiting.  
-    The frontend-svc external IP address is where you can access the Smilr app, e.g. by visiting **http://{frontend-svc-ip}/** in your browser
+    Wait for service `frontend` to get an external IP address assigned, once it has, hit CTRL+C stop waiting.  
+    The `frontend` service external IP address is where you can access the Smilr app, e.g. by visiting **http://{frontend-service-ip}/** in your browser
 
 
 

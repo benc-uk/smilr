@@ -32,11 +32,11 @@ spec:
 
         env:     
         - name: MONGO_CONNSTR
-          value: mongodb://mongodb-svc
+          value: mongodb://mongodatabase
 
         # Optional
         #- name: SENTIMENT_API_ENDPOINT
-        #  value: http://sentiment-svc:5000
+        #  value: http://sentiment:5000
 
         livenessProbe:
           httpGet:
@@ -59,7 +59,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: data-api-svc
+  name: data-api
   labels:
     app: data-api
 spec:

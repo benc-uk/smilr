@@ -8,19 +8,11 @@ trigger: none
 pr: none
 
 # NOTE! The 'shared-variables' variable group must be pre-created and populated
-# - Expected variables: acr-connection, azure-connection
+# - Expected variables: aks-connection, acr-connection, azure-connection, aks-resgrp
 variables:
   - group: shared-variables
   - name: dns-suffix
-    value: 'smilr.kube.benco.io'
-  - name: aks-resgrp
-    value: 'demo.aks'
-  - name: aks-cluster
-    value: $(aks-connection)
-  # - name: image-tag     # As pipeline is manual - set at deploy time
-  #   value: 'latest'
-  - name: acr-name
-    value: $(aks-connection)
+    value: 'kube.benco.io'
 
 stages:
 # *************************************************************************************
@@ -30,15 +22,15 @@ stages:
   displayName: AKS Test
 
   jobs:
-  - template: templates/aks-bake-deploy.yml
+  - template: templates/helm-deploy.yml
     parameters:
       envName: test
 
   - template: templates/run-postman-tests.yml
     parameters:
       dependsOn: deployToAKS
-      apiHost: '$(ingress-host)/test-$(Build.BuildId)'
-      frontHost: '$(ingress-host)/test-$(Build.BuildId)'
+      apiHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
+      frontHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
 
 # *************************************************************************************
 # Deploy stage 2 - AKS staging namespace
@@ -47,15 +39,15 @@ stages:
   displayName: AKS Staging
 
   jobs:
-  - template: templates/aks-bake-deploy.yml
+  - template: templates/helm-deploy.yml
     parameters:
       envName: staging
 
   - template: templates/run-loadtest.yml
     parameters:
       dependsOn: deployToAKS
-      apiHost: '$(ingress-host)/staging-$(Build.BuildId)'
-      frontHost: '$(ingress-host)/staging-$(Build.BuildId)'
+      apiHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
+      frontHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
 
 # *************************************************************************************
 # Deploy stage 3 - AKS production namespace
@@ -64,7 +56,6 @@ stages:
   displayName: AKS Production
 
   jobs:
-  - template: templates/aks-bake-deploy.yml
+  - template: templates/helm-deploy.yml
     parameters:
       envName: prod
-
