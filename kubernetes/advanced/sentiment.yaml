@@ -52,7 +52,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: sentiment-svc
+  name: sentiment
 spec:
   type: ClusterIP
   ports:
