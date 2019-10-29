@@ -1,49 +1,56 @@
-{{- $frontendFullName := (printf "%s-frontend" (include "smilr.fullname" .)) -}}
-{{- $dataApifullName := (printf "%s-data-api" (include "smilr.fullname" .)) -}}
-{{- $ingressName := (printf "%s-ingress" (include "smilr.fullname" .)) -}}
-{{- $certName := (printf "%s-cert" (include "smilr.fullname" .)) -}}
+{{- $fullName := include "smilr.fullname" . -}}
+{{- $tlsEnable := (or .Values.ingress.certIssuer .Values.ingress.certName) -}}
 
 {{ if .Values.ingress.domainSuffix }}
-
+#
+# Ingress for host based routing, release name prefixed 
+#
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $ingressName }}"
+  name: "{{ $fullName }}"
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     {{ if .Values.ingress.certIssuer }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.certIssuer }}
     {{ end }}
+    {{ if $tlsEnable }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    {{ else }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    {{ end }}
 spec:
-  {{ if or .Values.ingress.certIssuer .Values.ingress.certName }}
+  {{ if $tlsEnable }}
   tls:
   - hosts:
-    - "{{ .Release.Name }}-{{ .Values.ingress.domainSuffix }}"
+    - "{{ $fullName }}.{{ .Values.ingress.domainSuffix }}"
     {{ if .Values.ingress.certName }}
     secretName: {{ .Values.ingress.certName }}
     {{ else }}
-    secretName: "{{ $certName }}"
+    secretName: "{{ $fullName }}"
     {{ end }}
   {{ end }}
   rules:
-  - host: "{{ .Release.Name }}-{{ .Values.ingress.domainSuffix }}"
+  - host: "{{ $fullName }}.{{ .Values.ingress.domainSuffix }}"
     http:
       paths:
       - path: /api
         backend:
-          serviceName: {{ $dataApifullName }}
+          serviceName: {{ $fullName }}-data-api
           servicePort: 80
       - path: /
         backend:
-          serviceName: {{ $frontendFullName }}
+          serviceName: {{ $fullName }}-frontend
           servicePort: 80
 
 {{ else }}
-
+#
+# Ingress for path URL based routing, no DNS required only ingress IP
+#
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $ingressName }}-api"
+  name: "{{ $fullName }}-api"
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -54,7 +61,7 @@ spec:
       paths:
       - path: "/{{ .Release.Name }}/api"
         backend:
-          serviceName: {{ $dataApifullName }}
+          serviceName: {{ $fullName }}-data-api
           servicePort: 80
 
 ---
@@ -62,7 +69,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $ingressName }}-frontend"
+  name: "{{ $fullName }}-frontend"
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -74,6 +81,6 @@ spec:
       paths:
       - path: "/{{ .Release.Name }}"
         backend:
-          serviceName: {{ $frontendFullName }}
+          serviceName: {{ $fullName }}-frontend
           servicePort: 80    
 {{ end }}

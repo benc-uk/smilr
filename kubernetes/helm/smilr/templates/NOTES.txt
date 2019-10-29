@@ -1,18 +1,19 @@
+{{- $fullName := include "smilr.fullname" . -}}
 
 -=-=- 🚀  Smilr has been deployed! 😄  -=-=-
 
 {{ if .Values.ingress.domainSuffix }}
-{{ if or .Values.ingress.certIssuer .Values.ingress.certName }}The app is accessible at https://{{ .Release.Name }}-{{ .Values.ingress.domainSuffix }}/ 
-{{ else }}The app is accessible at http://{{ .Release.Name }}-{{ .Values.ingress.domainSuffix }}/
+{{ if or .Values.ingress.certIssuer .Values.ingress.certName }}The app is accessible at https://{{ $fullName }}.{{ .Values.ingress.domainSuffix }}/ 
+{{ else }}The app is accessible at http://{{ $fullName }}.{{ .Values.ingress.domainSuffix }}/
 {{ end }}
 It might take a while for the DNS record to be created & propagate, so please wait. 
-Check DNS with: dig +short {{ .Release.Name }}-{{ .Values.ingress.domainSuffix }}
+Check DNS with: dig +short {{ $fullName }}.{{ .Values.ingress.domainSuffix }}
 {{ else }}
 No domainSuffix was provided, so use the external IP of your ingress
 Run these commands:
 
 export INGRESS_IP=$(kubectl get svc -l app=addon-http-application-routing-nginx-ingress -A -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}')
-echo -e "\n\nSmilr app is accessible at http://$INGRESS_IP/{{ .Release.Name }}/\n\n"
+echo -e "\n\nSmilr app is accessible at http://$INGRESS_IP/{{ $fullName }}/\n\n"
 {{ end }}
 {{ if .Values.mongodb.persistence.enabled }}There might also be a delay while the MongoDB starts and is assigned a persistent volume {{ end }}
 Have fun, bye!
