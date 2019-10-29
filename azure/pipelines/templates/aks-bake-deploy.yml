@@ -24,8 +24,8 @@ jobs:
         - task: HelmDeploy@0
           displayName: 'Helm update dependencies'
           inputs:
-            # azureSubscriptionEndpoint: $(azure-connection)
-            # azureResourceGroup: $(aks-resgrp)
+            azureSubscriptionEndpoint: $(azure-connection)
+            azureResourceGroup: $(aks-resgrp)
             kubernetesCluster: $(aks-connection)
             command: dependency
             arguments: 'update kubernetes/helm/smilr'
