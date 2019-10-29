@@ -2,7 +2,7 @@ apiVersion: v1
 appVersion: "4.0"
 description: A Helm chart to deploy Smilr microservices app to Kubernetes
 name: smilr
-version: 1.7.0
+version: 2.0.2
 icon: https://github.com/benc-uk/smilr/blob/master/vue/public/favicon.png
 maintainers: 
   - name: Ben Coleman

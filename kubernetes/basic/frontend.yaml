@@ -33,7 +33,7 @@ spec:
 
         env:       
         - name: API_ENDPOINT
-          # !CHANGE THIS! To the external IP of data-api-svc or DNS name if using external DNS, don't forget /api 
+          # !CHANGE THIS! To the external IP of data-api service or DNS name if using external DNS, don't forget /api 
           value: http://12.34.56.89/api
 
         resources:
@@ -48,7 +48,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: frontend-svc
+  name: frontend
   annotations:
     # !CHANGE THIS! To your real DNS domain
     external-dns.alpha.kubernetes.io/hostname: smilrbasic.56539f01234e4e00981e.westeurope.aksapp.io

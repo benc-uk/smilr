@@ -67,7 +67,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: mongodb-svc
+  name: mongodatabase
 spec:
   type: ClusterIP
   ports:

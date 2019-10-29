@@ -11,13 +11,15 @@ metadata:
   name: "smilr-ingress"
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    certmanager.k8s.io/cluster-issuer: letsencrypt-staging
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # !CHANGE THIS! Remove if using a static pre-created cert
+    cert-manager.io/cluster-issuer: letsencrypt-staging
 spec:
   tls:
   - hosts:
     # !CHANGE THIS! To match the DNS zone / domain name you are using
     - smilr.changeme.changeme.aksapp.io
+    # !CHANGE THIS! If using a pe-created cert, put the secret name here
     secretName: smilr-cert-staging
   rules:
   # !CHANGE THIS! To match the DNS zone / domain name you are using
@@ -26,9 +28,9 @@ spec:
       paths:
       - path: /api
         backend:
-          serviceName: data-api-svc
+          serviceName: data-api
           servicePort: 80
       - path: /
         backend:
-          serviceName: frontend-svc
+          serviceName: frontend
           servicePort: 80
