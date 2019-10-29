@@ -29,8 +29,8 @@ stages:
   - template: templates/run-postman-tests.yml
     parameters:
       dependsOn: deployToAKS
-      apiHost: 'test-$(Build.BuildId)-$(dns-suffix)'
-      frontHost: 'test-$(Build.BuildId)-$(dns-suffix)'
+      apiHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
+      frontHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
 
 # *************************************************************************************
 # Deploy stage 2 - AKS staging namespace
@@ -46,8 +46,8 @@ stages:
   - template: templates/run-loadtest.yml
     parameters:
       dependsOn: deployToAKS
-      apiHost: 'test-$(Build.BuildId)-$(dns-suffix)'
-      frontHost: 'test-$(Build.BuildId)-$(dns-suffix)'
+      apiHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
+      frontHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
 
 # *************************************************************************************
 # Deploy stage 3 - AKS production namespace
