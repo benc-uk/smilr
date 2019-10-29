@@ -24,30 +24,40 @@ jobs:
         - task: HelmDeploy@0
           displayName: 'Helm update dependencies'
           inputs:
-            azureSubscriptionEndpoint: $(azure-connection)
-            azureResourceGroup: $(aks-resgrp)
-            kubernetesCluster: $(aks-cluster)
+            # azureSubscriptionEndpoint: $(azure-connection)
+            # azureResourceGroup: $(aks-resgrp)
+            kubernetesCluster: $(aks-connection)
             command: dependency
             arguments: 'update kubernetes/helm/smilr'
 
-        - task: KubernetesManifest@0
-          displayName: Bake manifests from Helm chart
-          name: bake
+        - task: HelmDeploy@0
+          displayName: 'Helm install Smilr chart'
           inputs:
-            action: bake
             kubernetesServiceConnection: $(aks-connection)
-            releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
-            helmChart: kubernetes/helm/smilr
-            overrides: |
-              registryPrefix:$(acr-name).azurecr.io/
-              dataApi.imageTag:$(image-tag)
-              frontend.imageTag:$(image-tag)
-              mongo.usePersistence:false
-              domainSuffix:$(dns-suffix)
+            command: upgrade
+            releaseName: ${{ parameters.envName }}-$(Build.BuildId)
+            chartType: FilePath
+            chartPath: kubernetes/helm/smilr
+            overrideValues: "registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag:$(image-tag),frontend.imageTag:$(image-tag),ingress.domainSuffix=smilr.kube.benco.io,ingress.domainSuffix=kube-benco-io-cert"
 
-        - task: KubernetesManifest@0
-          displayName: Deploy manifests
-          inputs:
-            kubernetesServiceConnection: $(aks-connection)
-            namespace: ${{ parameters.envName }}
-            manifests: $(bake.manifestsBundle)
+        # - task: KubernetesManifest@0
+        #   displayName: Bake manifests from Helm chart
+        #   name: bake
+        #   inputs:
+        #     action: bake
+        #     kubernetesServiceConnection: $(aks-connection)
+        #     releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
+        #     helmChart: kubernetes/helm/smilr
+        #     overrides: |
+        #       registryPrefix:$(acr-name).azurecr.io/
+        #       dataApi.imageTag:$(image-tag)
+        #       frontend.imageTag:$(image-tag)
+        #       mongo.usePersistence:false
+        #       domainSuffix:$(dns-suffix)
+
+        # - task: KubernetesManifest@0
+        #   displayName: Deploy manifests
+        #   inputs:
+        #     kubernetesServiceConnection: $(aks-connection)
+        #     namespace: ${{ parameters.envName }}
+        #     manifests: $(bake.manifestsBundle)
