@@ -13,14 +13,6 @@ variables:
   - group: shared-variables
   - name: dns-suffix
     value: 'smilr.kube.benco.io'
-  # - name: aks-resgrp
-  #   value: 'demo.aks'
-  # - name: aks-cluster
-  #   value: $(aks-connection)
-  # - name: image-tag     # As pipeline is manual - set at deploy time
-  #   value: 'latest'
-  # - name: acr-name
-  #   value: $(aks-connection)
 
 stages:
 # *************************************************************************************
@@ -30,43 +22,41 @@ stages:
   displayName: AKS Test
 
   jobs:
-  - template: templates/aks-bake-deploy.yml
+  - template: templates/helm-deploy.yml
     parameters:
       envName: test
 
   - template: templates/run-postman-tests.yml
     parameters:
       dependsOn: deployToAKS
-      # apiHost: '$(ingress-host)/test-$(Build.BuildId)'
-      # frontHost: '$(ingress-host)/test-$(Build.BuildId)'
       apiHost: 'test-$(Build.BuildId)-$(dns-suffix)'
       frontHost: 'test-$(Build.BuildId)-$(dns-suffix)'
 
 # *************************************************************************************
 # Deploy stage 2 - AKS staging namespace
 # *************************************************************************************
-# - stage: deployToStaging
-#   displayName: AKS Staging
+- stage: deployToStaging
+  displayName: AKS Staging
 
-#   jobs:
-#   - template: templates/aks-bake-deploy.yml
-#     parameters:
-#       envName: staging
+  jobs:
+  - template: templates/helm-deploy.yml
+    parameters:
+      envName: staging
 
-#   - template: templates/run-loadtest.yml
-#     parameters:
-#       dependsOn: deployToAKS
-#       apiHost: '$(ingress-host)/staging-$(Build.BuildId)'
-#       frontHost: '$(ingress-host)/staging-$(Build.BuildId)'
+  - template: templates/run-loadtest.yml
+    parameters:
+      dependsOn: deployToAKS
+      apiHost: 'test-$(Build.BuildId)-$(dns-suffix)'
+      frontHost: 'test-$(Build.BuildId)-$(dns-suffix)'
 
 # *************************************************************************************
 # Deploy stage 3 - AKS production namespace
 # *************************************************************************************
-# - stage: deployToProduction
-#   displayName: AKS Production
+- stage: deployToProduction
+  displayName: AKS Production
 
-#   jobs:
-#   - template: templates/aks-bake-deploy.yml
-#     parameters:
-#       envName: prod
+  jobs:
+  - template: templates/helm-deploy.yml
+    parameters:
+      envName: prod
 

@@ -41,25 +41,3 @@ jobs:
             chartPath: kubernetes/helm/smilr
             namespace: ${{ parameters.envName }}
             overrideValues: "registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(image-tag),frontend.imageTag=$(image-tag),ingress.domainSuffix=$(dns-suffix),ingress.certName=kube-benco-io-cert"
-
-        # - task: KubernetesManifest@0
-        #   displayName: Bake manifests from Helm chart
-        #   name: bake
-        #   inputs:
-        #     action: bake
-        #     kubernetesServiceConnection: $(aks-connection)
-        #     releaseName: '${{ parameters.envName }}-$(Build.BuildId)'
-        #     helmChart: kubernetes/helm/smilr
-        #     overrides: |
-        #       registryPrefix:$(acr-name).azurecr.io/
-        #       dataApi.imageTag:$(image-tag)
-        #       frontend.imageTag:$(image-tag)
-        #       mongo.usePersistence:false
-        #       domainSuffix:$(dns-suffix)
-
-        # - task: KubernetesManifest@0
-        #   displayName: Deploy manifests
-        #   inputs:
-        #     kubernetesServiceConnection: $(aks-connection)
-        #     namespace: ${{ parameters.envName }}
-        #     manifests: $(bake.manifestsBundle)
