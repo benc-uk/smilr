@@ -67,7 +67,7 @@ export default function() {
     let res = http.get(url, {tags: {name: 'GetEventUrl'}});
     check(res, {
       "GET /api/events/{id}: status 200": (r) => r.status === 200,
-      "GET /api/events/{id}: fetched event is ok": (r) => JSON.parse(r.body)._id === newEventId
+      "GET /api/events/{id}: fetched event is ok": (r) => JSON.parse(r.body)._id === eventId
     });    
   });
 
