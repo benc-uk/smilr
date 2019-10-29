@@ -33,6 +33,7 @@ jobs:
         - task: HelmDeploy@0
           displayName: 'Helm install Smilr chart'
           inputs:
+            connectionType: Kubernetes Service Connection
             kubernetesServiceConnection: $(aks-connection)
             command: upgrade
             releaseName: ${{ parameters.envName }}-$(Build.BuildId)
