@@ -35,6 +35,8 @@ sentiment:
   image: mcr.microsoft.com/azure-cognitive-services/sentiment:1.1.009301-amd64-preview
 
 mongodb:
+  image:
+    tag: 4.0-xenial
   persistence:
     enabled: false
     size: 1Gi
