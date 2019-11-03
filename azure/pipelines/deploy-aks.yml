@@ -4,8 +4,16 @@
 # Ben C, 2019
 #
 name: $(Date:yyyy-MM-dd)$(Rev:.rr)
-trigger: none
-pr: none
+trigger:
+  branches:
+    include: 
+    - master
+  paths:
+    include:
+    - pipelines/deploy-aks.yml
+    - pipelines/templates/helm-deploy.yml
+    - kubernetes/helm/*
+pr: [master]
 
 # NOTE! The 'shared-variables' variable group must be pre-created and populated
 # - Expected variables: aks-connection, acr-connection, azure-connection, aks-resgrp
