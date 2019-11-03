@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "smilr.fullname" . }}-test-api"
+  labels:
+{{ include "smilr.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget-api-info
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "smilr.fullname" . }}-data-api:80/api/info']
+    - name: wget-api-events
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "smilr.fullname" . }}-data-api:80/api/events']
+  restartPolicy: Never

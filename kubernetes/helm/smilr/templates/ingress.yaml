@@ -1,5 +1,4 @@
-{{- $fullName := include "smilr.fullname" . -}}
-{{- $tlsEnable := (or .Values.ingress.certIssuer .Values.ingress.certName) -}}
+{{- $tlsEnabled := (or .Values.ingress.certIssuer .Values.ingress.certName) -}}
 
 {{ if .Values.ingress.domainSuffix }}
 #
@@ -8,39 +7,41 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $fullName }}"
+  name: {{ include "smilr.fullname" . }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     {{ if .Values.ingress.certIssuer }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.certIssuer }}
     {{ end }}
-    {{ if $tlsEnable }}
+    {{ if $tlsEnabled }}
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     {{ else }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     {{ end }}
+  labels:
+{{ include "smilr.labels" . | indent 4 }}
 spec:
-  {{ if $tlsEnable }}
+  {{ if $tlsEnabled }}
   tls:
   - hosts:
-    - "{{ $fullName }}.{{ .Values.ingress.domainSuffix }}"
+    - "{{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}"
     {{ if .Values.ingress.certName }}
     secretName: {{ .Values.ingress.certName }}
     {{ else }}
-    secretName: "{{ $fullName }}"
+    secretName: {{ include "smilr.fullname" . }}
     {{ end }}
   {{ end }}
   rules:
-  - host: "{{ $fullName }}.{{ .Values.ingress.domainSuffix }}"
+  - host: "{{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}"
     http:
       paths:
       - path: /api
         backend:
-          serviceName: {{ $fullName }}-data-api
+          serviceName: {{ include "smilr.fullname" . }}-data-api
           servicePort: 80
       - path: /
         backend:
-          serviceName: {{ $fullName }}-frontend
+          serviceName: {{ include "smilr.fullname" . }}-frontend
           servicePort: 80
 
 {{ else }}
@@ -50,7 +51,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $fullName }}-api"
+  name: "{{ include "smilr.fullname" . }}-data-api"
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -61,7 +62,7 @@ spec:
       paths:
       - path: "/{{ .Release.Name }}/api"
         backend:
-          serviceName: {{ $fullName }}-data-api
+          serviceName: {{ include "smilr.fullname" . }}-data-api
           servicePort: 80
 
 ---
@@ -69,7 +70,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $fullName }}-frontend"
+  name: "{{ include "smilr.fullname" . }}-frontend"
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -81,6 +82,6 @@ spec:
       paths:
       - path: "/{{ .Release.Name }}"
         backend:
-          serviceName: {{ $fullName }}-frontend
+          serviceName: {{ include "smilr.fullname" . }}-frontend
           servicePort: 80    
 {{ end }}
