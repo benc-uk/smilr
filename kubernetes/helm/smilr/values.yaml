@@ -36,7 +36,7 @@ sentiment:
 
 mongodb:
   image:
-    tag: 4.0-xenial
+    tag: 5.0-xenial
   persistence:
     enabled: false
     size: 1Gi
