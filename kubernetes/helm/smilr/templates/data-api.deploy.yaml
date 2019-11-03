@@ -1,31 +1,23 @@
-{{- $fullName := (printf "%s-data-api" (include "smilr.fullname" .)) -}}
-{{- $name := (printf "%s-data-api" (include "smilr.name" .)) -}}
-{{- $mongoFullName := (printf "%s-mongodb" (include "smilr.fullname" .)) -}}
-{{- $sentimentSvcName := (printf "%s-sentiment" (include "smilr.fullname" .)) -}}
-
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: {{ $fullName }}
+  name: {{ include "smilr.fullname" . }}-data-api
   labels:
-    app: {{ $name }}
-    chart: {{ template "smilr.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "smilr.labels" . | indent 4 }} 
 spec:
   replicas: {{ .Values.dataApi.replicas }}
   selector:
     matchLabels:
-      app: {{ $name }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "smilr.name" . }}-data-api
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ $name }}
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "smilr.name" . }}-data-api
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
-      - name: {{ $name }}
+      - name: {{ include "smilr.name" . }}-data-api
  
         image: "{{ .Values.registryPrefix }}smilr/data-api:{{ .Values.dataApi.imageTag }}"
         imagePullPolicy: {{ .Values.dataApi.imagePullPolicy }}
@@ -42,7 +34,7 @@ spec:
 
         {{ if .Values.sentiment.enabled }}
         - name: SENTIMENT_API_ENDPOINT
-          value: http://{{ $sentimentSvcName }}:5000
+          value: http://{{ include "smilr.fullname" . }}-sentiment:5000
         {{ end }}
 
         livenessProbe:

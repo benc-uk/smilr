@@ -11,12 +11,11 @@ This document is not intended to be a step by step guide for deploying Azure Con
  - Azure Citadel - [Kubernetes: Hands On With Microservices](https://aka.ms/kubelab)
  - Azure Docs - [Quickstart: Deploy an Azure Container Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
 
-> **NOTE.** When creating your AKS cluster it is strongly recommended you use the portal and enable the "HTTP Application Routing add-on" during creation, or create with the `--enable-addons http_application_routing` option. This will automatically enable an ingress controller in your cluster and also provide you with an external DNS zone in Azure, with Kubernetes configured to automatically create records in it. 
+> **NOTE.** When creating your AKS cluster it is strongly recommended you enable the "HTTP Application Routing add-on" during creation, or create with the `--enable-addons http_application_routing` option. This will automatically enable an ingress controller in your cluster and also provide you with an external DNS zone in Azure, with Kubernetes configured to automatically create records in it. 
 
 ---
 
 # Deploying Smilr to Kubernetes
-
 Once you have AKS deployed and are able to interact with it via `kubectl` you can start deploying Smilr to it
 
 ## Pre-requisites 
@@ -30,15 +29,12 @@ Notes on Smilr Kubernetes deployment:
 - When deploying to Kubernetes use of the `default` namespace is assumed.
 - Kubernetes version 1.9+ is assumed, if you are using 1.8 or older the API version in the deployment YAML may require changing e.g. to `apiVersion: apps/v1beta1`. Older versions have not been tested.
 
-
 ---
-
 
 ## Option 1 - Helm (Easiest)
 [Helm](https://helm.sh/) is a package manager for Kubernetes, and a Helm Chart has been created to deploy Smilr. This means you can deploy Smilr with a single command. The chart is called simply 'smilr' and is in the helm subdirectory 
 
 ### Helm & Smilr Quick Start
-
 - Install Helm https://docs.helm.sh/using_helm/#installing-helm
 - Add Helm to your Kubernetes cluster: `helm init`
 - From root of this project `cd kubernetes/helm`
@@ -48,9 +44,7 @@ Notes on Smilr Kubernetes deployment:
 Full details of using the Helm chart are here:  
 #### [:page_with_curl: Helm Chart Docs](helm/readme.md)
 
-
 ---
-
 
 ## Option 2 - Direct Deployment
 
@@ -87,7 +81,6 @@ The steps for deployment are:
     ```
     Wait for service `frontend` to get an external IP address assigned, once it has, hit CTRL+C stop waiting.  
     The `frontend` service external IP address is where you can access the Smilr app, e.g. by visiting **http://{frontend-service-ip}/** in your browser
-
 
 
 ### Scenario B - Advanced

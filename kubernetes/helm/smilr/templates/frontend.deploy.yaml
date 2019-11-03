@@ -1,29 +1,23 @@
-{{- $fullName := (printf "%s-frontend" (include "smilr.fullname" .)) -}}
-{{- $name := (printf "%s-frontend" (include "smilr.name" .)) -}}
-
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: {{ $fullName }}
+  name: {{ include "smilr.fullname" . }}-frontend
   labels:
-    app: {{ $name }}
-    chart: {{ template "smilr.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "smilr.labels" . | indent 4 }} 
 spec:
   replicas: {{ .Values.dataApi.replicas }}
   selector:
     matchLabels:
-      app: {{ $name }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "smilr.name" . }}-frontend
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ $name }}
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "smilr.name" . }}-frontend
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
-      - name: {{ $name }}
+      - name: {{ include "smilr.name" . }}
 
         image: "{{ .Values.registryPrefix }}smilr/frontend:{{ .Values.frontend.imageTag }}"
         imagePullPolicy: {{ .Values.frontend.imagePullPolicy }}
