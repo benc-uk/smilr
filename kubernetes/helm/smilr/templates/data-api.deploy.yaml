@@ -27,7 +27,7 @@ spec:
 
         env:     
         - name: MONGO_CONNSTR
-          value: {{ if .Values.dataApi.mongoConnStr }} {{ .Values.dataApi.mongoConnStr }} {{ else }} "mongodb://{{ .Release.Name }}-mongodb" {{ end }}
+          value: {{ if .Values.dataApi.mongoConnStr }} {{ .Values.dataApi.mongoConnStr }} {{ else }} "mongodbZ://{{ .Release.Name }}-mongodb" {{ end }}
 
         - name: RELEASE_INFO
           value: 'Helm release: {{ .Release.Name }}, namespace: {{ .Release.Namespace }}, revision: {{ .Release.Revision }}, chart: {{ .Chart.Name }}-{{ .Chart.Version }}'
