@@ -718,13 +718,13 @@
 							"script": {
 								"id": "e87ce3c9-0508-4fff-a0e1-641b50f1793a",
 								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
+									"pm.test(\"Frontend: Response must be valid and have a body\", function () {",
 									"     pm.response.to.be.ok;",
 									"     pm.response.to.be.withBody;",
 									"     pm.response.to.have.header(\"Content-Type\", \"text/html; charset=UTF-8\")",
 									"});",
 									"",
-									"pm.test(\"there is an app title\", function () {",
+									"pm.test(\"Frontend: There is an app title in HTML\", function () {",
 									"    var html = pm.response.text()",
 									"    pm.expect(html).to.include(\"<title>Smilr</title>\")",
 									"});",
