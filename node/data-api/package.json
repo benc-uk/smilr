@@ -1,13 +1,14 @@
 {
   "name": "smilr-data-api",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "main": "server.js",
   "engines": {
-    "node": "^10.15.0"
+    "node": "^12.13.0"
   },
   "description": "Main Smilr microservice, RESTful data API",
   "scripts": {
     "start": "node server.js",
+    "watch": "nodemon server.js",
     "test": "NODE_ENV=test mocha --exit --sort",
     "test-report": "NODE_ENV=test MONGO_CONNSTR=not-used mocha --exit --sort --reporter mocha-junit-reporter",
     "code-coverage": "NODE_ENV=test MONGO_CONNSTR=not-used node ./node_modules/nyc/bin/nyc.js npm test"
@@ -15,27 +16,16 @@
   "license": "MIT",
   "repository": "https://github.com/benc-uk/smilr",
   "dependencies": {
-    "applicationinsights": "^1.4.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "dotenv": "^8.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "jsonwebtoken": "^8.4.0",
-    "mongodb": "^3.3.0",
+    "mongoose": "^5.7.7",
+    "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.9.1",
-    "passport-azure-ad": "^4.1.0",
-    "request": "^2.88.0",
-    "swagger-ui-express": "^4.0.5",
-    "yamljs": "^0.3.0"
+    "slugify": "^1.3.6"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.2.0",
-    "mocha-junit-reporter": "^1.23.1",
-    "mock-express-response": "^0.2.2",
-    "nyc": "^14.1.1",
-    "sinon": "^7.4.1",
-    "sinon-chai": "^3.3.0",
-    "supertest": "^4.0.2"
+    "nodemon": "^1.19.4"
   }
 }
