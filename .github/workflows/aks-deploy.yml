@@ -1,0 +1,28 @@
+name: Deploy to AKS
+
+on:
+  issue_comment:
+    types: [created, deleted]
+    
+jobs:
+  # ==================================================================================
+  # Continuous deployment job - deploy to AKS
+  # ==================================================================================
+  release-job:
+    needs: build-job
+    runs-on: ubuntu-latest
+    steps:  
+    - name: 'Checkout repo'
+      uses: actions/checkout@v1
+
+    - name: 'Connect to AKS'
+      uses: azure/aks-set-context@v1
+      with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+          resourceGroupName: 'demo.aks'
+          clusterName: 'bcdemo'
+      id: login
+
+    - name: 'Deploy'
+      run: |
+        helm ls     
