@@ -9,6 +9,11 @@ jobs:
   # Continuous deployment job - deploy to AKS
   # ==================================================================================
   release-job:
+    env:
+      ACR_NAME: bcdemo
+      AKS_NAME: bcdemo
+      RES_GRP: demo.aks
+
     runs-on: ubuntu-latest
     steps:  
     - name: 'Checkout repo'
@@ -18,10 +23,10 @@ jobs:
       uses: azure/aks-set-context@v1
       with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-          resource-group: 'demo.aks'
-          cluster-name: 'bcdemo'
+          resource-group: $RES_GRP
+          cluster-name: $AKS_NAME
       id: login
 
     - name: 'Helm'
       run: |
-        helm ls     
+        helm upgrade test-123 kubernetes/helm/smilr --install --namespace test --set "registryPrefix=bcdemo.azurecr.io/,dataApi.imageTag=latest,frontend.imageTag=latest,ingress.domainSuffix=kube.benco.io,ingress.certName=kube-benco-io-cert"
