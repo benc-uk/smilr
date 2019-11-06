@@ -35,6 +35,7 @@ jobs:
 
     - name: 'Helm dep update'
       run: |
+        helm init
         helm dep update kubernetes/helm/smilr
 
     - name: 'Helm install'
