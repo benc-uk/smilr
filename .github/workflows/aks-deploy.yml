@@ -9,7 +9,6 @@ jobs:
   # Continuous deployment job - deploy to AKS
   # ==================================================================================
   release-job:
-    needs: build-job
     runs-on: ubuntu-latest
     steps:  
     - name: 'Checkout repo'
