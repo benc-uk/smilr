@@ -19,6 +19,7 @@ jobs:
       IMAGE_TAG: latest
       DOMAIN: kube.benco.io
       CERT: kube-benco-io-cert
+      ENVIRON: test
 
     runs-on: ubuntu-latest
     steps:  
@@ -39,6 +40,7 @@ jobs:
         helm init --client-only
         helm dep update kubernetes/helm/smilr
 
-    - name: 'Helm install'
+    - name: 'Helm install release'
       run: |
-        helm upgrade test-123 kubernetes/helm/smilr --install --namespace test --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+        helm upgrade $ENVIRON-gh kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+
