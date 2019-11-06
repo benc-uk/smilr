@@ -29,7 +29,7 @@ frontend:
   imagePullPolicy: Always
 
 #
-# Sentiment cognative service API defaults
+# Sentiment cognitive service API defaults
 #
 sentiment:
   enabled: false
