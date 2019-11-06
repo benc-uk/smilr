@@ -13,6 +13,9 @@ jobs:
       ACR_NAME: bcdemo
       AKS_NAME: bcdemo
       RES_GRP: demo.aks
+      IMAGE_TAG: latest
+      DOMAIN: kube.benco.io
+      CERT: kube-benco-io-cert
 
     runs-on: ubuntu-latest
     steps:  
@@ -23,10 +26,10 @@ jobs:
       uses: azure/aks-set-context@v1
       with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-          resource-group: $RES_GRP
-          cluster-name: $AKS_NAME
+          resource-group: '{{ env.RES_GRP }}'
+          cluster-name: '{{ env.AKS_NAME }}'
       id: login
 
     - name: 'Helm'
       run: |
-        helm upgrade test-123 kubernetes/helm/smilr --install --namespace test --set "registryPrefix=bcdemo.azurecr.io/,dataApi.imageTag=latest,frontend.imageTag=latest,ingress.domainSuffix=kube.benco.io,ingress.certName=kube-benco-io-cert"
+        helm upgrade test-123 kubernetes/helm/smilr --install --namespace test --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
