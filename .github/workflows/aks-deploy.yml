@@ -22,10 +22,6 @@ jobs:
           cluster-name: 'bcdemo'
       id: login
 
-    - name: 'List kube'
-      run: |
-        ls -R .kube
-
     - name: 'Helm'
       run: |
         helm ls     
