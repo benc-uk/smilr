@@ -19,10 +19,14 @@ jobs:
       uses: azure/aks-set-context@v1
       with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-          resourceGroupName: 'demo.aks'
-          clusterName: 'bcdemo'
+          resource-group: 'demo.aks'
+          cluster-name: 'bcdemo'
       id: login
 
-    - name: 'Deploy'
+    - name: 'List kube'
+      run: |
+        ls -R .kube
+
+    - name: 'Helm'
       run: |
         helm ls     
