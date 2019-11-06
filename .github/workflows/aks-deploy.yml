@@ -6,20 +6,52 @@ on:
       - master
     paths:
       - '.github/workflows/aks-deploy.yml'
-    
+
+env:
+  ACR_NAME: bcdemo
+  AKS_NAME: bcdemo
+  RES_GRP: demo.aks
+  IMAGE_TAG: latest
+  DOMAIN: kube.benco.io
+  CERT: kube-benco-io-cert
+  
 jobs:
   # ==================================================================================
-  # Continuous deployment job - deploy to AKS
+  # Continuous deployment job - deploy to AKS test namespace
   # ==================================================================================
-  release-job:
+  deploy-k8s-test:
     env:
-      ACR_NAME: bcdemo
-      AKS_NAME: bcdemo
-      RES_GRP: demo.aks
-      IMAGE_TAG: latest
-      DOMAIN: kube.benco.io
-      CERT: kube-benco-io-cert
-      ENVIRON: test
+      ENVIRON: test    
+
+    runs-on: ubuntu-latest
+    steps:  
+    - name: 'Checkout repo'
+      uses: actions/checkout@v1
+
+    - name: 'Connect to AKS'
+      uses: azure/aks-set-context@v1
+      with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+          resource-group: '${{ env.RES_GRP }}'
+          cluster-name: '${{ env.AKS_NAME }}'
+      id: login
+
+    - name: 'Helm dep update'
+      run: |
+        printenv
+        helm init --client-only
+        helm dep update kubernetes/helm/smilr
+
+    - name: 'Helm install release'
+      run: |
+        helm upgrade $ENVIRON-gh kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+
+  # ==================================================================================
+  # Continuous deployment job - deploy to AKS staging namespace
+  # ==================================================================================
+  deploy-k8s-staging:
+    env:
+      ENVIRON: staging    
 
     runs-on: ubuntu-latest
     steps:  
