@@ -1,8 +1,11 @@
 name: Deploy to AKS
 
 on:
-  issue_comment:
-    types: [created, deleted]
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/aks-deploy.yml'
     
 jobs:
   # ==================================================================================
@@ -30,6 +33,10 @@ jobs:
           cluster-name: '${{ env.AKS_NAME }}'
       id: login
 
-    - name: 'Helm'
+    - name: 'Helm dep update'
+      run: |
+        helm dep update smilrkubernetes/helm/smilr
+
+    - name: 'Helm install'
       run: |
         helm upgrade test-123 kubernetes/helm/smilr --install --namespace test --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
