@@ -38,7 +38,6 @@ jobs:
 
     - name: 'Helm dep update'
       run: |
-        printenv
         helm init --client-only
         helm dep update kubernetes/helm/smilr
 
@@ -47,9 +46,31 @@ jobs:
         helm upgrade $ENVIRON-gh kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
   # ==================================================================================
+  # Integration API tests
+  # ==================================================================================
+  run-api-tests:
+    needs: deploy-k8s-test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    
+    - name: Wait for API to be ready
+      run: bash etc/bash/urlWait.sh https://$ENVIRON-gh-smilr.$DOMAIN/api 60
+    
+    # Run the tests inside a container with Newman
+    - name: Run API tests with Postman/newman
+      uses: docker://postman/newman:ubuntu
+      with:
+        args: run /github/workspace/etc/postman/Smilr.postman_collection.json /
+          --timeout 180000 /
+          --global-var smilr-api-host="$ENVIRON-gh-smilr.$DOMAIN" /
+          --global-var smilr-front-host="$ENVIRON-gh-smilr.$DOMAIN"
+
+  # ==================================================================================
   # Continuous deployment job - deploy to AKS staging namespace
   # ==================================================================================
   deploy-k8s-staging:
+    needs: run-api-tests
     env:
       ENVIRON: staging    
 
