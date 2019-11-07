@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ApiError = require('../lib/api-error');
 
 class Service {
   constructor(model) {
@@ -50,19 +51,9 @@ class Service {
   async insert(data) {
     try {
       let item = await this.model.create(data);
-      if (item)
-        return {
-          error: false,
-          item
-        };
+      if (item) return { error: false, item};
     } catch (error) {
-      console.log("error", error);
-      return {
-        error: true,
-        statusCode: 500,
-        message: error.errmsg || "Not able to create item",
-        errors: error.errors
-      };
+      return new ApiError(error.toString() || `Unable to create new doc in ${this.model.collection.collectionName}`, 500)
     }
   }
 
