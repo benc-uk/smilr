@@ -70,7 +70,6 @@ jobs:
           --timeout 180000 /
           --global-var smilr-api-host="$ENVIRON-gh-smilr.$DOMAIN" /
           --global-var smilr-front-host="$ENVIRON-gh-smilr.$DOMAIN"
-          -e 
 
   # ==================================================================================
   # Continuous deployment job - deploy to AKS staging namespace
