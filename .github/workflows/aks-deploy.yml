@@ -50,6 +50,9 @@ jobs:
   # ==================================================================================
   run-api-tests:
     needs: deploy-k8s-test
+    env:
+      ENVIRON: test   
+          
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
