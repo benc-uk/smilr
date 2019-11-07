@@ -14,7 +14,7 @@ env:
   IMAGE_TAG: latest
   DOMAIN: kube.benco.io
   CERT: kube-benco-io-cert
-  RELEASE_ID: "$GITHUB_SHA"
+  RELEASE_ID: "github"
   
 jobs:
   # ==================================================================================
@@ -32,9 +32,9 @@ jobs:
     - name: 'Connect to AKS'
       uses: azure/aks-set-context@v1
       with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-          resource-group: '${{ env.RES_GRP }}'
-          cluster-name: '${{ env.AKS_NAME }}'
+        creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+        resource-group: '${{ env.RES_GRP }}'
+        cluster-name: '${{ env.AKS_NAME }}'
       id: login
 
     - name: 'Helm dep update'
@@ -59,7 +59,7 @@ jobs:
     - uses: actions/checkout@v1
     
     - name: Wait for API to be ready
-      run: bash etc/bash/urlWait.sh https://$ENVIRON-gh-smilr.$DOMAIN/api 60
+      run: bash etc/bash/urlWait.sh https://$ENVIRON-$RELEASE_ID-smilr.$DOMAIN/api 60
     
     # Run the tests inside a container with Newman
     - name: Run API tests with Postman/newman
