@@ -69,8 +69,8 @@ jobs:
       with:
         args: run /github/workspace/etc/postman/Smilr.postman_collection.json /
           --timeout 180000 /
-          --global-var smilr-api-host="${ENVIRON}-gh-smilr.${DOMAIN}" /
-          --global-var smilr-front-host="${ENVIRON}-gh-smilr.${DOMAIN}"
+          --global-var smilr-api-host="${ENVIRON}-gh-smilr.$DOMAIN" /
+          --global-var smilr-front-host="${ENVIRON}-gh-smilr.$DOMAIN"
 
   # ==================================================================================
   # Continuous deployment job - deploy to AKS staging namespace
