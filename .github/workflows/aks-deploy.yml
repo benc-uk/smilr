@@ -14,6 +14,7 @@ env:
   IMAGE_TAG: latest
   DOMAIN: kube.benco.io
   CERT: kube-benco-io-cert
+  RELEASE_ID: '${{ env.GITHUB_SHA:0:7 }}'
   
 jobs:
   # ==================================================================================
@@ -43,7 +44,7 @@ jobs:
 
     - name: 'Helm install release'
       run: |
-        helm upgrade $ENVIRON-gh kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+        helm upgrade $ENVIRON-$RELEASE_ID kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
   # ==================================================================================
   # Integration API tests
@@ -66,8 +67,8 @@ jobs:
       with:
         args: run /github/workspace/etc/postman/Smilr.postman_collection.json /
           --timeout 180000 /
-          --global-var smilr-api-host="${{ env.ENVIRON }}-gh-smilr.${{ env.DOMAIN }}" /
-          --global-var smilr-front-host="${{ env.ENVIRON }}-gh-smilr.${{ env.DOMAIN }}"
+          --global-var smilr-api-host="${{ env.ENVIRON }}-${{ env.RELEASE_ID }}-smilr.${{ env.DOMAIN }}" /
+          --global-var smilr-front-host="${{ env.ENVIRON }}-${{ env.RELEASE_ID }}-smilr.${{ env.DOMAIN }}"
 
   # ==================================================================================
   # Continuous deployment job - deploy to AKS staging namespace
@@ -98,5 +99,5 @@ jobs:
 
     - name: 'Helm install release'
       run: |
-        helm upgrade $ENVIRON-gh kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+        helm upgrade $ENVIRON-$RELEASE_ID kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
