@@ -1,5 +1,6 @@
 name: Deploy to AKS
 
+# Limit triggers to a single file, this one
 on:
   push:
     branches:
