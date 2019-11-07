@@ -14,7 +14,7 @@ env:
   IMAGE_TAG: latest
   DOMAIN: kube.benco.io
   CERT: kube-benco-io-cert
-  RELEASE_ID: '${{ env.GITHUB_SHA:0:7 }}'
+  RELEASE_ID: '${{ env.GITHUB_SHA }}'
   
 jobs:
   # ==================================================================================
