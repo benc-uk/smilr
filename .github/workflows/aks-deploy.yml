@@ -64,12 +64,10 @@ jobs:
     - name: Run API tests with Postman/newman
       uses: docker://postman/newman:ubuntu
       with:
-        environ: '${{ env.ENVIRON }}'
-        domain: '${{ env.DOMAIN }}'
         args: run /github/workspace/etc/postman/Smilr.postman_collection.json /
           --timeout 180000 /
-          --global-var smilr-api-host="$INPUT_ENVIRON-gh-smilr.$INPUT_DOMAIN" /
-          --global-var smilr-front-host="$INPUT_ENVIRON-gh-smilr.$INPUT_DOMAIN"
+          --global-var smilr-api-host="${{ env.ENVIRON }}-gh-smilr.${{ env.DOMAIN }}" /
+          --global-var smilr-front-host="${{ env.ENVIRON }}-gh-smilr.${{ env.DOMAIN }}"
 
   # ==================================================================================
   # Continuous deployment job - deploy to AKS staging namespace
