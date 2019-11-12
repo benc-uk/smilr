@@ -79,51 +79,51 @@ stages:
       vmImage: ubuntu-latest
 
     steps:
-    - task: Docker@2
-      displayName: 'Build data API'
-      inputs:
-        command: build
-        containerRegistry: $(acr-connection)
-        Dockerfile: node/data-api/Dockerfile
-        buildContext: .
-        repository: smilr/data-api
-        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) [Linux container]"
-        tags: |
-          latest
-          $(Build.BuildNumber)
+    # - task: Docker@2
+    #   displayName: 'Build data API'
+    #   inputs:
+    #     command: build
+    #     containerRegistry: $(acr-connection)
+    #     Dockerfile: node/data-api/Dockerfile
+    #     buildContext: .
+    #     repository: smilr/data-api
+    #     arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) [Linux container]"
+    #     tags: |
+    #       latest
+    #       $(Build.BuildNumber)
 
-    - task: Docker@2
-      displayName: 'Build frontend'
-      inputs:
-        command: build
-        containerRegistry: $(acr-connection)
-        Dockerfile: node/frontend/Dockerfile
-        buildContext: .
-        repository: smilr/frontend
-        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
-        tags: |
-          latest
-          $(Build.BuildNumber)  
+    # - task: Docker@2
+    #   displayName: 'Build frontend'
+    #   inputs:
+    #     command: build
+    #     containerRegistry: $(acr-connection)
+    #     Dockerfile: node/frontend/Dockerfile
+    #     buildContext: .
+    #     repository: smilr/frontend
+    #     arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
+    #     tags: |
+    #       latest
+    #       $(Build.BuildNumber)  
 
-    - task: Docker@2
-      displayName: 'Push data API'
-      inputs:
-        command: push
-        containerRegistry: $(acr-connection)
-        repository: smilr/data-api
-        tags: |
-          latest
-          $(Build.BuildNumber) 
+    # - task: Docker@2
+    #   displayName: 'Push data API'
+    #   inputs:
+    #     command: push
+    #     containerRegistry: $(acr-connection)
+    #     repository: smilr/data-api
+    #     tags: |
+    #       latest
+    #       $(Build.BuildNumber) 
 
-    - task: Docker@2
-      displayName: 'Push frontend'
-      inputs:
-        command: push
-        containerRegistry: $(acr-connection)
-        repository: smilr/frontend
-        tags: |
-          latest
-          $(Build.BuildNumber)
+    # - task: Docker@2
+    #   displayName: 'Push frontend'
+    #   inputs:
+    #     command: push
+    #     containerRegistry: $(acr-connection)
+    #     repository: smilr/frontend
+    #     tags: |
+    #       latest
+    #       $(Build.BuildNumber)
 
     - publish: kubernetes/helm
       artifact: helm-charts
