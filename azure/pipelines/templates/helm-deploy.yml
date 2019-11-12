@@ -14,7 +14,7 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - download: build-pipeline
+        - download: buildpipeline
           artifact: helm-charts
 
         - bash: echo runID $(resources.pipeline.buildpipeline.runID)
