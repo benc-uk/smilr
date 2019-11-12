@@ -1,14 +1,25 @@
+# Base Alpine Linux image with Node 10.x
 FROM node:12-alpine
-LABEL Name="nodejs-api-starter" Version=0.0.1
-ENV NODE_ENV production
-WORKDIR /app 
 
-# For Docker layer caching do this BEFORE copying in rest of app
-COPY package*.json ./
+# Build time arguments
+LABEL version="6.0.0" 
+ARG basedir="node/data-api"
+ARG build_info="Docker container build"
+ENV NODE_ENV production
+ENV BUILD_INFO $build_info
+
+# Place our app here
+WORKDIR /home/app
+
+# Install bash inside container just for debugging 
+RUN apk update && apk add bash && apk add curl
+
+# NPM install packages
+COPY ${basedir}/package*.json ./
 RUN npm install --production --silent
 
-# NPM is done, now copy in the rest of the project to the workdir
-COPY . .
+# NPM is done, now copy in the the whole project to the workdir
+COPY ${basedir}/ .
 
-EXPOSE 3000
-ENTRYPOINT ["npm", "start"]
+EXPOSE 4000
+ENTRYPOINT [ "npm" , "start" ]
