@@ -123,4 +123,8 @@ stages:
         repository: smilr/frontend
         tags: |
           latest
-          $(Build.BuildNumber)             
+          $(Build.BuildNumber)
+
+    - publish: kubernetes/helm
+      artifact: helm-charts
+      displayName: Publish helm-charts artifact 
