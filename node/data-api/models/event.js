@@ -1,6 +1,14 @@
 const mongoose = require ('mongoose');
 
+const SCHEMA_NAME = 'Events';
+
+/**
+ * @typedef Event
+ * @property {string} title.required - Title of this event
+ */
+
 class Event {
+  // Set up the Mongoose schema, see https://mongoosejs.com/docs/guide.html
   initSchema() {
     const topicSchema = new mongoose.Schema({
       id:   { type: Number, required: true },
@@ -16,37 +24,44 @@ class Event {
       topics: { type: [topicSchema], required: true }
     });
     
-    // Custom pre-save check which creates _id for us, we DONT use the 
-    // built in MonogDB ObjectId for ids, there's historical reasons...
+    // Middleware for mutation and validation
     eventSchema.pre('save', function(next) {
-        var event = this;
-        if(!event._id) {
-          event._id = makeId(5);
-        }
-        if(event.topics.length < 1) {
-          next("ValidationError: event must have at least 1 topic");
-        }
-
-        next();
-      },
-      function(err) {
-        next(err);
+      var event = this;
+      
+      // Create our own id, for historical reasons 
+      if(!event._id) {
+        event._id = _makeId(5);
       }
-    );
 
-    mongoose.model("events", eventSchema);
+      if(event.topics.length < 1) {
+        next(new Error("ValidationError: event must have at least 1 topic"));
+      }
+
+      if(event.start > event.end) {
+        next(new Error("ValidationError: start date can not be after end date"));
+      }
+  
+      next();
+    });
+
+    // Create the mongoose model from eventSchema
+    mongoose.model(SCHEMA_NAME, eventSchema);
   }
 
+  // Return an instance of Thing model
   getInstance() {
     // Ensure model schema is initialized only once
-    if(!mongoose.modelNames().includes("events"))
+    if(!mongoose.modelNames().includes(SCHEMA_NAME))
       this.initSchema();
 
-    return mongoose.model("events");
+    return mongoose.model(SCHEMA_NAME);
   }
 }
 
-function makeId(len) {
+//
+// Simple random ID generator, good enough, with len=6 it's a 1:56 billion chance of a clash
+//
+function _makeId(len) {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 

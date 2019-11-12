@@ -1,10 +1,15 @@
 const Service = require('./service')
 const Event = require('../models/event');
 
+//
+// CRUD service for events
+//
 class EventService extends Service {
   constructor() {
-    const event = new Event().getInstance();
-    super(event);
+    // Get an instance of the Event model
+    const eventModel = new Event().getInstance();
+    // Pass it to the superclass
+    super(eventModel);
   }
 };
 
