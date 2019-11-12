@@ -17,7 +17,7 @@ pr: [master]
 
 resources: 
   pipelines:
-  - pipeline: build-pipeline
+  - pipeline: buildpipeline
     source: Build and push to ACR
     trigger: true
 
