@@ -124,3 +124,6 @@ stages:
         tags: |
           latest
           $(Build.BuildNumber)             
+
+    - publish: kubernetes/helm
+      artifact: helm-charts

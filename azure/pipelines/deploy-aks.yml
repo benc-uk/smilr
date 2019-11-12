@@ -15,6 +15,12 @@ trigger:
     - kubernetes/helm/*
 pr: [master]
 
+resources: 
+  pipelines:
+  - pipeline: build-pipeline
+    source: Build and push to ACR
+    trigger: true
+
 # NOTE! The 'shared-variables' variable group must be pre-created and populated
 # - Expected variables: aks-connection, acr-connection, azure-connection, aks-resgrp
 variables:
