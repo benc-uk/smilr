@@ -9,11 +9,9 @@
       <spinner v-if="!events"></spinner>
       
       <b-table hover :items="events" :fields="eventTableFields" v-if="events">
-        <template slot="actions" slot-scope="row">
-          <div class="text-center">
-          <b-button size="lg" variant="success" @click="editEvent(row)"> &nbsp; <fa icon="edit"/> &nbsp; </b-button> &nbsp;
-          <b-button size="lg" variant="danger" @click="preDeleteEvent(row)"> &nbsp; <fa icon="trash-alt"/> &nbsp; </b-button>
-          </div>
+        <template v-slot:cell(actions)="data">
+          <b-button size="lg" variant="success" @click="editEvent(data.item)"> &nbsp; <fa icon="edit"/> &nbsp; </b-button> &nbsp;
+          <b-button size="lg" variant="danger" @click="preDeleteEvent(data.item)"> &nbsp; <fa icon="trash-alt"/> &nbsp; </b-button>
         </template>
       </b-table>
       
@@ -43,20 +41,25 @@ export default {
 
   data: function() {
     return {
-      eventTableFields: {
-        title: {},
-        type: { formatter: (value) => { return value.charAt(0).toUpperCase() + value.substr(1) } },
-        start: { sortable: true, formatter: (value) => { return this.$options.filters.moment(value, 'MMM Do YYYY') } },
-        actions: { label: 'Actions' }
-      },
+      // eventTableFields: {
+      //   title: {},
+      //   type: { formatter: (value) => { return value.charAt(0).toUpperCase() + value.substr(1) } },
+      //   start: { sortable: true, formatter: (value) => { return this.$options.filters.moment(value, 'MMM Do YYYY') } },
+      //   actions: { label: 'Actions' }
+      // },
+      eventTableFields: [
+        { key: 'title', sortable: true },
+        { key: 'type', sortable: true, formatter: (value) => { return value.charAt(0).toUpperCase() + value.substr(1) } },
+        { key: 'start', sortable: true, formatter: (value) => { return this.$options.filters.moment(value, 'MMM Do YYYY') } },
+        { key: 'actions', sortable: false },
+      ],
       events: null,
       eventToDelete: null
     }
   },
 
   methods: {
-    editEvent: function(row) {
-      let event = row.item
+    editEvent: function(event) {
       this.$router.push({name: 'admin-event', params: { action: ""+event._id, editEvent: event }})
     },
 
@@ -64,8 +67,8 @@ export default {
       this.$router.push({name: 'admin-event', params: { action: 'new', editEvent: null }})
     },
 
-    preDeleteEvent: function(row) {
-      this.eventToDelete = row.item
+    preDeleteEvent: function(event) {
+      this.eventToDelete = event
       this.$refs.deleteModal.show()
     },
     

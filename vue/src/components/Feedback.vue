@@ -119,7 +119,7 @@ export default {
     } 
 
     // Check we have the two IDs we need, if not throw error
-    if(!this.eventId || !this.topicId) {
+    if(!this.eventId || !this.topicId) {     
       this.$router.push({
         name: 'error', 
         replace: true, 
@@ -136,11 +136,11 @@ export default {
         document.title = `Smilr: Feedback for: ${this.event.title} - ${this.topic.desc}` 
         
         // Check dates are valid, stop users doing direct to feedback page with URL
-        let today = new Date().toISOString().substring(0, 10);    
-        if(this.event.start.toString() > today || this.event.end.toString() < today) {
-          this.$router.push("/")
-          return;
-        }         
+        //let today = new Date().toISOString().substring(0, 10);    
+        // if(this.event.start.toString() > today || this.event.end.toString() < today) {
+        //   this.$router.push("/")
+        //   return;
+        // }         
       }
     })
   }

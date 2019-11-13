@@ -14,7 +14,7 @@ trigger:
     - node/**
     - vue/*
     - azure/pipelines/build.yaml
-#pr: [master]
+pr: [master]
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
@@ -41,15 +41,15 @@ stages:
     steps:
     - bash: |
         npm install --silent
-        npm run test-report
-        npm run code-coverage
+        npm run test-junit
+        npm run coverage
       displayName: Run tests for data-api
       workingDirectory: node/data-api
 
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
-        testResultsFiles: 'node/data-api/*.xml'
+        testResultsFiles: 'node/data-api/test-results.xml'
         testResultsFormat: JUnit
         testRunTitle: Data API Tests
 
@@ -71,7 +71,7 @@ stages:
     # =====================================================================================
   - job: containerBuildJob
     # NOTE! Only run in master branch (i.e. merged PRs) 
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     dependsOn: unitTestsJob
     displayName: 'Build & push to ACR'
     
@@ -79,52 +79,57 @@ stages:
       vmImage: ubuntu-latest
 
     steps:
-    # - task: Docker@2
-    #   displayName: 'Build data API'
-    #   inputs:
-    #     command: build
-    #     containerRegistry: $(acr-connection)
-    #     Dockerfile: node/data-api/Dockerfile
-    #     buildContext: .
-    #     repository: smilr/data-api
-    #     arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) [Linux container]"
-    #     tags: |
-    #       latest
-    #       $(Build.BuildNumber)
+    - task: Docker@2
+      displayName: 'Build data API'
+      inputs:
+        command: build
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/data-api/Dockerfile
+        buildContext: .
+        repository: smilr/data-api
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) [Linux container]"
+        tags: |
+          latest
+          $(Build.BuildNumber)
 
-    # - task: Docker@2
-    #   displayName: 'Build frontend'
-    #   inputs:
-    #     command: build
-    #     containerRegistry: $(acr-connection)
-    #     Dockerfile: node/frontend/Dockerfile
-    #     buildContext: .
-    #     repository: smilr/frontend
-    #     arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
-    #     tags: |
-    #       latest
-    #       $(Build.BuildNumber)  
+    - task: Docker@2
+      displayName: 'Build frontend'
+      inputs:
+        command: build
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/frontend/Dockerfile
+        buildContext: .
+        repository: smilr/frontend
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
+        tags: |
+          latest
+          $(Build.BuildNumber)  
 
-    # - task: Docker@2
-    #   displayName: 'Push data API'
-    #   inputs:
-    #     command: push
-    #     containerRegistry: $(acr-connection)
-    #     repository: smilr/data-api
-    #     tags: |
-    #       latest
-    #       $(Build.BuildNumber) 
+    - task: Docker@2
+      displayName: 'Push data API'
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/data-api
+        tags: |
+          latest
+          $(Build.BuildNumber) 
 
-    # - task: Docker@2
-    #   displayName: 'Push frontend'
-    #   inputs:
-    #     command: push
-    #     containerRegistry: $(acr-connection)
-    #     repository: smilr/frontend
-    #     tags: |
-    #       latest
-    #       $(Build.BuildNumber)
+    - task: Docker@2
+      displayName: 'Push frontend'
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/frontend
+        tags: |
+          latest
+          $(Build.BuildNumber)
 
+    # Create script in artifact outputs to allow release pipeline(s) to get the model version for this build
+    - bash: |
+        echo "echo \"##vso[task.setvariable variable=image-tag]$(Build.BuildNumber)\"" > kubernetes/helm/imagetag.sh
+      displayName: Create imagetag.sh script in output artifacts
+      
     - publish: kubernetes/helm
       artifact: helm-charts
       displayName: Publish helm-charts artifact 
