@@ -39,10 +39,10 @@ describe('EventList.vue', () => {
         }        
       ]
     })
-    
-    expect(wrapper.findAll('h1').length).to.equal(2);
-    expect(wrapper.find('h1').html()).to.contain(title);
-    expect(wrapper.find('h1').html()).to.contain('icon="flask"');
+        
+    expect(wrapper.findAll('h2').length).to.equal(2);
+    expect(wrapper.find('h2').html()).to.contain(title);
+    expect(wrapper.find('h2').html()).to.contain('icon="flask"');
     expect(wrapper.find('ul').findAll('li').length).to.equal(2);
     expect(wrapper.find('ul').html()).to.contain("Topic A");
     expect(wrapper.find('b-card-stub').html()).to.contain("January 1st 2020");

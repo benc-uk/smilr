@@ -15,7 +15,7 @@ GET http://localhost:4000/api/events/filter/{{filterTime}}
 # @name create
 POST http://localhost:4000/api/events
 Content-Type: application/json
-
+Authorization: weqweqw
 {
   "title": "API injected event",
   "type": "lab",

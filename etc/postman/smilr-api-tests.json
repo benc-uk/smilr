@@ -25,7 +25,8 @@
 									"",
 									"pm.test(\"Info GET: JSON object retured\", function () {",
 									"    var info = pm.response.json();",
-									"    pm.expect(info.hostname).to.not.be.empty;",
+									"    pm.expect(info.debug.hostInfo.hostname).to.not.be.empty;",
+									"    pm.expect(info.status).to.equal(\"pass\");",
 									"});",
 									""
 								],
@@ -704,55 +705,6 @@
 							""
 						]
 					}
-				}
-			]
-		},
-		{
-			"name": "Frontend",
-			"item": [
-				{
-					"name": "Get Frontend",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "e87ce3c9-0508-4fff-a0e1-641b50f1793a",
-								"exec": [
-									"pm.test(\"response must be valid and have a body\", function () {",
-									"     pm.response.to.be.ok;",
-									"     pm.response.to.be.withBody;",
-									"     pm.response.to.have.header(\"Content-Type\", \"text/html; charset=UTF-8\")",
-									"});",
-									"",
-									"pm.test(\"there is an app title\", function () {",
-									"    var html = pm.response.text()",
-									"    pm.expect(html).to.include(\"<title>Smilr</title>\")",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://{{smilr-front-host}}/",
-							"protocol": "http",
-							"host": [
-								"{{smilr-front-host}}"
-							],
-							"path": [
-								""
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}
