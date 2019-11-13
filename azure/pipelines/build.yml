@@ -14,7 +14,7 @@ trigger:
     - node/**
     - vue/*
     - azure/pipelines/build.yaml
-#pr: [master]
+pr: [master]
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
@@ -32,39 +32,39 @@ stages:
     # =====================================================================================
     # Run unit tests for Data API and Vue.js SPA/client
     # =====================================================================================  
-  # - job: unitTestsJob
-  #   displayName: 'Run unit tests'
+  - job: unitTestsJob
+    displayName: 'Run unit tests'
     
-  #   pool:
-  #     vmImage: ubuntu-latest
+    pool:
+      vmImage: ubuntu-latest
         
-  #   steps:
-  #   - bash: |
-  #       npm install --silent
-  #       npm run test-report
-  #       npm run code-coverage
-  #     displayName: Run tests for data-api
-  #     workingDirectory: node/data-api
+    steps:
+    - bash: |
+        npm install --silent
+        npm run test-report
+        npm run code-coverage
+      displayName: Run tests for data-api
+      workingDirectory: node/data-api
 
-  #   - task: PublishTestResults@2
-  #     condition: succeededOrFailed()
-  #     inputs:
-  #       testResultsFiles: 'node/data-api/*.xml'
-  #       testResultsFormat: JUnit
-  #       testRunTitle: Data API Tests
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: 'node/data-api/*.xml'
+        testResultsFormat: JUnit
+        testRunTitle: Data API Tests
 
-  #   - bash: |
-  #       npm install --silent
-  #       npm run test:unit-report
-  #     displayName: Run tests for Vue SPA client
-  #     workingDirectory: vue
+    - bash: |
+        npm install --silent
+        npm run test:unit-report
+      displayName: Run tests for Vue SPA client
+      workingDirectory: vue
 
-  #   - task: PublishTestResults@2
-  #     condition: succeededOrFailed()
-  #     inputs:
-  #       testResultsFiles: 'vue/*.xml'
-  #       testResultsFormat: JUnit
-  #       testRunTitle: Vue SPA Tests
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: 'vue/*.xml'
+        testResultsFormat: JUnit
+        testRunTitle: Vue SPA Tests
 
     # =====================================================================================
     # Build container image and push to ACR 
@@ -72,58 +72,58 @@ stages:
   - job: containerBuildJob
     # NOTE! Only run in master branch (i.e. merged PRs) 
     #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    #dependsOn: unitTestsJob
+    dependsOn: unitTestsJob
     displayName: 'Build & push to ACR'
     
     pool:
       vmImage: ubuntu-latest
 
     steps:
-    # - task: Docker@2
-    #   displayName: 'Build data API'
-    #   inputs:
-    #     command: build
-    #     containerRegistry: $(acr-connection)
-    #     Dockerfile: node/data-api/Dockerfile
-    #     buildContext: .
-    #     repository: smilr/data-api
-    #     arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) [Linux container]"
-    #     tags: |
-    #       latest
-    #       $(Build.BuildNumber)
+    - task: Docker@2
+      displayName: 'Build data API'
+      inputs:
+        command: build
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/data-api/Dockerfile
+        buildContext: .
+        repository: smilr/data-api
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) [Linux container]"
+        tags: |
+          latest
+          $(Build.BuildNumber)
 
-    # - task: Docker@2
-    #   displayName: 'Build frontend'
-    #   inputs:
-    #     command: build
-    #     containerRegistry: $(acr-connection)
-    #     Dockerfile: node/frontend/Dockerfile
-    #     buildContext: .
-    #     repository: smilr/frontend
-    #     arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
-    #     tags: |
-    #       latest
-    #       $(Build.BuildNumber)  
+    - task: Docker@2
+      displayName: 'Build frontend'
+      inputs:
+        command: build
+        containerRegistry: $(acr-connection)
+        Dockerfile: node/frontend/Dockerfile
+        buildContext: .
+        repository: smilr/frontend
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
+        tags: |
+          latest
+          $(Build.BuildNumber)  
 
-    # - task: Docker@2
-    #   displayName: 'Push data API'
-    #   inputs:
-    #     command: push
-    #     containerRegistry: $(acr-connection)
-    #     repository: smilr/data-api
-    #     tags: |
-    #       latest
-    #       $(Build.BuildNumber) 
+    - task: Docker@2
+      displayName: 'Push data API'
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/data-api
+        tags: |
+          latest
+          $(Build.BuildNumber) 
 
-    # - task: Docker@2
-    #   displayName: 'Push frontend'
-    #   inputs:
-    #     command: push
-    #     containerRegistry: $(acr-connection)
-    #     repository: smilr/frontend
-    #     tags: |
-    #       latest
-    #       $(Build.BuildNumber)
+    - task: Docker@2
+      displayName: 'Push frontend'
+      inputs:
+        command: push
+        containerRegistry: $(acr-connection)
+        repository: smilr/frontend
+        tags: |
+          latest
+          $(Build.BuildNumber)
 
     # Create script in artifact outputs to allow release pipeline(s) to get the model version for this build
     - bash: |
