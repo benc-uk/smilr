@@ -14,12 +14,11 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - download: build-pipeline
-          artifact: helm-charts
+        - download: buildpipeline
 
-        - bash: echo $(resources.pipeline.build-pipeline.runID)
-        - bash: echo $(resources.pipeline.build-pipeline.requestedForID)
-        - bash: echo $(resources.pipeline.build-pipeline.runName)
+        - bash: echo $(resources.pipeline.buildpipeline.runID)
+        - bash: echo $(resources.pipeline.buildpipeline.requestedForID)
+        - bash: echo $(resources.pipeline.buildpipeline.runName)
 
         - task: HelmInstaller@1
           displayName: 'Install Helm version'
