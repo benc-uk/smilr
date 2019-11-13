@@ -18,6 +18,7 @@ jobs:
           artifact: helm-charts
 
         - bash: bash $(Pipeline.Workspace)/buildpipeline/helm-charts/imagetag.sh
+        - bash: echo $(IMAGE_TAG)
 
         - task: HelmInstaller@1
           displayName: 'Install Helm version'
@@ -31,7 +32,7 @@ jobs:
             azureResourceGroup: $(aks-resgrp)
             kubernetesCluster: $(aks-connection)
             command: dependency
-            arguments: 'update kubernetes/helm/smilr'
+            arguments: 'update $(Pipeline.Workspace)/buildpipeline/helm-charts/smilr'
 
         - task: HelmDeploy@0
           displayName: 'Helm install Smilr chart'
@@ -41,6 +42,6 @@ jobs:
             command: upgrade
             releaseName: ${{ parameters.envName }}-$(Build.BuildId)
             chartType: FilePath
-            chartPath: kubernetes/helm/smilr
+            chartPath: $(Pipeline.Workspace)/buildpipeline/helm-charts/smilr
             namespace: ${{ parameters.envName }}
             overrideValues: "registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(IMAGE_TAG),frontend.imageTag=$(IMAGE_TAG),ingress.domainSuffix=$(dns-suffix),ingress.certName=kube-benco-io-cert"
