@@ -71,9 +71,10 @@ class Service {
   }
 
   // Update an existing single entity, id should be in the data
-  async update(data, doUpsert = false) {
+  async update(data, doUpsert = false, customFilter = null) {
     try {
-      let result = await this.model.updateOne({_id: data._id}, {$set: data}, {upsert: doUpsert});
+      let filter = customFilter ? customFilter : {_id: data._id}
+      let result = await this.model.updateOne(filter, {$set: data}, {upsert: doUpsert});
       
       if(result) {
         if(result.n !== 1) return new Error(MSG_NO_RESULT)
@@ -87,9 +88,10 @@ class Service {
   }
 
   // Delete a single entity by id
-  async delete(id) {
+  async delete(id, customFilter = null) {
     try {
-      let result = await this.model.deleteOne({_id: id});
+      let filter = customFilter ? customFilter : {_id: id}
+      let result = await this.model.deleteOne(filter);
       
       if(result) {
         if(result.n !== 1) return new Error(MSG_NO_RESULT);
