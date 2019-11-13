@@ -80,6 +80,7 @@ export default {
     topicsOK: function() {
       if(!this.event || !this.event.topics) return false
       if(this.event.topics.length <= 0) return false
+      // eslint-disable-next-line
       for(let t of this.event.topics) {
         if(t.desc.trim() == '')  return false 
       }
@@ -115,10 +116,14 @@ export default {
       // However to support users reloading the browser we can fetch from the API if we have to
       if(this.editEvent) {
         this.event = this.editEvent
+        this.event.start = this.event.start.substring(0, 10);
+        this.event.end = this.event.end.substring(0, 10);
       } else {
         this.apiGetEvent(this.action)
         .then(resp => {
           this.event = resp.data
+          this.event.start = this.event.start.substring(0, 10);
+          this.event.end = this.event.end.substring(0, 10);
         })
       }
     }
