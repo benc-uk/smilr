@@ -17,9 +17,7 @@ jobs:
         - download: buildpipeline
           artifact: helm-charts
 
-        - bash: echo runID ${{ variables.resources.pipeline_buildpipeline.runID }}
-        - bash: echo reqForID ${{ variables.resources.pipeline.buildpipeline.requestedForID }}
-        - bash: echo runName ${{ variables.resources.pipeline.buildpipeline.runName }}
+        - bash: ls -R $(Pipeline.Workspace)/buildpipeline
 
         - task: HelmInstaller@1
           displayName: 'Install Helm version'
