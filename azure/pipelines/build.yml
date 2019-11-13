@@ -41,15 +41,15 @@ stages:
     steps:
     - bash: |
         npm install --silent
-        npm run test-report
-        npm run code-coverage
+        npm run test-junit
+        npm run coverage
       displayName: Run tests for data-api
       workingDirectory: node/data-api
 
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
-        testResultsFiles: 'node/data-api/*.xml'
+        testResultsFiles: 'node/data-api/test-results.xml'
         testResultsFormat: JUnit
         testRunTitle: Data API Tests
 
