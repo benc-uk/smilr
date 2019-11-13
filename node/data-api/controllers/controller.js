@@ -85,7 +85,9 @@ class Controller {
   _sendData(res, data, code = 200) {
     res.type('application/json');
 
-    // Add telemetry / logging here
+    // App Insights
+    const appInsights = require("applicationinsights");    
+    if(appInsights.defaultClient) appInsights.defaultClient.trackEvent({name: "dataEvent", properties: {data: JSON.stringify(data)}})
 
     res.status(code).send(data);
   }
@@ -120,7 +122,9 @@ class Controller {
       source: source
     };
 
-    // Add telemetry / logging here
+    // App Insights
+    const appInsights = require("applicationinsights");    
+    if(appInsights.defaultClient) appInsights.defaultClient.trackException({exception: err});
 
     res.status(statusCode).send(problemDetails);
   }    

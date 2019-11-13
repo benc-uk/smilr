@@ -53,7 +53,7 @@ class Feedback {
     });
 
     // Create the mongoose model from eventSchema
-    mongoose.model(SCHEMA_NAME, schema);
+    mongoose.model(SCHEMA_NAME, schema, 'feedback');
   }
 
   // Return an instance of Thing model

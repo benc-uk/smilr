@@ -15,6 +15,8 @@ class DatabaseConnection {
       // Sets how long to try establishing initial server connection. Undocumented! 
       serverSelectionTimeoutMS: connectTimeout 
     }
+    
+    mongoose.pluralize(null);
 
     // Note, return the *promise* from .connect()
     return mongoose.connect(mongoUrl, options)

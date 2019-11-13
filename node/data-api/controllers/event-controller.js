@@ -25,6 +25,7 @@ class EventController extends Controller {
         break;
       default:
         this._sendError(res, new Error("ValidationError: Supplied time value must be one of: [active, future, past]"));
+        return;
     }
 
     this.query(req, res);

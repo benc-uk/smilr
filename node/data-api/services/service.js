@@ -71,9 +71,9 @@ class Service {
   }
 
   // Update an existing single entity, id should be in the data
-  async update(data) {
+  async update(data, doUpsert = false) {
     try {
-      let result = await this.model.updateOne({_id: data._id}, {$set: data});
+      let result = await this.model.updateOne({_id: data._id}, {$set: data}, {upsert: doUpsert});
       
       if(result) {
         if(result.n !== 1) return new Error(MSG_NO_RESULT)

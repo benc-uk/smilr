@@ -74,12 +74,12 @@ routes.post('(/api)?/bulk', async function (req, res, next) {
 
     for(let event of eventData) {        
       var e = await res.app.get('data').createOrUpdateEvent(event, true);
-      console.log(`### Created event ${e.result}`);
+      console.log(`### Bulk created event ${e.result}`);
       eventCount++;
     }
     for(let feedback of feedbackData) {        
       var f = await res.app.get('data').createFeedback(feedback);
-      console.log(`### Created feedback ${f.ops[0]._id}`);
+      console.log(`### Bulk created feedback ${f.ops[0]._id}`);
       feedbackCount++;
     }
     
