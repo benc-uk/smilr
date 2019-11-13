@@ -25,7 +25,6 @@ export default {
       let calls = []
       let apifeedback = []
 
-      // eslint-disable-next-line
       for(let topic of event.topics) {
         calls.push(axios.get(`${config.API_ENDPOINT}/feedback/${event._id}/${topic.id}`))
       }
@@ -34,9 +33,7 @@ export default {
       // It should be waiting for all API calls to complete 
       axios.all(calls)
       .then(axios.spread((...allResponses) => {
-        // eslint-disable-next-line
         for(let resp of allResponses) {
-          // eslint-disable-next-line
           for(let data of resp.data) {
             apifeedback.push(data)
           }
