@@ -14,7 +14,7 @@ trigger:
     - node/**
     - vue/*
     - azure/pipelines/build.yaml
-pr: [master]
+#pr: [master]
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
