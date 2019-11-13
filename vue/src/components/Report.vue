@@ -27,14 +27,13 @@
 
       <div v-for="topic in selectedEvent.topics" :key="topic.id" class="topicbox">
         <h2 class="topichead">{{ topic.desc }}</h2>
-        Responses: {{ topic.feedback.length }} <br/>
-        <span v-if="topic.feedback.length > 0">&nbsp;Average Rating: {{ topicAvgRating(topic) }} <img :src="utilsFaceSVG(Math.round(topicAvgRating(topic)))"/> </span>
-        
+        &nbsp; &bull; Responses: {{ topic.feedback.length }} <br/>
+        <span v-if="topic.feedback.length > 0">&nbsp; &bull; Average Rating: {{ topicAvgRating(topic) }} <img :src="utilsFaceSVG(Math.round(topicAvgRating(topic)))"/> </span>
         <b-table sort-by="rating" sort-desc v-if="topic.feedback.length > 0" hover :items="topic.feedback" :fields="feedBackTableFields">
-          <template slot="rating" slot-scope="data">
+          <template v-slot:cell(rating)="data">
             <img :src="utilsFaceSVG(data.item.rating)"/> {{ data.item.rating }} 
           </template>
-          <template slot="sentiment" slot-scope="data">
+          <template v-slot:cell(sentiment)="data">
             {{ data.item.sentiment ? Math.round(data.item.sentiment * 100) + "%" : '-' }} 
           </template>          
         </b-table>
@@ -64,11 +63,11 @@ export default {
       selectedEvent: null,
       totalRespCount: 0,
       feedback: [],
-      feedBackTableFields: {
-        rating: { sortable: true },
-        comment: { sortable: true },
-        sentiment: { label: "Sentiment Score", sortable: true }
-      }
+      feedBackTableFields: [
+        { key: 'rating', sortable: true },
+        { key: 'comment', sortable: true },
+        { key: 'sentiment', label: "Sentiment Score", sortable: true }
+      ]
     }
   },
 

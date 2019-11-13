@@ -4,10 +4,6 @@ const expect = chai.expect;
 
 const app = require('../server').app;
 
-//
-// Tests against the thing API routes & model
-// 
-
 describe('Events API', () => {
   var newEventId;
 
@@ -26,7 +22,6 @@ describe('Events API', () => {
       .expect(200, done);
   });
 
-  // GET /api/events
   it('returns all events', (done) => {
     request(app)
       .get('/api/events')
@@ -40,7 +35,6 @@ describe('Events API', () => {
       .expect(200, done);
   });
 
-  // GET /api/events/fake01
   it('returns a single event by id', (done) => {
     request(app)
       .get(`/api/events/${newEventId}`)
@@ -54,7 +48,6 @@ describe('Events API', () => {
       .expect(200, done)
   });
 
-  // GET /api/events/fake01
   it('fails on non-existent event', (done) => {
     request(app)
       .get('/api/events/bad')
@@ -68,7 +61,6 @@ describe('Events API', () => {
       .expect(404, done)
   });
 
-  // GET /api/events/filter/past
   it('returns time filtered events', (done) => {
     request(app)
       .get('/api/events/filter/past')
@@ -82,7 +74,6 @@ describe('Events API', () => {
       .expect(200, done)
   });
 
-  // POST /api/events
   it('rejects invalid events', (done) => {
     request(app)
       .post('/api/events')
@@ -97,7 +88,6 @@ describe('Events API', () => {
       .expect(400, done)
   });
 
-  // POST /api/events
   it('rejects invalid event dates', (done) => {
     request(app)
       .post('/api/events')
@@ -112,7 +102,6 @@ describe('Events API', () => {
       .expect(400, done)
   });
 
-  // PUT /api/events
   it('valid event update', (done) => {
     let event = {_id:newEventId, title:"updated event", type:"event", start:"2019-01-01", end:"2019-01-02", topics:[{desc:"blah", id:1}]}
     request(app)
@@ -128,7 +117,6 @@ describe('Events API', () => {
       .expect(200, done)
   });
 
-  // PUT /api/events
   it('invalid event update', (done) => {
     let event = {_id:"dontexist", title:"updated event", type:"event", start:"2019-01-01", end:"2019-01-02", topics:[{desc:"blah", id:1}]}
     request(app)
@@ -144,7 +132,6 @@ describe('Events API', () => {
       .expect(404, done)
   });
 
-  // DELETE /api/events
   it('delete an event', (done) => {
     request(app)
       .delete(`/api/events/${newEventId}`)
@@ -157,7 +144,6 @@ describe('Events API', () => {
       .expect(200, done)
   });   
 
-  // DELETE /api/events
   it("can't delete non-existent event", (done) => {
     request(app)
       .delete(`/api/events/${newEventId}`)
@@ -170,5 +156,4 @@ describe('Events API', () => {
       })
       .expect(404, done)
   });    
-
 })

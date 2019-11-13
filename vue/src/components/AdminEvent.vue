@@ -45,11 +45,11 @@
           </div>
 
           <b-table hover thead-class="hiddenHeader" :items="event.topics" :fields="topicTableFields">
-            <template slot="actions" slot-scope="row">
-              <b-button variant="danger" @click="deleteTopic(row)"><fa icon="trash-alt"/></b-button>
+            <template v-slot:cell(actions)="data">
+              <b-button variant="danger" @click="deleteTopic(data.item.id)"><fa icon="trash-alt" :title="'id:'+data.item.id"/></b-button>
             </template>
-            <template slot="desc" slot-scope="row">
-              <b-input v-focus :value="row.item.desc" v-model="row.item.desc"/>
+            <template v-slot:cell(desc)="data">
+              <b-input v-focus :value="data.item.desc" v-model="data.item.desc"/>
             </template>            
           </b-table>
           <p class="formError" v-if="!topicsOK">Events must have at least one topic, and all must have a description</p>
@@ -58,7 +58,7 @@
         <b-button @click="saveChanges" size="lg" variant="success" v-if="editEvent" :disabled="errors.all().length > 0 || !topicsOK"> SAVE CHANGES </b-button>
         <b-button @click="createEvent" size="lg" variant="success" v-else :disabled="errors.all().length > 0 || !topicsOK"> CREATE NEW EVENT </b-button>
         &nbsp;
-        <b-button @click="cancel" size="lg" variant="default"> CANCEL </b-button>
+        <b-button @click="cancel" size="lg" variant="secondary"> CANCEL </b-button>
       </b-form>
 
     </b-card>
@@ -80,7 +80,7 @@ export default {
     topicsOK: function() {
       if(!this.event || !this.event.topics) return false
       if(this.event.topics.length <= 0) return false
-      // eslint-disable-next-line
+
       for(let t of this.event.topics) {
         if(t.desc.trim() == '')  return false 
       }
@@ -95,10 +95,10 @@ export default {
   data: function() {
     return {
       event: null,
-      topicTableFields: {
-        desc: { label: 'Description' },
-        actions: { label: 'Actions' }
-      },      
+      topicTableFields: [
+        { key: 'desc', label: 'Description' },
+        { key: 'actions', label: 'Actions' }
+      ]    
     }
   },
 
@@ -164,8 +164,8 @@ export default {
       this.event.topics.push({ id: maxid + 1, desc: 'New Topic'}) 
     },
 
-    deleteTopic: function(row) {
-      this.event.topics.splice(row.index, 1);
+    deleteTopic: function(id) {
+      this.event.topics = this.event.topics.filter(t => {return t.id != id})
     }
   },
 
