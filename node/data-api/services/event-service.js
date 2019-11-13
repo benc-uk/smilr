@@ -16,11 +16,11 @@ class EventService extends Service {
   // We need to supply event type as well as just id 
   // So we override the base Service here and add extra constraints/keys 
   async update(data, doUpsert = false) {
-    super.update(data, doUpsert, {_id: data._id, type: data.type})
+    return super.update(data, doUpsert, {_id: data._id, type: data.type})
   }
   async delete(id) {
     let event = await this.fetchOne(id);
-    super.delete(id, {_id: id, type: event.type})
+    return super.delete(id, {_id: id, type: event.type})
   }
 };
 
