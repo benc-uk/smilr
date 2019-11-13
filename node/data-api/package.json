@@ -1,8 +1,13 @@
 {
-  "name": "nodejs-api-starter",
-  "version": "0.0.1",
-  "description": "Simple REST API starter template",
+  "name": "smilr-data-api",
+  "version": "6.1.0",
   "main": "server.js",
+  "engines": {
+    "node": "^12.13.0"
+  },
+  "repository": "https://github.com/benc-uk/smilr",
+  "description": "Primary Smilr microservice, RESTful data API",
+  "homepage": "https://smilr.benco.io",
   "scripts": {
     "start": "node server.js",
     "watch": "nodemon server.js",
@@ -10,8 +15,7 @@
     "test-junit": "NODE_ENV=test mocha --exit --sort --reporter mocha-junit-reporter",
     "test-html": "NODE_ENV=test mocha --exit --sort --reporter mochawesome",
     "coverage": "NODE_ENV=test nyc --reporter=html --reporter=text npm test",
-    "cleanup": "rm -rf coverage && rm -rf mochawesome-report && rm -rf .nyc_output",
-    "start-db": "sudo mongod -f /etc/mongod.conf & npm start"
+    "cleanup": "rm -rf coverage && rm -rf mochawesome-report && rm -rf .nyc_output && rm test-results.xml"
   },
   "author": "Ben Coleman",
   "license": "MIT",
