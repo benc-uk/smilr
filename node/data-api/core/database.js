@@ -13,7 +13,8 @@ class DatabaseConnection {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       // Sets how long to try establishing initial server connection. Undocumented! 
-      serverSelectionTimeoutMS: connectTimeout 
+      serverSelectionTimeoutMS: connectTimeout ,
+      dbName: 'smilrDb'
     }
     
     mongoose.pluralize(null);
