@@ -14,7 +14,7 @@ trigger:
     - node/**
     - vue/*
     - azure/pipelines/build.yaml
-#pr: [master]
+pr: [master]
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
@@ -32,39 +32,39 @@ stages:
     # =====================================================================================
     # Run unit tests for Data API and Vue.js SPA/client
     # =====================================================================================  
-  - job: unitTestsJob
-    displayName: 'Run unit tests'
+  # - job: unitTestsJob
+  #   displayName: 'Run unit tests'
     
-    pool:
-      vmImage: ubuntu-latest
+  #   pool:
+  #     vmImage: ubuntu-latest
         
-    steps:
-    - bash: |
-        npm install --silent
-        npm run test-report
-        npm run code-coverage
-      displayName: Run tests for data-api
-      workingDirectory: node/data-api
+  #   steps:
+  #   - bash: |
+  #       npm install --silent
+  #       npm run test-report
+  #       npm run code-coverage
+  #     displayName: Run tests for data-api
+  #     workingDirectory: node/data-api
 
-    - task: PublishTestResults@2
-      condition: succeededOrFailed()
-      inputs:
-        testResultsFiles: 'node/data-api/*.xml'
-        testResultsFormat: JUnit
-        testRunTitle: Data API Tests
+  #   - task: PublishTestResults@2
+  #     condition: succeededOrFailed()
+  #     inputs:
+  #       testResultsFiles: 'node/data-api/*.xml'
+  #       testResultsFormat: JUnit
+  #       testRunTitle: Data API Tests
 
-    - bash: |
-        npm install --silent
-        npm run test:unit-report
-      displayName: Run tests for Vue SPA client
-      workingDirectory: vue
+  #   - bash: |
+  #       npm install --silent
+  #       npm run test:unit-report
+  #     displayName: Run tests for Vue SPA client
+  #     workingDirectory: vue
 
-    - task: PublishTestResults@2
-      condition: succeededOrFailed()
-      inputs:
-        testResultsFiles: 'vue/*.xml'
-        testResultsFormat: JUnit
-        testRunTitle: Vue SPA Tests
+  #   - task: PublishTestResults@2
+  #     condition: succeededOrFailed()
+  #     inputs:
+  #       testResultsFiles: 'vue/*.xml'
+  #       testResultsFormat: JUnit
+  #       testRunTitle: Vue SPA Tests
 
     # =====================================================================================
     # Build container image and push to ACR 
