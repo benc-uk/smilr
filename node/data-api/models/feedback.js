@@ -14,7 +14,7 @@ class Feedback {
   initSchema() {
     const schema = new mongoose.Schema({
       event: { type: String, required: true },
-      topic: { type: String, required: true },
+      topic: { type: Number, required: true },
       rating: { type: Number, required: true, min: 1, max: 5 },
       comment: { type: String, maxlength: 512 },
       sentiment: { type: Number }
