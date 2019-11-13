@@ -12,9 +12,10 @@ class FeedbackController extends Controller {
     let eventId = req.params.eventid;
     let topicId = req.params.topicid;
 
+    // Inject query into req object
     req.query = { filter: `event=${eventId}&topic=${topicId}` };
-
-    this.query(req, res);
+    
+    return super.query(req, res);
   }
 }
 
