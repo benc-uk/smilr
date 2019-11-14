@@ -71,7 +71,7 @@ stages:
     # =====================================================================================
   - job: containerBuildJob
     # NOTE! Only run in master branch (i.e. merged PRs) 
-    #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     dependsOn: unitTestsJob
     displayName: 'Build & push to ACR'
     
