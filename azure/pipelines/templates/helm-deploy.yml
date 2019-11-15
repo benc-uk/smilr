@@ -23,10 +23,19 @@ jobs:
         - task: HelmInstaller@1
           displayName: 'Install Helm version'
           inputs:
-            helmVersionToInstall: 2.14.0
+            helmVersionToInstall: 3.0.0
         
         - task: HelmDeploy@0
-          displayName: 'Helm update dependencies'
+          displayName: 'Helm add stable repo'
+          inputs:
+            azureSubscriptionEndpoint: $(azure-connection)
+            azureResourceGroup: $(aks-resgrp)
+            kubernetesCluster: $(aks-connection)
+            command: repo
+            arguments: 'add stable https://kubernetes-charts.storage.googleapis.com'
+
+        - task: HelmDeploy@0
+          displayName: 'Helm update chart dependencies'
           inputs:
             azureSubscriptionEndpoint: $(azure-connection)
             azureResourceGroup: $(aks-resgrp)
