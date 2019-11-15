@@ -23,7 +23,7 @@ jobs:
         - task: HelmInstaller@1
           displayName: 'Install Helm version'
           inputs:
-            helmVersionToInstall: 3.0.0 #2.14.0
+            helmVersionToInstall: 3.0.0
         
         - task: HelmDeploy@0
           displayName: 'Helm add stable repo'
