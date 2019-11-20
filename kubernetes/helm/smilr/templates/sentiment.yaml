@@ -42,9 +42,12 @@ spec:
         - containerPort: 5000
 
         resources:
+          requests:
+            memory: "300M" 
+            cpu: "50m"
           limits:
-            memory: "2G" # Wow! Anything less and the pod won't start
-            cpu: "0.25"
+            memory: "2G" 
+            cpu: "500m"
 
 ---
 
