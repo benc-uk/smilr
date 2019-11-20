@@ -5,7 +5,7 @@ metadata:
   labels:
 {{ include "smilr.labels" . | indent 4 }} 
 spec:
-  replicas: {{ .Values.dataApi.replicas }}
+  replicas: {{ .Values.frontend.replicas }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "smilr.name" . }}-frontend
