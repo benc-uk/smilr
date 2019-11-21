@@ -126,9 +126,9 @@ stages:
           $(Build.BuildNumber)
 
     # Create script in artifact outputs to allow release pipeline(s) to get the model version for this build
-    - bash: |
-        echo "echo \"##vso[task.setvariable variable=image-tag]$(Build.BuildNumber)\"" > kubernetes/helm/imagetag.sh
-      displayName: Create imagetag.sh script in output artifacts
+    # - bash: |
+    #     echo "echo \"##vso[task.setvariable variable=image-tag]$(Build.BuildNumber)\"" > kubernetes/helm/imagetag.sh
+    #   displayName: Create imagetag.sh script in output artifacts
       
     - publish: kubernetes/helm
       artifact: helm-charts

@@ -13,6 +13,7 @@ trigger:
     - pipelines/deploy-aks.yml
     - pipelines/templates/helm-deploy.yml
     - kubernetes/helm/*
+
 pr:
   branches:
     include: 
