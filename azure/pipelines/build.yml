@@ -32,39 +32,39 @@ stages:
     # =====================================================================================
     # Run unit tests for Data API and Vue.js SPA/client
     # =====================================================================================  
-  # - job: unitTestsJob
-  #   displayName: 'Run unit tests'
+  - job: unitTestsJob
+    displayName: 'Run unit tests'
     
-  #   pool:
-  #     vmImage: ubuntu-latest
+    pool:
+      vmImage: ubuntu-latest
         
-  #   steps:
-  #   - bash: |
-  #       npm install --silent
-  #       npm run test-junit
-  #       npm run coverage
-  #     displayName: Run tests for data-api
-  #     workingDirectory: node/data-api
+    steps:
+    - bash: |
+        npm install --silent
+        npm run test-junit
+        npm run coverage
+      displayName: Run tests for data-api
+      workingDirectory: node/data-api
 
-  #   - task: PublishTestResults@2
-  #     condition: succeededOrFailed()
-  #     inputs:
-  #       testResultsFiles: 'node/data-api/test-results.xml'
-  #       testResultsFormat: JUnit
-  #       testRunTitle: Data API Tests
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: 'node/data-api/test-results.xml'
+        testResultsFormat: JUnit
+        testRunTitle: Data API Tests
 
-  #   - bash: |
-  #       npm install --silent
-  #       npm run test:unit-report
-  #     displayName: Run tests for Vue SPA client
-  #     workingDirectory: vue
+    - bash: |
+        npm install --silent
+        npm run test:unit-report
+      displayName: Run tests for Vue SPA client
+      workingDirectory: vue
 
-  #   - task: PublishTestResults@2
-  #     condition: succeededOrFailed()
-  #     inputs:
-  #       testResultsFiles: 'vue/*.xml'
-  #       testResultsFormat: JUnit
-  #       testRunTitle: Vue SPA Tests
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: 'vue/*.xml'
+        testResultsFormat: JUnit
+        testRunTitle: Vue SPA Tests
 
     # =====================================================================================
     # Build container image and push to ACR 
@@ -124,11 +124,6 @@ stages:
         tags: |
           latest
           $(Build.BuildNumber)
-
-    # Create script in artifact outputs to allow release pipeline(s) to get the model version for this build
-    # - bash: |
-    #     echo "echo \"##vso[task.setvariable variable=image-tag]$(Build.BuildNumber)\"" > kubernetes/helm/imagetag.sh
-    #   displayName: Create imagetag.sh script in output artifacts
       
     - publish: kubernetes/helm
       artifact: helm-charts

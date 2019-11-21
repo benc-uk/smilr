@@ -53,4 +53,4 @@ jobs:
             chartType: FilePath
             chartPath: $(Pipeline.Workspace)/buildpipeline/helm-charts/smilr
             namespace: ${{ parameters.envName }}
-            overrideValues: "registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(resources.pipeline.buildpipeline.runName),frontend.imageTag=$(resources.pipeline.buildpipeline.runName)=,ingress.domainSuffix=$(dns-suffix),ingress.certName=kube-benco-io-cert"
+            overrideValues: "registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(resources.pipeline.buildpipeline.runName),frontend.imageTag=$(resources.pipeline.buildpipeline.runName),ingress.domainSuffix=$(dns-suffix),ingress.certName=kube-benco-io-cert"
