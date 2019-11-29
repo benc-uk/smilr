@@ -28,6 +28,11 @@ spec:
         env:
         - name: API_ENDPOINT
           value: {{ if .Values.ingress.domainSuffix }} "/api"  {{ else }} "/{{ .Release.Name }}/api" {{ end }}
+        
+        {{ if .Values.frontend.aadClientId }}
+        - name: AAD_CLIENT_ID
+          value: {{ .Values.frontend.aadClientId }}
+        {{ end }}
 
         livenessProbe:
           httpGet:
