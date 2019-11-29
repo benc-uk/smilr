@@ -36,6 +36,17 @@ spec:
         - name: SENTIMENT_API_ENDPOINT
           value: http://{{ include "smilr.fullname" . }}-sentiment:5000
         {{ end }}
+        {{ if (and .Values.sentiment.externalEndpoint .Values.sentiment.key) }}
+        - name: SENTIMENT_API_ENDPOINT
+          value: {{ .Values.sentiment.externalEndpoint }}
+        - name: SENTIMENT_API_KEY
+          value: {{ .Values.sentiment.key }}          
+        {{ end }}
+
+        {{ if .Values.dataApi.aadClientId }}
+        - name: SECURE_CLIENT_ID
+          value: {{ .Values.dataApi.aadClientId }}
+        {{ end }}
 
         livenessProbe:
           httpGet:

@@ -21,11 +21,13 @@ dataApi:
   replicas: 2
   # Leave blank to use the internal service, override if using external database
   mongoConnStr: 
+  aadClientId:
   imagePullPolicy: Always
   
 frontend:
   imageTag: latest
   replicas: 2
+  aadClientId:
   imagePullPolicy: Always
 
 sentiment:
@@ -33,6 +35,7 @@ sentiment:
   key: 
   region: 
   image: mcr.microsoft.com/azure-cognitive-services/sentiment:1.1.009301-amd64-preview
+  externalEndpoint:
 
 mongodb:
   persistence:
