@@ -11,9 +11,8 @@ using GrainModels;
 
 namespace API.Controllers
 {
-
-  // the API that handles all calls to grains 
-  [Route("api/[controller]")]
+  // the API that handles the main event related calls to grains 
+  [Route("api/events")]
   public class EventsController : Controller
   {
     private IClusterClient client;
@@ -27,7 +26,7 @@ namespace API.Controllers
 
 
     // Create new event
-    // POST /api/events
+    // POST /api/events {FromBody}
     [HttpPost("")]
     public async Task<EventAPI> Post([FromBody] EventAPI body)  
     {
@@ -47,7 +46,7 @@ namespace API.Controllers
 
 
     // Update existing event
-    // PUT api/events
+    // PUT api/events/{eventCode}
     [HttpPut("{eventCode}")]
     public async Task<EventAPI> Put([FromBody] EventAPI body, string eventCode)
     {
@@ -70,15 +69,15 @@ namespace API.Controllers
     }
 
 
-
     // Get specific event info
     // GET api/events/{id}
     [HttpGet("{id}")]
     public async Task<EventAPI> Get(string id)
     {
-        logger.LogInformation($"GET api/events/id: id = {id}");
+        logger.LogInformation($"GET api/events/id: event id = {id}");
 
-        // call grain
+        // call event grain
+
         EventAPI info = new EventAPI();
         await ConnectClientIfNeeded();
         var grain = this.client.GetGrain<IEventGrain>(id);
@@ -88,6 +87,28 @@ namespace API.Controllers
     }
 
     
+    // Get list of all events
+    // GET api/events
+    [HttpGet("")]
+    public async Task<EventAPI[]> Get()
+    {
+        logger.LogInformation($"GET api/events: get all events");
+
+        // call aggregator grain
+
+
+
+        await ConnectClientIfNeeded();
+        var grain = this.client.GetGrain<IAggregatorGrain>(Guid.Empty);
+
+        return info;
+    }
+
+    
+
+
+
+
 
     // Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
     private string makeId(int len)
