@@ -15,15 +15,15 @@ namespace Grains
   [StorageProvider(ProviderName = "grain-store")]  // we will use auto persist for event grains
   public class EventGrain : Grain<EventGrainState>, IEventGrain
   {
-      List<FeedbackGrainState> feedabck;
+        // create / update an event
+        //  the system doesn't really distinguish between the two, just to keep the logic simple
+        //  scenarios include changing the start or end date, changing the list of topics for that event, etc
+        public async Task Update(string title, string type, string start, string end, TopicAPI[] topics)
+        { 
+            Console.WriteLine($"** EventGrain Update()for event id = {this.GetPrimaryKeyString()}, with title {title}");
 
+            // update interal grain state
 
-      // create / update an event
-      //  the system doesn't really distinguish between the two, just to keep the logic simple
-      //  scenarios include changing the start or endd date, changing the list of topics for that event, etc
-      public Task Update(string title, string type, string start, string end, TopicAPI[] topics)
-      {
-            // store state
             State.title = title;
             State.type = type;
             State.start = start;
@@ -31,15 +31,22 @@ namespace Grains
             State.topics = topics;
             State.feedback = new List<FeedbackGrainState>();  //  lets clear all feedback, just to keep things simple
 
-            Console.WriteLine($"** Event Grain Update() about to write WriteStateAsync for {title}");
-            return base.WriteStateAsync(); 
-      }
+            //Console.WriteLine($"** EventGrain Update() about to write WriteStateAsync");
+            await base.WriteStateAsync(); 
+
+            // update aggregated list of events
+
+            IAggregatorGrain aggregator = GrainFactory.GetGrain<IAggregatorGrain>(Guid.Empty);  // the aggregator grain is a singleton - Guid.Empty is convention to indicate this
+            await aggregator.AddAnEvent(this.GetPrimaryKeyString());
+
+            return;
+        }
 
 
       // return core info about this event
       public async Task<EventAPI> Info()
       {
-          Console.WriteLine($"** Event Grain Info()for topicId = {this.GetPrimaryKeyString()}");
+          Console.WriteLine($"** EventGrain Info() for topicId = {this.GetPrimaryKeyString()}");
 
           EventAPI info = new EventAPI();
 

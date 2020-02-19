@@ -42,6 +42,7 @@ namespace GrainModels
   // this is the state that the grain needs to pesist across activations, and gets saved by Orleans via the grain persistence API 
   // dotnet.github.io/orleans/Tutorials/Declarative-Persistence.html 
 
+    // ensure all event data is persisted  
     public class EventGrainState
     {
         public string id { get; set; }
@@ -58,5 +59,12 @@ namespace GrainModels
         public int topicId { get; set; }      // which Topic id the feedback refers to 
         public int rating { get; set; }       // thew actual rating 
         public string comment { get; set; }   // optional comment     
+    }
+
+
+    // ensure list of active events is persisted 
+    public class AggregatorGrainState
+    {
+        public List<string> eventids { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace GrainInterfaces
 {
 
-  // event grain interface
+    // main event grain interface
     public interface IEventGrain : IGrainWithStringKey
     {
         // initialise/update a grain with the core event info 
@@ -22,5 +22,20 @@ namespace GrainInterfaces
 
         // get all feedback for specific topic
         Task<FeedbackAPI[]> GetFeedback(int topicid);
+    } 
+
+
+
+    // aggregator grain interface
+    public interface IAggregatorGrain : IGrainWithGuidKey
+    {
+        // add a new event to the list of events
+        Task AddAnEvent(string eventid);
+
+        // delete an event from the list of events
+        Task DeleteAnEvent(string eventid);
+
+        // return array of events matching filter
+        Task<EventAPI> ListEvents(string filter);
     } 
 }
