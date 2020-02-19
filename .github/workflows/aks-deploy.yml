@@ -9,13 +9,13 @@ on:
       - '.github/workflows/aks-deploy.yml'
 
 env:
-  ACR_NAME: bcdemo
-  AKS_NAME: bcdemo
-  RES_GRP: demo.aks
-  IMAGE_TAG: latest
-  DOMAIN: kube.benco.io
-  CERT: kube-benco-io-cert
-  RELEASE_ID: "github"
+  ACR_NAME:     bcdemo
+  AKS_NAME:     bcdemo
+  RES_GRP:      demo.aks
+  IMAGE_TAG:    latest
+  DOMAIN:       kube.benco.io
+  CERT:         kube-benco-io-cert
+  RELEASE_NAME: github
   
 jobs:
   # ==================================================================================
@@ -45,7 +45,7 @@ jobs:
 
     - name: 'Helm install release'
       run: |
-        helm upgrade $ENVIRON-$RELEASE_ID kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+        helm upgrade $ENVIRON-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
   # ==================================================================================
   # Integration API tests
@@ -60,7 +60,7 @@ jobs:
     - uses: actions/checkout@v1
     
     - name: Wait for API to be ready
-      run: bash etc/bash/urlWait.sh https://$ENVIRON-$RELEASE_ID-smilr.$DOMAIN/api 60
+      run: bash etc/bash/urlWait.sh https://$ENVIRON-$RELEASE_NAME-smilr.$DOMAIN/api 60
     
     # Run the tests inside a container with Newman
     - name: Run API tests with Postman/newman
@@ -68,8 +68,8 @@ jobs:
       with:
         args: run /github/workspace/etc/postman/Smilr.postman_collection.json /
           --timeout 180000 /
-          --global-var smilr-api-host="${{ env.ENVIRON }}-${{ env.RELEASE_ID }}-smilr.${{ env.DOMAIN }}" /
-          --global-var smilr-front-host="${{ env.ENVIRON }}-${{ env.RELEASE_ID }}-smilr.${{ env.DOMAIN }}"
+          --global-var smilr-api-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}-smilr.${{ env.DOMAIN }}" /
+          --global-var smilr-front-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}-smilr.${{ env.DOMAIN }}"
 
   # ==================================================================================
   # Continuous deployment job - deploy to AKS staging namespace
@@ -100,5 +100,5 @@ jobs:
 
     - name: 'Helm install release'
       run: |
-        helm upgrade $ENVIRON-$RELEASE_ID kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+        helm upgrade $ENVIRON-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
