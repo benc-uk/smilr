@@ -1,5 +1,10 @@
-export Orleans__ConnectionString=''
-export Orleans__ClusterId='smilrcluster'
-export Orleans__ServiceId='smilr'
+#!/bin/bash
 
-dotnet run API.csproj
+if [ ! -f .env ]; then
+    echo ".env file not found"
+    exit
+fi
+
+export $(grep -v '^#' .env | xargs -0)
+
+dotnet run

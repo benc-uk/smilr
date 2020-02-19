@@ -15,6 +15,7 @@ The API is RESTful and very simple, there are two main entities that can be refe
 
 **Other routes:**  
 - `GET /api/info` - Provide some information about the backend service, including hostname (good for debugging & checking loadbalancing)
+- `POST /api/bulk` - Bulk load event and feedback data (*secured admin API call*)
 
 ## Swagger / OpenAPI
 There is a full [Swagger definition for the API](../node/data-api/swagger.json) 

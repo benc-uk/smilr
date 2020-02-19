@@ -1,5 +1,5 @@
-# Node.js - Stable Core Implementation
-The Node.js implementations of the Smilr frontend service and data API are here
+# Node.js - Reference Implementation
+Source for the the Node.js reference implementation of Smilr 
 
 #### [:page_with_curl: Data API](./data-api) 
 

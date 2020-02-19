@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "3.3.0",
+    "version": "4.9.5",
     "title": "Smilr API",
     "description": "REST API for data access microservice of the Smilr app",
     "contact": {
@@ -286,7 +286,39 @@
           }
         }
       }     
-    }   
+    },
+    "/bulk": {
+      "post": {
+        "tags": ["Other"],
+        "description": "Bulk load event and feedback data",
+        "operationId": "bulkLoad",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Bulk load data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Bulk"
+            }            
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Bulk load results object"
+          },
+          "400": {
+            "description": "Unexpected error"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        }
+      }     
+    }      
   },
   "definitions": {
     "Feedback": {
@@ -366,6 +398,23 @@
         "releaseInfo": { "type": "string",  "example": "Release-4" },
         "cosmosDb":    { "type": "object",  "example": {"connected": true, "host": "mongodb002", "port": 27017, "driverVer": "2.2.35"} }
       }
-    }    
+    },
+    "Bulk": {
+      "type": "object",
+      "properties": {
+        "events": {       
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "feedback": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Feedback"
+          }
+        }
+      }
+    }  
   }
 }

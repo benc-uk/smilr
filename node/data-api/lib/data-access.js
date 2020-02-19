@@ -33,7 +33,7 @@ class DataAccess {
 
       if(!this.db || force) {
         // Use await and connect to Mongo
-        await this.MongoClient.connect(connectionString, { useNewUrlParser: true, reconnectInterval: 5000, reconnectTries: 20 })
+        await this.MongoClient.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true, reconnectInterval: 5000, reconnectTries: 20 })
         .then(db => {
           // Switch DB to smilr, which will create it, if it doesn't exist
           this.db = db.db(this.DBNAME);
