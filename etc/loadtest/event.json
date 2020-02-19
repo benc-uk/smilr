@@ -1,0 +1,16 @@
+{
+  "title": "Load Test Event",
+  "type": "event",
+  "start": "2015-01-09",
+  "end": "2025-12-20",
+  "topics": [
+    {
+      "id": 1,
+      "desc": "Topic 1"
+    },
+    {
+      "id": 2,
+      "desc": "Topic 2"
+    }
+  ]
+}
