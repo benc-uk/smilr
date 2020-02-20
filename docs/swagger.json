@@ -1,0 +1,626 @@
+{
+  "info": {
+    "description": "Smilr microservice, RESTful data API",
+    "title": "Smilr API",
+    "version": "6.2.0"
+  },
+  "produces": [
+    "application/json"
+  ],
+  "swagger": "2.0",
+  "paths": {
+    "/api/bulk": {
+      "post": {
+        "parameters": [
+          {
+            "name": "bulk",
+            "in": "body",
+            "description": "Bulk payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Bulk"
+            }
+          }
+        ],
+        "description": "Bulk load events and feedback",
+        "tags": [
+          "Misc"
+        ],
+        "responses": {
+          "200": {
+            "description": "Status message"
+          },
+          "500": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        },
+        "operationId": "bulkLoad"
+      }
+    },
+    "/api/events": {
+      "get": {
+        "parameters": [],
+        "description": "This returns ALL events",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of events",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        },
+        "operationId": "eventGetAll"
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "event",
+            "in": "body",
+            "description": "The new event to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        ],
+        "description": "Create a new event",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of events",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error, invalid event",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "eventCreate"
+      }
+    },
+    "/api/events/filter/{time}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "time",
+            "in": "path",
+            "description": "Time range to filter on - eg: past,active,future",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "past",
+              "active",
+              "future"
+            ]
+          }
+        ],
+        "description": "This returns events matching given time range: past, active or future",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of events",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        },
+        "operationId": "eventGetFiltered"
+      }
+    },
+    "/api/events/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of event to update",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "description": "Get a single event",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of events",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          },
+          "404": {
+            "description": "Event with given id not found",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unexpected error \n/",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "eventGetSingle"
+      },
+      "put": {
+        "parameters": [
+          {
+            "name": "event",
+            "in": "body",
+            "description": "The event to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of event to update",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "description": "Update an event",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of events",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error, invalid event",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "404": {
+            "description": "Event with given id not found",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unexpected error \n/",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "eventUpdate"
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of event to delete",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "description": "Delete an event",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "An confirmation message in JSON"
+          },
+          "404": {
+            "description": "Event with given id not found",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unexpected error \n/",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        },
+        "operationId": "eventDelete"
+      }
+    },
+    "/api/feedback/{eventid}/{topicid}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "eventid",
+            "in": "path",
+            "description": "Id of event containing topic",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "topicid",
+            "in": "path",
+            "description": "Id of topic to leave feedback on",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "description": "This returns all feedback for a given event and topic",
+        "tags": [
+          "Feedback"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of feedback, empty array if topic or event not found",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Feedback"
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        },
+        "operationId": "feedbackGet"
+      }
+    },
+    "/api/feedback": {
+      "post": {
+        "parameters": [
+          {
+            "name": "feedback",
+            "in": "body",
+            "description": "The feedback to submit",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Feedback"
+            }
+          }
+        ],
+        "description": "This submit new feedback",
+        "tags": [
+          "Feedback"
+        ],
+        "responses": {
+          "200": {
+            "description": "Feedback object with id",
+            "schema": {
+              "$ref": "#/definitions/Feedback"
+            }
+          },
+          "400": {
+            "description": "Validation error with feedback",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        },
+        "operationId": "feedbackCreate"
+      }
+    },
+    "/api/info": {
+      "get": {
+        "parameters": [],
+        "description": "This returns health / info",
+        "tags": [
+          "Misc"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of events",
+            "schema": {
+              "$ref": "#/definitions/HealthInfo"
+            }
+          }
+        }
+      }
+    },
+    "/api/healthz": {
+      "get": {
+        "parameters": [],
+        "description": "This returns health / info",
+        "tags": [
+          "Misc"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of events",
+            "schema": {
+              "$ref": "#/definitions/HealthInfo"
+            }
+          }
+        },
+        "operationId": "infoGet"
+      }
+    }
+  },
+  "definitions": {
+    "Bulk": {
+      "required": [
+        "events",
+        "feedback"
+      ],
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "feedback": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Feedback"
+          }
+        }
+      }
+    },
+    "ProblemDetails": {
+      "required": [
+        "error",
+        "title",
+        "details",
+        "status",
+        "source"
+      ],
+      "properties": {
+        "error": {
+          "type": "boolean",
+          "description": "Always true"
+        },
+        "title": {
+          "type": "string",
+          "description": "title of the error ",
+          "example": "teapot-error"
+        },
+        "details": {
+          "type": "string",
+          "description": "title of the error ",
+          "example": "I am a teapot"
+        },
+        "status": {
+          "type": "integer",
+          "description": "title of the error ",
+          "example": 418
+        },
+        "source": {
+          "type": "string",
+          "description": "title of the error ",
+          "example": "TeapotController.get"
+        }
+      }
+    },
+    "HealthInfo": {
+      "required": [
+        "version"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Health string ",
+          "example": "pass"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version number ",
+          "example": "6.2.0"
+        },
+        "releaseID": {
+          "type": "string",
+          "description": "Additional release information"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the API ",
+          "example": "smilr-data-api"
+        },
+        "debug": {
+          "type": "object",
+          "description": "Further runtime information"
+        },
+        "debug.hostInfo": {
+          "type": "object",
+          "description": "Details of the host"
+        },
+        "debug.nodeInfo": {
+          "type": "object",
+          "description": "Details of the Node version"
+        },
+        "debug.runtimeInfo": {
+          "type": "object",
+          "description": "Details of the runtime environment"
+        },
+        "debug.mongoInfo": {
+          "type": "object",
+          "description": "Details of the MonogDB connection and DB"
+        }
+      }
+    },
+    "Event": {
+      "required": [
+        "_id",
+        "title",
+        "type",
+        "start",
+        "end",
+        "topics"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Id of this event ",
+          "example": "FOO12"
+        },
+        "title": {
+          "type": "string",
+          "description": "Descriptive title ",
+          "example": "Workshop about cheese"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of this event ",
+          "enum": [
+            "event",
+            "hack",
+            "lab",
+            "workshop"
+          ]
+        },
+        "start": {
+          "type": "string",
+          "description": "Start date in RFC 3339 format ",
+          "example": "2020-02-15"
+        },
+        "end": {
+          "type": "string",
+          "description": "End date in RFC 3339 format ",
+          "example": "2020-02-16"
+        },
+        "topics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Topic"
+          }
+        }
+      }
+    },
+    "Topic": {
+      "required": [
+        "id",
+        "desc"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Id of this topic ",
+          "example": 2
+        },
+        "desc": {
+          "type": "string",
+          "description": "Description of the topic ",
+          "example": "How to make nice cheese"
+        }
+      }
+    },
+    "Feedback": {
+      "required": [
+        "event",
+        "topic",
+        "rating"
+      ],
+      "properties": {
+        "event": {
+          "type": "string",
+          "description": "Event id ",
+          "example": "FOO12"
+        },
+        "topic": {
+          "type": "integer",
+          "description": "Topic id ",
+          "example": 3
+        },
+        "rating": {
+          "type": "number",
+          "description": "Rating score ",
+          "example": "4"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Optional comments ",
+          "example": "This is was really interesting"
+        },
+        "sentiment": {
+          "type": "number",
+          "description": "Sentiment score ",
+          "example": "0.542"
+        }
+      }
+    }
+  },
+  "responses": {},
+  "parameters": {},
+  "securityDefinitions": {},
+  "tags": [
+    {
+      "name": "Misc",
+      "description": "Misc operations"
+    },
+    {
+      "name": "Events",
+      "description": "Operations about events"
+    },
+    {
+      "name": "Feedback",
+      "description": "Operations about feedback"
+    }
+  ]
+}}

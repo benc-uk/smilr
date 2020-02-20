@@ -38,8 +38,8 @@ helm upgrade --install <<release-name>> smilr -f values.yaml
 ## Data API Settings
 |  Setting  |  Description           | Type | Default |
 | --------- | ---------------------- | ---- | ------- |
-|**dataApi.imageTag** | Which tag to pull, e.g. latest | String | latest |
-|**dataApi.replicas** | Number of pod replicas to create | Int | 1 |
+| **dataApi.imageTag** | Which tag to pull, e.g. latest | String | latest |
+| **dataApi.replicas** | Number of pod replicas to create | Int | 1 |
 | **dataApi.mongoConnStr** | Leave blank to use "in cluster" MongoDB pod & service, set to a value to point to an external or existing MongoDB instance, e.g. Cosmos DB or other. If this value is set then no MonogDB deployment will take place | String | *blank* |
 | **dataApi.imagePullPolicy** | One of: `Always` or `IfNotPresent` | String | Always |
 
@@ -58,6 +58,7 @@ A common one is turn persistence on/off, for speed in demos it's set to off as a
 
 |  Setting  |  Description           | Type | Default |
 | --------- | ---------------------- | ---- | ------- |
+| **mongodb.enabled** | Deploy MongoDB or not, if false ensure `dataApi.mongoConnStr` points somewhere! | Boolean | true |
 | **mongodb.persistence.enabled** | If true, then a persistent volume claim will be requested and mounted to persist MongoDB data. | Boolean | false |
 
 ## Sentiment API Settings

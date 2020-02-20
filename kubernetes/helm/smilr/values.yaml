@@ -38,6 +38,7 @@ sentiment:
   externalEndpoint:
 
 mongodb:
+  enabled: true
   persistence:
     enabled: false
     size: 1Gi

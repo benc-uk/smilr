@@ -4,7 +4,18 @@ const SCHEMA_NAME = 'Events';
 
 /**
  * @typedef Event
- * @property {string} title.required - Title of this event
+ * @property {string} _id.required - Id of this event - eg: FOO12
+ * @property {string} title.required - Descriptive title - eg: Workshop about cheese
+ * @property {enum} type.required - Type of this event - eg: event,hack,lab,workshop
+ * @property {string} start.required - Start date in RFC 3339 format - eg: 2020-02-15
+ * @property {string} end.required - End date in RFC 3339 format - eg: 2020-02-16
+ * @property {Array.<Topic>} topics.required - Topic list
+ */
+
+/**
+ * @typedef Topic
+ * @property {integer} id.required - Id of this topic - eg: 2
+ * @property {string} desc.required - Description of the topic - eg: How to make nice cheese
  */
 
 class Event {
@@ -19,8 +30,8 @@ class Event {
       _id: { type: String },
       title: { type: String, required: true },
       type:  { type: String, required: true, enum: ['event', 'workshop', 'hack', 'lab'] },
-      start: { type: Date, required: true },
-      end:   { type: Date, required: true },
+      start: { type: Date,   required: true },
+      end:   { type: Date,   required: true },
       topics: { type: [topicSchema], required: true }
     });
     
@@ -36,13 +47,28 @@ class Event {
       if(event.topics.length < 1) {
         next(new Error("ValidationError: event must have at least 1 topic"));
       }
-
       if(event.start > event.end) {
         next(new Error("ValidationError: start date can not be after end date"));
       }
   
       next();
     });
+
+    // Middleware for validation of updates
+    eventSchema.pre('updateOne', function(next) { 
+    if(this._update && this._update['$set']) {
+      var event = this._update['$set'];
+
+      if(event.start > event.end) {
+        next(new Error("ValidationError: start date can not be after end date"));
+      }
+      if(event.topics.length < 1) {
+        next(new Error("ValidationError: event must have at least 1 topic"));
+      }      
+    }
+
+    next()
+  })
 
     // Create the mongoose model from eventSchema
     mongoose.model(SCHEMA_NAME, eventSchema);
