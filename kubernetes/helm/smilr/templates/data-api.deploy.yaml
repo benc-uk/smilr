@@ -47,7 +47,10 @@ spec:
         - name: SENTIMENT_API_ENDPOINT
           value: {{ .Values.sentiment.externalEndpoint }}
         - name: SENTIMENT_API_KEY
-          value: {{ .Values.sentiment.key }}          
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "smilr.fullname" . }}-secrets
+              key: sentimentKey                    
         {{ end }}
 
         {{ if .Values.dataApi.aadClientId }}
