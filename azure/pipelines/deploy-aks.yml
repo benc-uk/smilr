@@ -69,8 +69,8 @@ stages:
   - template: templates/run-loadtest.yml
     parameters:
       dependsOn: deployToAKS
-      apiHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
-      frontHost: 'test-$(Build.BuildId)-smilr.$(dns-suffix)'
+      apiHost: 'staging-$(Build.BuildId)-smilr.$(dns-suffix)'
+      frontHost: 'staging-$(Build.BuildId)-smilr.$(dns-suffix)'
 
 # *************************************************************************************
 # Deploy stage 3 - AKS production namespace
