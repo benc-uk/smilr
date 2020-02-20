@@ -2,7 +2,7 @@
 
 ![logo](https://datamountaineer.com/wp-content/uploads/2016/09/helm.png)
 
-This is a working Helm chart to deploy Smilr. It requires that you have an Ingress Controller deployed, which can be easily installed via Helm.
+This is a working Helm chart to deploy Smilr. It requires that you have an Ingress Controller deployed, which can be easily installed via Helm. Currently Helm 3 is required.
 
 # Quick Start
 
