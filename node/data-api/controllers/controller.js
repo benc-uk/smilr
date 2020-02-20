@@ -113,6 +113,15 @@ class Controller {
       title = 'validation-error'
     }
 
+    /**
+     * @typedef ProblemDetails
+     * @property {boolean} error.required - Always true
+     * @property {string} title.required - title of the error - eg: teapot-error
+     * @property {string} details.required - title of the error - eg: I am a teapot
+     * @property {integer} status.required - title of the error - eg: 418
+     * @property {string} source.required - title of the error - eg: TeapotController.get
+     */
+
     // Problem Details object as per standard https://tools.ietf.org/html/rfc7807
     let problemDetails = {
       error: true,

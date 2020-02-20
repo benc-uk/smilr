@@ -100,3 +100,27 @@ function _convertSeconds(n)  {
 } 
 
 module.exports = HealthController;
+
+// ===== OpenAPI / Swagger generator comments below  =====
+
+/**
+ * This returns health / info
+ * @route GET /api/info
+ * @route GET /api/healthz
+ * @group Misc - Misc operations
+ * @operationId infoGet
+ * @returns {HealthInfo.model} 200 - An array of events
+ */
+
+/**
+ * @typedef HealthInfo
+ * @property {string} status - Health string - eg: pass
+ * @property {string} version.required - Version number - eg: 6.2.0
+ * @property {string} releaseID - Additional release information
+ * @property {string} description - Description of the API - eg: smilr-data-api
+ * @property {object} debug - Further runtime information 
+ * @property {object} debug.hostInfo - Details of the host
+ * @property {object} debug.nodeInfo - Details of the Node version
+ * @property {object} debug.runtimeInfo - Details of the runtime environment
+ * @property {object} debug.mongoInfo - Details of the MonogDB connection and DB
+ */

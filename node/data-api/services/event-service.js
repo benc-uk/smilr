@@ -18,6 +18,7 @@ class EventService extends Service {
   async update(data, doUpsert = false) {
     return super.update(data, doUpsert, {_id: data._id, type: data.type})
   }
+  
   async delete(id) {
     let event = await this.fetchOne(id);
     return super.delete(id, {_id: id, type: event.type})
