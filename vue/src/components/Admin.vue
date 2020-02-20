@@ -41,12 +41,6 @@ export default {
 
   data: function() {
     return {
-      // eventTableFields: {
-      //   title: {},
-      //   type: { formatter: (value) => { return value.charAt(0).toUpperCase() + value.substr(1) } },
-      //   start: { sortable: true, formatter: (value) => { return this.$options.filters.moment(value, 'MMM Do YYYY') } },
-      //   actions: { label: 'Actions' }
-      // },
       eventTableFields: [
         { key: 'title', sortable: true },
         { key: 'type', sortable: true, formatter: (value) => { return value.charAt(0).toUpperCase() + value.substr(1) } },

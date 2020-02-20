@@ -39,6 +39,10 @@ spec:
         backend:
           serviceName: {{ include "smilr.fullname" . }}-data-api
           servicePort: 80
+      - path: /api-docs
+        backend:
+          serviceName: {{ include "smilr.fullname" . }}-data-api
+          servicePort: 80          
       - path: /
         backend:
           serviceName: {{ include "smilr.fullname" . }}-frontend
@@ -64,7 +68,11 @@ spec:
         backend:
           serviceName: {{ include "smilr.fullname" . }}-data-api
           servicePort: 80
-
+      - path: "/{{ .Release.Name }}/api-docs"
+        backend:
+          serviceName: {{ include "smilr.fullname" . }}-data-api
+          servicePort: 80
+          
 ---
 
 apiVersion: extensions/v1beta1
