@@ -36,6 +36,7 @@ frontend:
 
 # These are the defaults for the database but change if you wish
 # mongodb:
+#   enabled: true
 #   persistence:
 #     enabled: false
 #   replicaSet:
