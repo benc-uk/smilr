@@ -6,7 +6,11 @@ const SCHEMA_NAME = 'Feedback';
 
 /**
  * @typedef Feedback
- * @property {number} rating.required - Rating score
+ * @property {string} event.required - Event id - eg: FOO12
+ * @property {integer} topic.required - Topic id - eg: 3
+ * @property {number} rating.required - Rating score - eg: 4
+ * @property {string} comment - Optional comments - eg: This is was really interesting
+ * @property {number} sentiment - Sentiment score - eg: 0.542
  */
 
 class Feedback {

@@ -57,12 +57,19 @@ const mongoTimeout = process.env.MONGO_CONNECT_TIMEOUT || 30000
 // Load API routes
 apiRoutes(app);
 
-// OPTIONAL - Set up express-swagger-generator
-// Remove if you don't want to use the auto generator
+// Set up express-swagger-generator
 const expressSwagger = new ExpressSwaggerGenerator(app);
 let options = {
   swaggerDefinition: {
     // Customize here, see docs https://github.com/pgroot/express-swagger-generator#usage
+    info: {
+      description: 'Smilr microservice, RESTful data API',
+      title: 'Smilr API',
+      version: '6.2.0',
+    },
+    produces: [
+      "application/json",
+    ]
   },
   basedir: __dirname, 
   files: ['./controllers/**/*.js', './models/**/*.js'] 
