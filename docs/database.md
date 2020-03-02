@@ -53,6 +53,10 @@ MonogDB server will start and be listening on all IPs by default, there is no au
 
 
 ## Loading Demo Data
-The database requires no initialization, however a helper script is provided to populate the system with demo data:
-#### [:page_with_curl: Helper Script: demoData](../scripts/demoData)
+The database requires no initialization, however a helper script is provided to populate the system with a set of simple demo data:
+```
+curl -L https://raw.github.com/benc-uk/smilr/master/etc/bash/loadData.sh | sh
+```
+
+The demo data held in [demodata.json](https://github.com/benc-uk/smilr/blob/master/etc/demodata.json)
 

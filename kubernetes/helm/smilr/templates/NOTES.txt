@@ -1,16 +1,20 @@
-Smilr has been deployed! Wow that was easy!
-===========================================
-{{ if .Values.domainSuffix }}
-{{ if .Values.cmCertIssuer }}The app is accessible at https://{{ .Release.Name }}.{{ .Values.domainSuffix }}/ 
-{{ else }}The app is accessible at http://{{ .Release.Name }}.{{ .Values.domainSuffix }}/
+
+╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
+    Smilr has been deployed! 🚀 🚀 🚀
+╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯
+
+{{ if .Values.ingress.domainSuffix }}
+{{ if or .Values.ingress.certIssuer .Values.ingress.certName }}The frontend is accessible at https://{{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}/ 
+{{ else }}The frontend is accessible at http://{{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}/
 {{ end }}
 It might take a while for the DNS record to be created & propagate, so please wait. 
-Check DNS with: dig +short {{ .Release.Name }}.{{ .Values.domainSuffix }}
-{{ if .Values.mongodb.persistence }}There might also be a delay while the MongoDB starts and is assigned a persistent volume {{ end }}
+Check DNS with: dig +short {{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}
 {{ else }}
-Get the IP address of your Ingress by running these commands:
+No domainSuffix was provided, so use the external IP of your ingress
+Run these commands:
 
-export INGRESS_IP=$(kubectl get svc -l app=addon-http-application-routing-nginx-ingress --all-namespaces -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}')
-echo -e "\n\nSmilr deployment is accessible at http://$INGRESS_IP/{{ .Release.Name }}/\n\n"
+export INGRESS_IP=$(kubectl get svc -l app=addon-http-application-routing-nginx-ingress -A -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}')
+echo -e "\n\nSmilr frontend is accessible at http://$INGRESS_IP/{{ include "smilr.fullname" . }}\n\n"
 {{ end }}
+{{ if .Values.mongodb.persistence.enabled }}There might also be a delay while the MongoDB starts and is assigned a persistent volume {{ end }}
 Have fun, bye!

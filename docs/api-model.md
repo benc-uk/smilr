@@ -14,12 +14,13 @@ The API is RESTful and very simple, there are two main entities that can be refe
 - `POST /api/feedback` - Submit feedback
 
 **Other routes:**  
-- `GET /api/info` - Provide some information about the backend service, including hostname (good for debugging & checking loadbalancing)
-- `POST /api/bulk` - Bulk load event and feedback data (*secured admin API call*)
+- `GET /api/health` - Provides a health endpoint and some information about the backend service, including hostname (good for debugging & checking loadbalancing). Note. `/api/info` and `/api/healthz` can also be called.
+- `POST /api/bulk` - Bulk load event and feedback data, can only be called from localhost for security 
 
 ## Swagger / OpenAPI
-There is a full [Swagger definition for the API](../node/data-api/swagger.json) 
-The data API server will also expose this out using Swagger UI, just use `/api-docs` as the URL, e.g.  **http://localhost:4000/api-docs/**
+Swagger is generated dynamically by the Node implementation, using **express-swagger-generator** The data API server will expose this out using Swagger UI, just use `/api-docs` as the URL, e.g.  **http://localhost:4000/api-docs/**
+
+For a static "dump" of the Swagger v2 file [click here](./swagger.json) 
 
 ---
 

@@ -48,7 +48,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: data-api-svc
+  name: data-api
   annotations:
     # !CHANGE THIS! To your real DNS domain
     external-dns.alpha.kubernetes.io/hostname: smilrbasic-api.56539f01234e4e00981e.westeurope.aksapp.io

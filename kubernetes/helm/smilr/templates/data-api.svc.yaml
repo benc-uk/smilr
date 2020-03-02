@@ -1,10 +1,9 @@
-{{- $fullName := (printf "%s-data-api" (include "smilr.fullname" .)) -}}
-{{- $name := (printf "%s-data-api" (include "smilr.name" .)) -}}
-
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ $fullName }}
+  name: {{ include "smilr.fullname" . }}-data-api
+  labels:
+{{ include "smilr.labels" . | indent 4 }} 
 spec:
   type: ClusterIP
   ports:
@@ -12,5 +11,5 @@ spec:
     port: 80
     targetPort: 4000
   selector:
-    app: {{ $name }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "smilr.name" . }}-data-api
+    app.kubernetes.io/instance: {{ .Release.Name }}

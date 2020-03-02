@@ -1,0 +1,734 @@
+{
+	"info": {
+		"_postman_id": "1f024236-a0c5-78be-b5e2-646356648421",
+		"name": "Smilr",
+		"description": "# Introduction\nTests and API calls for the Smilr data api, for accessing events & feedback. Also some minimal smoke tests for the frontend\n\n# Overview\nIt's a pretty standard REST API\n\n# Required Variables\nProvide variables as globals or via an environment\n* `smilr-api-host` - The host name (plus port if not 80) of the Smilr Data API. do not include http:// or trailing URL path, e.g. `localhost:4000` or `smilrdata.azurewebsites.net`\n* `smilr-api-host` - The host name (plus port if not 80) of the Smilr Frontend. do not include http:// or trailing URL path, e.g. `localhost:3000` or `smilrapp.azurewebsites.net`\n\n# Authentication\nBy default there is no auth\n\n# Error Codes\n400 and 500 with invalid requests\n404 when requesting events that don't exist\n\n# Rate limit\nNo limit",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "API",
+			"item": [
+				{
+					"name": "Get Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "46414654-4b17-4c78-9467-861fdfc001ee",
+								"exec": [
+									"pm.test(\"Info GET: Response is OK, with JSON body\", function () {",
+									"     pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Info GET: JSON object retured\", function () {",
+									"    var info = pm.response.json();",
+									"    pm.expect(info.debug.hostInfo.hostname).to.not.be.empty;",
+									"    pm.expect(info.status).to.equal(\"pass\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/info",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bf05dbb3-4241-47db-8dd7-29374d140dc8",
+								"exec": [
+									"pm.test(\"Events POST: Response is OK, with JSON body\", function () {",
+									"     pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Events POST: New event has correct title\", function () {",
+									"    var event = pm.response.json();",
+									"    pm.expect(event.title).to.contain(\"This is a new demo event\");",
+									"});",
+									"",
+									"pm.test(\"Events POST: New event has ID\", function () {",
+									"    var event = pm.response.json();",
+									"    pm.expect(event._id).to.not.be.empty;",
+									"    // Put event id into variable to be used by next test (Delete Event)",
+									"    pm.environment.set(\"new-event-id\", event._id);",
+									"});",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "92c93df5-80ac-4b6f-9813-a2ad2938af97",
+								"exec": [
+									"var uuid = require('uuid'); ",
+									"var myUUID = uuid.v4();"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"This is a new demo event {{$randomInt}}\",\n    \"type\": \"event\",\n    \"start\": \"2018-12-01\",\n    \"end\": \"2020-12-29\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Test data is boring\"\n      }      \n    ]\n}"
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/events",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Event Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"This is an example event\",\n    \"type\": \"event\",\n    \"start\": \"2018-01-01\",\n    \"end\": \"2018-07-20\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah a topic\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Another session\"        \n      }\n    ]\n}"
+								},
+								"url": {
+									"raw": "http://{{smilr-api-host}}/api/events",
+									"protocol": "http",
+									"host": [
+										"{{smilr-api-host}}"
+									],
+									"path": [
+										"api",
+										"events"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Length",
+									"value": "185",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 18 Mar 2018 19:35:23 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"b9-eS+gYVlJmbQfQ7wipok5PLs3Qzg\"",
+									"name": "ETag",
+									"description": "An identifier for a specific version of a resource, often a message digest"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express",
+									"name": "X-Powered-By",
+									"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+								}
+							],
+							"cookie": [],
+							"body": "{\"title\":\"This is an example event\",\"type\":\"event\",\"start\":\"2018-01-01\",\"end\":\"2018-07-20\",\"topics\":[{\"id\":1,\"desc\":\"Blah blah a topic\"},{\"id\":2,\"desc\":\"Another session\"}],\"id\":\"Chw8k\"}"
+						}
+					]
+				},
+				{
+					"name": "Invalid Event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bf05dbb3-4241-47db-8dd7-29374d140dc8",
+								"exec": [
+									"pm.test(\"Events POST: Invalid event triggers 400 status\", function () {",
+									"    pm.response.to.have.status(400);",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Events POST: Invalid event reponse has JSON error object\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(true);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"This should fail date validation\",\n    \"type\": \"event\",\n    \"start\": \"2018-12-01\",\n    \"end\": \"2018-04-15\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Test\"\n      }    \n    ]\n}"
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/events",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Event Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"This is an example event\",\n    \"type\": \"event\",\n    \"start\": \"2018-01-01\",\n    \"end\": \"2018-07-20\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah a topic\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Another session\"        \n      }\n    ]\n}"
+								},
+								"url": {
+									"raw": "http://{{smilr-api-host}}/api/events",
+									"protocol": "http",
+									"host": [
+										"{{smilr-api-host}}"
+									],
+									"path": [
+										"api",
+										"events"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Length",
+									"value": "185",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 18 Mar 2018 19:35:23 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"b9-eS+gYVlJmbQfQ7wipok5PLs3Qzg\"",
+									"name": "ETag",
+									"description": "An identifier for a specific version of a resource, often a message digest"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express",
+									"name": "X-Powered-By",
+									"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+								}
+							],
+							"cookie": [],
+							"body": "{\"title\":\"This is an example event\",\"type\":\"event\",\"start\":\"2018-01-01\",\"end\":\"2018-07-20\",\"topics\":[{\"id\":1,\"desc\":\"Blah blah a topic\"},{\"id\":2,\"desc\":\"Another session\"}],\"id\":\"Chw8k\"}"
+						}
+					]
+				},
+				{
+					"name": "Get Events",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "02218921-2585-48ee-ac1d-4d4ac36ea3c0",
+								"exec": [
+									"pm.test(\"Events GET (ALL): Response is OK, with JSON body\", function () {",
+									"     pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Events GET (ALL): JSON events array not empty\", function () {",
+									"    var events = pm.response.json();",
+									"    pm.expect(events.length).to.gt(0);",
+									"});",
+									"",
+									"pm.test(\"Events GET (ALL): First event in result has a title\", function () {",
+									"    var events = pm.response.json();",
+									"    pm.expect(events[0].title).to.not.be.empty;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/events",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"events",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e02238b4-a6f5-432b-858f-caa03a97ce0d",
+								"exec": [
+									"pm.test(\"Events GET (SINGLE): Response is OK, with JSON body\", function () {",
+									"     pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Events GET (SINGLE): Event has a title\", function () {",
+									"    var event = pm.response.json();",
+									"    pm.expect(event.title).to.not.be.empty;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/events/{{new-event-id}}",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"{{new-event-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Filtered Events",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "02218921-2585-48ee-ac1d-4d4ac36ea3c0",
+								"exec": [
+									"pm.test(\"Events GET (ACTIVE): Response is OK, with JSON body\", function () {",
+									"     pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Events GET (ACTIVE): JSON events array not empt\", function () {",
+									"    var events = pm.response.json();",
+									"    pm.expect(events.length).to.gt(0);",
+									"});",
+									"",
+									"pm.test(\"Events GET (ACTIVE): First event in result has a title\", function () {",
+									"    var events = pm.response.json();",
+									"    pm.expect(events[0].title).to.not.be.empty;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/events/filter/active",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"filter",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "43a399da-f9c3-4a5e-9ac9-05d805877752",
+								"exec": [
+									"pm.test(\"Events PUT: Response is OK, with JSON body\", function () {",
+									"     pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Events PUT: Modified event title has changed\", function () {",
+									"    var event = pm.response.json();",
+									"    pm.expect(event.title).to.eq(\"Updated event with API\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated event with API\",\n    \"type\": \"event\",\n    \"start\": \"2018-03-14\",\n    \"end\": \"2018-03-14\",\n    \"topics\": [\n      {\n        \"id\": 1,\n        \"desc\": \"Blah blah topic\"\n      },\n      {\n        \"id\": 2,\n        \"desc\": \"Hello yes\"        \n      }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/events/{{new-event-id}}",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"{{new-event-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Feedback",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fce74a1d-bcd1-4730-afdb-846f532b5ecc",
+								"exec": [
+									"pm.test(\"Feedback POST: Response is OK, with JSON body\", function () {",
+									"     pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Feedback POST: New feedback has ID\", function () {",
+									"    var feedback = pm.response.json();",
+									"    pm.expect(feedback._id).to.not.be.empty;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"event\": \"{{new-event-id}}\",\n    \"topic\": 1,\n    \"rating\": 5,\n    \"comment\": \"This is a test comment, I have no opinion\"\n}"
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/feedback",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Feedback",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "812eb514-60fb-45af-9624-c0ba7f44cf2e",
+								"exec": [
+									"pm.test(\"Feedback GET: Response is OK, with JSON body\", function () {",
+									"     pm.response.to.be.ok;",
+									"     pm.response.to.be.withBody;",
+									"     pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Feedback GET: JSON feedback array not empty\", function () {",
+									"    var feedback = pm.response.json();",
+									"    pm.expect(feedback.length).to.gt(0);",
+									"});",
+									"",
+									"pm.test(\"Feedback GET: First feedback in result has rating\", function () {",
+									"    var feedback = pm.response.json();",
+									"    pm.expect(feedback[0].rating).to.gt(0);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/feedback/{{new-event-id}}/1",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"feedback",
+								"{{new-event-id}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c9c08f48-85b8-4984-bb42-7172e252a1dd",
+								"exec": [
+									"pm.test(\"Events DELETE: Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{smilr-api-host}}/api/events/{{new-event-id}}",
+							"protocol": "http",
+							"host": [
+								"{{smilr-api-host}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"{{new-event-id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "# Introduction\nThe Smilr data api, for accessing events & feedback\n\n# Overview\nIt's a pretty standard REST API\n\n# Authentication\nBy default there is no auth\n\n# Error Codes\n400 and 500 with invalid requests\n404 when requesting events that don't exist\n\n# Rate limit\nNo limit",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4b0df9b1-1496-471d-afac-4819119c6a29",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ad7ccab2-89c2-4b73-8863-ee60b5e37d1f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b9c03e6c-bc0b-4926-8dc1-d1c8d4b9fb03",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c0ef0c3a-6ab4-46b5-a8e4-01c24d746b1e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

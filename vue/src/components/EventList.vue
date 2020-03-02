@@ -3,13 +3,11 @@
   <div>
     <transition-group name="fade" tag="p">
       <div v-for="event in events" :key="event._id">
-        <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
+        <b-card :border-variant="variant" :header-bg-variant="variant" header-text-variant="white">
 
-          <h1 slot="header"><fa :icon="utilsFaIcon(event.type)"/> &nbsp; {{ event.title }}</h1>
+          <h2 slot="header"><fa :icon="utilsFaIcon(event.type)"/> &nbsp; {{ event.title }}</h2>
           {{ event.start | moment("dddd, MMMM Do YYYY") }}
-          
           <hr>
-
           <ul>
             <li v-for="topic in event.topics" :key="topic.id">
               <router-link v-if="filter == 'active'" :to="{ name: 'feedback', query: { e: event._id, t: topic.id }}">{{ topic.desc }}</router-link>
@@ -55,7 +53,13 @@ export default {
   props: {
     filter: {
       type: String,
-      required: true
+      required: true,
+    }
+  },
+
+  computed: {
+    variant: function () {
+      return this.filter == "active" ? "primary" : "secondary"
     }
   },
 

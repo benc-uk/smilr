@@ -2,8 +2,10 @@ name: CI/CD Build, Release & Test
 
 on: 
   push:
-    branches:
-    - actions
+    branches: master
+
+env:
+  IMAGE_TAG: latest
 
 jobs:
   # ==================================================================================
@@ -22,13 +24,13 @@ jobs:
     
     - name: Build Data API
       run: |
-        docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:latest
-        docker push bcdemo.azurecr.io/smilr/data-api:latest
+        docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:$IMAGE_TAG
+        docker push bcdemo.azurecr.io/smilr/data-api:$IMAGE_TAG
 
     - name: Build Frontend
       run: |
-        docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:latest
-        docker push bcdemo.azurecr.io/smilr/frontend:latest
+        docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:$IMAGE_TAG
+        docker push bcdemo.azurecr.io/smilr/frontend:$IMAGE_TAG
 
   # ==================================================================================
   # Continuous deployment job - deploy in Azure as containers
@@ -57,7 +59,7 @@ jobs:
     - name: Deploy Data API container
       run: |
         az container create -n data-api -g temp.smilr-cicd \
-         --image bcdemo.azurecr.io/smilr/data-api:latest \
+         --image bcdemo.azurecr.io/smilr/data-api:$IMAGE_TAG \
          --ip-address public --port 4000 \
          --cpu 0.1 --memory 0.1 \
          --registry-password ${{ secrets.ACR_PASSWORD }} \
@@ -69,7 +71,7 @@ jobs:
     - name: Deploy frontend container
       run: |
         az container create -n frontend -g temp.smilr-cicd \
-         --image bcdemo.azurecr.io/smilr/frontend:latest \
+         --image bcdemo.azurecr.io/smilr/frontend:$IMAGE_TAG \
          --ip-address public --port 3000 \
          --cpu 0.1 --memory 0.1 \
          --registry-password ${{ secrets.ACR_PASSWORD }} \

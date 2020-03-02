@@ -19,9 +19,9 @@ spec:
       paths:
       - path: /api
         backend:
-          serviceName: data-api-svc
+          serviceName: data-api
           servicePort: 80
       - path: /
         backend:
-          serviceName: frontend-svc
+          serviceName: frontend
           servicePort: 80

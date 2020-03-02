@@ -1,0 +1,89 @@
+# =======================================================
+# Events API
+# =======================================================
+
+### Get all events
+GET http://localhost:4000/api/events
+
+
+### Get events filtered by timeframe
+@filterTime = future
+GET http://localhost:4000/api/events/filter/{{filterTime}}
+
+
+### Create new event
+# @name create
+POST http://localhost:4000/api/events
+Content-Type: application/json
+
+{
+  "title": "API injected event",
+  "type": "lab",
+  "start": "2010-01-01",
+  "end": "2030-12-30",
+  "topics": [
+    { "id": 1, "desc": "Topic A" },
+    { "id": 2, "desc": "Topic B" }
+  ]
+}
+### Store the id of new event
+@eventId = {{create.response.body.$._id}}
+
+
+### Get new event
+GET http://localhost:4000/api/events/{{eventId}}
+
+
+### Update the event
+PUT http://localhost:4000/api/events/{{eventId}}
+Content-Type: application/json
+
+{
+  "title": "Updated event",
+  "type": "lab",
+  "start": "2010-01-01",
+  "end": "2030-12-30",
+  "topics": [
+    { "id": 1, "desc": "Topic A" },
+    { "id": 2, "desc": "Topic B" }
+  ]
+}
+
+
+### Delete the event just created
+DELETE http://localhost:4000/api/events/{{eventId}}
+
+
+# =======================================================
+# Feedback api
+# =======================================================
+
+### Post feedback on event
+POST http://localhost:4000/api/feedback
+Content-Type: application/json
+
+{
+  "event": "{{eventId}}",
+  "topic": 1,
+  "rating": 5,
+  "comment": "Super amazing"
+}
+
+
+### Get feedback for event & topic
+GET http://localhost:4000/api/feedback/{{eventId}}/1
+
+
+# =======================================================
+# Other API
+# =======================================================
+
+### Get system info
+GET http://localhost:4000/api/info 
+
+
+### Bulk load demo data
+POST http://localhost:4000/api/bulk
+Content-Type: application/json
+
+< etc/demodata.json

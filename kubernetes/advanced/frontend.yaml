@@ -55,7 +55,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: frontend-svc
+  name: frontend
   labels:
     app: frontend
 spec:

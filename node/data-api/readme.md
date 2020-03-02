@@ -1,11 +1,21 @@
 # Node.js - Data API
-This is a instantiation of the [Smilr API](../../docs/api-model) using Node.js and Express. It acts as the REST API endpoint for the Vue.js client app. This is a stateless service. The main API routes & logic are held in `routes/api_events.js`, `routes/api_feedback.js`, `routes/api_other.js`
+This is a instantiation of the [Smilr API](../../docs/api-model) using Node.js and Express. It acts as the REST API endpoint for the Vue.js client app. This is a stateless service.
 
+This app is based on the [**Node API starter template**](https://github.com/benc-uk/nodejs-api-starter)
+
+Features:
+- Separation of controllers, services, models & routes
+- [Mongoose](https://mongoosejs.com/) for MongoDB interaction
+- Unit tests via Mocha, [SuperTest](https://www.npmjs.com/package/supertest) and [mongodb-memory-server](https://www.npmjs.com/package/mongodb-memory-server)
+- [Istanbul/nyc](https://www.npmjs.com/package/nyc) for code coverage
+- Swagger auto generation & Swagger UI using [express-swagger-generator](https://www.npmjs.com/package/express-swagger-generator)
+- A Dockerfile for containerisation
+- 
 
 # Building & Running Locally
-Make sure you have Node.js v8.9+ and NPM installed.
+Make sure you have Node.js v10+ and NPM installed.
 
-Ensure the `MONGO_CONNSTR` environment variable is set as described below.  
+Ensure the `MONGO_CONNSTR` environment variable is set as described below and is pointing at a running instance of MongoDB.  
 Then from the main Smilr project root run:
 ```
 cd node/data-api
@@ -13,10 +23,15 @@ npm install
 npm start
 ```
 
+# Project Structure
+The project follows a fairly standard MVC style structure, except there are no views. This being an API, all data is returned as JSON
 
-# Data Access
-All data is held in MongoDB, the data access layer is a plain ES6 class **DataAccess** in [`lib/data-access.js`](lib/data-access.js). This is a singleton which encapsulates all MongoDB specific code and logic (e.g. connecting and creating the database, collections etc) and also operations on the event and feedback entities. See [Database](../../docs/database.md) for more details.
+- `controllers/` - controllers, including base **Controller** class. HTTP interface layer
+- `models/` - models, classes should initalize a Mogoose schema, and return instances of Mongoose models
+- `services/` - services, carry out CRUD operations against the database via the models. Includes base **Service** class
+- `core/` - main database connection and app routes
 
+Controllers, models, services and routes for Smilr *events* and *feedback* have been created in line with [the Smilr API spec](../../docs/api-model.md)
 
 # Sentiment Analysis
 Optionally the service can pass feedback comments through Azure cognitive services (Text Analytics) for sentiment analysis. Any comments in the feedback POSTed to the API will be sent over to an external text analytics API endpoint. The resulting scores will be stored with the feedback objects in the database 
@@ -24,14 +39,13 @@ Optionally the service can pass feedback comments through Azure cognitive servic
 Enabling of this feature is done by setting the `SENTIMENT_API_ENDPOINT` environmental variable. By default this feature is not enabled
 
 # Configuration
-The server listens on port 4000 by default and requires just one mandatory configuration environmental variable to be set.
+The server listens on port 4000 by default
 
 |Variable Name|Purpose|
 |-------------|-------|
-|MONGO_CONNSTR|**Required setting!** A valid [MongoDB connection string](https://docs.mongodb.com/v3.4/reference/connection-string/), e.g. `mongodb://localhost` or `mongodb://myhost.example.net:27017`. When using Azure Cosmos DB, obtain the full Mongo connection string from the Cosmos instance in the portal, which will include the username & password.
+|MONGO_CONNSTR|A valid [MongoDB connection string](https://docs.mongodb.com/v4.2/reference/connection-string/), e.g. `mongodb://myhost.example.net:27017`. When using Azure Cosmos DB, obtain the full Mongo connection string from the Cosmos instance in the portal, which will include the username & password. *Default: mongodb://localhost*
 |PORT|Optional. Port the server will listen on. *Default: 4000*|
-|MONGO_RETRIES|Optional. How many times the server will retry connecting to MongoDB. *Default: 6*|
-|MONGO_RETRY_DELAY|Optional. How long to wait in seconds, before retry connecting to MongoDB. *Default: 15*|
+|MONGO_CONNECT_TIMEOUT|Optional. How many milliseconds the server will try connecting to MongoDB at startup. *Default: 30000*|
 |SECURE_CLIENT_ID|Optional. When set, certain admin API calls will be validated, leave blank or unset to disable security and validation. Details below. *Default: 'blank'*|
 |APPINSIGHTS_INSTRUMENTATIONKEY|Optional. Enables data collection and monitoring with Azure App Insights, set to the key of the instance you want to send data to. *Default: 'blank'*|
 |SENTIMENT_API_ENDPOINT|Optional. When set, the feedback comment text will be processed for sentiment analysis using Azure Cognitive Services. Endpoint can point to a self hosted instance running in a container, or a Azure hosted API endpoint *Default: 'blank'*|

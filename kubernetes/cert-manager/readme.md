@@ -11,11 +11,11 @@ Change the email address in the issuer.*.yaml files, you can use any valid email
 
 2. Install the cert issuers
 ```
-kubectl apply -f issuer.staging.yaml
-kubectl apply -f issuer.prod.yaml
+kubectl apply -f issuer-staging.yaml
+kubectl apply -f issuer-prod.yaml
 ```
 
-4. Deploy Smilr using ingress using the configs found in [kubernetes/advanced](../advanced/) and use the `ingress.https.yaml`
+4. Deploy Smilr using ingress using the configs found in [kubernetes/advanced](../advanced/) and use the `ingress-https.yaml`
 
 5. The certificate might take a little while to validate and be issued the first time
 

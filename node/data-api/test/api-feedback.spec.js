@@ -1,78 +1,49 @@
-const app = require('../server')
 const request = require('supertest')
-
 const chai = require("chai");
-const sinon = require("sinon");
-const sinonChai = require("sinon-chai");
 const expect = chai.expect;
-chai.use(sinonChai);
 
-const dataAccess = require('../lib/data-access')
-const utils = require('../lib/utils');
+const app = require('../server').app;
 
-//
-// Stub out data access so no MongoDB connect is required or used
-//
-var createFeedbackStub = sinon.stub(dataAccess, 'createFeedback').callsFake((feedback) => {
-  return {ops:[feedback], result:{n: 1}};
-});
-var listFeedbackForEventTopicStub = sinon.stub(dataAccess, 'listFeedbackForEventTopic').callsFake((event, topic) => {
-  return [{comment: "test feedback", rating: 5, event: "fake01", topic: 1}]
-});
-app.set('data', dataAccess);   
-
-//
-// Tests for feedback API
-//
-describe('Smilr feedback API', () => {
-  // GET /api/feedback/fake01/1
-  it('returns feedback for event', (done) => {
-    request(app)
-      .get('/api/feedback/fake01/1')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
+describe('Feedback API', () => {
+    let newEventId
+    let event = {title:"fake event", type:"event", start:"2019-01-01", end:"2019-01-02", topics:[{desc:"blah", id:1}] };
+    it('create event for feedback', (done) => {
+      request(app)
+      .post('/api/events')
+      .send(event)
       .expect(function(res) {
-        expect(res.body).to.be.an.an('array')
-        expect(listFeedbackForEventTopicStub).to.have.been.calledOnceWith('fake01', 1)
+        newEventId = res.body._id
       })
-      .expect(200, done)
-  });
+      .expect(200, done);
+    });
 
-  // POST /api/feedback
-  it('stores valid feedback', (done) => {
-    let feedback = {rating: 5, comment: "blah blah", event: 'fake01', topic: 1}
+  it('submit valid feedback', (done) => {
     request(app)
       .post('/api/feedback')
-      .send({rating: 5, comment: "blah blah", event: 'fake01', topic: 1})
+      .send({rating: 5, comment: "blah blah", event: newEventId, topic: 1})
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(function(res) {
         expect(res.body).to.be.an.an('object')
-        expect(createFeedbackStub).to.have.been.calledOnceWith(feedback)
       })
       .expect(200, done)
   });
 
-  // POST /api/feedback
-  it('rejects feedback with no rating', (done) => {
-    createFeedbackStub.resetHistory();
+  it('reject feedback with no rating', (done) => {
     request(app)
       .post('/api/feedback')
-      .send({comment: "blah blah", event: 'fake01', topic: 1})
+      .send({comment: "blah blah", event: newEventId, topic: 1})
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(function(res) {
         expect(res.body).to.be.an.an('object')
         expect(res.body).to.have.property('error').equals(true)
-        expect(res.body).to.have.property('title').includes('feedback-post')
-        expect(createFeedbackStub).to.not.have.been.calledOnce;
+        expect(res.body).to.have.property('title').includes('validation-error')
       })
       .expect(400, done)
   });  
 
-  // POST /api/feedback
-  it('rejects feedback if the event does not exist', (done) => {
-    createFeedbackStub.resetHistory();
+  it('reject feedback if the event does not exist', (done) => {
     request(app)
       .post('/api/feedback')
       .send({rating: 1, comment: "blah blah", event: 'fake02', topic: 1})
@@ -81,9 +52,8 @@ describe('Smilr feedback API', () => {
       .expect(function(res) {
         expect(res.body).to.be.an.an('object')
         expect(res.body).to.have.property('error').equals(true)
-        expect(res.body).to.have.property('title').includes('feedback-post')
-        expect(createFeedbackStub).to.not.have.been.calledOnce;
+        expect(res.body).to.have.property('title').includes('validation-error')
       })
-      .expect(404, done)
-  });    
+      .expect(400, done)
+  });  
 })

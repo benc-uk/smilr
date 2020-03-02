@@ -1,0 +1,56 @@
+parameters:
+  envName: ''
+  
+jobs:
+- deployment: deployToAKS
+  displayName: Deploy to namespace ${{ parameters.envName }}
+  # Dot here is very important, it targets the namespace in the environments view UI
+  environment: AKS-${{ parameters.envName }}.${{ parameters.envName }}
+
+  pool:
+    vmImage: ubuntu-latest
+
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - download: buildpipeline
+          artifact: helm-charts
+
+        - bash: echo ImageTag=$(resources.pipeline.buildpipeline.runName)
+          displayName: Fetch image-tag variable from build pipeline
+
+        - task: HelmInstaller@1
+          displayName: 'Install Helm version'
+          inputs:
+            helmVersionToInstall: 3.0.0
+        
+        - task: HelmDeploy@0
+          displayName: 'Helm add stable repo'
+          inputs:
+            azureSubscriptionEndpoint: $(azure-connection)
+            azureResourceGroup: $(aks-resgrp)
+            kubernetesCluster: $(aks-connection)
+            command: repo
+            arguments: 'add stable https://kubernetes-charts.storage.googleapis.com'
+
+        - task: HelmDeploy@0
+          displayName: 'Helm update chart dependencies'
+          inputs:
+            azureSubscriptionEndpoint: $(azure-connection)
+            azureResourceGroup: $(aks-resgrp)
+            kubernetesCluster: $(aks-connection)
+            command: dependency
+            arguments: 'update $(Pipeline.Workspace)/buildpipeline/helm-charts/smilr'
+
+        - task: HelmDeploy@0
+          displayName: 'Helm install Smilr chart'
+          inputs:
+            connectionType: Kubernetes Service Connection
+            kubernetesServiceConnection: $(aks-connection)
+            command: upgrade
+            releaseName: ${{ parameters.envName }}-$(Build.BuildId)
+            chartType: FilePath
+            chartPath: $(Pipeline.Workspace)/buildpipeline/helm-charts/smilr
+            namespace: ${{ parameters.envName }}
+            overrideValues: "registryPrefix=$(acr-name).azurecr.io/,dataApi.imageTag=$(resources.pipeline.buildpipeline.runName),frontend.imageTag=$(resources.pipeline.buildpipeline.runName),ingress.domainSuffix=$(dns-suffix),ingress.certName=kube-benco-io-cert"
