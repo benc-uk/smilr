@@ -60,6 +60,8 @@ if(process.env.NODE_ENV == 'production') {
 } else {
   // In dev mode fetch config from static .env file, note the VUE_APP_ prefix
   // The Vue CLI webpack bundling will populate these from `.env.development.local`
+  console.log(process.env.VUE_APP_API_ENDPOINT);
+  
   config.API_ENDPOINT = process.env.VUE_APP_API_ENDPOINT
   config.AAD_CLIENT_ID = process.env.VUE_APP_AAD_CLIENT_ID
   initApp()

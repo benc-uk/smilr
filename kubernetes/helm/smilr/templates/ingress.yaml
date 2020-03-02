@@ -1,50 +1,63 @@
-{{- $frontendFullName := (printf "%s-frontend" (include "smilr.fullname" .)) -}}
-{{- $dataApifullName := (printf "%s-data-api" (include "smilr.fullname" .)) -}}
-{{- $ingressName := (printf "%s-ingress" (include "smilr.fullname" .)) -}}
-{{- $certName := (printf "%s-cert" (include "smilr.fullname" .)) -}}
+{{- $tlsEnabled := (or .Values.ingress.certIssuer .Values.ingress.certName) -}}
 
-{{ if .Values.domainSuffix }}
-
+{{ if .Values.ingress.domainSuffix }}
+#
+# Ingress for host based routing, release name prefixed 
+#
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $ingressName }}"
+  name: {{ include "smilr.fullname" . }}
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
-    {{ if .Values.cmCertIssuer }}
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    {{ if .Values.ingress.certIssuer }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.certIssuer }}
+    {{ end }}
+    {{ if $tlsEnabled }}
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    certmanager.k8s.io/cluster-issuer: {{ .Values.cmCertIssuer }}
     {{ else }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     {{ end }}
+  labels:
+{{ include "smilr.labels" . | indent 4 }}
 spec:
-  {{ if .Values.cmCertIssuer }}
+  {{ if $tlsEnabled }}
   tls:
   - hosts:
-    - "{{ .Release.Name }}.{{ .Values.domainSuffix }}"
-    secretName: "{{ $certName }}"
+    - "{{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}"
+    {{ if .Values.ingress.certName }}
+    secretName: {{ .Values.ingress.certName }}
+    {{ else }}
+    secretName: {{ include "smilr.fullname" . }}
+    {{ end }}
   {{ end }}
   rules:
-  - host: "{{ .Release.Name }}.{{ .Values.domainSuffix }}"
+  - host: "{{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}"
     http:
       paths:
       - path: /api
         backend:
-          serviceName: {{ $dataApifullName }}
+          serviceName: {{ include "smilr.fullname" . }}-data-api
           servicePort: 80
+      - path: /api-docs
+        backend:
+          serviceName: {{ include "smilr.fullname" . }}-data-api
+          servicePort: 80          
       - path: /
         backend:
-          serviceName: {{ $frontendFullName }}
+          serviceName: {{ include "smilr.fullname" . }}-frontend
           servicePort: 80
 
 {{ else }}
-
+#
+# Ingress for path URL based routing, no DNS required only ingress IP
+#
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $ingressName }}-api"
+  name: "{{ include "smilr.fullname" . }}-data-api"
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: "/api"
 spec:
@@ -53,17 +66,21 @@ spec:
       paths:
       - path: "/{{ .Release.Name }}/api"
         backend:
-          serviceName: {{ $dataApifullName }}
+          serviceName: {{ include "smilr.fullname" . }}-data-api
           servicePort: 80
-
+      - path: "/{{ .Release.Name }}/api-docs"
+        backend:
+          serviceName: {{ include "smilr.fullname" . }}-data-api
+          servicePort: 80
+          
 ---
 
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $ingressName }}-frontend"
+  name: "{{ include "smilr.fullname" . }}-frontend"
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingressClass }}
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: "/"
     nginx.ingress.kubernetes.io/add-base-url: "true"
@@ -73,6 +90,6 @@ spec:
       paths:
       - path: "/{{ .Release.Name }}"
         backend:
-          serviceName: {{ $frontendFullName }}
+          serviceName: {{ include "smilr.fullname" . }}-frontend
           servicePort: 80    
 {{ end }}

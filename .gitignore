@@ -65,6 +65,7 @@ azure.json
 appsettings.json
 environment.live.ts
 myvalues.yaml
+livevalues.yaml
 **/*.bot
 
 # Visual Studio Code - BC changed my mind, allowed this in the repo
@@ -79,8 +80,19 @@ tmp.zip
 newman/*
 requirements.lock
 **/smilr/charts
-orleans/API/run.ps1
 **/test-results.xml
 etc/loadtest/results
 !etc/loadtest/bin
 **/.nyc_output
+# Unit test, code coverage and load test output
+newman/*
+**/.nyc_output
+etc/loadtest/result.json
+**/test-results.xml
+
+# Helm reqs we don't want
+kubernetes/helm/**/*.lock
+kubernetes/helm/**/charts
+
+# Orleans things
+orleans/API/run.ps1

@@ -1,0 +1,40 @@
+parameters:
+  frontHost: ''
+  apiHost: ''
+  dependsOn: ''
+
+jobs:
+  - job: loadtestJob
+    dependsOn: ${{ parameters.dependsOn }}
+    displayName: 'Load Test'
+    variables:
+      k6Ver: '0.25.1'
+
+    condition: and(succeeded(), ne(variables['skiptests'], 'true'))
+
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - checkout: self
+    
+    # Wait until URL is ready or 60 seconds
+    - bash: bash etc/bash/urlWait.sh http://${{ parameters.apiHost }}/ 60
+      displayName: Wait until ready
+    
+    # Install K6 tool
+    - bash: |
+        wget -q https://github.com/loadimpact/k6/releases/download/v$(k6Ver)/k6-v$(k6Ver)-linux64.tar.gz
+        tar -xzf k6-v$(k6Ver)-linux64.tar.gz
+      displayName: Install k6 binary
+      workingDirectory: etc/loadtest
+    
+    # Run the tests
+    - bash: >
+        ./k6-v$(k6Ver)-linux64/k6 run -q 
+        -e API_HOST=http://${{ parameters.apiHost }}
+        -e FRONT_HOST=http://${{ parameters.frontHost }}
+        loadtest.js
+        --out json=result.json
+      displayName: Run loadtest with k6
+      workingDirectory: etc/loadtest

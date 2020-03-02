@@ -1,0 +1,104 @@
+name: Deploy to AKS
+
+# Limit triggers to a single file, this one
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/aks-deploy.yml'
+
+env:
+  ACR_NAME:     bcdemo
+  AKS_NAME:     bcdemo
+  RES_GRP:      demo.aks
+  IMAGE_TAG:    latest
+  DOMAIN:       kube.benco.io
+  CERT:         kube-benco-io-cert
+  RELEASE_NAME: github
+  
+jobs:
+  # ==================================================================================
+  # Continuous deployment job - deploy to AKS test namespace
+  # ==================================================================================
+  deploy-k8s-test:
+    env:
+      ENVIRON: test    
+
+    runs-on: ubuntu-latest
+    steps:  
+    - name: 'Checkout repo'
+      uses: actions/checkout@v1
+
+    - name: 'Connect to AKS'
+      uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+        resource-group: '${{ env.RES_GRP }}'
+        cluster-name: '${{ env.AKS_NAME }}'
+      id: login
+
+    - name: 'Helm dep update'
+      run: |
+        helm init --client-only
+        helm dep update kubernetes/helm/smilr
+
+    - name: 'Helm install release'
+      run: |
+        helm upgrade $ENVIRON-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+
+  # ==================================================================================
+  # Integration API tests
+  # ==================================================================================
+  run-api-tests:
+    needs: deploy-k8s-test
+    env:
+      ENVIRON: test   
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    
+    - name: Wait for API to be ready
+      run: bash etc/bash/urlWait.sh https://$ENVIRON-$RELEASE_NAME-smilr.$DOMAIN/api 60
+    
+    # Run the tests inside a container with Newman
+    - name: Run API tests with Postman/newman
+      uses: docker://postman/newman:ubuntu
+      with:
+        args: run /github/workspace/etc/postman/Smilr.postman_collection.json /
+          --timeout 180000 /
+          --global-var smilr-api-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}-smilr.${{ env.DOMAIN }}" /
+          --global-var smilr-front-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}-smilr.${{ env.DOMAIN }}"
+
+  # ==================================================================================
+  # Continuous deployment job - deploy to AKS staging namespace
+  # ==================================================================================
+  deploy-k8s-staging:
+    needs: run-api-tests
+    env:
+      ENVIRON: staging    
+
+    runs-on: ubuntu-latest
+    steps:  
+    - name: 'Checkout repo'
+      uses: actions/checkout@v1
+
+    - name: 'Connect to AKS'
+      uses: azure/aks-set-context@v1
+      with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+          resource-group: '${{ env.RES_GRP }}'
+          cluster-name: '${{ env.AKS_NAME }}'
+      id: login
+
+    - name: 'Helm dep update'
+      run: |
+        printenv
+        helm init --client-only
+        helm dep update kubernetes/helm/smilr
+
+    - name: 'Helm install release'
+      run: |
+        helm upgrade $ENVIRON-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+

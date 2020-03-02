@@ -2,15 +2,13 @@
 {{- $name := (printf "%s-sentiment" (include "smilr.name" .)) -}}
 
 {{ if .Values.sentiment.enabled }}
+
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: {{ $fullName }}
   labels:
-    app: {{ $name }}
-    chart: {{ template "smilr.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}    
+{{ include "smilr.labels" . | indent 4 }} 
 spec:
   replicas: 1
   selector:
@@ -44,9 +42,12 @@ spec:
         - containerPort: 5000
 
         resources:
+          requests:
+            memory: "300M" 
+            cpu: "50m"
           limits:
-            memory: "2G" # Wow! Anything less and the pod won't start
-            cpu: "0.25"
+            memory: "2G" 
+            cpu: "500m"
 
 ---
 

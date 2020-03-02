@@ -5,37 +5,43 @@
 # Change to blank string to pull from Docker Hub
 registryPrefix: 
 
-# Leave blank if not using DNS with your ingress
-domainSuffix: 
-
-# Change if not using AKS with HTTP routing 
-ingressClass: addon-http-application-routing
-
-# If using cert-manager to issue TLS certs for HTTPS support 
-# Leave blank if you haven't set up cert-manager to disable HTTPS
-cmCertIssuer: 
+ingress:
+  # If blank then path based routing will be used, based on release name
+  # If set then release name will be prepended and host routing used 
+  domainSuffix:
+  # Ingress class annotation
+  class: addon-http-application-routing
+  # Set to enable TLS, when using cert-manager and dynamically issued certs 
+  certIssuer:
+  # Set to enable TLS with a static secret
+  certName:
 
 dataApi:
   imageTag: latest
-  replicas: 1
+  replicas: 2
   # Leave blank to use the internal service, override if using external database
   mongoConnStr: 
+  aadClientId:
   imagePullPolicy: Always
   
 frontend:
   imageTag: latest
-  replicas: 1
+  replicas: 2
+  aadClientId:
   imagePullPolicy: Always
 
 sentiment:
   enabled: false
   key: 
-  region: westeurope
+  region: 
   image: mcr.microsoft.com/azure-cognitive-services/sentiment:1.1.009301-amd64-preview
+  externalEndpoint:
 
 mongodb:
+  enabled: true
   persistence:
     enabled: false
+    size: 1Gi
   usePassword: false
   replicaSet:
     enabled: false  

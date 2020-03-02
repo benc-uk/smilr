@@ -7,29 +7,28 @@ name: $(Date:yyyy-MM-dd)$(Rev:.rr)
 trigger: none
 pr: none
 
-schedules:
-- cron: "30 5 * * *"
-  displayName: Daily build
-  branches:
-    include:
-    - master  
-  always: true
+# schedules:
+# - cron: "30 5 * * *"
+#   displayName: Daily build
+#   branches:
+#     include:
+#     - master  
 
 # NOTE! The 'shared-variables' variable group must be pre-created and populated
 # - Expected variables: acr-connection
 variables:
   - group: shared-variables
   - name: cleanup
-    value: false
+    value: true
   - name: resGroupPrefix
     value: Temp.Smilr
   - name: location
     value: westeurope
 
 stages:
-#
+# *************************************************************************************
 # Deploy stage - test environment
-#
+# *************************************************************************************
 - stage: deployToTest
   displayName: Deploy to Test
   
@@ -37,6 +36,9 @@ stages:
     dns-prefix: smilr-$(Build.BuildId)-test
 
   jobs:
+    # =====================================================================================
+    # Deploy app in Azure Container Instances via ARM template
+    # =====================================================================================
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Test
@@ -45,15 +47,18 @@ stages:
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
+    # =====================================================================================
+    # Run integration tests against deployed system
+    # =====================================================================================
   - template: templates/run-postman-tests.yml
     parameters:
       dependsOn: deployWithACI
       apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
       frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
-#
+# *************************************************************************************
 # Deploy stage - staging environment
-#
+# *************************************************************************************
 - stage: deployToStaging
   displayName: Deploy to Staging
 
@@ -61,6 +66,9 @@ stages:
     dns-prefix: smilr-$(Build.BuildId)-staging
 
   jobs:
+    # =====================================================================================
+    # Deploy app in Azure Container Instances via ARM template
+    # =====================================================================================  
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Staging
@@ -69,23 +77,18 @@ stages:
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
-  - job: loadtestJob
-    displayName: Run Load Test
-    dependsOn: deployWithACI
-    steps:
-      - bash: |
-          chmod a+x *.sh
-          ./load-front.sh http://$(dns-prefix)-frontend.$(location).azurecontainer.io 30
-          ./load-api.sh http://$(dns-prefix)-api.$(location).azurecontainer.io 20
-        displayName: Call loadtest scripts
-        workingDirectory: etc/loadtest
+    # =====================================================================================
+    # Run load tests against deployed system
+    # =====================================================================================
+  - template: templates/run-loadtest.yml
+    parameters:
+      dependsOn: deployWithACI
+      apiHost: $(dns-prefix)-api.$(location).azurecontainer.io
+      frontHost: $(dns-prefix)-frontend.$(location).azurecontainer.io
 
-      - publish: etc/loadtest/results
-        artifact: loadtest-results-aci
-
-#
+# *************************************************************************************
 # Deploy stage - prod environment
-#
+# *************************************************************************************
 - stage: deployToProduction
   displayName: Deploy to Production
   
@@ -93,6 +96,9 @@ stages:
     dns-prefix: smilr-$(Build.BuildId)-prod
 
   jobs:
+    # =====================================================================================
+    # Deploy app in Azure Container Instances via ARM template
+    # =====================================================================================    
   - template: templates/deploy-aci-arm.yml
     parameters:
       envName: ACI-Production
@@ -101,9 +107,9 @@ stages:
       resGroupPrefix: $(resGroupPrefix)
       dnsPrefix: $(dns-prefix)
 
-#
+# *************************************************************************************
 # Cleanup stage - remove resources after run
-#
+# *************************************************************************************
 - stage: cleanup
   displayName: Remove Resources
   condition: eq(variables['cleanup'], 'true')

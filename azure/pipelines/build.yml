@@ -11,12 +11,10 @@ trigger:
     - master
   paths:
     include:
-      - node/*
-      - vue/*
-      - azure/pipelines/*
-
-pr:
-- master
+    - node/*
+    - vue/*
+    - azure/pipelines/build.yaml
+pr: [master]
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
@@ -24,31 +22,34 @@ variables:
   - group: shared-variables
 
 stages:
-#
-# Build stage
-#
+# *************************************************************************************
+# Single stage: test, build and push
+# *************************************************************************************
 - stage: build
-  displayName: 'Build containers'
+  displayName: 'Unit test & build containers'
 
   jobs:
-  - job: testJob
+    # =====================================================================================
+    # Run unit tests for Data API and Vue.js SPA/client
+    # =====================================================================================  
+  - job: unitTestsJob
     displayName: 'Run unit tests'
     
     pool:
-      vmImage: Ubuntu-16.04
+      vmImage: ubuntu-latest
         
     steps:
     - bash: |
         npm install --silent
-        npm run test-report
-        npm run code-coverage
+        npm run test-junit
+        npm run coverage
       displayName: Run tests for data-api
       workingDirectory: node/data-api
 
     - task: PublishTestResults@2
-      condition: always()
+      condition: succeededOrFailed()
       inputs:
-        testResultsFiles: 'node/data-api/*.xml'
+        testResultsFiles: 'node/data-api/test-results.xml'
         testResultsFormat: JUnit
         testRunTitle: Data API Tests
 
@@ -59,18 +60,23 @@ stages:
       workingDirectory: vue
 
     - task: PublishTestResults@2
-      condition: always()
+      condition: succeededOrFailed()
       inputs:
         testResultsFiles: 'vue/*.xml'
         testResultsFormat: JUnit
         testRunTitle: Vue SPA Tests
 
-  - job: buildJob
-    dependsOn: testJob
+    # =====================================================================================
+    # Build container image and push to ACR 
+    # =====================================================================================
+  - job: containerBuildJob
+    # NOTE! Only run in master branch (i.e. merged PRs) 
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    dependsOn: unitTestsJob
     displayName: 'Build & push to ACR'
     
     pool:
-      vmImage: Ubuntu-16.04
+      vmImage: ubuntu-latest
 
     steps:
     - task: Docker@2
@@ -81,7 +87,7 @@ stages:
         Dockerfile: node/data-api/Dockerfile
         buildContext: .
         repository: smilr/data-api
-        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) $(Build.Reason) [Linux container]"
+        arguments: --build-arg build_info="Pipeline CI build $(Build.BuildNumber) [Linux container]"
         tags: |
           latest
           $(Build.BuildNumber)
@@ -117,4 +123,8 @@ stages:
         repository: smilr/frontend
         tags: |
           latest
-          $(Build.BuildNumber)             
+          $(Build.BuildNumber)
+      
+    - publish: kubernetes/helm
+      artifact: helm-charts
+      displayName: Publish helm-charts artifact 

@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: {{change-me}}-cert-staging
+  namespace: default
+spec:
+  secretName: {{change-me}}-cert-staging
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: '*.{{change-me}}'
+  dnsNames:
+  - '*.{{change-me}}'      

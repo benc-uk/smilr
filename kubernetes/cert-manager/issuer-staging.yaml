@@ -1,0 +1,34 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    email: change-me@changeme.net
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Secret resource used to store the account's private key.
+      name: letsencrypt-staging-key
+    solvers:
+    - http01:
+        ingress:
+          class: addon-http-application-routing    
+    #
+    # !NOTE! Remove the DNS solver below
+    #  - if you're not using wildcard certs with a wildcard DNS zone
+    #
+    - dns01:
+        azuredns:
+          # Service principal clientId
+          clientID: {{change-me}}
+          # A secretKeyRef to a service principal ClientSecret (password)
+          clientSecretSecretRef:
+            name: azuredns-config
+            key: CLIENT_SECRET
+          # Azure subscription Id
+          subscriptionID: {{change-me}}
+          # Azure AD tenant Id
+          tenantID: {{change-me}}
+          # ResourceGroup name where dns zone is provisioned
+          resourceGroupName: {{change-me}}
+          hostedZoneName: {{change-me}}

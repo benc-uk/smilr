@@ -6,18 +6,18 @@ parameters:
 jobs:
   - job: runTestsJob
     dependsOn: ${{ parameters.dependsOn }}
-    displayName: 'Functional API tests'
+    displayName: 'Integration API tests'
 
     condition: and(succeeded(), ne(variables['skiptests'], 'true'))
 
     pool:
-      vmImage: Ubuntu-16.04
+      vmImage: ubuntu-latest
 
     steps:
     - checkout: self
     
     # Wait until URL is ready or 60 seconds
-    - bash: bash etc/bash/urlWait.sh http://${{ parameters.apiHost }}/ 60
+    - bash: bash etc/bash/urlWait.sh http://${{ parameters.apiHost }}/api 60
       displayName: Wait until ready
     
     # Install Newman CLI tool
@@ -26,10 +26,9 @@ jobs:
     
     # Run the tests with Newman
     - bash: >
-        $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/Smilr.postman_collection.json 
+        $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/smilr-api-tests.json
         --reporters junit --iteration-count 3 --timeout 180000 
         --global-var smilr-api-host="${{ parameters.apiHost }}" 
-        --global-var smilr-front-host="${{ parameters.frontHost }}"
       displayName: Run API integration tests
     
     # Publish test results
