@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace GrainInterfaces
 {
-
-    // main event grain interface
+    // event grain interface, one grain per event
     public interface IEventGrain : IGrainWithStringKey
     {
         // initialise/update a grain with the core event info 
@@ -26,7 +25,7 @@ namespace GrainInterfaces
 
 
 
-    // aggregator grain interface
+    // aggregator interface, one grain per system for all events 
     public interface IAggregatorGrain : IGrainWithGuidKey
     {
         // add a new event to the list of events

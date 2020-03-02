@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GrainModels
 {
-    // Web API data models
+    // These are the externally facing web API data models 
 
 
     // event and topics for event creation & update 
@@ -38,11 +38,11 @@ namespace GrainModels
 
 
 
-  // Grain internal state 
-  // this is the state that the grain needs to pesist across activations, and gets saved by Orleans via the grain persistence API 
-  // dotnet.github.io/orleans/Tutorials/Declarative-Persistence.html 
+    // Grain internal state 
+    // this is the state that the grain needs to pesist across activations, and gets saved by Orleans via the grain persistence API 
+    // dotnet.github.io/orleans/Tutorials/Declarative-Persistence.html 
 
-    // ensure all event data is persisted  
+    // event info   
     public class EventGrainState
     {
         public string id { get; set; }
@@ -54,6 +54,8 @@ namespace GrainModels
         public List<FeedbackGrainState> feedback { get; set; }
     }
 
+
+    // feedback info
     public class FeedbackGrainState 
     {
         public int topicId { get; set; }      // which Topic id the feedback refers to 
@@ -62,9 +64,18 @@ namespace GrainModels
     }
 
 
-    // ensure list of active events is persisted 
+    // aggregator info about all events 
     public class AggregatorGrainState
     {
-        public List<string> eventids { get; set; }
+        // this is the list of known events, where each entry is the grain idendity  
+        public List<SummaryEventInfo> allevents { get; set; }
+    }
+
+
+    // helper class for AggregatorGrainState
+    public class SummaryEventInfo
+    {
+        public string id { get; set; }      // event id  
+        public string start { get; set; }   // start date
     }
 }
