@@ -43,9 +43,10 @@ The server listens on port 4000 by default
 
 |Variable Name|Purpose|
 |-------------|-------|
-|MONGO_CONNSTR|A valid [MongoDB connection string](https://docs.mongodb.com/v4.2/reference/connection-string/), e.g. `mongodb://myhost.example.net:27017`. When using Azure Cosmos DB, obtain the full Mongo connection string from the Cosmos instance in the portal, which will include the username & password. *Default: mongodb://localhost*
 |PORT|Optional. Port the server will listen on. *Default: 4000*|
+|MONGO_CONNSTR|A valid [MongoDB connection string](https://docs.mongodb.com/v4.2/reference/connection-string/), e.g. `mongodb://myhost.example.net:27017`. When using Azure Cosmos DB, obtain the full Mongo connection string from the Cosmos instance in the portal, which will include the username & password. *Default: mongodb://localhost*
 |MONGO_CONNECT_TIMEOUT|Optional. How many milliseconds the server will try connecting to MongoDB at startup. *Default: 30000*|
+|MONGO_DB_NAME|Optional. Name of the database to use in MongoDB. *Default: SmilrDb*|
 |SECURE_CLIENT_ID|Optional. When set, certain admin API calls will be validated, leave blank or unset to disable security and validation. Details below. *Default: 'blank'*|
 |APPINSIGHTS_INSTRUMENTATIONKEY|Optional. Enables data collection and monitoring with Azure App Insights, set to the key of the instance you want to send data to. *Default: 'blank'*|
 |SENTIMENT_API_ENDPOINT|Optional. When set, the feedback comment text will be processed for sentiment analysis using Azure Cognitive Services. Endpoint can point to a self hosted instance running in a container, or a Azure hosted API endpoint *Default: 'blank'*|
