@@ -100,7 +100,7 @@ jobs:
           --timeout 180000 /
           --global-var smilr-api-host="smilrdataapi.westeurope.azurecontainer.io:4000" /
           --global-var smilr-front-host="smilrfront.westeurope.azurecontainer.io:3000" /
-          --reporters html --reporter-html-export="api_test_report.html" -n 5
+          --reporters html --reporter-html-export="/github/workspace/api_test_report.html" -n 5
 
     - name: Upload test report
       uses: actions/upload-artifact@v1
