@@ -93,19 +93,24 @@ jobs:
       run: bash etc/bash/urlWait.sh http://smilrdataapi.westeurope.azurecontainer.io:4000/ 60
     
     # Run the tests inside a container with Newman
-    - name: Run API tests with Postman/newman
-      uses: docker://postman/newman:ubuntu
-      with:
-        args: run /github/workspace/etc/postman/smilr-api-tests.json /
+    # - name: Run API tests with Postman/newman
+    #   uses: docker://postman/newman:ubuntu
+    #   with:
+    #     args: run /github/workspace/etc/postman/smilr-api-tests.json /
+    #       --timeout 180000 /
+    #       --global-var smilr-api-host="smilrdataapi.westeurope.azurecontainer.io:4000" /
+    #       --global-var smilr-front-host="smilrfront.westeurope.azurecontainer.io:3000" /
+    #       --reporters html --reporter-html-export="/github/workspace/api_test_report.html" -n 5
+    - run: |
+        npm i -g newman
+        newman run etc/postman/smilr-api-tests.json /
           --timeout 180000 /
           --global-var smilr-api-host="smilrdataapi.westeurope.azurecontainer.io:4000" /
           --global-var smilr-front-host="smilrfront.westeurope.azurecontainer.io:3000" /
-          --reporters html --reporter-html-export="/github/workspace/api_test_report.html" -n 5
+          --reporters html --reporter-html-export="api_test_report.html" -n 5
 
-    - run: ls -R
-    
     - name: Upload test report
       uses: actions/upload-artifact@v1
       with:
         name: API Test Report
-        path: ./api_test_report.html
+        path: api_test_report.html
