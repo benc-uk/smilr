@@ -2,7 +2,7 @@ const Service = require('./service')
 const Feedback = require('../models/feedback');
 
 //
-// CRUD service for events
+// CRUD service for feedback
 //
 class FeedbackService extends Service {
   constructor() {
