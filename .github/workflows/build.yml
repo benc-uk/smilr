@@ -11,80 +11,80 @@ jobs:
   # ==================================================================================
   # Continuous integration - build container images and push to Azure Container Reg
   # ==================================================================================
-  build-job:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
+  # build-job:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v1
 
-    - uses: azure/docker-login@v1
-      with:
-        login-server: bcdemo.azurecr.io
-        username: bcdemo
-        password: ${{ secrets.ACR_PASSWORD }}
+  #   - uses: azure/docker-login@v1
+  #     with:
+  #       login-server: bcdemo.azurecr.io
+  #       username: bcdemo
+  #       password: ${{ secrets.ACR_PASSWORD }}
     
-    - name: Build Data API
-      run: |
-        docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:$IMAGE_TAG
-        docker push bcdemo.azurecr.io/smilr/data-api:$IMAGE_TAG
+  #   - name: Build Data API
+  #     run: |
+  #       docker build . -f node/data-api/Dockerfile -t bcdemo.azurecr.io/smilr/data-api:$IMAGE_TAG
+  #       docker push bcdemo.azurecr.io/smilr/data-api:$IMAGE_TAG
 
-    - name: Build Frontend
-      run: |
-        docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:$IMAGE_TAG
-        docker push bcdemo.azurecr.io/smilr/frontend:$IMAGE_TAG
+  #   - name: Build Frontend
+  #     run: |
+  #       docker build . -f node/frontend/Dockerfile -t bcdemo.azurecr.io/smilr/frontend:$IMAGE_TAG
+  #       docker push bcdemo.azurecr.io/smilr/frontend:$IMAGE_TAG
 
-  # ==================================================================================
-  # Continuous deployment job - deploy in Azure as containers
-  # ==================================================================================
-  release-job:
-    needs: build-job
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
+  # # ==================================================================================
+  # # Continuous deployment job - deploy in Azure as containers
+  # # ==================================================================================
+  # release-job:
+  #   needs: build-job
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v1
 
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+  #   - uses: azure/login@v1
+  #     with:
+  #       creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - name: Deploy mongo container
-      run: |
-        az group create -n temp.smilr-cicd -l westeurope -o table
+  #   - name: Deploy mongo container
+  #     run: |
+  #       az group create -n temp.smilr-cicd -l westeurope -o table
 
-        az container create -n mongo -g temp.smilr-cicd \
-         --image mongo:4-xenial \
-         --ip-address public --port 27017 \
-         --cpu 0.1 --memory 0.3 \
-         --dns-name-label smilrmongo \
-         --no-wait
+  #       az container create -n mongo -g temp.smilr-cicd \
+  #        --image mongo:4-xenial \
+  #        --ip-address public --port 27017 \
+  #        --cpu 0.1 --memory 0.3 \
+  #        --dns-name-label smilrmongo \
+  #        --no-wait
 
-    - name: Deploy Data API container
-      run: |
-        az container create -n data-api -g temp.smilr-cicd \
-         --image bcdemo.azurecr.io/smilr/data-api:$IMAGE_TAG \
-         --ip-address public --port 4000 \
-         --cpu 0.1 --memory 0.1 \
-         --registry-password ${{ secrets.ACR_PASSWORD }} \
-         --registry-username bcdemo \
-         -e MONGO_CONNSTR=mongodb://smilrmongo.westeurope.azurecontainer.io \
-         --dns-name-label smilrdataapi \
-         --no-wait
+  #   - name: Deploy Data API container
+  #     run: |
+  #       az container create -n data-api -g temp.smilr-cicd \
+  #        --image bcdemo.azurecr.io/smilr/data-api:$IMAGE_TAG \
+  #        --ip-address public --port 4000 \
+  #        --cpu 0.1 --memory 0.1 \
+  #        --registry-password ${{ secrets.ACR_PASSWORD }} \
+  #        --registry-username bcdemo \
+  #        -e MONGO_CONNSTR=mongodb://smilrmongo.westeurope.azurecontainer.io \
+  #        --dns-name-label smilrdataapi \
+  #        --no-wait
 
-    - name: Deploy frontend container
-      run: |
-        az container create -n frontend -g temp.smilr-cicd \
-         --image bcdemo.azurecr.io/smilr/frontend:$IMAGE_TAG \
-         --ip-address public --port 3000 \
-         --cpu 0.1 --memory 0.1 \
-         --registry-password ${{ secrets.ACR_PASSWORD }} \
-         --registry-username bcdemo \
-         -e API_ENDPOINT=http://smilrdataapi.westeurope.azurecontainer.io:4000/api \
-         --dns-name-label smilrfront \
-         --no-wait
+  #   - name: Deploy frontend container
+  #     run: |
+  #       az container create -n frontend -g temp.smilr-cicd \
+  #        --image bcdemo.azurecr.io/smilr/frontend:$IMAGE_TAG \
+  #        --ip-address public --port 3000 \
+  #        --cpu 0.1 --memory 0.1 \
+  #        --registry-password ${{ secrets.ACR_PASSWORD }} \
+  #        --registry-username bcdemo \
+  #        -e API_ENDPOINT=http://smilrdataapi.westeurope.azurecontainer.io:4000/api \
+  #        --dns-name-label smilrfront \
+  #        --no-wait
   
   # ==================================================================================
   # Testing job - Run functional API tests with Postman/newman
   # ==================================================================================  
   testing-job:
-    needs: release-job
+    #needs: release-job
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -102,6 +102,8 @@ jobs:
           --global-var smilr-front-host="smilrfront.westeurope.azurecontainer.io:3000" /
           --reporters html --reporter-html-export="/github/workspace/api_test_report.html" -n 5
 
+    - run: ls -R
+    
     - name: Upload test report
       uses: actions/upload-artifact@v1
       with:
