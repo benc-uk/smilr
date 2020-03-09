@@ -51,7 +51,7 @@ module.exports = EventController;
  * This returns events matching given time range: past, active or future
  * @route GET /api/events/filter/{time}
  * @group Events - Operations about events
- * @param {enum} time.path - Time range to filter on - eg: past,active,future
+ * @param {enum} time.path.required - Time range to filter on - eg: past,active,future
  * @operationId eventGetFiltered
  * @returns {Array.<Event>} 200 - An array of events
  * @returns {ProblemDetails.model} 500 - Unexpected error 
@@ -61,7 +61,7 @@ module.exports = EventController;
  * Get a single event
  * @route GET /api/events/{id}
  * @group Events - Operations about events
- * @param {string} id.path - Id of event to update
+ * @param {string} id.path.required - Id of event to update
  * @consumes application/json
  * @operationId eventGetSingle
  * @returns {Array.<Event>} 200 - An array of events
@@ -86,7 +86,7 @@ module.exports = EventController;
  * @route PUT /api/events/{id}
  * @group Events - Operations about events
  * @param {Event.model} event.body.required - The event to update
- * @param {string} id.path - Id of event to update
+ * @param {string} id.path.required - Id of event to update
  * @consumes application/json
  * @operationId eventUpdate
  * @returns {Array.<Event>} 200 - An array of events
@@ -99,7 +99,7 @@ module.exports = EventController;
  * Delete an event
  * @route DELETE /api/events/{id}
  * @group Events - Operations about events
- * @param {string} id.path - ID of event to delete
+ * @param {string} id.path.required - ID of event to delete
  * @operationId eventDelete
  * @returns {object} 200 - An confirmation message in JSON
  * @returns {ProblemDetails.model} 404 - Event with given id not found

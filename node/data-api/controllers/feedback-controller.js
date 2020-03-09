@@ -28,8 +28,8 @@ module.exports = FeedbackController;
  * @route GET /api/feedback/{eventid}/{topicid}
  * @group Feedback - Operations about feedback
  * @operationId feedbackGet
- * @param {string} eventid.path - Id of event containing topic
- * @param {integer} topicid.path - Id of topic to leave feedback on
+ * @param {string} eventid.path.required - Id of event containing topic
+ * @param {integer} topicid.path.required - Id of topic to leave feedback on
  * @returns {Array.<Feedback>} 200 - An array of feedback, empty array if topic or event not found
  * @returns {ProblemDetails.model} 500 - Unexpected error 
  */
