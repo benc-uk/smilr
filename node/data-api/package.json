@@ -1,6 +1,6 @@
 {
   "name": "smilr-data-api",
-  "version": "6.2.0",
+  "version": "6.2.1",
   "main": "server.js",
   "engines": {
     "node": "^12.13.0"
