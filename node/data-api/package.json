@@ -1,9 +1,9 @@
 {
   "name": "smilr-data-api",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "main": "server.js",
   "engines": {
-    "node": "^12.13.0"
+    "node": "^12.16.1"
   },
   "repository": "https://github.com/benc-uk/smilr",
   "description": "Primary Smilr microservice, RESTful data API",
@@ -15,7 +15,8 @@
     "test-junit": "NODE_ENV=test mocha --exit --sort --reporter mocha-junit-reporter",
     "test-html": "NODE_ENV=test mocha --exit --sort --reporter mochawesome",
     "coverage": "NODE_ENV=test nyc --reporter=html --reporter=text npm test",
-    "cleanup": "rm -rf coverage && rm -rf mochawesome-report && rm -rf .nyc_output && rm test-results.xml"
+    "cleanup": "rm -rf coverage && rm -rf mochawesome-report && rm -rf .nyc_output && rm test-results.xml",
+    "lint": "eslint ."
   },
   "author": "Ben Coleman",
   "license": "MIT",
@@ -34,6 +35,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^6.8.0",
     "mocha": "6.2.2",
     "mocha-junit-reporter": "^1.23.1",
     "mochawesome": "^4.1.0",
