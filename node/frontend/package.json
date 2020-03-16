@@ -1,13 +1,14 @@
 {
   "name": "smilr-frontend",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "main": "server.js",
   "engines": {
-    "node": "^10.15.0"
+    "node": "^12.16.1"
   },
   "description": "Simple static content server for Smilr SPA UI/frontend",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint ."
   },
   "license": "MIT",
   "repository": "https://github.com/benc-uk/smilr",
@@ -15,5 +16,8 @@
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
   }
 }

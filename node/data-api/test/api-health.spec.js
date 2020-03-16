@@ -1,8 +1,8 @@
 const request = require('supertest')
-const chai = require("chai");
-const expect = chai.expect;
+const chai = require('chai')
+const expect = chai.expect
 
-const app = require('../server').app;
+const app = require('../server').app
 
 describe('Health API', () => {
   it('fetch health', (done) => {
@@ -18,5 +18,5 @@ describe('Health API', () => {
         expect(res.body.debug.hostInfo).to.have.property('hostname')
       })
       .expect(200, done)
-  });
+  })
 })
