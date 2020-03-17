@@ -1,4 +1,4 @@
-# Base Alpine Linux image with Node 10.x
+# Base Alpine Linux image with Node 12.x
 FROM node:12-alpine
 
 # Build time arguments

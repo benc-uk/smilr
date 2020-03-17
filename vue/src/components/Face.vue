@@ -1,19 +1,19 @@
 <template>
   <div class="facebox">
-    <img class="face animated" @click="clicked" 
-      :src="utilsFaceSVG(number)" 
-      :class="{ 
-        'slower': selected, 
-        'infinite': selected, 
-        'tada': selected, 
-        'flipInX': appear, 
-        'unselected': unselected }" :ref="`face${number}`">
+    <img :ref="`face${number}`" class="face animated"
+         :src="utilsFaceSVG(number)"
+         :class="{
+           'slower': selected,
+           'infinite': selected,
+           'tada': selected,
+           'flipInX': appear,
+           'unselected': unselected }" @click="clicked">
   </div>
 </template>
-      
+
 <script>
 import '../assets/css/animate.css'
-import utils from "../mixins/utils"
+import utils from '../mixins/utils'
 
 export default {
   name: 'Face',
@@ -29,14 +29,14 @@ export default {
   },
 
   mounted() {
-    for(let faceRef in this.$refs) {
-      this.$refs[faceRef].style.animationDelay = (Math.random() * 600 + "ms")
+    for (let faceRef in this.$refs) {
+      this.$refs[faceRef].style.animationDelay = (Math.random() * 600 + 'ms')
     }
   },
 
   methods: {
     clicked: function() {
-      this.$emit('clicked', this.number);
+      this.$emit('clicked', this.number)
     }
   }
 }

@@ -5,7 +5,7 @@ import router from './router'
 
 // Bootstrap and theme
 import BootstrapVue from 'bootstrap-vue'
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue)
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 // Select Bootswatch theme :)
 import 'bootswatch/dist/cosmo/bootstrap.css'
@@ -13,13 +13,13 @@ import 'bootswatch/dist/cosmo/bootstrap.css'
 
 // Other plugins
 Vue.use(require('vue-moment'))
-import VeeValidate from 'vee-validate';
-Vue.use(VeeValidate, {fieldsBagName: 'formFields', events: 'change|blur'})
+import VeeValidate from 'vee-validate'
+Vue.use(VeeValidate, { fieldsBagName: 'formFields', events: 'change|blur' })
 
 // Font Awesome
 import { library as faLibrary } from '@fortawesome/fontawesome-svg-core'
-import { faHome, faInfoCircle, faCoffee, faCalendarAlt, faFlask, faChalkboardTeacher, faLaptopCode, 
-  faTools, faChartBar, faSync, faEdit, faTrashAlt, 
+import { faHome, faInfoCircle, faCoffee, faCalendarAlt, faFlask, faChalkboardTeacher, faLaptopCode,
+  faTools, faChartBar, faSync, faEdit, faTrashAlt,
   faCalendarPlus, faPlusSquare, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 faLibrary.add(faHome, faInfoCircle, faCoffee, faSync, faCalendarAlt, faFlask, faChalkboardTeacher,

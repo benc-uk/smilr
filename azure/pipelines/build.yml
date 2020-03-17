@@ -14,7 +14,7 @@ trigger:
     - node/*
     - vue/*
     - azure/pipelines/build.yaml
-pr: [master]
+pr: ['master']
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
@@ -26,14 +26,14 @@ stages:
 # Single stage: test, build and push
 # *************************************************************************************
 - stage: build
-  displayName: 'Unit test & build containers'
+  displayName: 'Test & build containers'
 
   jobs:
     # =====================================================================================
-    # Run unit tests for Data API and Vue.js SPA/client
+    # Run unit tests for Data API and Vue.js SPA/client, and lint checks
     # =====================================================================================  
-  - job: unitTestsJob
-    displayName: 'Run unit tests'
+  - job: testsJob
+    displayName: 'Run linting & tests'
     
     pool:
       vmImage: ubuntu-latest
@@ -41,38 +41,59 @@ stages:
     steps:
     - bash: |
         npm install --silent
-        npm run test-junit
-        npm run coverage
-      displayName: Run tests for data-api
+        npm run lint
+      displayName: 'Run lint for frontend'
+      workingDirectory: node/frontend
+
+    - bash: |
+        npm install --silent
+        npm run lint
+      displayName: 'Run lint for data-api'
       workingDirectory: node/data-api
 
+    - bash: |
+        npm run test-junit
+        npm run coverage
+      displayName: 'Run tests for data-api'
+      workingDirectory: node/data-api
+      continueOnError: true
+
     - task: PublishTestResults@2
-      condition: succeededOrFailed()
+      displayName: 'Publish tests for data-api'
       inputs:
-        testResultsFiles: 'node/data-api/test-results.xml'
+        testResultsFiles: node/data-api/test-results.xml
         testResultsFormat: JUnit
-        testRunTitle: Data API Tests
+        testRunTitle: 'Data API Tests'
+        failTaskOnFailedTests: true
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage for data-api'
+      inputs:
+        codeCoverageTool: cobertura
+        summaryFileLocation: node/data-api/coverage/cobertura-coverage.xml
 
     - bash: |
         npm install --silent
         npm run test:unit-report
-      displayName: Run tests for Vue SPA client
+      displayName: 'Run tests for Vue SPA client'
       workingDirectory: vue
+      continueOnError: true
 
     - task: PublishTestResults@2
-      condition: succeededOrFailed()
+      displayName: 'Publish tests for Vue SPA client'
       inputs:
         testResultsFiles: 'vue/*.xml'
         testResultsFormat: JUnit
-        testRunTitle: Vue SPA Tests
+        testRunTitle: 'Vue SPA Tests'
+        failTaskOnFailedTests: true
 
     # =====================================================================================
     # Build container image and push to ACR 
     # =====================================================================================
-  - job: containerBuildJob
+  - job: buildPushJob
     # NOTE! Only run in master branch (i.e. merged PRs) 
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    dependsOn: unitTestsJob
+    dependsOn: testsJob
     displayName: 'Build & push to ACR'
     
     pool:
@@ -127,4 +148,4 @@ stages:
       
     - publish: kubernetes/helm
       artifact: helm-charts
-      displayName: Publish helm-charts artifact 
+      displayName: 'Publish helm-charts artifact'

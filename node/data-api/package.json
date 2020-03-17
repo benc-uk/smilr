@@ -14,7 +14,7 @@
     "test": "NODE_ENV=test mocha --exit --sort",
     "test-junit": "NODE_ENV=test mocha --exit --sort --reporter mocha-junit-reporter",
     "test-html": "NODE_ENV=test mocha --exit --sort --reporter mochawesome",
-    "coverage": "NODE_ENV=test nyc --reporter=html --reporter=text npm test",
+    "coverage": "NODE_ENV=test nyc --reporter=text --reporter=cobertura npm test",
     "cleanup": "rm -rf coverage && rm -rf mochawesome-report && rm -rf .nyc_output && rm test-results.xml",
     "lint": "eslint ."
   },
