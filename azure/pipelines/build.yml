@@ -52,30 +52,30 @@ stages:
       workingDirectory: node/data-api
 
     - bash: |
-        npm run test-junit
+        npm run test-junit || true
         npm run coverage
       displayName: 'Run tests for data-api'
       workingDirectory: node/data-api
 
     - task: PublishTestResults@2
-      condition: succeededOrFailed()
       inputs:
         testResultsFiles: 'node/data-api/test-results.xml'
         testResultsFormat: JUnit
         testRunTitle: 'Data API Tests'
+        failTaskOnFailedTests: true
 
     - bash: |
         npm install --silent
-        npm run test:unit-report
+        npm run test:unit-report || true
       displayName: 'Run tests for Vue SPA client'
       workingDirectory: vue
 
     - task: PublishTestResults@2
-      condition: succeededOrFailed()
       inputs:
         testResultsFiles: 'vue/*.xml'
         testResultsFormat: JUnit
         testRunTitle: 'Vue SPA Tests'
+        failTaskOnFailedTests: true
 
     # =====================================================================================
     # Build container image and push to ACR 

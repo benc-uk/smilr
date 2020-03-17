@@ -15,7 +15,7 @@ describe('Events API', () => {
       .expect('Content-Type', /json/)
       .expect(function(res) {
         expect(res.body).to.be.an.an('object')
-        expect(res.body).to.have.property('_id')
+        expect(res.body).to.have.property('_idooo')
         expect(res.body).to.have.property('title').equals('new event')
         newEventId = res.body._id
       })
