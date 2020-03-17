@@ -30,7 +30,7 @@ resources:
     source: Build and push to ACR
     trigger: 
       branches:  
-        include: master
+        include: [ 'master' ]
 
 # NOTE! The 'shared-variables' variable group must be pre-created and populated
 # - Expected variables: aks-connection, acr-connection, azure-connection, aks-resgrp
