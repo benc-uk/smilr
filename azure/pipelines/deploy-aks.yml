@@ -28,9 +28,7 @@ resources:
   pipelines:
   - pipeline: buildpipeline
     source: Build and push to ACR
-    trigger: 
-      branches:  
-        include: [ 'master' ]
+    trigger: true
 
 # NOTE! The 'shared-variables' variable group must be pre-created and populated
 # - Expected variables: aks-connection, acr-connection, azure-connection, aks-resgrp
@@ -44,6 +42,7 @@ stages:
 # Deploy stage 1 - AKS test namespace
 # *************************************************************************************
 - stage: deployToTest
+  condition: eq(variables['Build.SourceBranchName'], 'master')
   displayName: AKS Test
 
   jobs:
@@ -61,6 +60,7 @@ stages:
 # Deploy stage 2 - AKS staging namespace
 # *************************************************************************************
 - stage: deployToStaging
+  condition: eq(variables['Build.SourceBranchName'], 'master')
   displayName: AKS Staging
 
   jobs:
@@ -78,6 +78,7 @@ stages:
 # Deploy stage 3 - AKS production namespace
 # *************************************************************************************
 - stage: deployToProduction
+  condition: eq(variables['Build.SourceBranchName'], 'master')
   displayName: AKS Production
 
   jobs:
