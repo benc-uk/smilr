@@ -18,7 +18,7 @@ describe('Error.vue', () => {
       }      
     })  
 
-    expect(wrapper.find('.error-messageXXXXXX').html()).to.contain(msg)
+    expect(wrapper.find('.error-message').html()).to.contain(msg)
     expect(wrapper.find('b-button-stub').exists()).to.be.true;
   })
 })
