@@ -52,10 +52,11 @@ stages:
       workingDirectory: node/data-api
 
     - bash: |
-        npm run test-junit || true
+        npm run test-junit
         npm run coverage
       displayName: 'Run tests for data-api'
       workingDirectory: node/data-api
+      continueOnError: true
 
     - task: PublishTestResults@2
       inputs:
@@ -66,9 +67,10 @@ stages:
 
     - bash: |
         npm install --silent
-        npm run test:unit-report || true
+        npm run test:unit-report
       displayName: 'Run tests for Vue SPA client'
       workingDirectory: vue
+      continueOnError: true
 
     - task: PublishTestResults@2
       inputs:
