@@ -42,6 +42,7 @@ stages:
 # Deploy stage 1 - AKS test namespace
 # *************************************************************************************
 - stage: deployToTest
+  condition: eq(variables['Build.SourceBranchName'], 'master')
   displayName: AKS Test
 
   jobs:
@@ -59,6 +60,7 @@ stages:
 # Deploy stage 2 - AKS staging namespace
 # *************************************************************************************
 - stage: deployToStaging
+  condition: eq(variables['Build.SourceBranchName'], 'master')
   displayName: AKS Staging
 
   jobs:
@@ -76,6 +78,7 @@ stages:
 # Deploy stage 3 - AKS production namespace
 # *************************************************************************************
 - stage: deployToProduction
+  condition: eq(variables['Build.SourceBranchName'], 'master')
   displayName: AKS Production
 
   jobs:

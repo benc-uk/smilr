@@ -1,43 +1,49 @@
 <template>
   <div>
     <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
-      <h1 slot="header"><fa icon="tools"/> &nbsp; Event Admin</h1>
-      <b-button size="lg" class="bigger" variant="success" @click="newEvent"><fa icon="calendar-alt"/> ADD EVENT</b-button>
+      <h1 slot="header">
+        <fa icon="tools" /> &nbsp; Event Admin
+      </h1>
+      <b-button size="lg" class="bigger" variant="success" @click="newEvent">
+        <fa icon="calendar-alt" /> ADD EVENT
+      </b-button>
 
-      <br/><br/>
+      <br><br>
 
-      <spinner v-if="!events"></spinner>
-      
-      <b-table hover :items="events" :fields="eventTableFields" v-if="events">
+      <spinner v-if="!events" />
+
+      <b-table v-if="events" hover :items="events" :fields="eventTableFields">
         <template v-slot:cell(actions)="data">
-          <b-button size="lg" variant="success" @click="editEvent(data.item)"> &nbsp; <fa icon="edit"/> &nbsp; </b-button> &nbsp;
-          <b-button size="lg" variant="danger" @click="preDeleteEvent(data.item)"> &nbsp; <fa icon="trash-alt"/> &nbsp; </b-button>
+          <b-button size="lg" variant="success" @click="editEvent(data.item)">
+&nbsp; <fa icon="edit" /> &nbsp;
+          </b-button> &nbsp;
+          <b-button size="lg" variant="danger" @click="preDeleteEvent(data.item)">
+            &nbsp; <fa icon="trash-alt" /> &nbsp;
+          </b-button>
         </template>
       </b-table>
-      
     </b-card>
 
-    <b-modal ref="deleteModal" centered hide-header-close header-bg-variant="warning" header-text-variant="light" @ok="deleteEvent" title="Delete Event">
+    <b-modal ref="deleteModal" centered hide-header-close header-bg-variant="warning" header-text-variant="light" title="Delete Event" @ok="deleteEvent">
       <div class="d-block text-center">
         <h3>Are you sure you want to delete this event?</h3>
       </div>
-    </b-modal>  
-
+    </b-modal>
   </div>
 </template>
 
 <script>
-import api from "../mixins/api"
+import api from '../mixins/api'
 import Spinner from './Spinner'
 
 export default {
   name: 'Admin',
 
-  mixins: [ api ],
-
   components: {
     Spinner
   },
+
+  mixins: [ api ],
 
   data: function() {
     return {
@@ -52,37 +58,37 @@ export default {
     }
   },
 
+  created: function() {
+    this.apiGetAllEvents()
+      .then((resp) => {
+        if (resp) { this.events = resp.data }
+      })
+  },
+
   methods: {
     editEvent: function(event) {
-      this.$router.push({name: 'admin-event', params: { action: ""+event._id, editEvent: event }})
+      this.$router.push({ name: 'admin-event', params: { action: ''+event._id, editEvent: event } })
     },
 
     newEvent: function() {
-      this.$router.push({name: 'admin-event', params: { action: 'new', editEvent: null }})
+      this.$router.push({ name: 'admin-event', params: { action: 'new', editEvent: null } })
     },
 
     preDeleteEvent: function(event) {
       this.eventToDelete = event
       this.$refs.deleteModal.show()
     },
-    
+
     deleteEvent: function() {
       this.apiDeleteEvent(this.eventToDelete)
-      .then(resp => {
-        if(resp) {
-          for(let eindex in this.events) {
-            if(this.events[eindex]._id == this.eventToDelete._id) this.events.splice(eindex, 1)
+        .then((resp) => {
+          if (resp) {
+            for (let eindex in this.events) {
+              if (this.events[eindex]._id == this.eventToDelete._id) { this.events.splice(eindex, 1) }
+            }
           }
-        }
-      })
+        })
     }
-  },
-
-  created: function() {
-    this.apiGetAllEvents()
-    .then(resp => {
-      if(resp) this.events = resp.data;
-    })
   }
 }
 </script>

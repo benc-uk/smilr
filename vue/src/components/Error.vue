@@ -6,10 +6,12 @@
 -->
 
 <template>
-  <b-jumbotron header="Error 😢" lead="Something bad has happened" >
+  <b-jumbotron header="Error 😢" lead="Something bad has happened">
     <pre class="error-message">{{ message }}</pre>
-    <br/>
-    <b-button onclick="window.location.reload()" variant="danger">Try to Reload App</b-button>
+    <br>
+    <b-button onclick="window.location.reload()" variant="danger">
+      Try to Reload App
+    </b-button>
   </b-jumbotron>
 </template>
 
@@ -29,8 +31,8 @@ export default {
 
   created: function() {
     // If message is empty means page has been loaded/refreshed by user directly
-    // - Redirect them to home. Stops user being stuck on error page and hitting F5 
-    if(!this.message) {
+    // - Redirect them to home. Stops user being stuck on error page and hitting F5
+    if (!this.message) {
       this.$router.push({ name: 'home' })
     }
   }
@@ -46,6 +48,6 @@ export default {
   font-size: 1.2rem;
   white-space: pre-wrap;
   word-break: keep-all;
-  word-wrap: break-word; 
+  word-wrap: break-word;
 }
 </style>
