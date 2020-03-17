@@ -14,7 +14,7 @@ trigger:
     - node/*
     - vue/*
     - azure/pipelines/build.yaml
-pr: [master]
+pr: ['master']
 
 # NOTE! This variable group must be pre-created and populated
 # - Expected variables: acr-connection
@@ -26,13 +26,13 @@ stages:
 # Single stage: test, build and push
 # *************************************************************************************
 - stage: build
-  displayName: 'Unit test & build containers'
+  displayName: 'Test & build containers'
 
   jobs:
     # =====================================================================================
-    # Run unit tests for Data API and Vue.js SPA/client
+    # Run unit tests for Data API and Vue.js SPA/client, and lint checks
     # =====================================================================================  
-  - job: unitTestsJob
+  - job: testsJob
     displayName: 'Run unit tests'
     
     pool:
@@ -41,9 +41,16 @@ stages:
     steps:
     - bash: |
         npm install --silent
+        npm run lint
+      displayName: Run lint for frontend
+      workingDirectory: node/frontend
+
+    - bash: |
+        npm install --silent
+        npm run lint
         npm run test-junit
         npm run coverage
-      displayName: Run tests for data-api
+      displayName: Run lint & tests for data-api
       workingDirectory: node/data-api
 
     - task: PublishTestResults@2
@@ -69,10 +76,10 @@ stages:
     # =====================================================================================
     # Build container image and push to ACR 
     # =====================================================================================
-  - job: containerBuildJob
+  - job: buildPushJob
     # NOTE! Only run in master branch (i.e. merged PRs) 
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    dependsOn: unitTestsJob
+    dependsOn: testsJob
     displayName: 'Build & push to ACR'
     
     pool:

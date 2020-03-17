@@ -32,8 +32,8 @@
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-eslint": "^10.0.1",
     "chai": "^4.1.2",
-    "eslint": "6.1.0",
-    "eslint-plugin-vue": "^6.0.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-vue": "^6.2.2",
     "isomorphic-fetch": "^2.2.1",
     "json-server": "^0.15.0",
     "mocha": "^6.2.0",
@@ -42,20 +42,6 @@
   },
   "vue": {
     "publicPath": ""
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
   },
   "postcss": {
     "plugins": {
