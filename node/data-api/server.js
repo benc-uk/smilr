@@ -16,7 +16,7 @@ if (process.env.NODE_ENV == 'test') { console.log = function() {} }
 // App Insights. Set APPINSIGHTS_INSTRUMENTATIONKEY as App Setting or env var
 if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
   const appInsights = require('applicationinsights')
-  app_Insights.setup()
+  appInsights.setup()
     .setAutoDependencyCorrelation(true)
     .setAutoCollectRequests(true)
     .setAutoCollectPerformance(true)
