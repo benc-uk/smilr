@@ -59,11 +59,18 @@ stages:
       continueOnError: true
 
     - task: PublishTestResults@2
+      displayName: 'Publish tests for data-api'
       inputs:
-        testResultsFiles: 'node/data-api/test-results.xml'
+        testResultsFiles: node/data-api/test-results.xml
         testResultsFormat: JUnit
         testRunTitle: 'Data API Tests'
         failTaskOnFailedTests: true
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage for data-api'
+      inputs:
+        codeCoverageTool: cobertura
+        summaryFileLocation: node/data-api/coverage/cobertura-coverage.xml
 
     - bash: |
         npm install --silent
@@ -73,6 +80,7 @@ stages:
       continueOnError: true
 
     - task: PublishTestResults@2
+      displayName: 'Publish tests for Vue SPA client'
       inputs:
         testResultsFiles: 'vue/*.xml'
         testResultsFormat: JUnit
