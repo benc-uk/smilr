@@ -33,7 +33,7 @@ stages:
     # Run unit tests for Data API and Vue.js SPA/client, and lint checks
     # =====================================================================================  
   - job: testsJob
-    displayName: 'Run unit tests'
+    displayName: 'Run linting & tests'
     
     pool:
       vmImage: ubuntu-latest
@@ -42,18 +42,19 @@ stages:
     - bash: |
         npm install --silent
         npm run lint
-      displayName: Run lint for frontend
+      displayName: 'Run lint for frontend'
       workingDirectory: node/frontend
 
     - bash: |
         npm install --silent
         npm run lint
-      displayName: Run lint for data-api
-      
+      displayName: 'Run lint for data-api'
+      workingDirectory: node/data-api
+
     - bash: |
         npm run test-junit
         npm run coverage
-      displayName: Run tests for data-api
+      displayName: 'Run tests for data-api'
       workingDirectory: node/data-api
 
     - task: PublishTestResults@2
@@ -61,12 +62,12 @@ stages:
       inputs:
         testResultsFiles: 'node/data-api/test-results.xml'
         testResultsFormat: JUnit
-        testRunTitle: Data API Tests
+        testRunTitle: 'Data API Tests'
 
     - bash: |
         npm install --silent
         npm run test:unit-report
-      displayName: Run tests for Vue SPA client
+      displayName: 'Run tests for Vue SPA client'
       workingDirectory: vue
 
     - task: PublishTestResults@2
@@ -74,7 +75,7 @@ stages:
       inputs:
         testResultsFiles: 'vue/*.xml'
         testResultsFormat: JUnit
-        testRunTitle: Vue SPA Tests
+        testRunTitle: 'Vue SPA Tests'
 
     # =====================================================================================
     # Build container image and push to ACR 
@@ -137,4 +138,4 @@ stages:
       
     - publish: kubernetes/helm
       artifact: helm-charts
-      displayName: Publish helm-charts artifact 
+      displayName: 'Publish helm-charts artifact'
