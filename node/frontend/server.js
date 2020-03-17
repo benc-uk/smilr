@@ -56,6 +56,6 @@ app.use('*', function(req, res) {
 // Start the Express server
 //
 let port = process.env.PORT || 3000
-const server = app.listen(port, function () {
-  console.log(`### Frontend server listening on ${server.address().port}`)
+const ser_ver = app.listen(port, function () {
+  console.log(`### Frontend server listening on ${ser_ver.address().port}`)
 })
