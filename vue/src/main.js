@@ -7,14 +7,13 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 // Select Bootswatch theme :)
 import 'bootswatch/dist/cosmo/bootstrap.css'
 //import 'bootswatch/dist/slate/bootstrap.css'
 
 // Other plugins
 Vue.use(require('vue-moment'))
-import VeeValidate from 'vee-validate'
-Vue.use(VeeValidate, { fieldsBagName: 'formFields', events: 'change|blur' })
 
 // Font Awesome
 import { library as faLibrary } from '@fortawesome/fontawesome-svg-core'
@@ -28,40 +27,40 @@ Vue.component('fa', FontAwesomeIcon)
 
 /* ================================================================================================== */
 
-/* eslint-disable */
+
 Vue.config.productionTip = false
 
 // Global object created and populated here and exported for other code to use
-var config = {}
-// Global user profile object 
-var userProfile = {}
+let config = {}
+// Global user profile object
+let userProfile = {}
 
 export { userProfile, config }
 
 // In production mode fetch config at runtime from special .config endpoint
 // This REQUIRES the SPA is being served by the Smilr frontend Node server
-if(process.env.NODE_ENV == 'production') { 
-  fetch(`.config/API_ENDPOINT,AAD_CLIENT_ID`)
-  .then(resp => {
-    resp.json()
-    .then(result => {
-      // Store results as our global config object, then init the app
-      config.API_ENDPOINT = result.API_ENDPOINT
-      config.AAD_CLIENT_ID = result.AAD_CLIENT_ID
-      initApp()
+if (process.env.NODE_ENV == 'production') {
+  fetch('.config/API_ENDPOINT,AAD_CLIENT_ID')
+    .then((resp) => {
+      resp.json()
+        .then((result) => {
+          // Store results as our global config object, then init the app
+          config.API_ENDPOINT = result.API_ENDPOINT
+          config.AAD_CLIENT_ID = result.AAD_CLIENT_ID
+          initApp()
+        })
+        .catch((err) => {
+          console.log(`### Unable to fetch config from server. App will not start! Err: ${err}`)
+        })
     })
-    .catch(err => {
-      console.log(`### Unable to fetch config from server. App will not start! Err: ${err}`);
+    .catch((err) => {
+      console.log(`### Unable to fetch config from server. App will not start! Err: ${err}`)
     })
-  })
-  .catch(err => {
-    console.log(`### Unable to fetch config from server. App will not start! Err: ${err}`);
-  })
 } else {
   // In dev mode fetch config from static .env file, note the VUE_APP_ prefix
   // The Vue CLI webpack bundling will populate these from `.env.development.local`
-  console.log(process.env.VUE_APP_API_ENDPOINT);
-  
+  console.log(process.env.VUE_APP_API_ENDPOINT)
+
   config.API_ENDPOINT = process.env.VUE_APP_API_ENDPOINT
   config.AAD_CLIENT_ID = process.env.VUE_APP_AAD_CLIENT_ID
   initApp()
@@ -75,7 +74,7 @@ function initApp() {
   console.log('### App config is', config)
 
   // Check if security enabled
-  if(config.AAD_CLIENT_ID) {
+  if (config.AAD_CLIENT_ID) {
     userProfile = {
       user: null
     }
@@ -93,8 +92,8 @@ function initApp() {
   // Taken from Vue CLI template app, don't really understand what it all does
   new Vue({
     router,
-    render: function (h) { return h(App) },
-    beforeCreate: function() { }
+    beforeCreate: function() { },
+    render: function (h) { return h(App) }
   }).$mount('#app')
 }
 
