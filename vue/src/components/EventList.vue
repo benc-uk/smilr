@@ -81,9 +81,8 @@ export default {
           if (resp) { this.events = resp.data }
         })
         .catch((err) => {
-        // Never should get here
+          // Never should get here
           console.log(err)
-
         })
     }
   }

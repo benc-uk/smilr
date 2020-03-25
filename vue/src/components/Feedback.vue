@@ -11,11 +11,11 @@
       <div class="card-body">
         <h3>Please provide your feedback, click on a face</h3><br>
         <div v-if="!sending" class="facegroup">
-          <face number="1" :unselected="unselected[0]" :selected="selected[0]" @clicked="clickFace" />
-          <face number="2" :unselected="unselected[1]" :selected="selected[1]" @clicked="clickFace" />
-          <face number="3" :unselected="unselected[2]" :selected="selected[2]" @clicked="clickFace" />
-          <face number="4" :unselected="unselected[3]" :selected="selected[3]" @clicked="clickFace" />
-          <face number="5" :unselected="unselected[4]" :selected="selected[4]" @clicked="clickFace" />
+          <face :number="1" :unselected="unselected[0]" :selected="selected[0]" @clicked="clickFace" />
+          <face :number="2" :unselected="unselected[1]" :selected="selected[1]" @clicked="clickFace" />
+          <face :number="3" :unselected="unselected[2]" :selected="selected[2]" @clicked="clickFace" />
+          <face :number="4" :unselected="unselected[3]" :selected="selected[3]" @clicked="clickFace" />
+          <face :number="5" :unselected="unselected[4]" :selected="selected[4]" @clicked="clickFace" />
         </div>
         <div v-if="sending">
           <h1>Sending feedback...</h1>
@@ -60,8 +60,11 @@ export default {
 
   mixins: [ api, cookies ],
 
-  // These are no longer used, kept just in case, query params used now
-  props: ['eventIdProp', 'topicIdProp'],
+  // These are only used by unit tests, in the app the query string and router sets these
+  props: {
+    eventIdProp: { type: String, required: false, default: '' },
+    topicIdProp: { type: String, required: false, default: '' }
+  },
 
   data: function() {
     return  {

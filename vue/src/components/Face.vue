@@ -20,7 +20,20 @@ export default {
 
   mixins: [ utils ],
 
-  props: ['number', 'unselected', 'selected'],
+  props: {
+    number: {
+      type: Number,
+      required: true
+    },
+    unselected: {
+      type: Boolean,
+      required: true
+    },
+    selected: {
+      type: Boolean,
+      required: true
+    }
+  },
 
   computed: {
     appear: function() {

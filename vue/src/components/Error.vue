@@ -21,7 +21,12 @@
 export default {
   name: 'Error',
 
-  props: [ 'message' ],
+  props: {
+    message: {
+      type: String,
+      required: true
+    }
+  },
 
   data: function() {
     return {

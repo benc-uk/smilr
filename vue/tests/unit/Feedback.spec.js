@@ -14,7 +14,7 @@ describe('Feedback.vue', () => {
       localVue,
       propsData: {
         eventIdProp: 'fake01',
-        topicIdProp: 1
+        topicIdProp: "1"
       }
     })
 

@@ -1,6 +1,6 @@
 {
   "name": "smilr-spa",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
@@ -20,7 +20,6 @@
     "bootswatch": "^4.4.1",
     "epic-spinners": "^1.1.0",
     "msal": "^1.2.2",
-    "vee-validate": "^2.0.0",
     "vue": "^2.6.11",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.1.6"
@@ -29,7 +28,7 @@
     "@vue/cli-plugin-eslint": "^4.2.3",
     "@vue/cli-plugin-unit-mocha": "^4.2.3",
     "@vue/cli-service": "^4.2.3",
-    "@vue/test-utils": "1.0.0-beta.32",
+    "@vue/test-utils": "1.0.0-beta.29",
     "babel-eslint": "^10.1.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
