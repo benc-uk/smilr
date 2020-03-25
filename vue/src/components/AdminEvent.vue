@@ -10,9 +10,9 @@
 
       <b-form>
         <b-form-group label="Event Title" label-for="titleInput">
-          <b-form-input id="titleInput" v-model="event.title" v-focus v-validate="'required|min:5'" :state="!errors.first('title')" type="text" name="title" placeholder="Please provide a title" />
-          <p class="formError">
-            {{ errors.first('title') }}
+          <b-form-input id="titleInput" v-model="event.title" v-focus :state="titleOK" type="text" name="title" placeholder="Please provide a title" />
+          <p v-if="!titleOK" class="formError">
+            Title is required and must be more than 5 characters
           </p>
         </b-form-group>
 
@@ -28,10 +28,7 @@
           <b-row>
             <b-col sm="6">
               <b-form-group label="Event Start Date" label-for="startInput">
-                <b-form-input id="startInput" v-model="event.start" v-validate="'required'" inline :state="!errors.first('start') && datesOK" type="date" name="start" />
-                <p class="formError">
-                  {{ errors.first('start') }}
-                </p>
+                <b-form-input id="startInput" v-model="event.start" type="date" name="start" />
                 <p v-if="!datesOK" class="formError">
                   Start date must be on or before end date
                 </p>
@@ -39,10 +36,7 @@
             </b-col>
             <b-col sm="6">
               <b-form-group label="Event End Date" label-for="endInput">
-                <b-form-input id="endInput" ref="endRef" v-model="event.end" v-validate="'required'" inline :state="!errors.first('end') && datesOK" type="date" name="end" />
-                <p class="formError">
-                  {{ errors.first('end') }}
-                </p>
+                <b-form-input id="endInput" ref="endRef" v-model="event.end" inline type="date" name="end" />
                 <p v-if="!datesOK" class="formError">
                   End date must be on or after start date
                 </p>
@@ -76,10 +70,10 @@
           </p>
         </div>
 
-        <b-button v-if="editEvent" size="lg" variant="success" :disabled="errors.all().length > 0 || !topicsOK" @click="saveChanges">
+        <b-button v-if="editEvent" size="lg" variant="success" :disabled="!formOK" @click="saveChanges">
           SAVE CHANGES
         </b-button>
-        <b-button v-else size="lg" variant="success" :disabled="errors.all().length > 0 || !topicsOK" @click="createEvent">
+        <b-button v-else size="lg" variant="success" :disabled="!formOK" @click="createEvent">
           CREATE NEW EVENT
         </b-button>
         &nbsp;
@@ -95,6 +89,7 @@
 import utils from '../mixins/utils'
 import api from '../mixins/api'
 
+
 export default {
   name: 'AdminEvent',
 
@@ -109,7 +104,16 @@ export default {
 
   mixins: [ utils, api ],
 
-  props: [ 'editEvent', 'action' ],
+  props: {
+    editEvent: {
+      type: Object,
+      required: true
+    },
+    action: {
+      type: String,
+      required: true
+    }
+  },
 
   data: function() {
     return {
@@ -122,7 +126,13 @@ export default {
   },
 
   computed: {
-    topicsOK: function() {
+    // Yeah I wrote my own form & data validation functions, it's fine
+
+    titleOK() {
+      return this.event.title && this.event.title.length >= 5
+    },
+
+    topicsOK() {
       if (!this.event || !this.event.topics) { return false }
       if (this.event.topics.length <= 0) { return false }
 
@@ -132,8 +142,15 @@ export default {
       return true
     },
 
-    datesOK: function() {
+    datesOK() {
+      if (this.event.start.length <= 0) { return false }
+      if (this.event.end <= 0) { return false }
       return this.event.start <= this.event.end
+    },
+
+    // Aggregate all validations
+    formOK() {
+      return this.titleOK && this.topicsOK && this.datesOK
     }
   },
 
@@ -164,14 +181,9 @@ export default {
     }
   },
 
-  mounted() {
-    this.$validator.validateAll()
-  },
-
   methods: {
     saveChanges: function() {
-      this.$validator.validateAll()
-      if (this.errors.all().length > 0) { return }
+      if (!this.formOK) { return }
 
       this.apiUpdateEvent(this.event)
         .then((resp) => {
@@ -180,8 +192,7 @@ export default {
     },
 
     createEvent: function() {
-      this.$validator.validateAll()
-      if (this.errors.all().length > 0) { return }
+      if (!this.formOK) { return }
 
       this.apiCreateEvent(this.event)
         .then((resp) => {

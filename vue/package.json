@@ -20,7 +20,6 @@
     "bootswatch": "^4.4.1",
     "epic-spinners": "^1.1.0",
     "msal": "^1.2.2",
-    "vee-validate": "^2.0.0",
     "vue": "^2.6.11",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.1.6"
