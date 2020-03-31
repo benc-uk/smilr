@@ -14,10 +14,11 @@ jobs:
 
     steps:
     - name: Login to Dockerhub
-      uses: azure/docker-login@v1
-      with:
-        username: ${{ env.DOCKERHUB_USER }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      run: docker login -u ${{ env.DOCKERHUB_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+      # uses: azure/docker-login@v1
+      # with:
+      #   username: ${{ env.DOCKERHUB_USER }}
+      #   password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Login to ACR
       run: docker login -u ${{ env.ACR_NAME }} -p ${{ secrets.ACR_PASSWORD }} ${{ env.ACR_NAME }}.azurecr.io
