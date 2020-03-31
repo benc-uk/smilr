@@ -9,9 +9,9 @@ env:
   ACR_NAME:       bcdemo
 
 jobs:
-  # ===============================================================
-  #
-  # ===============================================================
+  # ===========================================================================
+  # Retag latest image from ACR and push to Dockerhub with version number
+  # ===========================================================================
   releaseJob:
     runs-on: ubuntu-latest
 
@@ -40,7 +40,7 @@ jobs:
         docker push smilr/data-api       
 
   # ===============================================================
-  #
+  # Deploy live smilr instance using Helm chart
   # ===============================================================
   deployJob:
     env:
@@ -73,7 +73,6 @@ jobs:
         token: ${{ github.token }}
         helm: helm3
         secrets: ${{ toJSON(secrets) }}
-
         values: |
           ingress:
             domainSuffix: kube.benco.io
@@ -97,8 +96,3 @@ jobs:
 
           mongodb:
             enabled: false
-
-    # - name: 'Helm install live release'
-    #   run: |
-    #     helm upgrade $HELM_RELEASE kubernetes/helm/smilr --install --namespace $HELM_NS --set "dataApi.imageTag=${{ github.event.client_payload.imagetag }},dataApi.replicas=2frontend.imageTag=${{ github.event.client_payload.imagetag }},ingress.domainSuffix=$HELM_DOMAIN,ingress.certName=$HELM_CERT"
- 
