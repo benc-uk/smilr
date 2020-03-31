@@ -1,0 +1,36 @@
+name: Release Dockerhub Image
+
+on:
+  release:
+    types: [published]
+
+env:
+  DOCKERHUB_USER: bencuk
+  ACR_NAME:       bcdemo
+
+jobs:
+  releaseJob:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Login to Dockerhub
+      run: docker login -u $dockerUser -p ${{ secrets.DOCKER_PASSWORD }} 
+
+    - name: Login to Dockerhub
+      uses: azure/docker-login@v1
+      with:
+        username: ${{ env.DOCKERHUB_USER }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Login to ACR
+      uses: azure/docker-login@v1
+      with:
+        server: ${{ env.ACR_NAME }}.azurecr.io
+        username: ${{ env.ACR_NAME }}
+        password: ${{ secrets.ACR_PASSWORD }}        
+      
+    - name: Pull latest images
+      run: |
+        docker pull ${{ env.ACR_NAME }}.azurecr.io/smilr/data-api:latest
+        docker pull ${{ env.ACR_NAME }}.azurecr.io/smilr/frontend:latest
