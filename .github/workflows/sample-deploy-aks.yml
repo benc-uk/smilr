@@ -1,12 +1,9 @@
-name: Deploy to AKS
+name: 'Sample: Deploy to AKS'
 
-# Limit triggers to a single file, this one
-on:
+on: 
   push:
-    branches:
-      - master
-    paths:
-      - '.github/workflows/aks-deploy.yml'
+    # This effectively disables this flow
+    branches: ['__DISABLED__']
 
 env:
   ACR_NAME:     bcdemo
@@ -15,7 +12,7 @@ env:
   IMAGE_TAG:    latest
   DOMAIN:       kube.benco.io
   CERT:         kube-benco-io-cert
-  RELEASE_NAME: github
+  RELEASE_NAME: demosmilr
   
 jobs:
   # ==================================================================================
@@ -28,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:  
     - name: 'Checkout repo'
-      uses: actions/checkout@v1
+      uses: actions/checkout@v1          
 
     - name: 'Connect to AKS'
       uses: azure/aks-set-context@v1
