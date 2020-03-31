@@ -1,8 +1,9 @@
-name: CI/CD Build, Release & Test
+name: 'Sample: CI/CD with ACI'
 
 on: 
   push:
-    branches: master
+    # This effectively disables this flow
+    branches: ['__DISABLED__']
 
 env:
   IMAGE_TAG: latest
