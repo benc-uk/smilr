@@ -74,8 +74,6 @@ jobs:
         helm: helm3
 
         values: |
-          registryPrefix: bcdemo.azurecr.io/
-
           ingress:
             domainSuffix: kube.benco.io
             certName: kube-benco-io-cert
