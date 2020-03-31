@@ -66,7 +66,6 @@ jobs:
 
     - name: 'Helm repo & dependency update'
       run: |
-        foo=`cat ~/.kube/config`
         helm repo add stable https://kubernetes-charts.storage.googleapis.com
         helm dep update kubernetes/helm/smilr
 
