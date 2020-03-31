@@ -57,20 +57,8 @@ jobs:
     - name: 'Checkout repo'
       uses: actions/checkout@v1          
 
-    # - name: 'Connect to AKS'
-    #   uses: azure/aks-set-context@v1
-    #   with:
-    #     creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-    #     resource-group: '${{ env.AKS_RES_GRP }}'
-    #     cluster-name: '${{ env.AKS_NAME }}'
-
-    - uses: azure/setup-helm@v1
-      with:
-        version: 'v3.1.1'
-
     - name: 'Helm repo & dependency update'
       run: |
-        helm version
         helm repo add stable https://kubernetes-charts.storage.googleapis.com
         helm dep update kubernetes/helm/smilr
 
@@ -83,6 +71,7 @@ jobs:
         namespace: ${{ env.HELM_NS }}
         chart: kubernetes/helm/smilr
         token: ${{ github.token }}
+        helm: helm3
 
         values: |
           registryPrefix: bcdemo.azurecr.io/
