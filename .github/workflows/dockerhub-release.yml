@@ -63,18 +63,17 @@ jobs:
         creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
         resource-group: '${{ env.AKS_RES_GRP }}'
         cluster-name: '${{ env.AKS_NAME }}'
-      id: login
 
     - name: 'Helm repo & dependency update'
       run: |
-        echo $KUBECONFIG
+        foo=`cat ~/.kube/config`
         helm repo add stable https://kubernetes-charts.storage.googleapis.com
         helm dep update kubernetes/helm/smilr
 
     - name: 'Helm install live release'
       uses: deliverybot/helm@v1
       env:
-        KUBECONFIG_FILE: '${{ env.KUBECONFIG }}'      
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'      
       with:
         release: ${{ env.HELM_RELEASE }}
         namespace: ${{ env.HELM_NS }}
