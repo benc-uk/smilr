@@ -72,6 +72,7 @@ jobs:
         chart: kubernetes/helm/smilr
         token: ${{ github.token }}
         helm: helm3
+        secrets: ${{ toJSON(secrets) }}
 
         values: |
           ingress:
@@ -79,17 +80,23 @@ jobs:
             certName: kube-benco-io-cert
               
           dataApi:
+            mongoConnStr: ${{ secrets.LIVE_MONGO_CONNSTR }}
             imageTag: ${{ github.event.release.tag_name }}
             replicas: 1
-            aadClientId: bfd50950-a772-4b7f-bc51-065a07705ced
+            aadClientId: ${{ secrets.LIVE_CLIENT_ID }}
 
           frontend:
             imageTag: ${{ github.event.release.tag_name }}
             replicas: 1
-            aadClientId: bfd50950-a772-4b7f-bc51-065a07705ced
+            aadClientId: ${{ secrets.LIVE_CLIENT_ID }}
+
+          sentiment:
+            enabled: false
+            key: ${{ secrets.LIVE_SENTIMENT_KEY }}
+            externalEndpoint: https://westeurope.api.cognitive.microsoft.com/
 
           mongodb:
-            enabled: true
+            enabled: false
 
     # - name: 'Helm install live release'
     #   run: |
