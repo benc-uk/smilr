@@ -65,9 +65,9 @@ jobs:
         cluster-name: '${{ env.AKS_NAME }}'
       id: login
 
-    - name: 'Helm dependency update'
+    - name: 'Helm repo & dependency update'
       run: |
-        helm init --client-only
+        helm repo add stable https://kubernetes-charts.storage.googleapis.com
         helm dep update kubernetes/helm/smilr
 
     - name: 'Helm install live release'
