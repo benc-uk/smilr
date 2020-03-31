@@ -67,16 +67,20 @@ jobs:
 
     - name: 'Helm repo & dependency update'
       run: |
+        echo $KUBECONFIG
         helm repo add stable https://kubernetes-charts.storage.googleapis.com
         helm dep update kubernetes/helm/smilr
 
     - name: 'Helm install live release'
       uses: deliverybot/helm@v1
+      env:
+        KUBECONFIG_FILE: '${{ env.KUBECONFIG }}'      
       with:
         release: ${{ env.HELM_RELEASE }}
         namespace: ${{ env.HELM_NS }}
         chart: kubernetes/helm/smilr
         token: ${{ github.token }}
+
         values: |
           registryPrefix: bcdemo.azurecr.io/
 
