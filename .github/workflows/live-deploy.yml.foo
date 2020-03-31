@@ -1,0 +1,67 @@
+name: Release Dockerhub Image
+
+on:
+  release:
+    types: [blah]
+
+env:
+  DOCKERHUB_USER: bencuk
+  AKS_NAME:       bcdemo
+  AKS_RES_GRP:    demo.aks  
+  HELM_RELEASE:   live
+  HELM_NS:        smilr
+  HELM_DOMAIN:    kube.benco.io
+  HELM_CERT:      kube-benco-io-cert  
+
+jobs:
+  deployJob:
+    runs-on: ubuntu-latest
+
+    steps:  
+    - name: 'Checkout repo'
+      uses: actions/checkout@v1          
+
+    - name: 'Connect to AKS'
+      uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+        resource-group: '${{ env.AKS_RES_GRP }}'
+        cluster-name: '${{ env.AKS_NAME }}'
+      id: login
+
+    - name: 'Helm dependency update'
+      run: |
+        helm init --client-only
+        helm dep update kubernetes/helm/smilr
+
+    - name: 'Helm install live release'
+      uses: deliverybot/helm@v1
+      with:
+        release: ${{ env.HELM_RELEASE }}
+        namespace: ${{ env.HELM_NS }}
+        chart: kubernetes/helm/smilr
+        token: ${{ github.token }}
+        values: |
+          registryPrefix: bcdemo.azurecr.io/
+
+          ingress:
+            domainSuffix: kube.benco.io
+            certName: kube-benco-io-cert
+              
+          dataApi:
+            imageTag: latest
+            replicas: 1
+            aadClientId: bfd50950-a772-4b7f-bc51-065a07705ced
+
+          frontend:
+            imageTag: latest
+            replicas: 1
+            aadClientId: bfd50950-a772-4b7f-bc51-065a07705ced
+
+          mongodb:
+            enabled: true
+
+    # - name: 'Helm install live release'
+    #   run: |
+    #     helm upgrade $HELM_RELEASE kubernetes/helm/smilr --install --namespace $HELM_NS --set "dataApi.imageTag=${{ github.event.client_payload.imagetag }},dataApi.replicas=2frontend.imageTag=${{ github.event.client_payload.imagetag }},ingress.domainSuffix=$HELM_DOMAIN,ingress.certName=$HELM_CERT"
+ 
