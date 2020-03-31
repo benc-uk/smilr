@@ -91,7 +91,6 @@ jobs:
 
     - name: 'Helm dep update'
       run: |
-        printenv
         helm init --client-only
         helm dep update kubernetes/helm/smilr
 
