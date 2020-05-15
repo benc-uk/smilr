@@ -92,6 +92,8 @@ namespace API.Controllers
       [HttpGet("")]
       public async Task<EventAPI[]> Get()
       {
+          EventAPI[] list = new EventAPI[0]; //?
+
           logger.LogInformation($"GET api/events: get all events");
 
           // call aggregator grain
@@ -101,7 +103,7 @@ namespace API.Controllers
           await ConnectClientIfNeeded();
           var grain = this.client.GetGrain<IAggregatorGrain>(Guid.Empty);
 
-          return info;
+          return list;
       }
 
     

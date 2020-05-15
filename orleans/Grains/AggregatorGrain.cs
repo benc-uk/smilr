@@ -12,7 +12,10 @@ namespace Grains
     // The aggragtor grain maintains a list of all valid events, for cross event queries
     // For a technology demonstrator, a single grain with a list of events this is fine, but a real world system maywe  choose to have multiple 
     // aggregators, one per silo and roll them up - https://dotnet.github.io/orleans/Documentation/frequently_asked_questions.html
-    // By convention, the graind identity for the aggregator grain is 'Guid.Empty'  
+    // By convention, the graind identity for the aggregator grain is 'Guid.Empty'
+    // The aggregator needs to store core info including the topics, due to the way the UI designed to
+    // work, to enable a drill down into the actual feedback, so there is comesome duplication of data between
+    // the aggregator and actual event grain 
 
     [StorageProvider(ProviderName = "grain-store")]  
     public class AggregatorGrain : Grain<AggregatorGrainState>, IAggregatorGrain
@@ -28,13 +31,14 @@ namespace Grains
                 return;  // nothing to do
             // int index = pricePublicList.FindIndex(item => item.Size == 200);
             // if (State.eventids.Contains(eventid))
-            int index = State.allevents.FindIndex(x => x.id == eventid);
-            if(index >= 0)
-                return;  // won't add same id twice
+            //int index = State.allevents.FindIndex(x => x.id == eventid)
+            //    return; //?
+            //if (index >= 0)
+            //    return;  // won't add same id twice
 
             // add this event key to our active list and persist it
 
-            State.eventids.Add(eventid);
+            //State.eventids.Add(eventid);
             Console.WriteLine($"** AggregatorGrain AddAnEvent() about to write WriteStateAsync for new event id {eventid}");
             await base.WriteStateAsync(); 
 
@@ -51,12 +55,12 @@ namespace Grains
 
             if (eventid == "")
                 return;  // nothing to do
-            if (! State.eventids.Contains(eventid))
-                return;  // nothing to delete
+            //if (! State.eventids.Contains(eventid))
+            //    return;  // nothing to delete
 
             // delete this event key from our active list and persist it
 
-            State.eventids.Remove(eventid);
+            //State.eventids.Remove(eventid);
             Console.WriteLine($"** Aggregator Grain DeleteAnEvent() about to write WriteStateAsync for deleted event id {eventid}");
             await base.WriteStateAsync(); 
 
@@ -66,8 +70,12 @@ namespace Grains
 
         // return filtered list of events
         // filter = ""|active|future|past
-        public async Task<EventAPI> ListEvents(string filter)
+        public async Task<EventAPI[]> ListEvents(string filter)
         {
+            EventAPI[] list = new EventAPI[0]; //?
+
+
+            /*
             foreach (string id in State.eventids)
             {
                 // check if event matches filter
@@ -93,7 +101,9 @@ namespace Grains
                     add = false;
                 
             }
+            */
 
+            return list;
         }
     } 
 }
