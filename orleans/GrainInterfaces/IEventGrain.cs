@@ -35,6 +35,6 @@ namespace GrainInterfaces
         Task DeleteAnEvent(string eventid);
 
         // return array of events matching filter
-        Task<EventAPI> ListEvents(string filter);
+        Task<EventAPI[]> ListEvents(string filter);
     } 
 }

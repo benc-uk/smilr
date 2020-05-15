@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: orleans-api
-        image: bcdemo.azurecr.io/smilr-orleans/api:latest
+        image: davidgri.azurecr.io/smilr-orleans/api:v1
         imagePullPolicy: Always
 
         ports:
