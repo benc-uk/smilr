@@ -21,25 +21,21 @@ namespace Grains
     public class AggregatorGrain : Grain<AggregatorGrainState>, IAggregatorGrain
     {
         // add event id to event list
-        public async Task AddAnEvent(string eventid)
+        public async Task AddAnEvent(SummaryEventInfo eventInfo)
         {
-            Console.WriteLine($"** AggregatorGrain AddAnEvent() for event id {eventid}");
+            Console.WriteLine($"** AggregatorGrain AddAnEvent() for event id {eventInfo.id}, title {eventInfo.title}");
 
-            // check args
+            // check to see if event already exists, and if so, removed, before inserting new event info
 
-            if (eventid == "")
-                return;  // nothing to do
-            // int index = pricePublicList.FindIndex(item => item.Size == 200);
-            // if (State.eventids.Contains(eventid))
-            //int index = State.allevents.FindIndex(x => x.id == eventid)
-            //    return; //?
-            //if (index >= 0)
-            //    return;  // won't add same id twice
+            int index = State.allevents.FindIndex(item => item.id == eventInfo.id);
+            if (index >= 0)
+                State.allevents.RemoveAt(index);  // remove it
 
-            // add this event key to our active list and persist it
+            // add this event key to our active list
 
-            //State.eventids.Add(eventid);
-            Console.WriteLine($"** AggregatorGrain AddAnEvent() about to write WriteStateAsync for new event id {eventid}");
+            State.allevents.Add(eventInfo);
+
+            Console.WriteLine($"** AggregatorGrain AddAnEvent() about to write WriteStateAsync for new event id {eventInfo.id}");
             await base.WriteStateAsync(); 
 
             return; 
@@ -47,63 +43,72 @@ namespace Grains
 
 
         // delete specific event from the aggregator event list
-        public async Task DeleteAnEvent(string eventid)
+        public async Task DeleteAnEvent(string id)
         {
-            Console.WriteLine($"** AggregatorGrain DeleteAnEvent() for event id {eventid}");
+            Console.WriteLine($"** AggregatorGrain DeleteAnEvent() for event id {id}");
 
             // check args
 
-            if (eventid == "")
+            if (id == "")
                 return;  // nothing to do
-            //if (! State.eventids.Contains(eventid))
-            //    return;  // nothing to delete
 
-            // delete this event key from our active list and persist it
+            // delete this event key from our active list if it exists 
 
-            //State.eventids.Remove(eventid);
-            Console.WriteLine($"** Aggregator Grain DeleteAnEvent() about to write WriteStateAsync for deleted event id {eventid}");
+            int index = State.allevents.FindIndex(item => item.id == id);
+            if (index >= 0)
+                State.allevents.RemoveAt(index);  // remove it
+
+            Console.WriteLine($"** Aggregator Grain DeleteAnEvent() about to write WriteStateAsync for deleted event id {id}");
             await base.WriteStateAsync(); 
 
             return;
         }
 
 
-        // return filtered list of events
-        // filter = ""|active|future|past
-        public async Task<EventAPI[]> ListEvents(string filter)
+        // return filtered list of events. filter = ""|active|future|past
+        public async Task<EventApiData[]> ListEvents(string filter)
         {
-            EventAPI[] list = new EventAPI[0]; //?
+            List<EventApiData> filteredevents = new List<EventApiData>();  //  list of matching events to output
+            DateTime today = DateTime.Today;  // baseline to compare with
 
+            // loop through every event we have and check if it matches filter 
 
-            /*
-            foreach (string id in State.eventids)
+            foreach (SummaryEventInfo e in State.allevents)
             {
+                DateTime eventdate = DateTime.Parse(e.start);       // extract event date
+                int result = DateTime.Compare(today, eventdate);    // <0 for future, 0 for today, >0 for past
+
                 // check if event matches filter
                 
                 Boolean add = false;
-                if (filter == "") 
-                {  
-                    add = true;
-                }
-                else if (filter == "active")
+                if (filter == "active")
                 {
-
+                    if (result == 0) add = true;  // add if today
                 }
                 else if (filter == "future")
                 {
-
+                    if (result < 0) add = true;
                 }
                 else if (filter == "past")
                 {
-
+                    if (result > 0) add = true;
                 }
                 else
-                    add = false;
-                
-            }
-            */
+                    add = true;  // default for empty string or bad string
 
-            return list;
+                // add event 
+
+                if (add)
+                {
+                    filteredevents.Add(new EventApiData() { _id = e.id, title = e.title, start = e.start, end = e.end});
+
+                    // to do - add more event info from each grain
+                }
+            }
+
+            // return back as array
+            EventApiData[] ret = filteredevents.ToArray();
+            return ret;
         }
     } 
 }
