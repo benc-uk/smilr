@@ -12,7 +12,7 @@ using GrainModels;
 namespace API.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Feedback")]
+    [Route("api/feedback")]
     public class FeedbackController : Controller
     {
         private IClusterClient client;
@@ -25,10 +25,9 @@ namespace API.Controllers
         }
 
 
-
-        // GET /api/feedback/{eventid}/{topicid} - Return an array of feedback for specific event and topic
+        // GET /api/feedback/{eventid}/{topicid} - Return all feedback for specific event and topic
         [HttpGet("{eventid}/{topicid}", Name = "Get")]
-        public async Task<FeedbackAPI[]> Get(string eventid, int topicid)
+        public async Task<FeedbackApiData[]> Get(string eventid, int topicid)
         {
             logger.LogInformation($"GET /api/feedback: eventid {eventid}, topicid {topicid}");
 
@@ -36,16 +35,15 @@ namespace API.Controllers
 
             await ConnectClientIfNeeded();
             var grain = this.client.GetGrain<IEventGrain>(eventid);  // grains are keyed on event id
-            FeedbackAPI[] f = await grain.GetFeedback(topicid);
+            FeedbackApiData[] f = await grain.GetFeedback(topicid);
 
             return f;
         }
         
 
-        // POST: api/Feedback
-        //  submit user feedback for an event + topic
+        // POST /api/Feedback - submit feedback for an event + topic
         [HttpPost]
-        public async Task Post([FromBody] FeedbackAPI body)
+        public async Task Post([FromBody] FeedbackApiData body)
         {
             logger.LogInformation($"POST /api/feedback: incoming feedback for event {body.Event}, topic {body.topic}, comment {body.comment}");
 

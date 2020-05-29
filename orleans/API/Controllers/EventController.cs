@@ -11,44 +11,41 @@ using GrainModels;
 
 namespace API.Controllers
 {
-  // the API that handles the main event related calls to grains 
-  [Route("api/events")]
-  public class EventsController : Controller
-  {
-      private IClusterClient client;
-      private readonly ILogger logger;
+    [Produces("application/json")]
+    [Route("api/events")]
+    public class EventsController : Controller
+    {
+        private IClusterClient client;
+        private readonly ILogger logger;
 
-      public EventsController(IClusterClient client, ILogger<EventsController> logger)
-      {
-          this.client = client;
-          this.logger = logger;
-      }
+        public EventsController(IClusterClient client, ILogger<EventsController> logger)
+        {
+            this.client = client;
+            this.logger = logger;
+        }
 
+        // POST /api/events - Create new event 
+        [HttpPost("")]
+        public async Task<EventApiData> Post([FromBody] EventApiData body)  
+        {
+            // create new event code, which we tend to keep short to be more memorable
+            string eventCode = makeId(6);
+            logger.LogInformation($"POST /api/events: Create new event, incoming body title = {body.title}, assigned to event code {eventCode}");
 
-      // Create new event
-      // POST /api/events {FromBody}
-      [HttpPost("")]
-      public async Task<EventAPI> Post([FromBody] EventAPI body)  
-      {
-          // create new event code, which we tend to keep short to be more memorable
-          string eventCode = makeId(6);
-          logger.LogInformation($"POST /api/events: Create new event, incoming body title = {body.title}, assigned to event code {eventCode}");
+            // initialise grain with event info
+            await ConnectClientIfNeeded();
+            var grain = this.client.GetGrain<IEventGrain>(eventCode);
+            await grain.Update(body.title, body.type, body.start, body.end, body.topics);
 
-          // initialise grain with event info
-          await ConnectClientIfNeeded();
-          var grain = this.client.GetGrain<IEventGrain>(eventCode);
-          await grain.Update(body.title, body.type, body.start, body.end, body.topics);
-
-          // return body with event code added
-          body._id = eventCode;
-          return body;
-      }
+            // return body with event code added
+            body._id = eventCode;
+            return body;
+        }
 
 
-      // Update an existing event
-      // PUT api/events/{eventCode}
+      // PUT /api/events/{eventCode} - Update an existing event
       [HttpPut("{eventCode}")]
-      public async Task<EventAPI> Put([FromBody] EventAPI body, string eventCode)
+      public async Task<EventApiData> Put([FromBody] EventApiData body, string eventCode)
       {
           logger.LogInformation($"PUT /api/events: Update existing event, event code = {eventCode}, body title = {body.title}");
 
@@ -59,26 +56,28 @@ namespace API.Controllers
               return body;
           }
 
-          // update grain
+          // update internal grain state
+
           await ConnectClientIfNeeded();
           var grain = this.client.GetGrain<IEventGrain>(eventCode);
           await grain.Update(body.title, body.type, body.start, body.end, body.topics);
 
           body._id = eventCode;  // make sure we include the event code back into the body
+          
           return body;
       }
 
+ 
 
-      // Get specific event info
-      // GET api/events/{id}
+      // GET /api/events/{id} - Get specific event info
       [HttpGet("{id}")]
-      public async Task<EventAPI> Get(string id)
+      public async Task<EventApiData> GetEvent(string id)
       {
           logger.LogInformation($"GET api/events/id: event id = {id}");
 
           // call event grain
 
-          EventAPI info = new EventAPI();
+          EventApiData info = new EventApiData();
           await ConnectClientIfNeeded();
           var grain = this.client.GetGrain<IEventGrain>(id);
           info = await grain.Info();
@@ -87,18 +86,15 @@ namespace API.Controllers
       }
 
     
-      // Get list of all events
-      // GET api/events
+      // GET /api/events - return a list of all events
       [HttpGet("")]
-      public async Task<EventAPI[]> Get()
+      public async Task<EventApiData[]> GetEvents()
       {
-          EventAPI[] list = new EventAPI[0]; //?
+          EventApiData[] list = new EventApiData[0]; //?
 
           logger.LogInformation($"GET api/events: get all events");
 
           // call aggregator grain
-
-
 
           await ConnectClientIfNeeded();
           var grain = this.client.GetGrain<IAggregatorGrain>(Guid.Empty);
@@ -106,7 +102,28 @@ namespace API.Controllers
           return list;
       }
 
-    
+
+      // GET /api/events/filter/{active|future|past} - return a list of events filtered to timeframe 
+      [HttpGet("filter/{filter}")]
+      public async Task<EventApiData[]> GetFilteredEvents(string filter)
+      {
+          EventApiData[] list = new EventApiData[0]; //?
+
+          logger.LogInformation($"GET api/events/filer/{filter}");
+
+          // call aggregator grain
+
+          await ConnectClientIfNeeded();
+          var grain = this.client.GetGrain<IAggregatorGrain>(Guid.Empty);
+
+
+
+
+          return list;
+      }
+
+
+
 
 
       // Simple random ID generator, good enough, with len=6 it's a 1:56 in billion chance of a clash
