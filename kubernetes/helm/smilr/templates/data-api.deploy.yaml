@@ -64,6 +64,12 @@ spec:
             port: 4000
           initialDelaySeconds: 3
           periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /api/info
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 20
 
         resources:
           requests:

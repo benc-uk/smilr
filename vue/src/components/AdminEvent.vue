@@ -1,37 +1,45 @@
 <template>
   <div v-if="event">
     <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
-      <h1 slot="header" v-if="editEvent"><fa icon="edit"/> Edit: {{ event.title }}</h1>
-      <h1 slot="header" v-else><fa icon="calendar-plus"/> Create New Event</h1>
+      <h1 v-if="editEvent" slot="header">
+        <fa icon="edit" /> Edit: {{ event.title }}
+      </h1>
+      <h1 v-else slot="header">
+        <fa icon="calendar-plus" /> Create New Event
+      </h1>
 
-      <b-form >
+      <b-form>
         <b-form-group label="Event Title" label-for="titleInput">
-          <b-form-input v-focus id="titleInput" :state="!errors.first('title')" v-validate="'required|min:5'" v-model="event.title" type="text" name="title" placeholder="Please provide a title"></b-form-input>
-          <p class="formError">{{ errors.first('title') }}</p>
+          <b-form-input id="titleInput" v-model="event.title" v-focus :state="titleOK" type="text" name="title" placeholder="Please provide a title" />
+          <p v-if="!titleOK" class="formError">
+            Title is required and must be more than 5 characters
+          </p>
         </b-form-group>
 
         <b-form-group label="Event Type" label-for="typeInput">
           <b-select id="typeInput" v-model="event.type" name="type" placeholder="Please provide a title" class="eventSelect" :disabled="action!='new'">
-            <option v-for="(type, index) in getEventTypes()" v-bind:value="type" :key="index" class="typeOption">
+            <option v-for="(type, index) in getEventTypes()" :key="index" :value="type" class="typeOption">
               {{ type }}
-            </option> 
-          </b-select><fa :icon="utilsFaIcon(event.type)" class="eventTypeIcon float-right"/>
+            </option>
+          </b-select><fa :icon="utilsFaIcon(event.type)" class="eventTypeIcon float-right" />
         </b-form-group>
 
         <b-container class="nopadding">
           <b-row>
             <b-col sm="6">
               <b-form-group label="Event Start Date" label-for="startInput">
-                <b-form-input inline id="startInput" :state="!errors.first('start') && datesOK" v-validate="'required'" v-model="event.start" type="date" name="start"></b-form-input>
-                <p class="formError">{{ errors.first('start') }}</p>
-                <p class="formError" v-if="!datesOK">Start date must be on or before end date</p>
-              </b-form-group>          
+                <b-form-input id="startInput" v-model="event.start" type="date" name="start" />
+                <p v-if="!datesOK" class="formError">
+                  Start date must be on or before end date
+                </p>
+              </b-form-group>
             </b-col>
             <b-col sm="6">
               <b-form-group label="Event End Date" label-for="endInput">
-                <b-form-input inline id="endInput" :state="!errors.first('end') && datesOK" v-validate="'required'" v-model="event.end" type="date" name="end" ref="endRef"></b-form-input>
-                <p class="formError">{{ errors.first('end') }}</p>
-                <p class="formError" v-if="!datesOK">End date must be on or after start date</p>
+                <b-form-input id="endInput" ref="endRef" v-model="event.end" inline type="date" name="end" />
+                <p v-if="!datesOK" class="formError">
+                  End date must be on or after start date
+                </p>
               </b-form-group>
             </b-col>
           </b-row>
@@ -39,56 +47,71 @@
 
         <div class="topicBox">
           <div class="clearfix">
-            <h2 class="float-left">Topics</h2>
-            <b-button @click="addTopic()" size="lg" variant="primary" class="float-right"><fa icon="plus-square"/> ADD TOPIC</b-button>
-
+            <h2 class="float-left">
+              Topics
+            </h2>
+            <b-button size="lg" variant="primary" class="float-right" @click="addTopic()">
+              <fa icon="plus-square" /> ADD TOPIC
+            </b-button>
           </div>
 
           <b-table hover thead-class="hiddenHeader" :items="event.topics" :fields="topicTableFields">
             <template v-slot:cell(actions)="data">
-              <b-button variant="danger" @click="deleteTopic(data.item.id)"><fa icon="trash-alt" :title="'id:'+data.item.id"/></b-button>
+              <b-button variant="danger" @click="deleteTopic(data.item.id)">
+                <fa icon="trash-alt" :title="'id:'+data.item.id" />
+              </b-button>
             </template>
             <template v-slot:cell(desc)="data">
-              <b-input v-focus :value="data.item.desc" v-model="data.item.desc"/>
-            </template>            
+              <b-input v-model="data.item.desc" v-focus :value="data.item.desc" />
+            </template>
           </b-table>
-          <p class="formError" v-if="!topicsOK">Events must have at least one topic, and all must have a description</p>
+          <p v-if="!topicsOK" class="formError">
+            Events must have at least one topic, and all must have a description
+          </p>
         </div>
 
-        <b-button @click="saveChanges" size="lg" variant="success" v-if="editEvent" :disabled="errors.all().length > 0 || !topicsOK"> SAVE CHANGES </b-button>
-        <b-button @click="createEvent" size="lg" variant="success" v-else :disabled="errors.all().length > 0 || !topicsOK"> CREATE NEW EVENT </b-button>
+        <b-button v-if="editEvent" size="lg" variant="success" :disabled="!formOK" @click="saveChanges">
+          SAVE CHANGES
+        </b-button>
+        <b-button v-else size="lg" variant="success" :disabled="!formOK" @click="createEvent">
+          CREATE NEW EVENT
+        </b-button>
         &nbsp;
-        <b-button @click="cancel" size="lg" variant="secondary"> CANCEL </b-button>
+        <b-button size="lg" variant="secondary" @click="cancel">
+          CANCEL
+        </b-button>
       </b-form>
-
     </b-card>
   </div>
 </template>
 
 <script>
-import utils from "../mixins/utils"
-import api from "../mixins/api"
+import utils from '../mixins/utils'
+import api from '../mixins/api'
+
 
 export default {
   name: 'AdminEvent',
 
-  mixins: [ utils, api ],
-  
-  props: [ 'editEvent', 'action' ],
-
-  computed: {
-    topicsOK: function() {
-      if(!this.event || !this.event.topics) return false
-      if(this.event.topics.length <= 0) return false
-
-      for(let t of this.event.topics) {
-        if(t.desc.trim() == '')  return false 
+  directives: {
+    focus: {
+      // Minor UX, new topics get focus automatically,
+      inserted: function (el) {
+        el.focus()
       }
-      return true
-    },
+    }
+  },
 
-    datesOK: function() {
-      return this.event.start <= this.event.end
+  mixins: [ utils, api ],
+
+  props: {
+    editEvent: {
+      type: Object,
+      required: true
+    },
+    action: {
+      type: String,
+      required: true
     }
   },
 
@@ -98,83 +121,97 @@ export default {
       topicTableFields: [
         { key: 'desc', label: 'Description' },
         { key: 'actions', label: 'Actions' }
-      ]    
+      ]
+    }
+  },
+
+  computed: {
+    // Yeah I wrote my own form & data validation functions, it's fine
+
+    titleOK() {
+      return this.event.title && this.event.title.length >= 5
+    },
+
+    topicsOK() {
+      if (!this.event || !this.event.topics) { return false }
+      if (this.event.topics.length <= 0) { return false }
+
+      for (let t of this.event.topics) {
+        if (t.desc.trim() == '')  { return false }
+      }
+      return true
+    },
+
+    datesOK() {
+      if (this.event.start.length <= 0) { return false }
+      if (this.event.end <= 0) { return false }
+      return this.event.start <= this.event.end
+    },
+
+    // Aggregate all validations
+    formOK() {
+      return this.titleOK && this.topicsOK && this.datesOK
     }
   },
 
   created() {
-    if(this.action == 'new') {
+    if (this.action == 'new') {
       this.event  = {
-        title:  "",
-        type:   "event",
-        start:  "", //new Date().toISOString().substring(0, 10),
-        end:    "", //new Date().toISOString().substring(0, 10),
+        title:  '',
+        type:   'event',
+        start:  '', //new Date().toISOString().substring(0, 10),
+        end:    '', //new Date().toISOString().substring(0, 10),
         topics: []
       }
     } else {
       // Normally we are passed the event to edit in editEvent as a prop from the Admin component
       // However to support users reloading the browser we can fetch from the API if we have to
-      if(this.editEvent) {
+      if (this.editEvent) {
         this.event = this.editEvent
-        this.event.start = this.event.start.substring(0, 10);
-        this.event.end = this.event.end.substring(0, 10);
+        this.event.start = this.event.start.substring(0, 10)
+        this.event.end = this.event.end.substring(0, 10)
       } else {
         this.apiGetEvent(this.action)
-        .then(resp => {
-          this.event = resp.data
-          this.event.start = this.event.start.substring(0, 10);
-          this.event.end = this.event.end.substring(0, 10);
-        })
+          .then((resp) => {
+            this.event = resp.data
+            this.event.start = this.event.start.substring(0, 10)
+            this.event.end = this.event.end.substring(0, 10)
+          })
       }
     }
-  },
-
-  mounted() {
-    this.$validator.validateAll()
   },
 
   methods: {
     saveChanges: function() {
-      this.$validator.validateAll()
-      if(this.errors.all().length > 0) return
+      if (!this.formOK) { return }
 
       this.apiUpdateEvent(this.event)
-      .then(resp => {
-        if(resp) this.$router.push({name: 'admin'})
-      })
+        .then((resp) => {
+          if (resp) { this.$router.push({ name: 'admin' }) }
+        })
     },
 
     createEvent: function() {
-      this.$validator.validateAll()
-      if(this.errors.all().length > 0) return
+      if (!this.formOK) { return }
 
       this.apiCreateEvent(this.event)
-      .then(resp => {
-        if(resp) this.$router.push({name: 'admin'})
-      })      
+        .then((resp) => {
+          if (resp) { this.$router.push({ name: 'admin' }) }
+        })
     },
 
     cancel: function() {
-      this.$router.push({name: 'admin'})
+      this.$router.push({ name: 'admin' })
     },
 
     addTopic: function() {
       let maxid = 0
-      this.event.topics.map(t => { if(t.id > maxid) maxid = t.id})
-      this.event.topics.push({ id: maxid + 1, desc: 'New Topic'}) 
+      this.event.topics.map((t) => { if (t.id > maxid) { maxid = t.id } })
+      this.event.topics.push({ id: maxid + 1, desc: 'New Topic' })
     },
 
     deleteTopic: function(id) {
-      this.event.topics = this.event.topics.filter(t => {return t.id != id})
-    }
-  },
-
-  directives: {
-    focus: {
-      // Minor UX, new topics get focus automatically, 
-      inserted: function (el) {
-        el.focus(); 
-      }
+      this.event.topics = this.event.topics.filter((t) => { return t.id != id })
     }
   }
 }

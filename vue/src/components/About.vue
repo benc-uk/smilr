@@ -1,19 +1,23 @@
 <template>
   <div>
     <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
-      <h1 slot="header"><fa icon="info-circle"/> &nbsp; About Smilr</h1>
-      <h2>A microservices &amp; SPA reference / demonstration app</h2> 
+      <h1 slot="header">
+        <fa icon="info-circle" /> &nbsp; About Smilr
+      </h1>
+      <h2>A microservices &amp; SPA reference / demonstration app</h2>
       <img :src="utilsFaceSVG(faceRating)" class="aboutface animated rubberBand infinite slow" @click="easter">
-      <h5>{{ egg }}</h5> 
-     
-      <hr/>
+      <h5>{{ egg }}</h5>
 
-      <b>Version: {{ ver }} (Vue.js)</b><br/>
-      &copy; Ben Coleman, 2017 - 2019<br/>
-      Provided under the <a target="_blank" href="https://opensource.org/licenses/MIT">MIT License</a><br/><br/>
-      <b-button size="lg" variant="primary" href="https://smilr.benco.io" target="_blank">Project details &amp; source code (GitHub)</b-button>
-      
-      <hr/>
+      <hr>
+
+      <b>Version: {{ ver }} (Vue.js)</b><br>
+      &copy; Ben Coleman, 2017 - 2019<br>
+      Provided under the <a target="_blank" href="https://opensource.org/licenses/MIT">MIT License</a><br><br>
+      <b-button size="lg" variant="primary" href="https://smilr.benco.io" target="_blank">
+        Project details &amp; source code (GitHub)
+      </b-button>
+
+      <hr>
 
       <pre>
 <b>API Endpoint:</b> {{ apiEndpoint }}
@@ -21,8 +25,6 @@
 <b>Build Info:</b> {{ buildInfo }}
 
 <b>More Details:</b> <a :href="infoUrl" target="_blank">{{ apiEndpoint }}/info</a></pre>
-
-
     </b-card>
   </div>
 </template>
@@ -30,7 +32,7 @@
 <script>
 import '../assets/css/animate.css'
 import { config } from '../main'
-import utils from "../mixins/utils"
+import utils from '../mixins/utils'
 
 export default {
   name: 'About',
@@ -43,7 +45,7 @@ export default {
       infoUrl: `${config.API_ENDPOINT}/info`,
       mode: process.env.NODE_ENV,
       buildInfo: process.env.VUE_APP_BUILD_INFO || 'No build info',
-      egg: "",
+      egg: '',
       faceRating: 5,
       ver: require('../../package.json').version
     }
@@ -53,8 +55,8 @@ export default {
     easter: function() {
       this.egg = 'This is probably where I could put a clever hidden easter egg. But I haven\'t bothered. Bye!'
       this.faceRating--
-      if(this.faceRating <= 0) this.faceRating = 5
-    }     
+      if (this.faceRating <= 0) { this.faceRating = 5 }
+    }
   }
 }
 </script>
