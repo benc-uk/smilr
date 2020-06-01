@@ -172,6 +172,7 @@ There are several sub-projects and re-implementations of the Smilr architecture.
 # Changelog 
 High level project changes and overall history are recorded here:
 
+- *Jan 2020* - Rewrote Node.js data API, using MVCS pattern
 - *Jul 2019* - Start of Go implementation. Archived old sub-projects
 - *Jun 2019* - Security improvements, MSAL and token validation
 - *Dec 2018* - Total rewrite of SPA in Vue.js and proper AAD security

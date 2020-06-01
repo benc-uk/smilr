@@ -2,40 +2,48 @@
   <div>
     <h1>Feedback Report</h1>
 
-    <spinner v-if="!events"></spinner>
+    <spinner v-if="!events" />
 
-    <b-form label="Select event to report on" inline v-if="events">
+    <b-form v-if="events" label="Select event to report on" inline>
       <b-form-select v-model="selectedIndex" size="lg">
-        <option :value="null" disabled>-- Please select an event --</option>
-        <option v-for="(event, index) in events" v-bind:value="index" :key="event._id">
+        <option :value="null" disabled>
+          -- Please select an event --
+        </option>
+        <option v-for="(event, index) in events" :key="event._id" :value="index">
           {{ event.title }}
-        </option>           
+        </option>
       </b-form-select> &nbsp;
-      <b-button @click="fetchComments" v-if="selectedEvent" variant="success" size="lg"><fa icon="sync"/> REFRESH REPORT</b-button>
+      <b-button v-if="selectedEvent" variant="success" size="lg" @click="fetchComments">
+        <fa icon="sync" /> REFRESH REPORT
+      </b-button>
     </b-form>
 
-    <br/>
+    <br>
 
     <b-card v-if="selectedEvent" border-variant="primary" header-bg-variant="primary" header-text-variant="white">
-      <h1 slot="header">{{ selectedEvent.title }}</h1>
-      <b>Start:</b> {{ selectedEvent.start | moment("dddd, MMMM Do YYYY") }} <br/>
-      <b>End:</b> {{ selectedEvent.end | moment("dddd, MMMM Do YYYY") }} <br/>
-      <b>Type:</b> <span class="text-capitalize"> {{ selectedEvent.type }} <fa :icon="utilsFaIcon(selectedEvent.type)"/> </span> <br/>
-      <b>Total Responses:</b> {{ this.feedback.length }} <br/>
-      
-      <hr/>
+      <h1 slot="header">
+        {{ selectedEvent.title }}
+      </h1>
+      <b>Start:</b> {{ selectedEvent.start | moment("dddd, MMMM Do YYYY") }} <br>
+      <b>End:</b> {{ selectedEvent.end | moment("dddd, MMMM Do YYYY") }} <br>
+      <b>Type:</b> <span class="text-capitalize"> {{ selectedEvent.type }} <fa :icon="utilsFaIcon(selectedEvent.type)" /> </span> <br>
+      <b>Total Responses:</b> {{ feedback.length }} <br>
+
+      <hr>
 
       <div v-for="topic in selectedEvent.topics" :key="topic.id" class="topicbox">
-        <h2 class="topichead">{{ topic.desc }}</h2>
-        &nbsp; &bull; Responses: {{ topic.feedback.length }} <br/>
-        <span v-if="topic.feedback.length > 0">&nbsp; &bull; Average Rating: {{ topicAvgRating(topic) }} <img :src="utilsFaceSVG(Math.round(topicAvgRating(topic)))"/> </span>
-        <b-table sort-by="rating" sort-desc v-if="topic.feedback.length > 0" hover :items="topic.feedback" :fields="feedBackTableFields">
+        <h2 class="topichead">
+          {{ topic.desc }}
+        </h2>
+        &nbsp; &bull; Responses: {{ topic.feedback.length }} <br>
+        <span v-if="topic.feedback.length > 0">&nbsp; &bull; Average Rating: {{ topicAvgRating(topic) }} <img :src="utilsFaceSVG(Math.round(topicAvgRating(topic)))"> </span>
+        <b-table v-if="topic.feedback.length > 0" sort-by="rating" sort-desc hover :items="topic.feedback" :fields="feedBackTableFields">
           <template v-slot:cell(rating)="data">
-            <img :src="utilsFaceSVG(data.item.rating)"/> {{ data.item.rating }} 
+            <img :src="utilsFaceSVG(data.item.rating)"> {{ data.item.rating }}
           </template>
           <template v-slot:cell(sentiment)="data">
-            {{ data.item.sentiment ? Math.round(data.item.sentiment * 100) + "%" : '-' }} 
-          </template>          
+            {{ data.item.sentiment ? Math.round(data.item.sentiment * 100) + "%" : '-' }}
+          </template>
         </b-table>
       </div>
     </b-card>
@@ -43,18 +51,18 @@
 </template>
 
 <script>
-import api from "../mixins/api"
-import utils from "../mixins/utils"
+import api from '../mixins/api'
+import utils from '../mixins/utils'
 import Spinner from './Spinner'
 
 export default {
   name: 'Report',
 
-  mixins: [ api, utils ],
-
   components: {
     Spinner
   },
+
+  mixins: [ api, utils ],
 
   data: function () {
     return {
@@ -66,7 +74,7 @@ export default {
       feedBackTableFields: [
         { key: 'rating', sortable: true },
         { key: 'comment', sortable: true },
-        { key: 'sentiment', label: "Sentiment Score", sortable: true }
+        { key: 'sentiment', label: 'Sentiment Score', sortable: true }
       ]
     }
   },
@@ -80,28 +88,28 @@ export default {
     feedback: function() {
       // Run when feedback is populated with API call
       // ALSO copy feeback data into nested topics objects inside selected event
-      for(let fb of this.feedback) {
+      for (let fb of this.feedback) {
         // Find relevant topic object
-        let topic = this.selectedEvent.topics.find(t => t.id == fb.topic)
-        // Push feedback into topic feedback 
+        let topic = this.selectedEvent.topics.find((t) => t.id == fb.topic)
+        // Push feedback into topic feedback
         topic.feedback.push(fb)
       }
       // Nothing works without this, Vue can't seem to detect the updates
       this.$forceUpdate()
-    } 
+    }
   },
 
   created: function() {
     this.apiGetAllEvents()
-    .then(resp => {
-      if(resp) this.events = resp.data;
-    })
+      .then((resp) => {
+        if (resp) { this.events = resp.data }
+      })
   },
 
   methods: {
     fetchComments: function() {
       // Mutate event object, insert empty feedback array into each topic
-      for(let topic of this.selectedEvent.topics) {
+      for (let topic of this.selectedEvent.topics) {
         topic.feedback = []
       }
       // Wipe feedback
@@ -110,13 +118,13 @@ export default {
     },
 
     topicAvgRating: function(topic) {
-      let rating = 0.0;
+      let rating = 0.0
 
-      for(let fb of topic.feedback) {
+      for (let fb of topic.feedback) {
         rating += parseInt(fb.rating)
       }
 
-      return Number(rating / topic.feedback.length).toFixed(2);
+      return Number(rating / topic.feedback.length).toFixed(2)
     }
   }
 }

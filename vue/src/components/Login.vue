@@ -1,14 +1,19 @@
 <template>
   <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
-    <h1 slot="header"><fa icon="user"/> &nbsp; Login Required</h1>
+    <h1 slot="header">
+      <fa icon="user" /> &nbsp; Login Required
+    </h1>
     To access this part of the application you must be logged in
-    <br/><br/>
+    <br><br>
     <p class="text-center">
-      <b-button @click="login" size="lg" variant="success"> 
-      &nbsp;&nbsp; <fa icon="user"/> LOGIN WITH AZURE ACTIVE DIRECTORY &nbsp;&nbsp; </b-button>
+      <b-button size="lg" variant="success" @click="login">
+        &nbsp;&nbsp; <fa icon="user" /> LOGIN WITH AZURE ACTIVE DIRECTORY &nbsp;&nbsp;
+      </b-button>
     </p>
-    
-    <b-alert v-if="loginFailed" show> <b>Login failed!</b> <br>{{ loginError }}</b-alert>
+
+    <b-alert v-if="loginFailed" show>
+      <b>Login failed!</b> <br>{{ loginError }}
+    </b-alert>
   </b-card>
 </template>
 

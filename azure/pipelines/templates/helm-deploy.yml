@@ -14,6 +14,7 @@ jobs:
     runOnce:
       deploy:
         steps:
+        - bash: echo $(Build.Reason) $(Build.SourceBranch) $(Build.SourceBranchName)
         - download: buildpipeline
           artifact: helm-charts
 

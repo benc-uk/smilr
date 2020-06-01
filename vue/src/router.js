@@ -13,24 +13,24 @@ import { config, userProfile } from './main'
 
 Vue.use(Router)
 
-var router = new Router({
+let router = new Router({
   // Assumes we being served via something "SPA aware" with index.html redirects
   mode: 'history',
   routes: [
     {
-      meta: {title: 'Smilr'},
+      meta: { title: 'Smilr' },
       path: '/',
       name: 'home',
       component: Home
-    }, 
+    },
     {
-      meta: {title: 'Smilr: About'},
+      meta: { title: 'Smilr: About' },
       path: '/about',
       name: 'about',
       component: About
-    }, 
+    },
     {
-      meta: {title: 'Smilr: Events'},
+      meta: { title: 'Smilr: Events' },
       path: '/events',
       name: 'events',
       component: Events
@@ -44,7 +44,7 @@ var router = new Router({
 
     // Used when trapping errors
     {
-      meta: {title: 'Smilr: Error'},
+      meta: { title: 'Smilr: Error' },
       path: '/error',
       name: 'error',
       component: Error,
@@ -53,38 +53,38 @@ var router = new Router({
 
     // These three routes have a guard checking for logged in user
     {
-      meta: {title: 'Smilr: Feedback Report'},
+      meta: { title: 'Smilr: Feedback Report' },
       path: '/report',
       name: 'report',
       component: Report,
-      beforeEnter: validateAdminUser     
+      beforeEnter: validateAdminUser
     },
     {
-      meta: {title: 'Smilr: Event Admin'},
+      meta: { title: 'Smilr: Event Admin' },
       path: '/admin',
       name: 'admin',
       component: Admin,
       beforeEnter: validateAdminUser
     },
     {
-      meta: {title: 'Smilr: Event Admin'},
+      meta: { title: 'Smilr: Event Admin' },
       path: '/admin/event/:action',
       name: 'admin-event',
       component: AdminEvent,
       props: true,
-      beforeEnter: validateAdminUser    
+      beforeEnter: validateAdminUser
     },
 
     // Login, only used when AAD_CLIENT_ID is set
     {
-      meta: {title: 'Smilr: Login'},
+      meta: { title: 'Smilr: Login' },
       path: '/login/:redir',
       name: 'login',
       component: Login,
       props: true
     },
     {
-      meta: {title: 'Smilr: Login'},
+      meta: { title: 'Smilr: Login' },
       path: '/login',
       name: 'loginplain',
       component: Login
@@ -92,11 +92,11 @@ var router = new Router({
 
     // Catch all route, redirects to Error without props, so will redirect to Home
     {
-      meta: {title: 'Smilr: Error'},
+      meta: { title: 'Smilr: Error' },
       path: '*',
       name: 'error-noprops',
       component: Error,
-    }    
+    }
   ]
 })
 
@@ -104,14 +104,14 @@ var router = new Router({
 // Validate user is logged-in and in the authorised users list
 //
 function validateAdminUser(to, from, next) {
-  // If no user object - redirect to Login 
-  if(!userProfile.user) {
-    next({name: 'login', params: { redir: to.name}})
+  // If no user object - redirect to Login
+  if (!userProfile.user) {
+    next({ name: 'login', params: { redir: to.name } })
   } else {
     // Now check if their name is on the list
     // if(!userProfile.isAdmin) {
     //   next({name: 'error', replace: true, params: { message: `ACCESS DENIED.\nUser '${userProfile.user.userName}' is not an administrator for this application` }})
-    //   return;      
+    //   return;
     // }
     next()
   }
@@ -122,9 +122,9 @@ function validateAdminUser(to, from, next) {
 //
 router.beforeEach((to, from, next) => {
   // Check config for API_ENDPOINT, if it's not set whole app is screwed
-  if(!config.API_ENDPOINT && to.name != 'error') {
-    next({name: 'error', replace: true, params: { message: 'API_ENDPOINT is not set, app can not function without it' }})
-    return;
+  if (!config.API_ENDPOINT && to.name != 'error') {
+    next({ name: 'error', replace: true, params: { message: 'API_ENDPOINT is not set, app can not function without it' } })
+    return
   }
 
   // Update page title based on route
@@ -132,4 +132,4 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-export default router;
+export default router

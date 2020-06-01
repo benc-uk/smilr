@@ -1,0 +1,98 @@
+name: Release Dockerhub Image
+
+on:
+  release:
+    types: [published]
+
+env:
+  DOCKERHUB_USER: bencuk
+  ACR_NAME:       bcdemo
+
+jobs:
+  # ===========================================================================
+  # Retag latest image from ACR and push to Dockerhub with version number
+  # ===========================================================================
+  releaseJob:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Login to Dockerhub'
+      run: docker login -u ${{ env.DOCKERHUB_USER }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: 'Login to ACR'
+      run: docker login -u ${{ env.ACR_NAME }} -p ${{ secrets.ACR_PASSWORD }} ${{ env.ACR_NAME }}.azurecr.io    
+      
+    - name: 'Pull latest images'
+      run: |
+        docker pull ${{ env.ACR_NAME }}.azurecr.io/smilr/data-api:latest
+        docker pull ${{ env.ACR_NAME }}.azurecr.io/smilr/frontend:latest
+
+    - name: 'Retag images for release'
+      run: |
+        docker tag ${{ env.ACR_NAME }}.azurecr.io/smilr/frontend:latest smilr/frontend:${{ github.event.release.tag_name }}
+        docker tag ${{ env.ACR_NAME }}.azurecr.io/smilr/data-api:latest smilr/data-api:${{ github.event.release.tag_name }}
+        docker tag ${{ env.ACR_NAME }}.azurecr.io/smilr/frontend:latest smilr/frontend:latest
+        docker tag ${{ env.ACR_NAME }}.azurecr.io/smilr/data-api:latest smilr/data-api:latest
+
+    - name: 'Push images to Dockerhub'
+      run: |
+        docker push smilr/frontend
+        docker push smilr/data-api       
+
+  # ===============================================================
+  # Deploy live smilr instance using Helm chart
+  # ===============================================================
+  deployJob:
+    env:
+      AKS_NAME:       bcdemo
+      AKS_RES_GRP:    demo.aks  
+      HELM_RELEASE:   live
+      HELM_NS:        smilr
+      HELM_DOMAIN:    kube.benco.io
+      HELM_CERT:      kube-benco-io-cert  
+
+    runs-on: ubuntu-latest
+
+    steps:  
+    - name: 'Checkout repo'
+      uses: actions/checkout@v1          
+
+    - name: 'Helm repo & dependency update'
+      run: |
+        helm repo add stable https://kubernetes-charts.storage.googleapis.com
+        helm dep update kubernetes/helm/smilr
+
+    - name: 'Helm install live release'
+      uses: deliverybot/helm@v1
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'      
+      with:
+        release: ${{ env.HELM_RELEASE }}
+        namespace: ${{ env.HELM_NS }}
+        chart: kubernetes/helm/smilr
+        token: ${{ github.token }}
+        helm: helm3
+        secrets: ${{ toJSON(secrets) }}
+        values: |
+          ingress:
+            domainSuffix: kube.benco.io
+            certName: kube-benco-io-cert
+              
+          dataApi:
+            mongoConnStr: ${{ secrets.LIVE_MONGO_CONNSTR }}
+            imageTag: ${{ github.event.release.tag_name }}
+            replicas: 1
+            aadClientId: ${{ secrets.LIVE_CLIENT_ID }}
+
+          frontend:
+            imageTag: ${{ github.event.release.tag_name }}
+            replicas: 1
+            aadClientId: ${{ secrets.LIVE_CLIENT_ID }}
+
+          sentiment:
+            enabled: false
+            key: ${{ secrets.LIVE_SENTIMENT_KEY }}
+            externalEndpoint: https://westeurope.api.cognitive.microsoft.com/
+
+          mongodb:
+            enabled: false

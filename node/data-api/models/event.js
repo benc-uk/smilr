@@ -1,6 +1,6 @@
-const mongoose = require ('mongoose');
+const mongoose = require('mongoose')
 
-const SCHEMA_NAME = 'Events';
+const SCHEMA_NAME = 'Events'
 
 /**
  * @typedef Event
@@ -24,7 +24,7 @@ class Event {
     const topicSchema = new mongoose.Schema({
       id:   { type: Number, required: true },
       desc: { type: String, required: true }
-    },{ _id : false });
+    }, { _id : false })
 
     const eventSchema = new mongoose.Schema({
       _id: { type: String },
@@ -33,54 +33,53 @@ class Event {
       start: { type: Date,   required: true },
       end:   { type: Date,   required: true },
       topics: { type: [topicSchema], required: true }
-    });
-    
+    })
+
     // Middleware for mutation and validation
     eventSchema.pre('save', function(next) {
-      var event = this;
-      
-      // Create our own id, for historical reasons 
-      if(!event._id) {
-        event._id = _makeId(5);
+      let event = this
+
+      // Create our own id, for historical reasons
+      if (!event._id) {
+        event._id = _makeId(5)
       }
 
-      if(event.topics.length < 1) {
-        next(new Error("ValidationError: event must have at least 1 topic"));
+      if (event.topics.length < 1) {
+        next(new Error('ValidationError: event must have at least 1 topic'))
       }
-      if(event.start > event.end) {
-        next(new Error("ValidationError: start date can not be after end date"));
+      if (event.start > event.end) {
+        next(new Error('ValidationError: start date can not be after end date'))
       }
-  
-      next();
-    });
+
+      next()
+    })
 
     // Middleware for validation of updates
-    eventSchema.pre('updateOne', function(next) { 
-    if(this._update && this._update['$set']) {
-      var event = this._update['$set'];
+    eventSchema.pre('updateOne', function(next) {
+      if (this._update && this._update['$set']) {
+        let event = this._update['$set']
 
-      if(event.start > event.end) {
-        next(new Error("ValidationError: start date can not be after end date"));
+        if (event.start > event.end) {
+          next(new Error('ValidationError: start date can not be after end date'))
+        }
+        if (event.topics.length < 1) {
+          next(new Error('ValidationError: event must have at least 1 topic'))
+        }
       }
-      if(event.topics.length < 1) {
-        next(new Error("ValidationError: event must have at least 1 topic"));
-      }      
-    }
 
-    next()
-  })
+      next()
+    })
 
     // Create the mongoose model from eventSchema
-    mongoose.model(SCHEMA_NAME, eventSchema);
+    mongoose.model(SCHEMA_NAME, eventSchema)
   }
 
   // Return an instance of Thing model
   getInstance() {
     // Ensure model schema is initialized only once
-    if(!mongoose.modelNames().includes(SCHEMA_NAME))
-      this.initSchema();
+    if (!mongoose.modelNames().includes(SCHEMA_NAME)) { this.initSchema() }
 
-    return mongoose.model(SCHEMA_NAME);
+    return mongoose.model(SCHEMA_NAME)
   }
 }
 
@@ -88,13 +87,12 @@ class Event {
 // Simple random ID generator, good enough, with len=6 it's a 1:56 billion chance of a clash
 //
 function _makeId(len) {
-  var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let text = ''
+  let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
-  for (var i = 0; i < len; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  for (let i = 0; i < len; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)) }
 
-  return text;
+  return text
 }
 
-module.exports = Event;
+module.exports = Event
