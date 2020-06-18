@@ -27,7 +27,6 @@ Vue.component('fa', FontAwesomeIcon)
 
 /* ================================================================================================== */
 
-
 Vue.config.productionTip = false
 
 // Global object created and populated here and exported for other code to use
@@ -59,7 +58,7 @@ if (process.env.NODE_ENV == 'production') {
 } else {
   // In dev mode fetch config from static .env file, note the VUE_APP_ prefix
   // The Vue CLI webpack bundling will populate these from `.env.development.local`
-  console.log(process.env.VUE_APP_API_ENDPOINT)
+  console.log(`### VUE_APP_API_ENDPOINT=${process.env.VUE_APP_API_ENDPOINT}`)
 
   config.API_ENDPOINT = process.env.VUE_APP_API_ENDPOINT
   config.AAD_CLIENT_ID = process.env.VUE_APP_AAD_CLIENT_ID
