@@ -18,6 +18,7 @@ namespace API.Controllers
         private IClusterClient client;
         private readonly ILogger logger;
 
+
         public FeedbackController(IClusterClient client, ILogger<EventsController> logger)
         {
             this.client = client;
@@ -29,7 +30,7 @@ namespace API.Controllers
         [HttpGet("{eventid}/{topicid}", Name = "Get")]
         public async Task<FeedbackApiData[]> Get(string eventid, int topicid)
         {
-            logger.LogInformation($"GET /api/feedback: eventid {eventid}, topicid {topicid}");
+            logger.LogInformation($"-- GET /api/feedback: eventid {eventid}, topicid {topicid}");
 
             // call approprate grain to get all feedback for a specific topic id
 
@@ -45,7 +46,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task Post([FromBody] FeedbackApiData body)
         {
-            logger.LogInformation($"POST /api/feedback: incoming feedback for event {body.Event}, topic {body.topic}, comment {body.comment}");
+            logger.LogInformation($"-- POST /api/feedback: incoming feedback for event {body.Event}, topic {body.topic}, comment {body.comment}");
 
             string eventid = body.Event;
             if (eventid == "")

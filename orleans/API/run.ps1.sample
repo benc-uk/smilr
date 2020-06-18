@@ -1,0 +1,5 @@
+$Env:Orleans__ConnectionString = "DefaultEndpointsProtocol=https;AccountName=XXX;AccountKey=YYY;EndpointSuffix=core.windows.net"
+$Env:Orleans__ClusterId = "smilrcluster"
+$Env:Orleans__ServiceId = "smilr"
+
+dotnet run API.csproj

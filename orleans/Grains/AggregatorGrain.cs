@@ -20,19 +20,37 @@ namespace Grains
     [StorageProvider(ProviderName = "grain-store")]  
     public class AggregatorGrain : Grain<AggregatorGrainState>, IAggregatorGrain
     {
+        // does a specfic event id exist? -1 if not, zero or greater if it
+        public async Task<int> IsAnEvent(string id)
+        {
+            Console.WriteLine($"** AggregatorGrain IsAnEvent() for event id {id}");
+
+            // ensure allevent List is constructed ok 
+            if (State.allevents == null)
+                State.allevents = new List<SummaryEventInfo>();
+
+            int index = State.allevents.FindIndex(x => x.id == id);
+
+            return index;
+        }
+
+
         // add event id to event list
         public async Task AddAnEvent(SummaryEventInfo eventInfo)
         {
             Console.WriteLine($"** AggregatorGrain AddAnEvent() for event id {eventInfo.id}, title {eventInfo.title}");
 
-            // check to see if event already exists, and if so, removed, before inserting new event info
+            // ensure allevent List is constructed ok 
+            if (State.allevents == null)
+                State.allevents = new List<SummaryEventInfo>();
 
+
+            // check to see if event already exists, and if so, removed, before inserting new event info
             int index = State.allevents.FindIndex(item => item.id == eventInfo.id);
             if (index >= 0)
-                State.allevents.RemoveAt(index);  // remove it
+                State.allevents.RemoveAt(index); 
 
             // add this event key to our active list
-
             State.allevents.Add(eventInfo);
 
             Console.WriteLine($"** AggregatorGrain AddAnEvent() about to write WriteStateAsync for new event id {eventInfo.id}");
@@ -48,18 +66,21 @@ namespace Grains
             Console.WriteLine($"** AggregatorGrain DeleteAnEvent() for event id {id}");
 
             // check args
-
             if (id == "")
                 return;  // nothing to do
 
-            // delete this event key from our active list if it exists 
+            if (State.allevents == null)
+                State.allevents = new List<SummaryEventInfo>(); // ensure allevent List is constructed ok 
 
+            // delete this event key from our active list if it exists 
             int index = State.allevents.FindIndex(item => item.id == id);
             if (index >= 0)
+            {
                 State.allevents.RemoveAt(index);  // remove it
 
-            Console.WriteLine($"** Aggregator Grain DeleteAnEvent() about to write WriteStateAsync for deleted event id {id}");
-            await base.WriteStateAsync(); 
+                Console.WriteLine($"** Aggregator Grain DeleteAnEvent() about to write WriteStateAsync for deleted event id {id}");
+                await base.WriteStateAsync(); 
+            }
 
             return;
         }
@@ -68,6 +89,10 @@ namespace Grains
         // return filtered list of events. filter = ""|active|future|past
         public async Task<EventApiData[]> ListEvents(string filter)
         {
+            Console.WriteLine($"** AggregatorGrain ListEvents for filter '{filter}'");
+
+            if (State.allevents == null)
+                State.allevents = new List<SummaryEventInfo>(); // ensure allevent List is constructed ok 
             List<EventApiData> filteredevents = new List<EventApiData>();  //  list of matching events to output
             DateTime today = DateTime.Today;  // baseline to compare with
 
@@ -96,13 +121,11 @@ namespace Grains
                 else
                     add = true;  // default for empty string or bad string
 
-                // add event 
+                // add matched event 
 
                 if (add)
                 {
-                    filteredevents.Add(new EventApiData() { _id = e.id, title = e.title, start = e.start, end = e.end});
-
-                    // to do - add more event info from each grain
+                    filteredevents.Add(new EventApiData() { _id = e.id, title = e.title, start = e.start, end = e.end, type = ""});
                 }
             }
 

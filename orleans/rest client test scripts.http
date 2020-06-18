@@ -1,0 +1,105 @@
+### Rest Client add-in test scripts 
+
+### health probe test
+GET http://localhost:4000/api/health
+
+
+### get a list of all events
+GET http://localhost:4000/api/events HTTP/1.1 
+
+
+### create event (in the past)
+POST http://localhost:4000/api/events HTTP/1.1
+content-type: application/json
+
+{
+    "title": "demo event 1",
+    "type": "event",
+    "start": "2020-01-01",
+    "end": "2020-01-01",
+    "topics": [
+        {
+            "id": 1,
+            "desc": "topic 1"
+        },
+        {
+            "id": 2,
+            "desc": "topic 2"
+        }
+    ]
+}
+
+
+### check the new event is really there 
+GET http://localhost:4000/api/events/yhswqB  HTTP/1.1
+
+
+### recheck list of all events
+GET http://localhost:4000/api/events HTTP/1.1 
+
+
+### submit some feedback 
+POST http://localhost:4000/api/feedback HTTP/1.1
+content-type: application/json
+
+{
+    "event": "yhswqB",
+    "topic": 1,
+    "rating": 4,
+    "comment": "topic 1 was pretty good"
+}
+
+### submit some more feedback 
+POST http://localhost:4000/api/feedback HTTP/1.1
+content-type: application/json
+
+{
+    "event": "yhswqB",
+    "topic": 1,
+    "rating": 5,
+    "comment": "topic 1 was awesome"
+}
+
+
+### check feedback is there for topic 1
+GET http://localhost:4000/api/feedback/yhswqB/1
+
+
+### check for feedback for non existant topic
+GET http://localhost:4000/api/feedback/yhswqB/2
+
+
+### check for feedback on non existant event
+GET http://localhost:4000/api/feedback/aaaaaa/1
+
+
+
+
+### create event (in the future)
+POST http://localhost:4000/api/events HTTP/1.1
+content-type: application/json
+
+{
+    "title": "future event",
+    "type": "event",
+    "start": "2030-01-01",
+    "end": "2030-01-01",
+    "topics": [
+        {
+            "id": 1,
+            "desc": "what will the future be like?"
+        }
+    ]
+}
+
+
+### check for past events
+GET http://localhost:4000/api/events/filter/past HTTP/1.1 
+
+### check for future events
+GET http://localhost:4000/api/events/filter/future HTTP/1.1 
+
+
+
+
+

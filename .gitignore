@@ -94,5 +94,6 @@ etc/loadtest/result.json
 kubernetes/helm/**/*.lock
 kubernetes/helm/**/charts
 
-# Orleans things
-orleans/API/run.ps1
+# Orleans PowerShell scripts to run Silo and API have keys in them
+orleans/Silo/run.ps1
+orleans/API/run.ps1 

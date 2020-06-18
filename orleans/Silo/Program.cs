@@ -35,9 +35,9 @@ namespace Silo
       // start the silo
       // see https://dotnet.github.io/orleans/Documentation/Deployment-and-Operations/Configuration-Guide/Typical-Configurations.html 
       silo = new SiloHostBuilder()
-          .Configure<ProcessExitHandlingOptions>(options => {
-              options.FastKillOnProcessExit = true;
-          })
+//          .Configure<ProcessExitHandlingOptions>(options => {
+//              options.FastKillOnProcessExit = true;
+//          })
           .Configure<ClusterOptions>(options => {
               options.ClusterId = appSettings["Orleans:ClusterId"];
               options.ServiceId = appSettings["Orleans:ServiceId"];

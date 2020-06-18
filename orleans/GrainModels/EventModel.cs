@@ -79,20 +79,4 @@ namespace GrainModels
         public string start { get; set; }   // start date
         public string end { get; set; }     // end date
     }
-
-
-    // aggregator info about all events 
-    public class AggregatorGrainState
-    {
-        // this is the list of known events, where each entry is the grain idendity  
-        public List<SummaryEventInfo> allevents { get; set; }
-    }
-
-
-    // helper class for AggregatorGrainState
-    public class SummaryEventInfo
-    {
-        public string id { get; set; }      // event id  
-        public string start { get; set; }   // start date
-    }
 }
