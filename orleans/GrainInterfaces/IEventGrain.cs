@@ -26,7 +26,10 @@ namespace GrainInterfaces
 
     // aggregator interface, one aggregator grain per system for all events 
     public interface IAggregatorGrain : IGrainWithGuidKey
-    {
+    {   
+        // does a specfic event exist? -1 no, >=0 yes 
+         Task<int> IsAnEvent(string id);
+
         // add a new event to the list of events
         Task AddAnEvent(SummaryEventInfo eventInfo);
 
@@ -35,20 +38,5 @@ namespace GrainInterfaces
 
         // return array of events matching passed in filter
         Task<EventApiData[]> ListEvents(string filter);
-    } 
-
-
-
-    // aggregator interface, one grain per system for all events 
-    public interface IAggregatorGrain : IGrainWithGuidKey
-    {
-        // add a new event to the list of events
-        Task AddAnEvent(string eventid);
-
-        // delete an event from the list of events
-        Task DeleteAnEvent(string eventid);
-
-        // return array of events matching filter
-        Task<EventAPI[]> ListEvents(string filter);
     } 
 }

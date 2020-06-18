@@ -44,7 +44,7 @@ namespace Grains
             eventInfo.end = end;
 
             IAggregatorGrain aggregator = GrainFactory.GetGrain<IAggregatorGrain>(Guid.Empty);  // the aggregator grain is a singleton - Guid.Empty is convention to indicate this
-            await aggregator.DeleteAnEvent(id);  
+            //await aggregator.DeleteAnEvent(id);  
             await aggregator.AddAnEvent(eventInfo);
 
             return;
@@ -78,6 +78,9 @@ namespace Grains
             if (topicId < 1 || topicId > State.topics.Length)
                 return 300;   
 
+            if (State.feedback == null)
+                State.feedback = new List<FeedbackGrainState>();  // belt and barces in cas efeedback hasn't been initialised
+
             // store feedback
             FeedbackGrainState f = new FeedbackGrainState();
             f.topicId = topicId;
@@ -96,6 +99,9 @@ namespace Grains
     // return all the feedback details for a specific topic 
     public async Task<FeedbackApiData[]> GetFeedback(int thisTopic)
     {
+        if (State.feedback == null)
+            State.feedback = new List<FeedbackGrainState>();  // belt and barces in cas efeedback hasn't been initialised
+
         List<FeedbackApiData> topicSpecificFeedback = new List<FeedbackApiData>();  // output list of topic specific feedback 
 
         foreach (FeedbackGrainState f in State.feedback)
