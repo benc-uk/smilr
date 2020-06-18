@@ -68,6 +68,7 @@ export default {
     //
 
     _apiRawCall: function(apiPath, method = 'get', data = null) {
+      // !IMPORTANT! Special stub of all API calls when running unit tests
       if (process.env.NODE_ENV === 'test') { return new Promise((resolve) => { resolve([]) }) }
 
       let apiUrl = `${config.API_ENDPOINT}/${apiPath}`
