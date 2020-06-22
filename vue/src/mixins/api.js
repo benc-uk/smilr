@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { config, userProfile } from '../main'
+import { config } from '../main'
 import axios from 'axios'
 import router from '../router'
 
@@ -77,11 +77,11 @@ export default {
       let headers = {}
 
       // Send token as per the OAuth 2.0 bearer token scheme
-      if (userProfile.token) {
-        headers = {
-          'Authorization': `Bearer ${userProfile.token}`
-        }
-      }
+      // if (userProfile.token) {
+      //   headers = {
+      //     'Authorization': `Bearer ${userProfile.token}`
+      //   }
+      // }
 
       return axios({
         method: method,

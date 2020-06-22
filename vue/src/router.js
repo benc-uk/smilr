@@ -9,7 +9,8 @@ import Report from './components/Report'
 import Admin from './components/Admin'
 import AdminEvent from './components/AdminEvent'
 import Login from './components/Login'
-import { config, userProfile } from './main'
+import { config } from './main'
+import auth from './mixins/auth'
 
 Vue.use(Router)
 
@@ -57,14 +58,14 @@ let router = new Router({
       path: '/report',
       name: 'report',
       component: Report,
-      beforeEnter: validateAdminUser
+      beforeEnter: checkLoggedIn
     },
     {
       meta: { title: 'Smilr: Event Admin' },
       path: '/admin',
       name: 'admin',
       component: Admin,
-      beforeEnter: validateAdminUser
+      beforeEnter: checkLoggedIn
     },
     {
       meta: { title: 'Smilr: Event Admin' },
@@ -72,7 +73,7 @@ let router = new Router({
       name: 'admin-event',
       component: AdminEvent,
       props: true,
-      beforeEnter: validateAdminUser
+      beforeEnter: checkLoggedIn
     },
 
     // Login, only used when AAD_CLIENT_ID is set
@@ -103,18 +104,14 @@ let router = new Router({
 //
 // Validate user is logged-in and in the authorised users list
 //
-function validateAdminUser(to, from, next) {
-  // If no user object - redirect to Login
-  if (!userProfile.user) {
-    next({ name: 'login', params: { redir: to.name } })
-  } else {
-    // Now check if their name is on the list
-    // if(!userProfile.isAdmin) {
-    //   next({name: 'error', replace: true, params: { message: `ACCESS DENIED.\nUser '${userProfile.user.userName}' is not an administrator for this application` }})
-    //   return;
-    // }
-    next()
+function checkLoggedIn(to, from, next) {
+  if (config.AAD_CLIENT_ID) {
+    // If no user object - redirect to Login
+    if (!auth.methods.user() || !auth.methods.user().userName) {
+      next({ name: 'login', params: { redir: to.name } })
+    }
   }
+  next()
 }
 
 //
