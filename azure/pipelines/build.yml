@@ -74,7 +74,7 @@ stages:
 
     - bash: |
         npm install --silent
-        npm run test:unit-report -- --ci
+        npm run test:unit -- --ci
       displayName: 'Run tests for Vue SPA client'
       workingDirectory: vue
       continueOnError: true
