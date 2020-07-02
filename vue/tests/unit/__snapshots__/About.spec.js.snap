@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`About.vue renders current app version 1`] = `
+<div>
+  <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
+    <h1 slot="header">
+      <fa icon="info-circle"></fa> &nbsp; About Smilr
+    </h1>
+    <h2>A microservices &amp; SPA reference / demonstration app</h2> <img src="" class="aboutface animated rubberBand infinite slow">
+    <h5></h5>
+    <hr> <b>Version: 2.9.1 (Vue.js)</b><br>
+    © Ben Coleman, 2017 - 2019<br>
+    Provided under the <a target="_blank" href="https://opensource.org/licenses/MIT">MIT License</a><br><br>
+    <b-button size="lg" variant="primary" href="https://smilr.benco.io" target="_blank">
+      Project details &amp; source code (GitHub)
+    </b-button>
+    <hr> <pre><b>API Endpoint:</b> /api
+<b>Mode:</b> test
+<b>Build Info:</b> No build info
+
+<b>More Details:</b> <a href="/api/info" target="_blank">/api/info</a></pre>
+  </b-card>
+</div>
+`;

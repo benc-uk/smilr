@@ -1,0 +1,132 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Events.vue shows active events 1`] = `
+<div>
+  <h1>Browse Events</h1>
+  <b-form-group label="Find events by time range" description="Select a time range filter">
+    <b-form-select size="lg" class="mb-3">
+      <option value="null" disabled="disabled">
+        -- Please select an option --
+      </option>
+      <option value="past">
+        Past
+      </option>
+      <option value="active">
+        Active
+      </option>
+      <option value="future">
+        Future
+      </option>
+    </b-form-select>
+  </b-form-group>
+  <div>
+    <transition-group-stub tag="p" name="fade">
+      <div>
+        <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
+          <h2 slot="header">
+            <fa icon="chalkboard-teacher"></fa> &nbsp; Fake event (current)
+          </h2>
+          1997-01-01
+          <hr>
+          <ul>
+            <li>
+              <router-link to="[object Object]">
+                Lemons
+              </router-link>
+            </li>
+            <li>
+              <router-link to="[object Object]">
+                Apples
+              </router-link>
+            </li>
+          </ul>
+        </b-card> <br>
+      </div>
+    </transition-group-stub>
+    <!---->
+    <!---->
+  </div>
+</div>
+`;
+
+exports[`Events.vue shows future events 1`] = `
+<div>
+  <h1>Browse Events</h1>
+  <b-form-group label="Find events by time range" description="Select a time range filter">
+    <b-form-select size="lg" class="mb-3">
+      <option value="null" disabled="disabled">
+        -- Please select an option --
+      </option>
+      <option value="past">
+        Past
+      </option>
+      <option value="active">
+        Active
+      </option>
+      <option value="future">
+        Future
+      </option>
+    </b-form-select>
+  </b-form-group>
+  <div>
+    <transition-group-stub tag="p" name="fade">
+      <div>
+        <b-card border-variant="secondary" header-bg-variant="secondary" header-text-variant="white">
+          <h2 slot="header">
+            <fa icon="flask"></fa> &nbsp; Fake lab (future)
+          </h2>
+          2025-01-01
+          <hr>
+          <ul>
+            <li><span>Jetpacks</span></li>
+            <li><span>Teleporters</span></li>
+          </ul>
+        </b-card> <br>
+      </div>
+    </transition-group-stub>
+    <!---->
+    <!---->
+  </div>
+</div>
+`;
+
+exports[`Events.vue shows past events 1`] = `
+<div>
+  <h1>Browse Events</h1>
+  <b-form-group label="Find events by time range" description="Select a time range filter">
+    <b-form-select size="lg" class="mb-3">
+      <option value="null" disabled="disabled">
+        -- Please select an option --
+      </option>
+      <option value="past">
+        Past
+      </option>
+      <option value="active">
+        Active
+      </option>
+      <option value="future">
+        Future
+      </option>
+    </b-form-select>
+  </b-form-group>
+  <div>
+    <transition-group-stub tag="p" name="fade">
+      <div>
+        <b-card border-variant="secondary" header-bg-variant="secondary" header-text-variant="white">
+          <h2 slot="header">
+            <fa icon="calendar-alt"></fa> &nbsp; Fake event (past)
+          </h2>
+          1996-01-01
+          <hr>
+          <ul>
+            <li><span>Spice Girls</span></li>
+            <li><span>Can Of Stella</span></li>
+          </ul>
+        </b-card> <br>
+      </div>
+    </transition-group-stub>
+    <!---->
+    <!---->
+  </div>
+</div>
+`;

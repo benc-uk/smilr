@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Feedback.vue shows event data 1`] = `
+<div>
+  <!---->
+  <b-card-stub bodytag="div" titletag="h4" subtitletag="h6" subtitletextvariant="muted" headertag="div" headerbgvariant="primary" headertextvariant="white" footertag="div" tag="div" bordervariant="primary">
+    <h2 slot="header" class="text-truncate">
+      Lemons (Fake event (current))
+    </h2>
+    <div class="card-body">
+      <h3>Please provide your feedback, click on a face</h3><br>
+      <div class="facegroup">
+        <face-stub number="1"></face-stub>
+        <face-stub number="2"></face-stub>
+        <face-stub number="3"></face-stub>
+        <face-stub number="4"></face-stub>
+        <face-stub number="5"></face-stub>
+      </div>
+      <!---->
+      <div>
+        <b-form-textarea-stub value="" placeholder="Any comments (optional)" debounce="0" rows="2" wrap="soft" noresize="true" class="commentbox"></b-form-textarea-stub>
+        <!---->
+      </div>
+      <!---->
+    </div>
+    <b-modal-stub size="md" centered="true" ignoreenforcefocusselector="" title="Feedback Received" titletag="h5" headerbgvariant="success" hideheaderclose="true" okonly="true" headerclosecontent="&amp;times;" headercloselabel="Close" canceltitle="Cancel" oktitle="All Done" cancelvariant="secondary" okvariant="primary">
+      <div class="d-block text-center">
+        <h3>Thanks for submitting your feedback! 😊</h3>
+      </div>
+    </b-modal-stub>
+  </b-card-stub>
+  <b-modal-stub size="md" centered="true" ignoreenforcefocusselector="" title="Hey! You're keen..." titletag="h5" headerbgvariant="warning" headertextvariant="light" hideheaderclose="true" okonly="true" headerclosecontent="&amp;times;" headercloselabel="Close" canceltitle="Cancel" oktitle="Oh yes, I forgot" cancelvariant="secondary" okvariant="primary">
+    <div class="d-block text-center">
+      <h3>You've already given feedback for this topic, sorry!</h3>
+    </div>
+  </b-modal-stub>
+</div>
+`;
