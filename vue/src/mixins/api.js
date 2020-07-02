@@ -1,3 +1,10 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Ben Coleman, 2020
+// Licensed under the MIT License.
+//
+// Axios based API client for all calls to data service API
+// ----------------------------------------------------------------------------
+
 /* eslint-disable no-console */
 import axios from 'axios'
 import router from '../router'

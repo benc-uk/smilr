@@ -2,7 +2,7 @@
 // Copyright (c) Ben Coleman, 2020
 // Licensed under the MIT License.
 //
-// Dapr Store frontend - Mock API helper
+// Mock API client injected for unit testing
 // ----------------------------------------------------------------------------
 
 const fs = require('fs')

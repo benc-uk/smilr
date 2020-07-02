@@ -8,9 +8,8 @@
     "lint": "vue-cli-service lint src tests",
     "build-modern": "vue-cli-service build --modern",
     "mock-api": "node mock-api/server.js",
-    "test:unit": "vue-cli-service test:unit ",
-    "test:unit-update": "vue-cli-service test:unit --silent --updateSnapshot",
-    "test:unit-report": "vue-cli-service test:unit --reporters='jest-junit' || exit 0"
+    "test:unit": "vue-cli-service test:unit --silent",
+    "test:unit-update": "vue-cli-service test:unit --silent --updateSnapshot"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.29",
