@@ -29,7 +29,12 @@ export default {
 
   mixins: [ auth ],
 
-  props: ['redir'],
+  props: {
+    redir: {
+      type: String,
+      default: ''
+    }
+  },
 
   data() {
     return {
