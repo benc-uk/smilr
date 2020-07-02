@@ -78,7 +78,9 @@ export default {
     refresh: function() {
       this.apiGetEventsFiltered(this.filter)
         .then((resp) => {
-          if (resp && resp.data) { this.events = resp.data }
+          if (resp && resp.data) {
+            this.events = resp.data
+          }
         })
         .catch((err) => {
           // Never should get here

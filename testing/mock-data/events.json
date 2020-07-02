@@ -1,0 +1,53 @@
+[
+  {
+     "title":"Fake lab (future)",
+     "_id":"fake1",
+     "type":"lab",
+     "start":"2025-01-01",
+     "end":"2025-02-01",
+     "topics":[
+        {
+           "desc":"Jetpacks",
+           "id":"1"
+        },
+        {
+           "desc":"Teleporters",
+           "id":"2"
+        }
+     ]
+  },
+  {
+     "title":"Fake event (past)",
+     "_id":"fake2",
+     "type":"event",
+     "start":"1996-01-01",
+     "end":"1996-02-01",
+     "topics":[
+        {
+           "desc":"Spice Girls",
+           "id":"1"
+        },
+        {
+           "desc":"Can Of Stella",
+           "id":"2"
+        }
+     ]
+  },
+  {
+   "title":"Fake event (current)",
+   "_id":"fake3",
+   "type":"workshop",
+   "start":"1997-01-01",
+   "end":"2024-02-01",
+   "topics":[
+      {
+         "desc":"Lemons",
+         "id":"1"
+      },
+      {
+         "desc":"Apples",
+         "id":"2"
+      }
+   ]
+}  
+]

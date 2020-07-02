@@ -1,5 +1,5 @@
 // This stubs out fetch calls when running tests, i.e. on server
-import fetch from 'isomorphic-fetch'
+//import fetch from 'isomorphic-fetch'
 import { config } from '@vue/test-utils'
 
 config.mocks['$config'] = {

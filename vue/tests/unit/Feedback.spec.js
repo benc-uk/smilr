@@ -1,36 +1,24 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Feedback from '@/components/Feedback.vue'
+import flushPromises from 'flush-promises'
 
-// create an extended `Vue` constructor
 const localVue = createLocalVue()
 import BootstrapVue from 'bootstrap-vue'
 localVue.use(BootstrapVue)
 
+jest.mock('@/mixins/api')
 
 describe('Feedback.vue', () => {
-  it('shows event data', () => {
+  it('shows event data', async () => {
     const wrapper = shallowMount(Feedback, {
       localVue,
       propsData: {
-        eventIdProp: 'fake01',
+        eventIdProp: 'fake3',
         topicIdProp: '1'
       }
     })
 
-    wrapper.setData({
-      event: {
-        title: 'Fake event'
-      },
-      topic: {
-        desc: 'Topic A',
-        id: 1
-      }
-    })
-
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.html()).toContain('a')
-      expect(wrapper.findAll('face-stub').length).toBe(5)
-      expect(wrapper.find('h2').html()).toContain('Topic A')
-    })
+    await flushPromises()
+    expect(wrapper).toMatchSnapshot()
   })
 })

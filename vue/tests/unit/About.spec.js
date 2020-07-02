@@ -3,10 +3,8 @@ import About from '@/components/About.vue'
 
 describe('About.vue', () => {
   it('renders current app version', () => {
-    const ver = require('../../package.json').version
 
-    const wrapper = shallowMount(About, {
-    })
-    expect(wrapper.text()).toContain(ver)
+    const wrapper = shallowMount(About, {})
+    expect(wrapper).toMatchSnapshot()
   })
 })

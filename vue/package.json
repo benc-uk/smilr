@@ -8,7 +8,8 @@
     "lint": "vue-cli-service lint src tests",
     "build-modern": "vue-cli-service build --modern",
     "mock-api": "node mock-api/server.js",
-    "test:unit": "vue-cli-service test:unit --silent",
+    "test:unit": "vue-cli-service test:unit ",
+    "test:unit-update": "vue-cli-service test:unit --silent --updateSnapshot",
     "test:unit-report": "vue-cli-service test:unit --reporters='jest-junit' || exit 0"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.3.1",
     "eslint-plugin-vue": "^6.2.2",
+    "flush-promises": "^1.0.2",
     "isomorphic-fetch": "^2.2.1",
     "jest-junit": "^11.0.1",
     "json-server": "^0.16.1",
@@ -49,14 +51,5 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "jest": {
-    "preset": "@vue/cli-plugin-unit-jest/presets/no-babel",
-    "setupFiles": [
-      "./tests/unit/jest.init.js"
-    ],
-    "transformIgnorePatterns": [
-      "/node_modules/(?!epic-spinners)"
-    ]
-  }
+  ]
 }

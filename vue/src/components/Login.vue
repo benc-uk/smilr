@@ -18,11 +18,7 @@
 </template>
 
 <script>
-
-//import { config } from '../main'
-
 import auth from '../mixins/auth'
-
 
 export default {
   name: 'Login',
@@ -43,10 +39,6 @@ export default {
     }
   },
 
-  created() {
-    //let redirectUri = window.location.origin + '/login'
-  },
-
   methods: {
     async login() {
       try {
@@ -61,7 +53,7 @@ export default {
         if (this.redir) {
           this.$router.push({ name: this.redir })
         } else {
-          this.$router.push({ name: 'home' })
+          this.$router.push({ name: 'home' }).catch(() => {})
         }
       } catch (err){
         console.log('### MSAL Error ' + err.toString())
