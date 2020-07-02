@@ -31,11 +31,10 @@ Vue.component('fa', FontAwesomeIcon)
 Vue.config.productionTip = false
 
 // Global object created and populated here and exported for other code to use
-let config = {}
+//let config = {}
 // Global user profile object
 //let userProfile = {}
-
-export { config }
+//export { config }
 
 // In production mode fetch config at runtime from special .config endpoint
 // This REQUIRES the SPA is being served by the Smilr frontend Node server
@@ -45,8 +44,10 @@ if (process.env.NODE_ENV == 'production') {
       resp.json()
         .then((result) => {
           // Store results as our global config object, then init the app
-          config.API_ENDPOINT = result.API_ENDPOINT
-          config.AAD_CLIENT_ID = result.AAD_CLIENT_ID
+          Vue.prototype.$config = {
+            API_ENDPOINT: result.API_ENDPOINT,
+            AAD_CLIENT_ID: result.AAD_CLIENT_ID
+          }
           initApp()
         })
         .catch((err) => {
@@ -61,8 +62,10 @@ if (process.env.NODE_ENV == 'production') {
   // The Vue CLI webpack bundling will populate these from `.env.development.local`
   console.log(`### VUE_APP_API_ENDPOINT=${process.env.VUE_APP_API_ENDPOINT}`)
 
-  config.API_ENDPOINT = process.env.VUE_APP_API_ENDPOINT
-  config.AAD_CLIENT_ID = process.env.VUE_APP_AAD_CLIENT_ID
+  Vue.prototype.$config = {
+    API_ENDPOINT: process.env.VUE_APP_API_ENDPOINT,
+    AAD_CLIENT_ID: process.env.VUE_APP_AAD_CLIENT_ID
+  }
   initApp()
 }
 
@@ -71,12 +74,12 @@ if (process.env.NODE_ENV == 'production') {
 //
 async function initApp() {
   console.log(`### App running in ${process.env.NODE_ENV} mode`)
-  console.log('### App config is', config)
+  console.log('### App config is', Vue.prototype.$config)
 
   // MSAL used for signing in users with MS identity platform
-  if (config.AAD_CLIENT_ID) {
-    console.log(`### Azure AD sign-in: enabled. Using clientId: ${config.AUTH_CLIENT_ID}`)
-    auth.methods.authInitMsal(config.AAD_CLIENT_ID, [ 'smilr.events' ])
+  if (Vue.prototype.$config.AAD_CLIENT_ID) {
+    console.log(`### Azure AD sign-in: enabled. Using clientId: ${Vue.prototype.$config.AUTH_CLIENT_ID}`)
+    auth.methods.authInitMsal(Vue.prototype.$config.AAD_CLIENT_ID, [ 'smilr.events' ])
   } else {
     console.log('### Azure AD sign-in: disabled. Will run in demo mode')
   }

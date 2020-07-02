@@ -9,7 +9,6 @@ import Report from './components/Report'
 import Admin from './components/Admin'
 import AdminEvent from './components/AdminEvent'
 import Login from './components/Login'
-import { config } from './main'
 import auth from './mixins/auth'
 
 Vue.use(Router)
@@ -105,7 +104,7 @@ let router = new Router({
 // Validate user is logged-in and in the authorised users list
 //
 function checkLoggedIn(to, from, next) {
-  if (config.AAD_CLIENT_ID) {
+  if (router.app.$config.AAD_CLIENT_ID) {
     // If no user object - redirect to Login
     if (!auth.methods.user() || !auth.methods.user().userName) {
       next({ name: 'login', params: { redir: to.name } })
@@ -118,12 +117,6 @@ function checkLoggedIn(to, from, next) {
 // All routes go through this check, it catches some low level errors
 //
 router.beforeEach((to, from, next) => {
-  // Check config for API_ENDPOINT, if it's not set whole app is screwed
-  if (!config.API_ENDPOINT && to.name != 'error') {
-    next({ name: 'error', replace: true, params: { message: 'API_ENDPOINT is not set, app can not function without it' } })
-    return
-  }
-
   // Update page title based on route
   document.title = process.env.NODE_ENV == 'development' ? to.meta.title + ' [DEV]' : to.meta.title
   next()
