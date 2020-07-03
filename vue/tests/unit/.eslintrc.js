@@ -1,6 +1,6 @@
 module.exports = {
   env: {
-    mocha: true
+    jest: true
   },
-  parser: "babel-eslint"
+  parser: 'babel-eslint'
 }

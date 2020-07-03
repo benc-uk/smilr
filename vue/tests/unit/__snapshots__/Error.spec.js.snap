@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Error.vue renders message when passed 1`] = `
+<b-jumbotron-stub header="Error 😢" headertag="h1" headerlevel="3" lead="Something bad has happened" leadtag="p" tag="div"><pre class="error-message">This is an error</pre> <br>
+  <b-button-stub variant="danger" type="button" tag="button" target="_self" onclick="window.location.reload()">
+    Try to Reload App
+  </b-button-stub>
+</b-jumbotron-stub>
+`;

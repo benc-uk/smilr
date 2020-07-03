@@ -35,23 +35,21 @@
       <router-view />
     </b-container>
 
+    <!-- User details button in footer -->
     <div class="appFooter">
-      <b-button v-if="userProfile.user" v-b-modal.userModal variant="outline-primary">
-        <fa icon="user" /> {{ userProfile.user.name }}
+      <b-button v-if="user()" v-b-modal.userModal variant="outline-primary">
+        <fa icon="user" /> {{ user().userName }}
       </b-button>
       <b-button v-else disabled variant="outline-primary">
         No user logged in
       </b-button>
     </div>
 
-    <b-modal v-if="userProfile.user && userProfile.user.idToken" id="userModal" title="User Details" ok-only>
-      <p>Name: {{ userProfile.user.name }}</p>
-      <p>User Name: {{ userProfile.user.userName }}</p>
-      <p>User ID: {{ userProfile.user.idToken.oid }}</p>
-      <p>Tenant: {{ userProfile.user.idToken.aud }}</p>
-      <p>Version: {{ userProfile.user.idToken.ver }}</p>
-      <!-- There is no real logout as we don't persist the session in cookies, reloading the page works as logout! -->
-      <b-button variant="warning" on-click="window.location.assign('/')">
+    <!-- Popup modal used by the user button -->
+    <b-modal v-if="user()" id="userModal" title="User Details" ok-only>
+      <p>Name: {{ user().name }}</p>
+      <p>User Name: {{ user().userName }}</p>
+      <b-button variant="warning" @click="authLogout">
         Logout
       </b-button>
     </b-modal>
@@ -59,15 +57,11 @@
 </template>
 
 <script>
-import { userProfile } from './main'
+import auth from './mixins/auth'
+
 export default {
   name: 'App',
-
-  data() {
-    return {
-      userProfile: userProfile
-    }
-  }
+  mixins: [ auth ],
 }
 </script>
 
