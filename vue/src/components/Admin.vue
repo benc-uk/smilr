@@ -50,7 +50,7 @@ export default {
       eventTableFields: [
         { key: 'title', sortable: true },
         { key: 'type', sortable: true, formatter: (value) => { return value.charAt(0).toUpperCase() + value.substr(1) } },
-        { key: 'start', sortable: true, formatter: (value) => { return this.$options.filters.moment(value, 'MMM Do YYYY') } },
+        { key: 'start', sortable: true, formatter: (value) => { return (new Date(value)).toUTCString().substr(0, 16) } },
         { key: 'actions', sortable: false },
       ],
       events: null,

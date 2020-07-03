@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Admin.vue renders admin screen 1`] = `
+<div>
+  <div class="card border-primary">
+    <!---->
+    <div class="card-header bg-primary text-white">
+      <h1>
+        <fa icon="tools"></fa> &nbsp; Event Admin
+      </h1>
+    </div>
+    <div class="card-body">
+      <!---->
+      <!----> <button type="button" class="btn bigger btn-success btn-lg">
+        <fa icon="calendar-alt"></fa> ADD EVENT
+      </button> <br><br>
+      <!---->
+      <table role="table" aria-busy="false" aria-colcount="4" class="table b-table table-hover" id="__BVID__7">
+        <!---->
+        <!---->
+        <thead role="rowgroup" class="">
+          <!---->
+          <tr role="row" class="">
+            <th role="columnheader" scope="col" tabindex="0" aria-colindex="1" aria-sort="none" class="">
+              <div>Title</div><span class="sr-only"> (Click to sort Ascending)</span>
+            </th>
+            <th role="columnheader" scope="col" tabindex="0" aria-colindex="2" aria-sort="none" class="">
+              <div>Type</div><span class="sr-only"> (Click to sort Ascending)</span>
+            </th>
+            <th role="columnheader" scope="col" tabindex="0" aria-colindex="3" aria-sort="none" class="">
+              <div>Start</div><span class="sr-only"> (Click to sort Ascending)</span>
+            </th>
+            <th role="columnheader" scope="col" tabindex="0" aria-colindex="4" class="">
+              <div>Actions</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody role="rowgroup">
+          <!---->
+          <tr role="row" class="">
+            <td aria-colindex="1" role="cell" class="">Fake lab (future)</td>
+            <td aria-colindex="2" role="cell" class="">Lab</td>
+            <td aria-colindex="3" role="cell" class="">Wed, 01 Jan 2025</td>
+            <td aria-colindex="4" role="cell" class=""><button type="button" class="btn btn-success btn-lg">
+                &nbsp; <fa icon="edit"></fa> &nbsp;
+              </button> &nbsp;
+              <button type="button" class="btn btn-danger btn-lg">
+                &nbsp; <fa icon="trash-alt"></fa> &nbsp;
+              </button></td>
+          </tr>
+          <tr role="row" class="">
+            <td aria-colindex="1" role="cell" class="">Fake event (past)</td>
+            <td aria-colindex="2" role="cell" class="">Event</td>
+            <td aria-colindex="3" role="cell" class="">Mon, 01 Jan 1996</td>
+            <td aria-colindex="4" role="cell" class=""><button type="button" class="btn btn-success btn-lg">
+                &nbsp; <fa icon="edit"></fa> &nbsp;
+              </button> &nbsp;
+              <button type="button" class="btn btn-danger btn-lg">
+                &nbsp; <fa icon="trash-alt"></fa> &nbsp;
+              </button></td>
+          </tr>
+          <tr role="row" class="">
+            <td aria-colindex="1" role="cell" class="">Fake event (current)</td>
+            <td aria-colindex="2" role="cell" class="">Workshop</td>
+            <td aria-colindex="3" role="cell" class="">Wed, 01 Jan 1997</td>
+            <td aria-colindex="4" role="cell" class=""><button type="button" class="btn btn-success btn-lg">
+                &nbsp; <fa icon="edit"></fa> &nbsp;
+              </button> &nbsp;
+              <button type="button" class="btn btn-danger btn-lg">
+                &nbsp; <fa icon="trash-alt"></fa> &nbsp;
+              </button></td>
+          </tr>
+          <!---->
+          <!---->
+        </tbody>
+        <!---->
+      </table>
+    </div>
+    <!---->
+    <!---->
+  </div>
+  <!---->
+</div>
+`;
