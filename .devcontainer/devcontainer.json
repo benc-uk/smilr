@@ -1,0 +1,31 @@
+{
+	"name": "Smilr Dev Enviroment",
+	"dockerFile": "Dockerfile",
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": { 
+		"terminal.integrated.shell.linux": "/bin/bash"
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"dbaeumer.vscode-eslint",
+		"ms-vscode.azure-account",
+		"ms-azuretools.vscode-cosmosdb",
+    "humao.rest-client",
+    "mikestead.dotenv",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "octref.vetur",
+		"redhat.vscode-yaml",
+		"ms-azuretools.vscode-docker"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [ 3000, 4000 ],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "npm install --prefix node/data-api && npm install --prefix node/frontend && npm install --prefix vue",
+
+	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "node"
+}
