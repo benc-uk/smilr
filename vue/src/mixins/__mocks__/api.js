@@ -7,7 +7,7 @@
 
 const fs = require('fs')
 
-// Load mock data, which we put beside the tests
+// Load mock data
 let mockDataDir = __dirname+'/../../../../testing/mock-data'
 let mockJson = fs.readFileSync(`${mockDataDir}/events.json`)
 let mockEvents = JSON.parse(mockJson)
