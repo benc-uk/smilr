@@ -1,5 +1,7 @@
+# Orleans Silo
+
 # Restore, build & publish in temp build image
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 as build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 as build
 WORKDIR /src
 COPY Silo ./Silo
 COPY GrainModels ./GrainModels
@@ -12,7 +14,7 @@ RUN dotnet publish --no-restore -c Release -o /app
 # ---------------------------------------------
 
 # Copy published binaries to final image
-FROM mcr.microsoft.com/dotnet/core/runtime:2.2
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1
 WORKDIR /app
 COPY --from=build /app .
 

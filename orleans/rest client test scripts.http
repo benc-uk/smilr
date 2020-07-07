@@ -1,19 +1,22 @@
 ### Rest Client add-in test scripts 
 
+#@host = localhost:4000 
+@host = 20.191.43.250
+
 ### health probe test
-GET http://localhost:4000/api/health
+GET http://{{host}}/api/health
 
 
 ### get a list of all events
-GET http://localhost:4000/api/events HTTP/1.1 
+GET http://{{host}}/api/events HTTP/1.1 
 
 
 ### create event (in the past)
-POST http://localhost:4000/api/events HTTP/1.1
+POST http://{{host}}/api/events HTTP/1.1
 content-type: application/json
 
 {
-    "title": "demo event 1",
+    "title": "demo event 2",
     "type": "event",
     "start": "2020-01-01",
     "end": "2020-01-01",
@@ -31,15 +34,15 @@ content-type: application/json
 
 
 ### check the new event is really there 
-GET http://localhost:4000/api/events/yhswqB  HTTP/1.1
+GET http://{{host}}/api/events/yhswqB  HTTP/1.1
 
 
 ### recheck list of all events
-GET http://localhost:4000/api/events HTTP/1.1 
+GET http://{{host}}/api/events HTTP/1.1 
 
 
 ### submit some feedback 
-POST http://localhost:4000/api/feedback HTTP/1.1
+POST http://{{host}}/api/feedback HTTP/1.1
 content-type: application/json
 
 {
@@ -50,7 +53,7 @@ content-type: application/json
 }
 
 ### submit some more feedback 
-POST http://localhost:4000/api/feedback HTTP/1.1
+POST http://{{host}}/api/feedback HTTP/1.1
 content-type: application/json
 
 {
@@ -62,21 +65,20 @@ content-type: application/json
 
 
 ### check feedback is there for topic 1
-GET http://localhost:4000/api/feedback/yhswqB/1
+GET http://{{host}}/api/feedback/yhswqB/1
 
 
 ### check for feedback for non existant topic
-GET http://localhost:4000/api/feedback/yhswqB/2
+GET http://{{host}}/api/feedback/yhswqB/2
 
 
 ### check for feedback on non existant event
-GET http://localhost:4000/api/feedback/aaaaaa/1
+GET http://{{host}}/api/feedback/aaaaaa/1
 
 
 
-
-### create event (in the future)
-POST http://localhost:4000/api/events HTTP/1.1
+### create an event (in the future)
+POST http://{{host}}/api/events HTTP/1.1
 content-type: application/json
 
 {
@@ -94,10 +96,10 @@ content-type: application/json
 
 
 ### check for past events
-GET http://localhost:4000/api/events/filter/past HTTP/1.1 
+GET http://{{host}}/api/events/filter/past HTTP/1.1 
 
 ### check for future events
-GET http://localhost:4000/api/events/filter/future HTTP/1.1 
+GET http://{{host}}/api/events/filter/future HTTP/1.1 
 
 
 

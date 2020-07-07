@@ -14,7 +14,7 @@ metadata:
   labels:
     app: orleans-api
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: orleans-api
@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: orleans-api
-        image: davidgri.azurecr.io/smilr-orleans/api:v1
+        image: davidgri.azurecr.io/smilr-orleans/api:v320
         imagePullPolicy: Always
 
         ports:
