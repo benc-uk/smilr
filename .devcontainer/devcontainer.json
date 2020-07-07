@@ -24,7 +24,7 @@
 	"forwardPorts": [ 3000, 4000 ],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install --prefix node/data-api && npm install --prefix node/frontend && npm install --prefix vue",
+	"postCreateCommand": "npm install --prefix node/data-api && npm install --prefix node/frontend && npm install --prefix vue && echo \"alias start-mongodb='mongod --fork --logpath /var/log/mongodb/mongod.log --logappend'\" >> $HOME/.profile",
 
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "node"
