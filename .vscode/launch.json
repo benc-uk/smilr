@@ -15,8 +15,7 @@
       "type": "coreclr",
       "request": "launch",
       "program": "${workspaceFolder}/Orleans/API/bin/Debug/netcoreapp2.2/Api.dll",
-      "args": [
-      ],
+      "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "serverReadyAction": {
@@ -51,7 +50,6 @@
       "type": "node",
       "request": "launch",
       "name": "Debug Node - API",
-      //"preLaunchTask": "NPM Install - Node API",
       "cwd": "${workspaceFolder}/node/data-api",
       "program": "${workspaceFolder}/node/data-api/server.js"
     },
@@ -62,6 +60,11 @@
       "port": 5858,
       "cwd": "${workspaceFolder}/azure/functionsv2",
       "preLaunchTask": "Functions Run Host"
+    },
+    {
+      "name": "Local Process with Kubernetes (Preview)",
+      "type": "dev-spaces-connect-configuration",
+      "request": "launch"
     }
   ]
 }

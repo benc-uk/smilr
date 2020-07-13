@@ -76,6 +76,14 @@ dist/
 tmp/
 tmp.zip
 
+# Test rubbish
+newman/*
+requirements.lock
+**/smilr/charts
+**/test-results.xml
+etc/loadtest/results
+!etc/loadtest/bin
+**/.nyc_output
 # Unit test, code coverage and load test output
 newman/*
 **/.nyc_output
@@ -89,5 +97,6 @@ unit-tests-frontend.xml
 kubernetes/helm/**/*.lock
 kubernetes/helm/**/charts
 
-# Orleans things
-orleans/API/run.ps1
+# Orleans PowerShell scripts to run Silo and API have keys in them
+orleans/Silo/run.ps1
+orleans/API/run.ps1 
