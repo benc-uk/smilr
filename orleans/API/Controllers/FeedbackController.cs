@@ -12,11 +12,12 @@ using GrainModels;
 namespace API.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Feedback")]
+    [Route("api/feedback")]
     public class FeedbackController : Controller
     {
         private IClusterClient client;
         private readonly ILogger logger;
+
 
         public FeedbackController(IClusterClient client, ILogger<EventsController> logger)
         {
@@ -25,29 +26,27 @@ namespace API.Controllers
         }
 
 
-
-        // GET /api/feedback/{eventid}/{topicid} - Return an array of feedback for specific event and topic
+        // GET /api/feedback/{eventid}/{topicid} - Return all feedback for specific event and topic
         [HttpGet("{eventid}/{topicid}", Name = "Get")]
-        public async Task<FeedbackAPI[]> Get(string eventid, int topicid)
+        public async Task<FeedbackApiData[]> Get(string eventid, int topicid)
         {
-            logger.LogInformation($"GET /api/feedback: eventid {eventid}, topicid {topicid}");
+            logger.LogInformation($"-- GET /api/feedback: eventid {eventid}, topicid {topicid}");
 
             // call approprate grain to get all feedback for a specific topic id
 
             await ConnectClientIfNeeded();
             var grain = this.client.GetGrain<IEventGrain>(eventid);  // grains are keyed on event id
-            FeedbackAPI[] f = await grain.GetFeedback(topicid);
+            FeedbackApiData[] f = await grain.GetFeedback(topicid);
 
             return f;
         }
         
 
-        // POST: api/Feedback
-        //  submit user feedback for an event + topic
+        // POST /api/Feedback - submit feedback for an event + topic
         [HttpPost]
-        public async Task Post([FromBody] FeedbackAPI body)
+        public async Task Post([FromBody] FeedbackApiData body)
         {
-            logger.LogInformation($"POST /api/feedback: incoming feedback for event {body.Event}, topic {body.topic}, comment {body.comment}");
+            logger.LogInformation($"-- POST /api/feedback: incoming feedback for event {body.Event}, topic {body.topic}, comment {body.comment}");
 
             string eventid = body.Event;
             if (eventid == "")

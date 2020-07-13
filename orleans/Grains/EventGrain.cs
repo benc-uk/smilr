@@ -15,15 +15,16 @@ namespace Grains
   [StorageProvider(ProviderName = "grain-store")]  // we will use auto persist for event grains
   public class EventGrain : Grain<EventGrainState>, IEventGrain
   {
-      List<FeedbackGrainState> feedabck;
+        // create / update an event
+        //  the system doesn't really distinguish between the two, just to keep the logic simple
+        //  scenarios include changing the start or end date, changing the list of topics for that event, etc
+        public async Task Update(string title, string type, string start, string end, TopicApiData[] topics)
+        { 
+            string id = this.GetPrimaryKeyString();  // rmember - the grain key is the event id 
+            Console.WriteLine($"** EventGrain Update()for event id = {id}, with title {title}");
 
+            // update interal grain state
 
-      // create / update an event
-      //  the system doesn't really distinguish between the two, just to keep the logic simple
-      //  scenarios include changing the start or endd date, changing the list of topics for that event, etc
-      public Task Update(string title, string type, string start, string end, TopicAPI[] topics)
-      {
-            // store state
             State.title = title;
             State.type = type;
             State.start = start;
@@ -31,17 +32,31 @@ namespace Grains
             State.topics = topics;
             State.feedback = new List<FeedbackGrainState>();  //  lets clear all feedback, just to keep things simple
 
-            Console.WriteLine($"** Event Grain Update() about to write WriteStateAsync for {title}");
-            return base.WriteStateAsync(); 
-      }
+            Console.WriteLine($"** EventGrain Update() about to write WriteStateAsync");
+            await base.WriteStateAsync(); 
+
+            // update aggregator about this new event
+
+            SummaryEventInfo eventInfo = new SummaryEventInfo(); 
+            eventInfo.id = id;
+            eventInfo.title = title;
+            eventInfo.start = start;
+            eventInfo.end = end;
+
+            IAggregatorGrain aggregator = GrainFactory.GetGrain<IAggregatorGrain>(Guid.Empty);  // the aggregator grain is a singleton - Guid.Empty is convention to indicate this
+            //await aggregator.DeleteAnEvent(id);  
+            await aggregator.AddAnEvent(eventInfo);
+
+            return;
+        }
 
 
       // return core info about this event
-      public async Task<EventAPI> Info()
+      public async Task<EventApiData> Info()
       {
-          Console.WriteLine($"** Event Grain Info()for topicId = {this.GetPrimaryKeyString()}");
+          Console.WriteLine($"** EventGrain Info() for topicId = {this.GetPrimaryKeyString()}");
 
-          EventAPI info = new EventAPI();
+          EventApiData info = new EventApiData();
 
           info._id = this.GetPrimaryKeyString(); // make sure we return the grain key as event id
           info.title = State.title;
@@ -63,6 +78,9 @@ namespace Grains
             if (topicId < 1 || topicId > State.topics.Length)
                 return 300;   
 
+            if (State.feedback == null)
+                State.feedback = new List<FeedbackGrainState>();  // belt and barces in cas efeedback hasn't been initialised
+
             // store feedback
             FeedbackGrainState f = new FeedbackGrainState();
             f.topicId = topicId;
@@ -79,31 +97,33 @@ namespace Grains
 
 
     // return all the feedback details for a specific topic 
-    public async Task<FeedbackAPI[]> GetFeedback(int thisTopic)
+    public async Task<FeedbackApiData[]> GetFeedback(int thisTopic)
     {
-        List<FeedbackAPI> topicSpecificFeedback = new List<FeedbackAPI>();  // lets build a list of topic specific feedback 
+        if (State.feedback == null)
+            State.feedback = new List<FeedbackGrainState>();  // belt and barces in cas efeedback hasn't been initialised
+
+        List<FeedbackApiData> topicSpecificFeedback = new List<FeedbackApiData>();  // output list of topic specific feedback 
 
         foreach (FeedbackGrainState f in State.feedback)
         {
             if (f.topicId == thisTopic)
             {
                 // add it to the  list
-                topicSpecificFeedback.Add(new FeedbackAPI
-                  {
-                      _id = "",
+                topicSpecificFeedback.Add(new FeedbackApiData
+                {
+                      _id = "",  // ?
                       Event = this.GetPrimaryKeyString(),
                       topic = thisTopic,
                       rating = f.rating,
                       comment = f.comment,
                       sentiment = ""
-                  }                                          
-                );
+                });
             }
         }
 
         // return
 
-        FeedbackAPI[] ret = topicSpecificFeedback.ToArray();
+        FeedbackApiData[] ret = topicSpecificFeedback.ToArray();
         return ret;
     }
 

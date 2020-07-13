@@ -1,0 +1,6 @@
+$Env:Orleans__ConnectionString = "DefaultEndpointsProtocol=https;AccountName=XXXX;AccountKey=YYY;EndpointSuffix=core.windows.net"
+$Env:Orleans__ClusterId = "smilrcluster"
+$Env:Orleans__ServiceId = "smilr"
+$Env:Orleans__LogLevel = "3"
+
+dotnet run Silo.csproj

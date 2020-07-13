@@ -209,3 +209,4 @@ src/SetupTestScriptOutput.txt
 *.binlog
 
 kubernetes/secret.yaml
+
