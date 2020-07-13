@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login.vue renders login screen 1`] = `
+<div class="card border-primary">
+  <!---->
+  <div class="card-header bg-primary text-white">
+    <h1>
+      <fa icon="user"></fa> &nbsp; Login Required
+    </h1>
+  </div>
+  <div class="card-body">
+    <!---->
+    <!---->
+    To access this part of the application you must be logged in
+    <br><br>
+    <p class="text-center"><button type="button" class="btn btn-success btn-lg">
+        &nbsp;&nbsp; <fa icon="user"></fa> LOGIN WITH AZURE ACTIVE DIRECTORY &nbsp;&nbsp;
+      </button></p>
+    <!---->
+  </div>
+  <!---->
+  <!---->
+</div>
+`;

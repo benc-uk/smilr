@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home.vue renders home screen 1`] = `
+<div>
+  <h1>Currently Active Events</h1>
+  <div>
+    <transition-group-stub tag="p" name="fade">
+      <div>
+        <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
+          <h2 slot="header">
+            <fa icon="chalkboard-teacher"></fa> &nbsp; Fake event (current)
+          </h2>
+          1997-01-01
+          <hr>
+          <ul>
+            <li>
+              <router-link to="[object Object]">
+                Lemons
+              </router-link>
+            </li>
+            <li>
+              <router-link to="[object Object]">
+                Apples
+              </router-link>
+            </li>
+          </ul>
+        </b-card> <br>
+      </div>
+    </transition-group-stub>
+    <!---->
+    <!---->
+  </div> <br><br>
+  <h1>Upcoming Future Events</h1>
+  <div>
+    <transition-group-stub tag="p" name="fade">
+      <div>
+        <b-card border-variant="secondary" header-bg-variant="secondary" header-text-variant="white">
+          <h2 slot="header">
+            <fa icon="flask"></fa> &nbsp; Fake lab (future)
+          </h2>
+          2025-01-01
+          <hr>
+          <ul>
+            <li><span>Jetpacks</span></li>
+            <li><span>Teleporters</span></li>
+          </ul>
+        </b-card> <br>
+      </div>
+    </transition-group-stub>
+    <!---->
+    <!---->
+  </div>
+</div>
+`;

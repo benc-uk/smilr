@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Report.vue renders feedback report 1`] = `
+<div>
+  <h1>Feedback Report</h1>
+  <!---->
+  <form label="Select event to report on" class="form-inline"><select class="custom-select custom-select-lg" id="__BVID__6">
+      <option disabled="disabled" value="">
+        -- Please select an event --
+      </option>
+      <option value="0">
+        Fake lab (future)
+      </option>
+      <option value="1">
+        Fake event (past)
+      </option>
+      <option value="2">
+        Fake event (current)
+      </option>
+    </select> &nbsp;
+    <button type="button" class="btn btn-success btn-lg">
+      <fa icon="sync"></fa> REFRESH REPORT
+    </button></form> <br>
+  <div class="card border-primary">
+    <!---->
+    <div class="card-header bg-primary text-white">
+      <h1>
+        Fake event (past)
+      </h1>
+    </div>
+    <div class="card-body">
+      <!---->
+      <!----> <b>Start:</b> 1996-01-01 <br> <b>End:</b> 1996-02-01 <br> <b>Type:</b> <span class="text-capitalize"> event <fa icon="calendar-alt"></fa></span> <br> <b>Total Responses:</b> 3 <br>
+      <hr>
+      <div class="topicbox">
+        <h2 class="topichead">
+          Spice Girls
+        </h2>
+        &nbsp; • Responses: 2 <br> <span>&nbsp; • Average Rating: 4.00 <img src=""></span>
+        <table role="table" aria-busy="false" aria-colcount="3" class="table b-table table-hover" id="__BVID__7">
+          <!---->
+          <!---->
+          <thead role="rowgroup" class="">
+            <!---->
+            <tr role="row" class="">
+              <th role="columnheader" scope="col" tabindex="0" aria-colindex="1" aria-sort="descending" class="">
+                <div>Rating</div><span class="sr-only"> (Click to sort Ascending)</span>
+              </th>
+              <th role="columnheader" scope="col" tabindex="0" aria-colindex="2" aria-sort="none" class="">
+                <div>Comment</div><span class="sr-only"> (Click to sort Ascending)</span>
+              </th>
+              <th role="columnheader" scope="col" tabindex="0" aria-colindex="3" aria-sort="none" class="">
+                <div>Sentiment Score</div><span class="sr-only"> (Click to sort Ascending)</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            <!---->
+            <tr role="row" class="">
+              <td aria-colindex="1" role="cell" class=""><img src=""> 5
+              </td>
+              <td aria-colindex="2" role="cell" class="">Amazing</td>
+              <td aria-colindex="3" role="cell" class="">
+                -
+              </td>
+            </tr>
+            <tr role="row" class="">
+              <td aria-colindex="1" role="cell" class=""><img src=""> 3
+              </td>
+              <td aria-colindex="2" role="cell" class="">Really useful, thank you</td>
+              <td aria-colindex="3" role="cell" class="">
+                -
+              </td>
+            </tr>
+            <!---->
+            <!---->
+          </tbody>
+          <!---->
+        </table>
+      </div>
+      <div class="topicbox">
+        <h2 class="topichead">
+          Can Of Stella
+        </h2>
+        &nbsp; • Responses: 1 <br> <span>&nbsp; • Average Rating: 2.00 <img src=""></span>
+        <table role="table" aria-busy="false" aria-colcount="3" class="table b-table table-hover" id="__BVID__16">
+          <!---->
+          <!---->
+          <thead role="rowgroup" class="">
+            <!---->
+            <tr role="row" class="">
+              <th role="columnheader" scope="col" tabindex="0" aria-colindex="1" aria-sort="descending" class="">
+                <div>Rating</div><span class="sr-only"> (Click to sort Ascending)</span>
+              </th>
+              <th role="columnheader" scope="col" tabindex="0" aria-colindex="2" aria-sort="none" class="">
+                <div>Comment</div><span class="sr-only"> (Click to sort Ascending)</span>
+              </th>
+              <th role="columnheader" scope="col" tabindex="0" aria-colindex="3" aria-sort="none" class="">
+                <div>Sentiment Score</div><span class="sr-only"> (Click to sort Ascending)</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            <!---->
+            <tr role="row" class="">
+              <td aria-colindex="1" role="cell" class=""><img src=""> 2
+              </td>
+              <td aria-colindex="2" role="cell" class="">Pretty terrible, boring</td>
+              <td aria-colindex="3" role="cell" class="">
+                -
+              </td>
+            </tr>
+            <!---->
+            <!---->
+          </tbody>
+          <!---->
+        </table>
+      </div>
+    </div>
+    <!---->
+    <!---->
+  </div>
+</div>
+`;

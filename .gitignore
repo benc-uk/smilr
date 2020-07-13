@@ -89,6 +89,9 @@ newman/*
 **/.nyc_output
 etc/loadtest/result.json
 **/test-results.xml
+**/junit.xml
+vue/coverage/**
+unit-tests-frontend.xml
 
 # Helm reqs we don't want
 kubernetes/helm/**/*.lock

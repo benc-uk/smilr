@@ -3,8 +3,6 @@
 ## Pipeline definitions
 These are a set of CI/CD pipeline definitions for use with [Azure DevOps Pipelines](https://azure.microsoft.com/en-gb/services/devops/pipelines/) to automatically build and deploy Smilr
 
-:warning: May 2019, These are multi-stage YAML pipelines which currently are in preview, and need to be enabled as a "preview feature" in Azure DevOps
-
 The contents of the `azure\pipelines` directory are:
 
 | Filename | Purpose | Trigger |
