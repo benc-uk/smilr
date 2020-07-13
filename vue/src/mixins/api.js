@@ -1,11 +1,17 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Ben Coleman, 2020
+// Licensed under the MIT License.
+//
+// Axios based API client for all calls to data service API
+// ----------------------------------------------------------------------------
+
 /* eslint-disable no-console */
-import { config, userProfile } from '../main'
 import axios from 'axios'
 import router from '../router'
+import auth from './auth'
 
 export default {
   methods: {
-
     //
     // ===== Events =====
     //
@@ -26,7 +32,7 @@ export default {
       let apifeedback = []
 
       for (let topic of event.topics) {
-        calls.push(axios.get(`${config.API_ENDPOINT}/feedback/${event._id}/${topic.id}`))
+        calls.push(axios.get(`${this.$config.API_ENDPOINT}/feedback/${event._id}/${topic.id}`))
       }
 
       // I only partially understand what this is doing
@@ -68,19 +74,20 @@ export default {
     //
 
     _apiRawCall: function(apiPath, method = 'get', data = null) {
+      // !IMPORTANT! Special stub of all API calls when running unit tests
       if (process.env.NODE_ENV === 'test') { return new Promise((resolve) => { resolve([]) }) }
 
-      let apiUrl = `${config.API_ENDPOINT}/${apiPath}`
-      //console.log("### API CALL "+ apiUrl);
+      let apiUrl = `${this.$config.API_ENDPOINT}/${apiPath}`
 
       let headers = {}
-
       // Send token as per the OAuth 2.0 bearer token scheme
-      if (userProfile.token) {
+      if (auth && auth.data() && auth.data().accessToken) {
         headers = {
-          'Authorization': `Bearer ${userProfile.token}`
+          'Authorization': `Bearer ${auth.data().accessToken}`
         }
       }
+      // console.log('### API CALL '+ apiUrl)
+      // console.log('### API HEADERS ', headers)
 
       return axios({
         method: method,

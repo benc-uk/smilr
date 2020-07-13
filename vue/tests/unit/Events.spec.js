@@ -1,19 +1,31 @@
-import { expect } from 'chai'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import Events from '@/components/Events.vue'
+import EventList from '@/components/EventList.vue'
+import flushPromises from 'flush-promises'
 
-// create an extended `Vue` constructor
-const localVue = createLocalVue()
-import BootstrapVue from 'bootstrap-vue'
-localVue.use(BootstrapVue);
+jest.mock('@/mixins/api')
 
 describe('Events.vue', () => {
-  it('has dropdown with options', () => {   
-    const wrapper = shallowMount(Events, {
-      localVue
-    })  
+  it('shows active events', async () => {
+    const wrapper = shallowMount(Events, { stubs: {'EventList': EventList} })
 
-    expect(wrapper.contains('b-form-select-stub')).to.be.true;
-    expect(wrapper.find('b-form-select-stub').findAll('option')).has.length(4)
+    await flushPromises()
+    expect(wrapper).toMatchSnapshot()
   })
+
+  it('shows past events', async () => {
+    const wrapper = shallowMount(Events, { stubs: {'EventList': EventList} })
+    wrapper.setData({ time: 'past' })
+
+    await flushPromises()
+    expect(wrapper).toMatchSnapshot()
+  })
+
+  it('shows future events', async () => {
+    const wrapper = shallowMount(Events, { stubs: {'EventList': EventList} })
+    wrapper.setData({ time: 'future' })
+
+    await flushPromises()
+    expect(wrapper).toMatchSnapshot()
+  })    
 })

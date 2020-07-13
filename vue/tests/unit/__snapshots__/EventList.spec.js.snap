@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EventList.vue renders current events correctly 1`] = `
+<div>
+  <transition-group-stub tag="p" name="fade">
+    <div>
+      <b-card-stub bodytag="div" titletag="h4" subtitletag="h6" subtitletextvariant="muted" headertag="div" headerbgvariant="primary" headertextvariant="white" footertag="div" tag="div" bordervariant="primary">
+        <h2 slot="header">
+          <fa icon="chalkboard-teacher"></fa> &nbsp; Fake event (current)
+        </h2>
+        1997-01-01
+        <hr>
+        <ul>
+          <li>
+            <router-link to="[object Object]">
+              Lemons
+            </router-link>
+          </li>
+          <li>
+            <router-link to="[object Object]">
+              Apples
+            </router-link>
+          </li>
+        </ul>
+      </b-card-stub> <br>
+    </div>
+  </transition-group-stub>
+  <!---->
+  <!---->
+</div>
+`;
+
+exports[`EventList.vue renders future events correctly 1`] = `
+<div>
+  <transition-group-stub tag="p" name="fade">
+    <div>
+      <b-card-stub bodytag="div" titletag="h4" subtitletag="h6" subtitletextvariant="muted" headertag="div" headerbgvariant="secondary" headertextvariant="white" footertag="div" tag="div" bordervariant="secondary">
+        <h2 slot="header">
+          <fa icon="flask"></fa> &nbsp; Fake lab (future)
+        </h2>
+        2025-01-01
+        <hr>
+        <ul>
+          <li><span>Jetpacks</span></li>
+          <li><span>Teleporters</span></li>
+        </ul>
+      </b-card-stub> <br>
+    </div>
+  </transition-group-stub>
+  <!---->
+  <!---->
+</div>
+`;
+
+exports[`EventList.vue renders past events correctly 1`] = `
+<div>
+  <transition-group-stub tag="p" name="fade">
+    <div>
+      <b-card-stub bodytag="div" titletag="h4" subtitletag="h6" subtitletextvariant="muted" headertag="div" headerbgvariant="secondary" headertextvariant="white" footertag="div" tag="div" bordervariant="secondary">
+        <h2 slot="header">
+          <fa icon="calendar-alt"></fa> &nbsp; Fake event (past)
+        </h2>
+        1996-01-01
+        <hr>
+        <ul>
+          <li><span>Spice Girls</span></li>
+          <li><span>Can Of Stella</span></li>
+        </ul>
+      </b-card-stub> <br>
+    </div>
+  </transition-group-stub>
+  <!---->
+  <!---->
+</div>
+`;

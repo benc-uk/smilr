@@ -18,81 +18,49 @@
 </template>
 
 <script>
-/* eslint-disable */
-import { userProfile } from '../main'
-import { config } from '../main'
-import * as Msal from 'msal'
-import axios from 'axios'
-
-var msalApp = null;
+import auth from '../mixins/auth'
 
 export default {
   name: 'Login',
 
-  props: ['redir'],
+  mixins: [ auth ],
+
+  props: {
+    redir: {
+      type: String,
+      default: ''
+    }
+  },
 
   data() {
     return {
-      authService: null,
       loginFailed: false,
       loginError: null
     }
   },
 
-  created() {
-    let redirectUri = window.location.origin + '/login'
+  methods: {
+    async login() {
+      try {
+        this.loginFailed = false
+        await this.authLogin()
 
-    const msalApplicationConfig = {
-      auth: {
-        clientId: config.AAD_CLIENT_ID,
-        redirectUri: redirectUri
+        if (!this.user() || !this.user().userName) {
+          throw new Error('Login failed')
+        }
+
+        // Direct to root or redir path if provided
+        if (this.redir) {
+          this.$router.push({ name: this.redir })
+        } else {
+          this.$router.push({ name: 'home' }).catch(() => {})
+        }
+      } catch (err){
+        console.log('### MSAL Error ' + err.toString())
+        this.loginFailed = true
+        this.loginError = err.toString()
       }
     }
-
-    // create UserAgentApplication instance
-    msalApp = new Msal.UserAgentApplication(msalApplicationConfig);
-  },
-
-  methods: {
-    login() {
-      this.loginFailed = false;
-
-      let loginRequest = {
-        scopes: [ 'user.read', 'offline_access', 'profile', `api://${config.AAD_CLIENT_ID}/smilr.events`  ]
-      }
-
-      let accessTokenRequest = {
-        scopes: [ 'offline_access', `api://${config.AAD_CLIENT_ID}/smilr.events`  ] 
-      }
-
-      msalApp.loginPopup(loginRequest).then(loginResponse => {   
-        return msalApp.acquireTokenSilent(accessTokenRequest).then(tokenResp => {
-          userProfile.token = tokenResp.accessToken;
-          userProfile.user = msalApp.getAccount();  
-          userProfile.isAdmin = true;
-          //console.log(userProfile.token);
-
-          // Check against list of admins
-          // if(config.ADMIN_USER_LIST) {
-          //   for(let userName of config.ADMIN_USER_LIST.split(',')) {
-          //     if(userName.trim().toLowerCase() == userProfile.user.userName.toLowerCase()) {
-          //       userProfile.isAdmin = true
-          //       break
-          //     }          
-          //   }
-          // }   
-
-          if(this.redir)
-            this.$router.push({ name: this.redir })
-          else
-            this.$router.push({ name: 'home' })  
-        })
-      }).catch(error => {  
-        console.log("### MSAL Error "+error.toString());
-        this.loginFailed = true;
-        this.loginError = error.toString()
-      });
-    }     
   }
 }
 </script>
