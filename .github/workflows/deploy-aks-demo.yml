@@ -65,7 +65,7 @@ jobs:
     - name: Run API tests with Postman/newman
       uses: docker://postman/newman:ubuntu
       with:
-        args: run /github/workspace/etc/postman/Smilr.postman_collection.json /
+        args: run /github/workspace/etc/postman/smilr-api-tests.json /
           --timeout 180000 /
           --global-var smilr-api-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}-smilr.${{ env.DOMAIN }}" /
           --global-var smilr-front-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}-smilr.${{ env.DOMAIN }}"
