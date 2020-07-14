@@ -56,13 +56,13 @@ jobs:
       run: |
         helm upgrade $ENVIRON-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
-      - name: 'End deployment - failure'
-        if: ${{ failure() }}
-        uses: chrnorm/deployment-status@v1.0.0
-        with:
-          token: ${{ github.token }}
-          state: failure
-          deployment_id: ${{ steps.deploy.outputs.deployment_id }} 
+    - name: 'End deployment - failure'
+      if: ${{ failure() }}
+      uses: chrnorm/deployment-status@v1.0.0
+      with:
+        token: ${{ github.token }}
+        state: failure
+        deployment_id: ${{ steps.deploy.outputs.deployment_id }} 
 
   # ==================================================================================
   # Integration API tests
