@@ -1,4 +1,4 @@
-name: 'Deploy to AKS'
+name: 'Deploy to AKS Demo'
 
 on: 
   workflow_dispatch:
@@ -39,7 +39,7 @@ jobs:
 
     - name: 'Helm dep update'
       run: |
-        helm add stable https://kubernetes-charts.storage.googleapis.com
+        helm repo add stable https://kubernetes-charts.storage.googleapis.com
         helm dep update kubernetes/helm/smilr
 
     - name: 'Helm install release'
