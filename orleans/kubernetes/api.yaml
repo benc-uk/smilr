@@ -34,8 +34,6 @@ spec:
         env:     
         - name: Orleans__ClusterId
           value: smilr-kube
-        - name: Orleans__SiloHost
-          value: silo-gateway-svc
         - name: Orleans__ConnectionString
           valueFrom:
             secretKeyRef:

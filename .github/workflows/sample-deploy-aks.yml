@@ -1,9 +1,7 @@
 name: 'Sample: Deploy to AKS'
 
 on: 
-  push:
-    # This effectively disables this flow
-    branches: ['__DISABLED__']
+  workflow_dispatch:
 
 env:
   ACR_NAME:     bcdemo
