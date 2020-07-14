@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: orleans-api
-        image: davidgri.azurecr.io/smilr-orleans/api:v320
+        image: CHANGEME.azurecr.io/smilr-orleans/api:latest
         imagePullPolicy: Always
 
         ports:
@@ -34,8 +34,6 @@ spec:
         env:     
         - name: Orleans__ClusterId
           value: smilr-kube
-        - name: Orleans__SiloHost
-          value: silo-gateway-svc
         - name: Orleans__ConnectionString
           valueFrom:
             secretKeyRef:
@@ -45,7 +43,7 @@ spec:
         resources:
           limits:
             memory: "1G"
-            cpu: "0.3"
+            cpu: "0.1"
 
 ---
 

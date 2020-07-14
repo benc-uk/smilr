@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using GrainInterfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,11 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Orleans;
 using Orleans.Hosting;
 using Orleans.Configuration;
-using System.Net;
 
 namespace API
 {
@@ -44,24 +38,16 @@ namespace API
                 app.UseDeveloperExceptionPage();
             }
 
-            
-            //app.UseMvc();  // new routing for .net core 3
-
             //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseEndpoints(routes =>
             {
                 routes.MapControllers();
             });
-
-
         }
-
 
         private IClusterClient CreateClusterClient(IServiceProvider serviceProvider)
         {
-            var gatewayPort = 30000;
-
             Console.WriteLine("##### Starting Orleans client!");
             Console.WriteLine($"##### Using ClusterId = {this.Configuration["Orleans:ClusterId"]}, ServiceId = {this.Configuration["Orleans:ServiceId"]}");
 
@@ -73,23 +59,6 @@ namespace API
                 })
                 .UseAzureStorageClustering(options => options.ConnectionString = this.Configuration["Orleans:ConnectionString"])
                 .ConfigureLogging(options => options.SetMinimumLevel((LogLevel)this.Configuration.GetValue<int>("Orleans:LogLevel")).AddConsole());
-
-            if(this.Configuration["Orleans:SiloHost"] != null) {
-                Console.WriteLine($"##### Configuring static clustering");
-                Console.WriteLine($"##### Will use DNS name '{this.Configuration["Orleans:SiloHost"]}' for silo connection");
-                
-                // DNS entry could have multiple IP addresses, built an IPEndPoint array of them all
-                // Orleans is hard work, this shouldn't be our job!
-                IPHostEntry dnsHostEntry = Dns.GetHostEntry(this.Configuration["Orleans:SiloHost"]);
-                IPEndPoint[] endpoints = new IPEndPoint[dnsHostEntry.AddressList.Length];
-                for(int ipIndex = 0; ipIndex < dnsHostEntry.AddressList.Length; ipIndex++) {
-                    IPAddress ip = dnsHostEntry.AddressList[ipIndex];
-                    Console.WriteLine($"##### - Resolved name '{this.Configuration["Orleans:SiloHost"]}' to IP: {ip}");
-                    endpoints[ipIndex] = new IPEndPoint(ip, gatewayPort);
-                }
-                builder.UseStaticClustering(endpoints);
-                //builder.UseDnsNameLookupClustering(Configuration["Orleans:SiloHost"], gatewayPort);
-            }
 
             var client = builder.Build();
             client.Connect().Wait();
