@@ -93,7 +93,7 @@ jobs:
 
     - name: 'Helm dep update'
       run: |
-        helm init --client-only
+        helm repo add stable https://kubernetes-charts.storage.googleapis.com
         helm dep update kubernetes/helm/smilr
 
     - name: 'Helm install release'
