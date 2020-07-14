@@ -59,7 +59,7 @@ jobs:
     - uses: actions/checkout@v1
     
     - name: Wait for API to be ready
-      run: bash etc/bash/urlWait.sh https://$ENVIRON-$RELEASE_NAME-smilr.$DOMAIN/api 60
+      run: bash etc/bash/urlWait.sh https://$ENVIRON-$RELEASE_NAME.$DOMAIN/api/info 60
     
     # Run the tests inside a container with Newman
     - name: Run API tests with Postman/newman
@@ -67,8 +67,8 @@ jobs:
       with:
         args: run /github/workspace/etc/postman/smilr-api-tests.json /
           --timeout 180000 /
-          --global-var smilr-api-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}-smilr.${{ env.DOMAIN }}" /
-          --global-var smilr-front-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}-smilr.${{ env.DOMAIN }}"
+          --global-var smilr-api-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}" /
+          --global-var smilr-front-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}"
 
   # ==================================================================================
   # Continuous deployment job - deploy to AKS staging namespace
