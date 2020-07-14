@@ -7,4 +7,4 @@ fi
 
 export $(grep -v '^#' .env | xargs -0)
 
-dotnet.exe run
+dotnet run
