@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using GrainInterfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,11 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Orleans;
 using Orleans.Hosting;
 using Orleans.Configuration;
-using System.Net;
 
 namespace API
 {
@@ -52,11 +46,8 @@ namespace API
             });
         }
 
-
         private IClusterClient CreateClusterClient(IServiceProvider serviceProvider)
         {
-            var gatewayPort = 30000;
-
             Console.WriteLine("##### Starting Orleans client!");
             Console.WriteLine($"##### Using ClusterId = {this.Configuration["Orleans:ClusterId"]}, ServiceId = {this.Configuration["Orleans:ServiceId"]}");
 

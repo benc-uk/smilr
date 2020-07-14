@@ -6,12 +6,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Orleans.Core" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Orleans.Reminders.AzureStorage" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Orleans.Server" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="3.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="3.2.1" />
+    <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Reminders.AzureStorage" Version="3.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Server" Version="3.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="3.2.1" />
 
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5" />
