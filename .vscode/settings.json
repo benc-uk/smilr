@@ -1,13 +1,12 @@
 {
   "azureFunctions.projectLanguage": "JavaScript",
-  "azureFunctions.projectRuntime": "~2",
+  "azureFunctions.projectRuntime": "~3",
   "azureFunctions.templateFilter": "Verified",
   "azureFunctions.preDeployTask": "installExtensions",
   "files.exclude": {
     "obj": true,
     "bin": true
   },
-  "go.formatTool": "goimports",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
