@@ -5,7 +5,7 @@ on:
     inputs:
       imageTag:
         default: latest
-        description: Image tag to deploy
+        description: Image tag to be deployed
 
 env:
   ACR_NAME:     bcdemo
