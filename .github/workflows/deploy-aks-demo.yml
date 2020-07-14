@@ -26,6 +26,16 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:  
+    - name: 'Start deployment'
+      id: deploy
+      uses: chrnorm/deployment-action@v1.2.0
+      with:
+        # Shouldn't need to pass the ref, but there's a bug in GitHub
+        # Triggering workflow_dispatch with API means GITHUB_REF isn't set 
+        ref: ${{ github.event.ref }}
+        token: ${{ github.token }}
+        environment: AKS - ${{ env.ENVIRON }}
+
     - name: 'Checkout repo'
       uses: actions/checkout@v1          
 
@@ -46,6 +56,14 @@ jobs:
       run: |
         helm upgrade $ENVIRON-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
+      - name: 'End deployment - failure'
+        if: ${{ failure() }}
+        uses: chrnorm/deployment-status@v1.0.0
+        with:
+          token: ${{ github.token }}
+          state: failure
+          deployment_id: ${{ steps.deploy.outputs.deployment_id }} 
+
   # ==================================================================================
   # Integration API tests
   # ==================================================================================
@@ -56,6 +74,17 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+    - name: 'Continue deployment'
+      id: deploy
+      uses: chrnorm/deployment-action@v1.2.0
+      with:
+        # Shouldn't need to pass the ref, but there's a bug in GitHub
+        # Triggering workflow_dispatch with API means GITHUB_REF isn't set 
+        ref: ${{ github.event.ref }}
+        token: ${{ github.token }}
+        environment: AKS - ${{ env.ENVIRON }}
+        initial_status: in_progress
+
     - uses: actions/checkout@v1
     
     - name: Wait for API to be ready
@@ -70,6 +99,23 @@ jobs:
           --global-var smilr-api-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}" /
           --global-var smilr-front-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}"
 
+    - name: 'End deployment - success'
+      if: ${{ success() }}
+      uses: chrnorm/deployment-status@v1.0.0
+      with:
+        token: ${{ github.token }}
+        state: success
+        deployment_id: ${{ steps.deploy.outputs.deployment_id }}
+        environment_url: 'http://${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}/'
+
+    - name: 'End deployment - failure'
+      if: ${{ failure() }}
+      uses: chrnorm/deployment-status@v1.0.0
+      with:
+        token: ${{ github.token }}
+        state: failure
+        deployment_id: ${{ steps.deploy.outputs.deployment_id }}   
+
   # ==================================================================================
   # Continuous deployment job - deploy to AKS staging namespace
   # ==================================================================================
@@ -80,6 +126,16 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:  
+    - name: 'Start deployment'
+      id: deploy
+      uses: chrnorm/deployment-action@v1.2.0
+      with:
+        # Shouldn't need to pass the ref, but there's a bug in GitHub
+        # Triggering workflow_dispatch with API means GITHUB_REF isn't set 
+        ref: ${{ github.event.ref }}
+        token: ${{ github.token }}
+        environment: AKS - ${{ env.ENVIRON }}  
+
     - name: 'Checkout repo'
       uses: actions/checkout@v1
 
@@ -100,3 +156,19 @@ jobs:
       run: |
         helm upgrade $ENVIRON-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
+    - name: 'End deployment - success'
+      if: ${{ success() }}
+      uses: chrnorm/deployment-status@v1.0.0
+      with:
+        token: ${{ github.token }}
+        state: success
+        deployment_id: ${{ steps.deploy.outputs.deployment_id }}
+        environment_url: 'http://${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}/'
+
+    - name: 'End deployment - failure'
+      if: ${{ failure() }}
+      uses: chrnorm/deployment-status@v1.0.0
+      with:
+        token: ${{ github.token }}
+        state: failure
+        deployment_id: ${{ steps.deploy.outputs.deployment_id }}   
