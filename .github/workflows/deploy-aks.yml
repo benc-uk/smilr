@@ -1,9 +1,11 @@
-name: 'Sample: Deploy to AKS'
+name: 'Deploy to AKS'
 
 on: 
-  push:
-    # This effectively disables this flow
-    branches: ['__DISABLED__']
+  workflow_dispatch:
+    inputs:
+      imageTag:
+        default: latest
+        description: Image tag to deploy
 
 env:
   ACR_NAME:     bcdemo
@@ -37,7 +39,7 @@ jobs:
 
     - name: 'Helm dep update'
       run: |
-        helm init --client-only
+        helm add stable https://kubernetes-charts.storage.googleapis.com
         helm dep update kubernetes/helm/smilr
 
     - name: 'Helm install release'

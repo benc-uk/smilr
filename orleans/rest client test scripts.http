@@ -16,7 +16,7 @@ POST http://{{host}}/api/events HTTP/1.1
 content-type: application/json
 
 {
-    "title": "demo event 2",
+    "title": "demo event",
     "type": "event",
     "start": "2020-01-01",
     "end": "2020-01-01",
