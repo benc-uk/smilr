@@ -61,6 +61,8 @@ export default {
 // Common fetch wrapper (private)
 //
 async function callGraph(apiPath) {
+  if (!auth.clientId() || !auth.user()) { return }
+
   // Acquire an access token to call APIs (like Graph)
   // Safe to call repeatedly as MSAL caches tokens locally
   accessToken = await auth.acquireToken(GRAPH_SCOPES)
