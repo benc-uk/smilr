@@ -107,9 +107,11 @@ let router = new Router({
 function checkLoggedIn(to, from, next) {
   if (auth.clientId()) {
     const user = auth.user()
+
     // If no user object - redirect to Login
     if (!user || !user.userName) {
       next({ name: 'login', params: { redir: to.name } })
+      return
     }
   }
   next()
