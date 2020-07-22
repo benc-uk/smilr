@@ -6,7 +6,7 @@ const localVue = createLocalVue()
 import BootstrapVue from 'bootstrap-vue'
 localVue.use(BootstrapVue)
 
-jest.mock('@/mixins/api')
+jest.mock('@/services/api')
 
 describe('Feedback.vue', () => {
   it('shows event data', async () => {
