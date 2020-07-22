@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import api from '../mixins/api'
+import api from '../services/api'
 import Spinner from './Spinner'
 
 export default {
@@ -42,8 +42,6 @@ export default {
   components: {
     Spinner
   },
-
-  mixins: [ api ],
 
   data: function() {
     return {
@@ -59,7 +57,7 @@ export default {
   },
 
   created: function() {
-    this.apiGetAllEvents()
+    api.getAllEvents()
       .then((resp) => {
         if (resp) { this.events = resp.data }
       })
@@ -71,7 +69,7 @@ export default {
     },
 
     newEvent: function() {
-      this.$router.push({ name: 'admin-event', params: { action: 'new', editEvent: null } })
+      this.$router.push({ name: 'admin-event', params: { action: 'new', editEvent: {} } })
     },
 
     preDeleteEvent: function(event) {
@@ -80,7 +78,7 @@ export default {
     },
 
     deleteEvent: function() {
-      this.apiDeleteEvent(this.eventToDelete)
+      api.deleteEvent(this.eventToDelete)
         .then((resp) => {
           if (resp) {
             for (let eindex in this.events) {

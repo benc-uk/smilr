@@ -3,7 +3,7 @@ import Home from '@/components/Home.vue'
 import EventList from '@/components/EventList.vue'
 import flushPromises from 'flush-promises'
 
-jest.mock('@/mixins/api')
+jest.mock('@/services/api')
 
 describe('Home.vue', () => {
   it('renders home screen', async () => {

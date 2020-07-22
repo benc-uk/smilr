@@ -6,7 +6,7 @@ import BootstrapVue from 'bootstrap-vue'
 const localVue = createLocalVue()
 localVue.use(BootstrapVue)
 
-jest.mock('@/mixins/api')
+jest.mock('@/services/api')
 
 describe('Report.vue', () => {
   it('renders feedback report', async () => {

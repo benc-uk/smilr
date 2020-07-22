@@ -70,7 +70,7 @@
           </p>
         </div>
 
-        <b-button v-if="editEvent" size="lg" variant="success" :disabled="!formOK" @click="saveChanges">
+        <b-button v-if="action != 'new'" size="lg" variant="success" :disabled="!formOK" @click="saveChanges">
           SAVE CHANGES
         </b-button>
         <b-button v-else size="lg" variant="success" :disabled="!formOK" @click="createEvent">
@@ -87,7 +87,7 @@
 
 <script>
 import utils from '../mixins/utils'
-import api from '../mixins/api'
+import api from '../services/api'
 
 
 export default {
@@ -102,7 +102,7 @@ export default {
     }
   },
 
-  mixins: [ utils, api ],
+  mixins: [ utils ],
 
   props: {
     editEvent: {
@@ -127,7 +127,6 @@ export default {
 
   computed: {
     // Yeah I wrote my own form & data validation functions, it's fine
-
     titleOK() {
       return this.event.title && this.event.title.length >= 5
     },
@@ -159,8 +158,8 @@ export default {
       this.event  = {
         title:  '',
         type:   'event',
-        start:  '', //new Date().toISOString().substring(0, 10),
-        end:    '', //new Date().toISOString().substring(0, 10),
+        start:  '',
+        end:    '',
         topics: []
       }
     } else {
@@ -171,7 +170,7 @@ export default {
         this.event.start = this.event.start.substring(0, 10)
         this.event.end = this.event.end.substring(0, 10)
       } else {
-        this.apiGetEvent(this.action)
+        api.getEvent(this.action)
           .then((resp) => {
             this.event = resp.data
             this.event.start = this.event.start.substring(0, 10)
@@ -183,18 +182,20 @@ export default {
 
   methods: {
     saveChanges: function() {
+      console.log('SAVE')
       if (!this.formOK) { return }
 
-      this.apiUpdateEvent(this.event)
+      api.updateEvent(this.event)
         .then((resp) => {
           if (resp) { this.$router.push({ name: 'admin' }) }
         })
     },
 
     createEvent: function() {
+      console.log('CREATE')
       if (!this.formOK) { return }
 
-      this.apiCreateEvent(this.event)
+      api.createEvent(this.event)
         .then((resp) => {
           if (resp) { this.$router.push({ name: 'admin' }) }
         })

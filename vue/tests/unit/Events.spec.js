@@ -3,7 +3,7 @@ import Events from '@/components/Events.vue'
 import EventList from '@/components/EventList.vue'
 import flushPromises from 'flush-promises'
 
-jest.mock('@/mixins/api')
+jest.mock('@/services/api')
 
 describe('Events.vue', () => {
   it('shows active events', async () => {

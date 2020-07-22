@@ -31,7 +31,7 @@
 
 <script>
 import '../assets/css/animate.css'
-import api from '../mixins/api'
+import api from '../services/api'
 import utils from '../mixins/utils'
 import Spinner from './Spinner'
 
@@ -42,7 +42,7 @@ export default {
     Spinner
   },
 
-  mixins: [ api, utils ],
+  mixins: [ utils ],
 
   props: {
     filter: {
@@ -76,7 +76,7 @@ export default {
 
   methods: {
     refresh: function() {
-      this.apiGetEventsFiltered(this.filter)
+      api.getEventsFiltered(this.filter)
         .then((resp) => {
           if (resp && resp.data) {
             this.events = resp.data
