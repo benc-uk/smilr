@@ -98,7 +98,7 @@ async function apiCall(apiPath, method = 'get', data = null) {
 
   let headers = {}
   // Only get a token if logged in & using real auth (i.e AUTH_CLIENT_ID set)
-  if (auth.user() && clientId) {
+  if (auth.user() && clientId && apiScope) {
     const scopes = [ `api://${clientId}/${apiScope}` ]
 
     // Try to get an access token with our API scope
