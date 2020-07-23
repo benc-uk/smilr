@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import api from '../mixins/api'
+import api from '../services/api'
 import utils from '../mixins/utils'
 import Spinner from './Spinner'
 
@@ -62,7 +62,7 @@ export default {
     Spinner
   },
 
-  mixins: [ api, utils ],
+  mixins: [ utils ],
 
   data: function () {
     return {
@@ -100,7 +100,7 @@ export default {
   },
 
   created: function() {
-    this.apiGetAllEvents()
+    api.getAllEvents()
       .then((resp) => {
         if (resp) { this.events = resp.data }
       })
@@ -114,7 +114,7 @@ export default {
       }
       // Wipe feedback
       this.feedback = []
-      this.feedback = this.apiGetFeedbackForEvent(this.selectedEvent)
+      this.feedback = api.getFeedbackForEvent(this.selectedEvent)
     },
 
     topicAvgRating: function(topic) {

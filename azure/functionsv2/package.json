@@ -5,9 +5,9 @@
   "author": "Ben Coleman",
   "license": "MIT",
   "dependencies": {
-    "mongodb": "^3.3.0",
-    "dotenv": "^8.0.0",
-    "request-promise-native": "~1.0.5",
-    "request": "^2.88.0"
+    "mongodb": "^3.5.9",
+    "dotenv": "^8.2.0",
+    "request-promise-native": "~1.0.9",
+    "request": "^2.88.2"
   }
 }

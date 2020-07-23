@@ -32,13 +32,13 @@
     <br>
 
     <b-container>
-      <router-view />
+      <router-view @loginComplete="refreshUser" />
     </b-container>
 
     <!-- User details button in footer -->
     <div class="appFooter">
-      <b-button v-if="user()" v-b-modal.userModal variant="outline-primary">
-        <fa icon="user" /> {{ user().userName }}
+      <b-button v-if="user" v-b-modal.userModal variant="outline-primary">
+        <fa icon="user" /> {{ user.userName }}
       </b-button>
       <b-button v-else disabled variant="outline-primary">
         No user logged in
@@ -46,10 +46,11 @@
     </div>
 
     <!-- Popup modal used by the user button -->
-    <b-modal v-if="user()" id="userModal" title="User Details" ok-only>
-      <p>Name: {{ user().name }}</p>
-      <p>User Name: {{ user().userName }}</p>
-      <b-button variant="warning" @click="authLogout">
+    <b-modal v-if="user" id="userModal" title="User Details" ok-only>
+      <p>Name: {{ user.name }}</p>
+      <p>User Name: {{ user.userName }}</p>
+      <img class="photo" :src="userPhoto" alt="user">
+      <b-button variant="warning" @click="logout">
         Logout
       </b-button>
     </b-modal>
@@ -57,11 +58,38 @@
 </template>
 
 <script>
-import auth from './mixins/auth'
+import auth from './services/auth'
+import graph from './services/graph'
 
 export default {
   name: 'App',
-  mixins: [ auth ],
+
+  data() {
+    return {
+      user: {},
+      userPhoto: 'https://i.pravatar.cc/120'
+    }
+  },
+
+  async created() {
+    // Restore any cached or saved local user
+    this.refreshUser()
+    graph.getPhoto()
+      .then((photo) => this.userPhoto = photo)
+  },
+
+  methods: {
+    refreshUser() {
+      this.user = auth.user()
+    },
+
+    async logout() {
+      await auth.logout()
+
+      this.$router.push({ name: 'home' })
+    },
+  }
+
 }
 </script>
 
@@ -80,5 +108,13 @@ export default {
   .bigger {
     font-size: 1.4rem !important;
     margin-right: 10px !important;
+  }
+  .photo {
+    float: right;
+    width: 120px;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    border-radius: 50%;
   }
 </style>

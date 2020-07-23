@@ -32,6 +32,7 @@
 <script>
 import '../assets/css/animate.css'
 import utils from '../mixins/utils'
+import api from '../services/api'
 
 export default {
   name: 'About',
@@ -40,8 +41,8 @@ export default {
 
   data: function() {
     return {
-      apiEndpoint: this.$config.API_ENDPOINT,
-      infoUrl: `${this.$config.API_ENDPOINT}/info`,
+      apiEndpoint: api.endpoint(),
+      infoUrl: `${api.endpoint()}/info`,
       mode: process.env.NODE_ENV,
       buildInfo: process.env.VUE_APP_BUILD_INFO || 'No build info',
       egg: '',

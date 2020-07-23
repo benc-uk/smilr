@@ -18,12 +18,10 @@
 </template>
 
 <script>
-import auth from '../mixins/auth'
+import auth from '../services/auth'
 
 export default {
   name: 'Login',
-
-  mixins: [ auth ],
 
   props: {
     redir: {
@@ -43,11 +41,8 @@ export default {
     async login() {
       try {
         this.loginFailed = false
-        await this.authLogin()
-
-        if (!this.user() || !this.user().userName) {
-          throw new Error('Login failed')
-        }
+        await auth.login()
+        this.$emit('loginComplete')
 
         // Direct to root or redir path if provided
         if (this.redir) {

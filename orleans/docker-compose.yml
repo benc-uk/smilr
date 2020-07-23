@@ -2,25 +2,22 @@ version: '3'
 
 services:
   api:
-    environment: 
-      - Orleans__ConnectionString=DefaultEndpointsProtocol=https;AccountName=CHANGEME;AccountKey=CHANGEME;EndpointSuffix=core.windows.net
     image: ${DOCKER_REG}smilr-orleans/api
     ports:
       - "4000:4000"
     environment: 
-      - Orleans__ConnectionString
+      - Orleans__ConnectionString=CHANGE_ME
       - Orleans__ClusterId=smilr-docker
       - Orleans__SiloHost=silo      
     build:
       context: .
       dockerfile: API/Dockerfile
   silo:
-    environment: 
-      - Orleans__ConnectionString=DefaultEndpointsProtocol=https;AccountName=CHANGEME;AccountKey=CHANGEME;EndpointSuffix=core.windows.net
     image: ${DOCKER_REG}smilr-orleans/silo
     environment: 
-      - Orleans__ConnectionString
+      - Orleans__ConnectionString=CHANGE_ME
       - Orleans__ClusterId=smilr-docker
+      - Orleans__SiloHost=silo  
     build:
       context: .
       dockerfile: Silo/Dockerfile

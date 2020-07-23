@@ -210,3 +210,9 @@ src/SetupTestScriptOutput.txt
 
 kubernetes/secret.yaml
 
+appsettings.json
+appsettings.[Dd]evelopment.json
+
+# Orleans PowerShell scripts to run Silo and API have keys in them
+orleans/Silo/run.ps1
+orleans/API/run.ps1 

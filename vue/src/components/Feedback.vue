@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import api from '../mixins/api'
+import api from '../services/api'
 import cookies from '../mixins/cookies'
 import Face from './Face'
 import Spinner from './Spinner'
@@ -58,7 +58,7 @@ export default {
     Spinner
   },
 
-  mixins: [ api, cookies ],
+  mixins: [ cookies ],
 
   // These are only used by unit tests, in the app the query string and router sets these
   props: {
@@ -104,7 +104,7 @@ export default {
       return
     }
 
-    this.apiGetEvent(this.eventId)
+    api.getEvent(this.eventId)
       .then((resp) => {
         if (resp.data) {
           this.event = resp.data
@@ -127,7 +127,7 @@ export default {
 
     submitFeedback: function() {
       this.sending = true
-      this.apiPostFeedback({
+      api.postFeedback({
         rating: parseInt(this.rating),
         topic: this.topicId,
         event: this.eventId,

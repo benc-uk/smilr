@@ -9,7 +9,8 @@ import Report from './components/Report'
 import Admin from './components/Admin'
 import AdminEvent from './components/AdminEvent'
 import Login from './components/Login'
-import auth from './mixins/auth'
+
+import auth from './services/auth'
 
 Vue.use(Router)
 
@@ -36,7 +37,7 @@ let router = new Router({
       component: Events
     },
     {
-      path: '/feedback/', //:eventId/:topicId',
+      path: '/feedback/',
       name: 'feedback',
       component: Feedback,
       props: true
@@ -101,13 +102,16 @@ let router = new Router({
 })
 
 //
-// Validate user is logged-in and in the authorised users list
+// Validate user is logged-in
 //
 function checkLoggedIn(to, from, next) {
-  if (router.app.$config.AAD_CLIENT_ID) {
+  if (auth.clientId()) {
+    const user = auth.user()
+
     // If no user object - redirect to Login
-    if (!auth.methods.user() || !auth.methods.user().userName) {
+    if (!user || !user.userName) {
       next({ name: 'login', params: { redir: to.name } })
+      return
     }
   }
   next()
