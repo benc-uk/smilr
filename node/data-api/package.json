@@ -21,7 +21,7 @@
   "author": "Ben Coleman",
   "license": "MIT",
   "dependencies": {
-    "applicationinsights": "^1.7.3",
+    "applicationinsights": "^1.8.2",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -29,19 +29,19 @@
     "express": "^4.17.1",
     "express-swagger-generator": "^1.1.17",
     "mongo-querystring": "^4.1.1",
-    "mongoose": "^5.9.6",
+    "mongoose": "^5.9.25",
     "morgan": "^1.10.0",
     "passport-azure-ad": "^4.2.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^6.8.0",
-    "mocha": "7.1.1",
-    "mocha-junit-reporter": "^1.23.3",
-    "mochawesome": "^5.0.0",
-    "mongodb-memory-server": "^6.5.0",
-    "nodemon": "^2.0.2",
-    "nyc": "^15.0.0",
+    "eslint": "^7.5.0",
+    "mocha": "8.0.1",
+    "mocha-junit-reporter": "^2.0.0",
+    "mochawesome": "^6.1.1",
+    "mongodb-memory-server": "^6.6.1",
+    "nodemon": "^2.0.4",
+    "nyc": "^15.1.0",
     "supertest": "^4.0.2"
   }
 }
