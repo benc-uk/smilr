@@ -48,7 +48,7 @@ export default {
     })
   },
 
-  getFeedbackForEvent: function(event) {
+  getFeedbackForEvent: function() {
     // This one doesn't return a promise, go figure
     return mockFeedback
   },

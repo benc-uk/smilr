@@ -6,7 +6,7 @@ module.exports = {
     'eslint:recommended'
   ],
   rules: {
-    // Errors & best practices 
+    // Errors & best practices
     'no-var': 'error',
     'no-console': 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
