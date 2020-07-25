@@ -2,6 +2,27 @@ const mongoose = require('mongoose')
 
 const SCHEMA_NAME = 'Events'
 
+//
+// Hook for validation hoisted up, for re-use in tests and database updateOne & save pre-hooks
+//
+const preSaveHook = function(next, event) {
+  // Create our own id, for historical reasons
+  if (!event._id) {
+    event._id = _makeId(5)
+  }
+
+  if (event.topics.length < 1) {
+    next(new Error('ValidationError: event must have at least 1 topic'))
+    return
+  }
+  if (event.start > event.end) {
+    next(new Error('ValidationError: start date can not be after end date'))
+    return
+  }
+
+  next()
+}
+
 /**
  * @typedef Event
  * @property {string} _id.required - Id of this event - eg: FOO12
@@ -36,39 +57,10 @@ class Event {
     })
 
     // Middleware for mutation and validation
-    eventSchema.pre('save', function(next) {
-      let event = this
-
-      // Create our own id, for historical reasons
-      if (!event._id) {
-        event._id = _makeId(5)
-      }
-
-      if (event.topics.length < 1) {
-        next(new Error('ValidationError: event must have at least 1 topic'))
-      }
-      if (event.start > event.end) {
-        next(new Error('ValidationError: start date can not be after end date'))
-      }
-
-      next()
-    })
+    eventSchema.pre('save', function(next) { preSaveHook(next, this) })
 
     // Middleware for validation of updates
-    eventSchema.pre('updateOne', function(next) {
-      if (this._update && this._update['$set']) {
-        let event = this._update['$set']
-
-        if (event.start > event.end) {
-          next(new Error('ValidationError: start date can not be after end date'))
-        }
-        if (event.topics.length < 1) {
-          next(new Error('ValidationError: event must have at least 1 topic'))
-        }
-      }
-
-      next()
-    })
+    eventSchema.pre('updateOne', function(next) { preSaveHook(next, this._update['$set']) })
 
     // Create the mongoose model from eventSchema
     mongoose.model(SCHEMA_NAME, eventSchema)
@@ -96,3 +88,4 @@ function _makeId(len) {
 }
 
 module.exports = Event
+module.exports.preSaveHook = preSaveHook

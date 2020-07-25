@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 let MongoQS = require('mongo-querystring')
 let querystring = require('querystring')
 
@@ -55,7 +57,7 @@ class Service {
         .limit(parseInt(limit) || 0)
         .skip(parseInt(skip) || 0)
 
-      if (items) { return items } else { return new Error(MSG_NO_RESULT) }
+      if (items && items.length > 0) { return items } else { return new Error(MSG_NO_RESULT) }
     } catch (error) {
       return error
     }
