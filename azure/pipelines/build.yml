@@ -52,8 +52,7 @@ stages:
       workingDirectory: node/data-api
 
     - bash: |
-        npm run test-junit
-        npm run coverage
+        npm run test
       displayName: 'Run tests for data-api'
       workingDirectory: node/data-api
       continueOnError: true
