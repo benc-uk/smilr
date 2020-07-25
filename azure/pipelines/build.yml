@@ -52,8 +52,7 @@ stages:
       workingDirectory: node/data-api
 
     - bash: |
-        npm run test-junit
-        npm run coverage
+        npm run test
       displayName: 'Run tests for data-api'
       workingDirectory: node/data-api
       continueOnError: true
@@ -61,7 +60,7 @@ stages:
     - task: PublishTestResults@2
       displayName: 'Publish tests for data-api'
       inputs:
-        testResultsFiles: node/data-api/test-results.xml
+        testResultsFiles: node/data-api/unit-tests-data-api.xml
         testResultsFormat: JUnit
         testRunTitle: 'Data API Tests'
         failTaskOnFailedTests: true
@@ -70,7 +69,7 @@ stages:
       displayName: 'Publish code coverage for data-api'
       inputs:
         codeCoverageTool: cobertura
-        summaryFileLocation: node/data-api/coverage/cobertura-coverage.xml
+        summaryFileLocation: node/data-api/cobertura-coverage.xml
 
     - bash: |
         npm install --silent

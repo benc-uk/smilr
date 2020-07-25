@@ -1,8 +1,39 @@
 const mongoose = require('mongoose')
 const axios = require('axios')
-const Event = require('./event')
 
 const SCHEMA_NAME = 'Feedback'
+
+//
+// Hook for validation hoisted up, for re-use in tests and database updateOne & save pre-hooks
+//
+const preSaveHook = async function(next, feedback, eventService) {
+  let event = await eventService.fetchOne(feedback.event)
+  if (event instanceof Error) {
+    next(new Error(`ValidationError: event: ${feedback.event} does not exist`))
+  } else {
+    // Scan topics, and return error if not found
+    let topicFound = false
+    for (let topic of event.topics) {
+      if (topic.id == feedback.topic) { topicFound = true; break }
+    }
+    if (!topicFound) {
+      next(new Error(`ValidationError: topic: ${feedback.topic} does not exist in event: ${feedback.event}`))
+    }
+  }
+
+  // OPTIONAL - Handle sentiment analysis if it has been configured
+  if (process.env.SENTIMENT_API_ENDPOINT && feedback.comment && feedback.comment.length > 0)  {
+    try {
+      feedback = await _sentimentScore(feedback)
+      console.log(`### Got sentiment score: ${feedback.sentiment}`)
+    } catch (err) {
+      console.log('### WARN! sentimentScore failed, but it won\'t prevent feedback being saved')
+      console.log(err.toString())
+    }
+  }
+
+  next()
+}
 
 /**
  * @typedef Feedback
@@ -25,36 +56,10 @@ class Feedback {
     })
 
     // Middleware for mutation and validation
-    schema.pre('save', async function(next) {
-      let feedback = this
-
-      let event = await new Event().getInstance().findById(feedback.event)
-      if (!event) {
-        next(new Error(`ValidationError: event: ${feedback.event} does not exist`))
-      } else {
-        // Scan topics, and return error if not found
-        let topicFound = false
-        for (let topic of event.topics) {
-          if (topic.id == feedback.topic) { topicFound = true; break }
-        }
-        if (!topicFound) {
-          next(new Error(`ValidationError: topic: ${feedback.topic} does not exist in event: ${feedback.event}`))
-        }
-      }
-
-      // OPTIONAL - Handle sentiment analysis if it has been configured
-      if (process.env.SENTIMENT_API_ENDPOINT && feedback.comment && feedback.comment.length > 0)  {
-        try {
-          feedback = await _sentimentScore(feedback)
-          console.log(`### Got sentiment score: ${feedback.sentiment}`)
-        } catch (err) {
-          console.log('### WARN! sentimentScore failed, but it won\'t prevent feedback being saved')
-          console.log(err.toString())
-        }
-      }
-
-      next()
-    })
+    // EventService is used to validate the event referenced in the feedback exists
+    const EventService = require('../services/event-service')
+    const service = new EventService()
+    schema.pre('save', async function(next) { await preSaveHook(next, this, service) })
 
     // Create the mongoose model from eventSchema
     mongoose.model(SCHEMA_NAME, schema, 'feedback')
@@ -72,6 +77,7 @@ class Feedback {
 //
 // Used for sentiment analysis of comments
 //
+/* istanbul ignore next */
 const _sentimentScore = async function(feedback) {
   // API payload
   let payload = {
@@ -101,3 +107,4 @@ const _sentimentScore = async function(feedback) {
 }
 
 module.exports = Feedback
+module.exports.preSaveHook = preSaveHook

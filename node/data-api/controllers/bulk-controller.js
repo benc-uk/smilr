@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const Controller = require('./controller')
 const EventService = require('../services/event-service')
 const FeedbackService = require('../services/feedback-service')
