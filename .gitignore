@@ -76,19 +76,15 @@ dist/
 tmp/
 tmp.zip
 
-# Test rubbish
-newman/*
-requirements.lock
-**/smilr/charts
-**/test-results.xml
-etc/loadtest/results
-!etc/loadtest/bin
-**/.nyc_output
 # Unit test, code coverage and load test output
 newman/*
-**/.nyc_output
+requirements.lock
+etc/loadtest/results
+!etc/loadtest/bin
 etc/loadtest/result.json
 **/test-results.xml
+**/unit-tests-data-api.xml
+**/cobertura-coverage.xml
 **/junit.xml
 vue/coverage/**
 unit-tests-frontend.xml
