@@ -1,13 +1,14 @@
 <template>
   <div class="facebox">
-    <img :ref="`face${number}`" class="face animated"
+    <img :ref="`face${number}`" class="face animate__animated"
          :src="utilsFaceSVG(number)"
          :class="{
-           'slower': selected,
-           'infinite': selected,
-           'tada': selected,
-           'flipInX': appear,
-           'unselected': unselected }" @click="clicked">
+           'animate__slower': selected,
+           'animate__infinite': selected,
+           'animate__tada': selected,
+           'animate__rotateIn': appear,
+           'unselected': unselected }"
+         @click="clicked">
   </div>
 </template>
 
@@ -43,7 +44,7 @@ export default {
 
   mounted() {
     for (let faceRef in this.$refs) {
-      this.$refs[faceRef].style.animationDelay = (Math.random() * 600 + 'ms')
+      this.$refs[faceRef].style.animationDelay = (Math.random() * 300 + 'ms')
     }
   },
 
@@ -59,13 +60,12 @@ export default {
 .face {
   width: 18%;
   filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.75));
-  /* transition: 0.3s ease-in-out; */
+  transition: 0.3s ease-in-out;
 }
 .face:hover {
   filter: drop-shadow(0px 0.8em 0.6em rgba(0, 0, 0, 0.75));
-  transform: translate(0px, -16px) !important;
+  transform: translate(0px, -16px) scale(1.1, 1.1) !important;
   transition: 0.3s ease-in-out !important;
-  animation: flipInX;
 }
 .facebox {
   display:inline;
