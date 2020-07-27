@@ -47,7 +47,7 @@ module.exports = {
     // Validate bearer token with oauth scheme see lib/auth.js
       authHandler = passport.authenticate('oauth-bearer', { session: false })
       // Optionally initialize Passport for bearer token validation
-      require('./core/auth')(app)
+      require('../core/auth')(app)
     }
 
     // Event endpoints, full CRUD + some extra
