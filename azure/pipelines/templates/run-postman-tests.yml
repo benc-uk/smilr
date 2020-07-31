@@ -26,7 +26,7 @@ jobs:
     
     # Run the tests with Newman
     - bash: >
-        $(System.DefaultWorkingDirectory)/bin/newman run etc/postman/smilr-api-tests.json
+        $(System.DefaultWorkingDirectory)/bin/newman run testing/postman/smilr-api-tests.json
         --reporters junit --iteration-count 3 --timeout 180000 
         --global-var smilr-api-host="${{ parameters.apiHost }}" 
       displayName: Run API integration tests

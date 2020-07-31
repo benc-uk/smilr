@@ -71,6 +71,8 @@ This is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) so contains multipl
 ```
 /
 ├── archive            Older and experimental code archive 
+│   ├── mobile             Nativescript + Vue.js mobile client 
+│   └── go                 Work in progress re-write of the main services in Go
 ├── azure              Supporting files for Azure deployment etc
 │   ├── functionsv2      Azure Functions serverless implementation
 │   ├── pipelines        Azure Pipelines for CI/CD
@@ -78,19 +80,15 @@ This is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) so contains multipl
 ├── docs               Documentation
 ├── docker             Docker compose files, Note. Dockerfiles are elsewhere 
 ├── etc                Supporting files, pictures and other artefacts 
-├── go                 Work in progress re-write of the main services in Go
-│   ├── data-api         Data API in Go
-│   └── frontend         Frontend service in Go
 ├── kubernetes         Docs and files to support deployment to Kubernetes & AKS
 │   ├── helm             Helm chart for deploying Smilr with Helm
 │   ├── advanced         Deployment YAML for use with Ingress, SSL and persistence
 │   └── basic            Simple deployment without Ingress or persistence
-├── mobile             Nativescript + Vue.js mobile client 
 ├── node               Main microservices, written in Node.js
 │   ├── data-api         Data API service source code
 │   └── frontend         Frontend service source code
-├── scripts            Supporting helper scripts
-│   └── demoData         Load the database with demo data
+├── orleans            Orleans actor based implementation of the Data API
+├── testing            Mock test data, API tests and load test scripts
 └── vue                The main app frontend, a Vue.js SPA
     ├── src              Source code of Vue.js app
     └── mock-api         Provides a fake API and database for local testing

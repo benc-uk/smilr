@@ -37,4 +37,4 @@ jobs:
         loadtest.js
         --out json=result.json
       displayName: Run loadtest with k6
-      workingDirectory: etc/loadtest
+      workingDirectory: testing/loadtest
