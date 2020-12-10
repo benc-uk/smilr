@@ -1,0 +1,64 @@
+name: Release Dockerhub Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      
+env:
+  ACR_NAME:       bcdemo
+
+jobs:
+  deployJob:
+    env:
+      AKS_NAME:       benc
+      AKS_RES_GRP:    aks  
+      HELM_RELEASE:   live
+      HELM_NS:        smilr
+      HELM_DOMAIN:    kube.benco.io
+      HELM_CERT:      kube-benco-io-cert  
+
+    runs-on: ubuntu-latest
+
+    steps:  
+    - name: 'Checkout repo'
+      uses: actions/checkout@v1          
+
+    - name: 'Helm repo & dependency update'
+      run: |
+        helm repo add stable https://kubernetes-charts.storage.googleapis.com
+        helm dep update kubernetes/helm/smilr
+
+    - name: 'Helm install live release'
+      uses: deliverybot/helm@v1
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBE_CONFIG }}'      
+      with:
+        release: ${{ env.HELM_RELEASE }}
+        namespace: ${{ env.HELM_NS }}
+        chart: kubernetes/helm/smilr
+        token: ${{ github.token }}
+        helm: helm3
+        #secrets: ${{ toJSON(secrets) }}
+        values: |
+          ingress:
+            domainSuffix: kube.benco.io
+            certName: kube-benco-io-cert
+              
+          dataApi:
+            mongoConnStr: ${{ secrets.LIVE_MONGO_CONNSTR }}
+            imageTag: ${{ github.event.release.tag_name }}
+            replicas: 1
+            aadClientId: ${{ secrets.LIVE_CLIENT_ID }}
+
+          frontend:
+            imageTag: ${{ github.event.release.tag_name }}
+            replicas: 1
+            aadClientId: ${{ secrets.LIVE_CLIENT_ID }}
+
+          sentiment:
+            enabled: false
+            key: ${{ secrets.LIVE_SENTIMENT_KEY }}
+            externalEndpoint: https://westeurope.api.cognitive.microsoft.com/
+
+          mongodb:
+            enabled: false

@@ -10,7 +10,7 @@ ingress:
   # If set then release name will be prepended and host routing used 
   domainSuffix:
   # Ingress class annotation
-  class: addon-http-application-routing
+  class: 
   # Set to enable TLS, when using cert-manager and dynamically issued certs 
   certIssuer:
   # Set to enable TLS with a static secret
@@ -21,6 +21,7 @@ dataApi:
   replicas: 2
   # Leave blank to use the internal service, override if using external database
   mongoConnStr: 
+  databaseName: 
   aadClientId:
   imagePullPolicy: Always
   

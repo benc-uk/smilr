@@ -35,6 +35,11 @@ spec:
           {{ else }}
           value: "mongodb://{{ .Release.Name }}-mongodb"
           {{ end }}
+        
+        {{ if .Values.dataApi.databaseName }}
+        - name: MONGO_DB_NAME
+          value: {{ .Values.dataApi.databaseName }}
+        {{ end }}
 
         - name: RELEASE_INFO
           value: 'Helm release: {{ .Release.Name }}, namespace: {{ .Release.Namespace }}, revision: {{ .Release.Revision }}, chart: {{ .Chart.Name }}-{{ .Chart.Version }}'

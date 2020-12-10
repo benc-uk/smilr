@@ -1,6 +1,6 @@
-name: 'Deploy to AKS Demo'
+name: "Deploy to AKS Demo"
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       imageTag:
@@ -8,167 +8,139 @@ on:
         description: Image tag to be deployed
 
 env:
-  ACR_NAME:     bcdemo
-  AKS_NAME:     bcdemo
-  RES_GRP:      demo.aks
-  IMAGE_TAG:    latest
-  DOMAIN:       kube.benco.io
-  CERT:         kube-benco-io-cert
+  ACR_NAME: bcdemo
+  AKS_NAME: benc
+  RES_GRP: aks
+  IMAGE_TAG: latest
+  DOMAIN: kube.benco.io
+  CERT: kube-benco-io-cert
   RELEASE_NAME: demosmilr
-  
+
 jobs:
   # ==================================================================================
   # Continuous deployment job - deploy to AKS test namespace
   # ==================================================================================
   deploy-k8s-test:
+    name: Deploy to Test Environment
     env:
-      ENVIRON: test    
+      NAMESPACE: test
+    environment:
+      name: AKS - test
+      url: "https://${{ env.NAMESPACE }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}/"
 
     runs-on: ubuntu-latest
-    steps:  
-    - name: 'Start deployment'
-      id: deploy
-      uses: chrnorm/deployment-action@v1.2.0
-      with:
-        # Shouldn't need to pass the ref, but there's a bug in GitHub
-        # Triggering workflow_dispatch with API means GITHUB_REF isn't set 
-        ref: ${{ github.event.ref }}
-        token: ${{ github.token }}
-        environment: AKS - ${{ env.ENVIRON }}
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@v1
 
-    - name: 'Checkout repo'
-      uses: actions/checkout@v1          
+      - name: "Connect to AKS"
+        uses: azure/aks-set-context@v1
+        with:
+          creds: "${{ secrets.AZURE_CREDENTIALS }}" # Azure credentials
+          resource-group: "${{ env.RES_GRP }}"
+          cluster-name: "${{ env.AKS_NAME }}"
+        id: login
 
-    - name: 'Connect to AKS'
-      uses: azure/aks-set-context@v1
-      with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-        resource-group: '${{ env.RES_GRP }}'
-        cluster-name: '${{ env.AKS_NAME }}'
-      id: login
+      - name: "Helm dep update"
+        run: |
+          helm repo add stable https://charts.helm.sh/stable
+          helm dep update kubernetes/helm/smilr
 
-    - name: 'Helm dep update'
-      run: |
-        helm repo add stable https://kubernetes-charts.storage.googleapis.com
-        helm dep update kubernetes/helm/smilr
-
-    - name: 'Helm install release'
-      run: |
-        helm upgrade $ENVIRON-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
-
-    - name: 'End deployment - failure'
-      if: ${{ failure() }}
-      uses: chrnorm/deployment-status@v1.0.0
-      with:
-        token: ${{ github.token }}
-        state: failure
-        deployment_id: ${{ steps.deploy.outputs.deployment_id }} 
+      - name: "Helm install release"
+        run: |
+          helm upgrade $NAMESPACE-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $NAMESPACE --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
   # ==================================================================================
   # Integration API tests
   # ==================================================================================
   run-api-tests:
+    name: Run API Tests
     needs: deploy-k8s-test
     env:
-      ENVIRON: test   
+      NAMESPACE: test
+    environment:
+      name: AKS - test
+      url: "https://${{ env.NAMESPACE }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}/"
 
     runs-on: ubuntu-latest
     steps:
-    - name: 'Continue deployment'
-      id: deploy
-      uses: chrnorm/deployment-action@v1.2.0
-      with:
-        # Shouldn't need to pass the ref, but there's a bug in GitHub
-        # Triggering workflow_dispatch with API means GITHUB_REF isn't set 
-        ref: ${{ github.event.ref }}
-        token: ${{ github.token }}
-        environment: AKS - ${{ env.ENVIRON }}
-        initial_status: in_progress
+      - uses: actions/checkout@v1
 
-    - uses: actions/checkout@v1
-    
-    - name: Wait for API to be ready
-      run: bash etc/bash/urlWait.sh https://$ENVIRON-$RELEASE_NAME.$DOMAIN/api/info 60
-    
-    # Run the tests inside a container with Newman
-    - name: Run API tests with Postman/newman
-      uses: docker://postman/newman:ubuntu
-      with:
-        args: run /github/workspace/etc/postman/smilr-api-tests.json /
-          --timeout 180000 /
-          --global-var smilr-api-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}" /
-          --global-var smilr-front-host="${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}"
+      - name: Wait for API to be ready
+        run: etc/bash/url-check.sh -u https://$NAMESPACE-$RELEASE_NAME.$DOMAIN/api/info -t 60 -c 2
 
-    - name: 'End deployment - success'
-      if: ${{ success() }}
-      uses: chrnorm/deployment-status@v1.0.0
-      with:
-        token: ${{ github.token }}
-        state: success
-        deployment_id: ${{ steps.deploy.outputs.deployment_id }}
-        environment_url: 'http://${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}/'
-
-    - name: 'End deployment - failure'
-      if: ${{ failure() }}
-      uses: chrnorm/deployment-status@v1.0.0
-      with:
-        token: ${{ github.token }}
-        state: failure
-        deployment_id: ${{ steps.deploy.outputs.deployment_id }}   
+      # Run the tests inside a container with Newman
+      - name: Run API tests with Postman/newman
+        uses: docker://postman/newman:ubuntu
+        with:
+          args: run /github/workspace/testing/postman/smilr-api-tests.json /
+            --timeout 180000 /
+            --global-var smilr-api-host="${{ env.NAMESPACE }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}"
 
   # ==================================================================================
   # Continuous deployment job - deploy to AKS staging namespace
   # ==================================================================================
   deploy-k8s-staging:
+    name: Deploy to Staging Environment
     needs: run-api-tests
     env:
-      ENVIRON: staging    
+      NAMESPACE: staging
+    environment:
+      name: AKS - staging
+      url: "https://${{ env.NAMESPACE }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}/"
 
     runs-on: ubuntu-latest
-    steps:  
-    - name: 'Start deployment'
-      id: deploy
-      uses: chrnorm/deployment-action@v1.2.0
-      with:
-        # Shouldn't need to pass the ref, but there's a bug in GitHub
-        # Triggering workflow_dispatch with API means GITHUB_REF isn't set 
-        ref: ${{ github.event.ref }}
-        token: ${{ github.token }}
-        environment: AKS - ${{ env.ENVIRON }}  
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@v1
 
-    - name: 'Checkout repo'
-      uses: actions/checkout@v1
+      - name: "Connect to AKS"
+        uses: azure/aks-set-context@v1
+        with:
+          creds: "${{ secrets.AZURE_CREDENTIALS }}" # Azure credentials
+          resource-group: "${{ env.RES_GRP }}"
+          cluster-name: "${{ env.AKS_NAME }}"
+        id: login
 
-    - name: 'Connect to AKS'
-      uses: azure/aks-set-context@v1
-      with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-          resource-group: '${{ env.RES_GRP }}'
-          cluster-name: '${{ env.AKS_NAME }}'
-      id: login
+      - name: "Helm dep update"
+        run: |
+          helm repo add stable https://charts.helm.sh/stable
+          helm dep update kubernetes/helm/smilr
 
-    - name: 'Helm dep update'
-      run: |
-        helm repo add stable https://kubernetes-charts.storage.googleapis.com
-        helm dep update kubernetes/helm/smilr
+      - name: "Helm install release"
+        run: |
+          helm upgrade $NAMESPACE-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $NAMESPACE --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
 
-    - name: 'Helm install release'
-      run: |
-        helm upgrade $ENVIRON-$RELEASE_NAME kubernetes/helm/smilr --install --namespace $ENVIRON --set "registryPrefix=$ACR_NAME.azurecr.io/,dataApi.imageTag=$IMAGE_TAG,frontend.imageTag=$IMAGE_TAG,ingress.domainSuffix=$DOMAIN,ingress.certName=$CERT"
+  # ==================================================================================
+  # Simple load test
+  # ==================================================================================
+  run-load-test:
+    name: Run Load Test
+    needs: deploy-k8s-staging
+    env:
+      NAMESPACE: staging
+      K6_VER: "0.29.0"
+    environment:
+      name: AKS - staging
+      url: "https://${{ env.NAMESPACE }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}/"
 
-    - name: 'End deployment - success'
-      if: ${{ success() }}
-      uses: chrnorm/deployment-status@v1.0.0
-      with:
-        token: ${{ github.token }}
-        state: success
-        deployment_id: ${{ steps.deploy.outputs.deployment_id }}
-        environment_url: 'http://${{ env.ENVIRON }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }}/'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
 
-    - name: 'End deployment - failure'
-      if: ${{ failure() }}
-      uses: chrnorm/deployment-status@v1.0.0
-      with:
-        token: ${{ github.token }}
-        state: failure
-        deployment_id: ${{ steps.deploy.outputs.deployment_id }}   
+      - name: Wait for API to be ready
+        run: etc/bash/url-check.sh -u https://$NAMESPACE-$RELEASE_NAME.$DOMAIN/api/info -t 60 -c 2
+
+      - name: Download k6 binary
+        run: |
+          wget -q https://github.com/loadimpact/k6/releases/download/v${K6_VER}/k6-v${K6_VER}-linux64.tar.gz
+          tar -xzf k6-v${{ env.K6_VER }}-linux64.tar.gz
+        working-directory: testing/loadtest
+
+      - name: Run loadtest with k6
+        run: |
+          ./k6-v${K6_VER}-linux64/k6 run -q \
+          -e API_HOST=https://${{ env.NAMESPACE }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }} \
+          -e FRONT_HOST=https://${{ env.NAMESPACE }}-${{ env.RELEASE_NAME }}.${{ env.DOMAIN }} \
+          loadtest.js --out json=result.json
+        working-directory: testing/loadtest

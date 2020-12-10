@@ -9,7 +9,9 @@ kind: Ingress
 metadata:
   name: {{ include "smilr.fullname" . }}
   annotations:
+    {{ if .Values.ingress.class }}
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    {{ end }}
     {{ if .Values.ingress.certIssuer }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.certIssuer }}
     {{ end }}
@@ -57,7 +59,9 @@ kind: Ingress
 metadata:
   name: "{{ include "smilr.fullname" . }}-data-api"
   annotations:
+    {{ if .Values.ingress.class }}
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    {{ end }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: "/api"
 spec:
@@ -80,7 +84,9 @@ kind: Ingress
 metadata:
   name: "{{ include "smilr.fullname" . }}-frontend"
   annotations:
+    {{ if .Values.ingress.class }}
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    {{ end }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: "/"
     nginx.ingress.kubernetes.io/add-base-url: "true"
