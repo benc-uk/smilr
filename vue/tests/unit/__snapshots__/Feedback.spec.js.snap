@@ -3,7 +3,7 @@
 exports[`Feedback.vue shows event data 1`] = `
 <div>
   <!---->
-  <b-card-stub bodytag="div" titletag="h4" subtitletag="h6" subtitletextvariant="muted" headertag="div" headerbgvariant="primary" headertextvariant="white" footertag="div" tag="div" bordervariant="primary">
+  <b-card-stub bodytag="div" bordervariant="primary" footertag="div" headerbgvariant="primary" headertag="div" headertextvariant="white" subtitletag="h6" subtitletextvariant="muted" tag="div" titletag="h4">
     <h2 slot="header" class="text-truncate">
       Lemons (Fake event (current))
     </h2>
@@ -18,18 +18,18 @@ exports[`Feedback.vue shows event data 1`] = `
       </div>
       <!---->
       <div>
-        <b-form-textarea-stub value="" placeholder="Any comments (optional)" debounce="0" rows="2" wrap="soft" noresize="true" class="commentbox"></b-form-textarea-stub>
+        <b-form-textarea-stub value="" debounce="0" formatter="[Function]" placeholder="Any comments (optional)" noresize="true" rows="2" wrap="soft" class="commentbox"></b-form-textarea-stub>
         <!---->
       </div>
       <!---->
     </div>
-    <b-modal-stub size="md" centered="true" ignoreenforcefocusselector="" title="Feedback Received" titletag="h5" headerbgvariant="success" hideheaderclose="true" okonly="true" headerclosecontent="&amp;times;" headercloselabel="Close" canceltitle="Cancel" oktitle="All Done" cancelvariant="secondary" okvariant="primary">
+    <b-modal-stub canceltitle="Cancel" cancelvariant="secondary" centered="true" headerbgvariant="success" headerclosecontent="&amp;times;" headercloselabel="Close" hideheaderclose="true" okonly="true" oktitle="All Done" okvariant="primary" size="md" title="Feedback Received" titletag="h5">
       <div class="d-block text-center">
         <h3>Thanks for submitting your feedback! 😊</h3>
       </div>
     </b-modal-stub>
   </b-card-stub>
-  <b-modal-stub size="md" centered="true" ignoreenforcefocusselector="" title="Hey! You're keen..." titletag="h5" headerbgvariant="warning" headertextvariant="light" hideheaderclose="true" okonly="true" headerclosecontent="&amp;times;" headercloselabel="Close" canceltitle="Cancel" oktitle="Oh yes, I forgot" cancelvariant="secondary" okvariant="primary">
+  <b-modal-stub canceltitle="Cancel" cancelvariant="secondary" centered="true" headerbgvariant="warning" headerclosecontent="&amp;times;" headercloselabel="Close" headertextvariant="light" hideheaderclose="true" okonly="true" oktitle="Oh yes, I forgot" okvariant="primary" size="md" title="Hey! You're keen..." titletag="h5">
     <div class="d-block text-center">
       <h3>You've already given feedback for this topic, sorry!</h3>
     </div>

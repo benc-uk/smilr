@@ -1,7 +1,7 @@
 #
 # Build and bundle the Vue.js app with Vue CLI 3 https://cli.vuejs.org/
 #
-FROM node:12-alpine as spabuild
+FROM node:16-alpine as spabuild
 ARG vue_root="vue"
 ARG build_info="Docker container build"
 
@@ -27,9 +27,9 @@ RUN npm run build-modern
 #
 # Build Node.js frontend service, pulling in bundled output from previous step
 #
-FROM node:12-alpine
+FROM node:16-alpine
 
-LABEL version="2.8.0" 
+LABEL version="2.9.7" 
 ARG basedir="node/frontend"
 ENV NODE_ENV production
 

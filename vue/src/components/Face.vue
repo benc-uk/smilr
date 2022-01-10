@@ -1,14 +1,15 @@
 <template>
   <div class="facebox">
-    <img :ref="`face${number}`" class="face animate__animated"
-         :src="utilsFaceSVG(number)"
-         :class="{
-           'animate__slower': selected,
-           'animate__infinite': selected,
-           'animate__tada': selected,
-           'animate__rotateIn': appear,
-           'unselected': unselected }"
-         @click="clicked">
+    <img
+      :ref="`face${number}`" class="face animate__animated"
+      :src="utilsFaceSVG(number)"
+      :class="{
+        'animate__slower': selected,
+        'animate__infinite': selected,
+        'animate__tada': selected,
+        'animate__rotateIn': appear,
+        'unselected': unselected }"
+      @click="clicked">
   </div>
 </template>
 

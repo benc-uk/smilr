@@ -30,7 +30,7 @@ exports[`Admin.vue renders admin screen 1`] = `
             <th role="columnheader" scope="col" tabindex="0" aria-colindex="3" aria-sort="none" class="">
               <div>Start</div><span class="sr-only"> (Click to sort Ascending)</span>
             </th>
-            <th role="columnheader" scope="col" tabindex="0" aria-colindex="4" class="">
+            <th role="columnheader" scope="col" aria-colindex="4" class="">
               <div>Actions</div>
             </th>
           </tr>
@@ -46,7 +46,8 @@ exports[`Admin.vue renders admin screen 1`] = `
               </button> &nbsp;
               <button type="button" class="btn btn-danger btn-lg">
                 &nbsp; <fa icon="trash-alt"></fa> &nbsp;
-              </button></td>
+              </button>
+            </td>
           </tr>
           <tr role="row" class="">
             <td aria-colindex="1" role="cell" class="">Fake event (past)</td>
@@ -57,7 +58,8 @@ exports[`Admin.vue renders admin screen 1`] = `
               </button> &nbsp;
               <button type="button" class="btn btn-danger btn-lg">
                 &nbsp; <fa icon="trash-alt"></fa> &nbsp;
-              </button></td>
+              </button>
+            </td>
           </tr>
           <tr role="row" class="">
             <td aria-colindex="1" role="cell" class="">Fake event (current)</td>
@@ -68,7 +70,8 @@ exports[`Admin.vue renders admin screen 1`] = `
               </button> &nbsp;
               <button type="button" class="btn btn-danger btn-lg">
                 &nbsp; <fa icon="trash-alt"></fa> &nbsp;
-              </button></td>
+              </button>
+            </td>
           </tr>
           <!---->
           <!---->

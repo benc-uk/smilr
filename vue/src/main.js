@@ -27,7 +27,7 @@ import { faHome, faInfoCircle, faCoffee, faCalendarAlt, faFlask, faChalkboardTea
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 faLibrary.add(faHome, faInfoCircle, faCoffee, faSync, faCalendarAlt, faFlask, faChalkboardTeacher,
   faLaptopCode, faTools, faChartBar, faEdit, faTrashAlt, faCalendarPlus, faPlusSquare, faUser)
-Vue.component('fa', FontAwesomeIcon)
+Vue.component('Fa', FontAwesomeIcon)
 
 /* ================================================================================================== */
 
