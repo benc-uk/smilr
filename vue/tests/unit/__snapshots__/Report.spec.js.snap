@@ -20,7 +20,8 @@ exports[`Report.vue renders feedback report 1`] = `
     </select> &nbsp;
     <button type="button" class="btn btn-success btn-lg">
       <fa icon="sync"></fa> REFRESH REPORT
-    </button></form> <br>
+    </button>
+  </form> <br>
   <div class="card border-primary">
     <!---->
     <div class="card-header bg-primary text-white">

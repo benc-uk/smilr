@@ -1,8 +1,8 @@
-# Base Alpine Linux image with Node 12.x
-FROM node:12-alpine
+# Base Alpine Linux image with Node 16.x
+FROM node:16-alpine
 
 # Build time arguments
-LABEL version="6.1.0" 
+LABEL version="6.6.0" 
 ARG basedir="node/data-api"
 ARG build_info="Docker container build"
 ENV NODE_ENV production

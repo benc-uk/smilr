@@ -4,7 +4,7 @@ exports[`EventList.vue renders current events correctly 1`] = `
 <div>
   <transition-group-stub tag="p" name="fade">
     <div>
-      <b-card-stub bodytag="div" titletag="h4" subtitletag="h6" subtitletextvariant="muted" headertag="div" headerbgvariant="primary" headertextvariant="white" footertag="div" tag="div" bordervariant="primary">
+      <b-card-stub bodytag="div" bordervariant="primary" footertag="div" headerbgvariant="primary" headertag="div" headertextvariant="white" subtitletag="h6" subtitletextvariant="muted" tag="div" titletag="h4">
         <h2 slot="header">
           <fa icon="chalkboard-teacher"></fa> &nbsp; Fake event (current)
         </h2>
@@ -34,7 +34,7 @@ exports[`EventList.vue renders future events correctly 1`] = `
 <div>
   <transition-group-stub tag="p" name="fade">
     <div>
-      <b-card-stub bodytag="div" titletag="h4" subtitletag="h6" subtitletextvariant="muted" headertag="div" headerbgvariant="secondary" headertextvariant="white" footertag="div" tag="div" bordervariant="secondary">
+      <b-card-stub bodytag="div" bordervariant="secondary" footertag="div" headerbgvariant="secondary" headertag="div" headertextvariant="white" subtitletag="h6" subtitletextvariant="muted" tag="div" titletag="h4">
         <h2 slot="header">
           <fa icon="flask"></fa> &nbsp; Fake lab (future)
         </h2>
@@ -56,7 +56,7 @@ exports[`EventList.vue renders past events correctly 1`] = `
 <div>
   <transition-group-stub tag="p" name="fade">
     <div>
-      <b-card-stub bodytag="div" titletag="h4" subtitletag="h6" subtitletextvariant="muted" headertag="div" headerbgvariant="secondary" headertextvariant="white" footertag="div" tag="div" bordervariant="secondary">
+      <b-card-stub bodytag="div" bordervariant="secondary" footertag="div" headerbgvariant="secondary" headertag="div" headertextvariant="white" subtitletag="h6" subtitletextvariant="muted" tag="div" titletag="h4">
         <h2 slot="header">
           <fa icon="calendar-alt"></fa> &nbsp; Fake event (past)
         </h2>

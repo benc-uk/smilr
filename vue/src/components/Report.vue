@@ -38,10 +38,10 @@
         &nbsp; &bull; Responses: {{ topic.feedback.length }} <br>
         <span v-if="topic.feedback.length > 0">&nbsp; &bull; Average Rating: {{ topicAvgRating(topic) }} <img :src="utilsFaceSVG(Math.round(topicAvgRating(topic)))"> </span>
         <b-table v-if="topic.feedback.length > 0" sort-by="rating" sort-desc hover :items="topic.feedback" :fields="feedBackTableFields">
-          <template v-slot:cell(rating)="data">
+          <template #cell(rating)="data">
             <img :src="utilsFaceSVG(data.item.rating)"> {{ data.item.rating }}
           </template>
-          <template v-slot:cell(sentiment)="data">
+          <template #cell(sentiment)="data">
             {{ data.item.sentiment ? Math.round(data.item.sentiment * 100) + "%" : '-' }}
           </template>
         </b-table>

@@ -56,12 +56,12 @@
           </div>
 
           <b-table hover thead-class="hiddenHeader" :items="event.topics" :fields="topicTableFields">
-            <template v-slot:cell(actions)="data">
+            <template #cell(actions)="data">
               <b-button variant="danger" @click="deleteTopic(data.item.id)">
                 <fa icon="trash-alt" :title="'id:'+data.item.id" />
               </b-button>
             </template>
-            <template v-slot:cell(desc)="data">
+            <template #cell(desc)="data">
               <b-input v-model="data.item.desc" v-focus :value="data.item.desc" />
             </template>
           </b-table>

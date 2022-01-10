@@ -13,7 +13,7 @@
       <spinner v-if="!events" />
 
       <b-table v-if="events" hover :items="events" :fields="eventTableFields">
-        <template v-slot:cell(actions)="data">
+        <template #cell(actions)="data">
           <b-button size="lg" variant="success" @click="editEvent(data.item)">
 &nbsp; <fa icon="edit" /> &nbsp;
           </b-button> &nbsp;

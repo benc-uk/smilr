@@ -1,6 +1,6 @@
 {
   "name": "smilr-data-api",
-  "version": "6.5.0",
+  "version": "6.6.0",
   "main": "server.js",
   "engines": {
     "node": "^12.16.1"
@@ -18,24 +18,24 @@
   "author": "Ben Coleman",
   "license": "MIT",
   "dependencies": {
-    "applicationinsights": "^1.8.2",
-    "axios": "^0.19.2",
-    "body-parser": "^1.19.0",
+    "applicationinsights": "^2.2.0",
+    "axios": "^0.24.0",
+    "body-parser": "^1.19.1",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
     "express-swagger-generator": "^1.1.17",
     "mongo-querystring": "^4.1.1",
-    "mongoose": "^5.9.25",
+    "mongoose": "^5.0.0",
     "morgan": "^1.10.0",
-    "passport-azure-ad": "^4.2.1"
+    "passport-azure-ad": "^4.3.1"
   },
   "devDependencies": {
-    "jest-junit": "^11.0.1",
-    "eslint": "^7.5.0",
-    "jest": "^26.1.0",
-    "nodemon": "^2.0.4",
+    "jest-junit": "^13.0.0",
+    "eslint": "^8.6.0",
+    "jest": "^27.4.7",
+    "nodemon": "^2.0.15",
     "nyc": "^15.1.0",
-    "supertest": "^4.0.2"
+    "supertest": "^6.1.6"
   }
 }
