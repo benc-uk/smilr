@@ -17,7 +17,7 @@
           </b-button>
         </b-navbar-nav>
 
-        <b-navbar-nav class="ml-auto">
+        <b-navbar-nav class="ms-auto">
           <b-button size="lg" :to="{name:'report'}" class="bigger" variant="warning">
             <fa icon="chart-bar" /> Report
           </b-button>
@@ -104,6 +104,7 @@ export default {
   }
   .logo {
     height: 45px;
+    padding-left: 1rem;
   }
   .bigger {
     font-size: 1.4rem !important;
