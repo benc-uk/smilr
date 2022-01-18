@@ -19,10 +19,10 @@
   "license": "MIT",
   "dependencies": {
     "applicationinsights": "^2.2.0",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
+    "dotenv": "^14.2.0",
     "express": "^4.17.2",
     "express-swagger-generator": "^1.1.17",
     "mongo-querystring": "^4.1.1",
@@ -32,10 +32,10 @@
   },
   "devDependencies": {
     "jest-junit": "^13.0.0",
-    "eslint": "^8.6.0",
+    "eslint": "^8.7.0",
     "jest": "^27.4.7",
     "nodemon": "^2.0.15",
     "nyc": "^15.1.0",
-    "supertest": "^6.1.6"
+    "supertest": "^6.2.2"
   }
 }

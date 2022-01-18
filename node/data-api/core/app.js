@@ -64,20 +64,17 @@ module.exports = {
     app.post('/api/feedback', feedbackController.create)
 
     // Health and info endpoints
-    app.get(['/api/health(z)?', '/api/info'], healthController.get)
+    app.get('/api/info', healthController.get)
+    app.get('/api/health(z)?', (_, res) => { res.sendStatus(200) })
 
     // Bulk load data
     app.post('/api/bulk', bulkController.load)
-
-    app.get('/foo', (req, res) => {
-      res.status(200).send({ d: 3 })
-    })
 
     // Global catch all for all requests not caught by other routes
     // Return a HTTP 404 plus our standard error response JSON
     app.use('*', function (req, res, next) {
       // Fake dummy controller, so we can call _sendError()
-      const ctrl = new (require('./controllers/controller'))(null)
+      const ctrl = new (require('../controllers/controller'))(null)
       ctrl._sendError(res, new Error('API route not implemented'), 'not-found', 404)
     })
 
