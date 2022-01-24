@@ -5,11 +5,10 @@
       <spinner />
     </div>
     <b-card v-if="event && topic" border-variant="primary" header-bg-variant="primary" header-text-variant="white">
-      <h2 slot="header" class="text-truncate">
-        {{ topic.desc }} ({{ event.title }})
-      </h2>
+      <h2 slot="header" class="text-truncate">{{ topic.desc }} ({{ event.title }})</h2>
       <div class="card-body">
-        <h3>Please provide your feedback, click on a face</h3><br>
+        <h3>Please provide your feedback, click on a face</h3>
+        <br />
         <div v-if="!sending" class="facegroup">
           <face :number="1" :unselected="unselected[0]" :selected="selected[0]" @clicked="clickFace" />
           <face :number="2" :unselected="unselected[1]" :selected="selected[1]" @clicked="clickFace" />
@@ -22,9 +21,7 @@
         </div>
         <div v-if="!sending">
           <b-form-textarea v-model="comment" class="commentbox" :rows="2" placeholder="Any comments (optional)" no-resize />
-          <b-button v-if="rating" id="submitbut" variant="success" size="lg" class="pullUp float-right" @click="submitFeedback">
-            SUBMIT
-          </b-button>
+          <b-button v-if="rating" id="submitbut" variant="success" size="lg" class="pullUp float-end" @click="submitFeedback">SUBMIT</b-button>
         </div>
         <spinner v-if="sending" />
       </div>
@@ -54,34 +51,38 @@ export default {
   name: 'Feedback',
 
   components: {
-    'face': Face,
-    Spinner
+    face: Face,
+    Spinner,
   },
 
-  mixins: [ cookies ],
+  mixins: [cookies],
 
   // These are only used by unit tests, in the app the query string and router sets these
   props: {
     eventIdProp: { type: String, required: false, default: '' },
-    topicIdProp: { type: String, required: false, default: '' }
+    topicIdProp: { type: String, required: false, default: '' },
   },
 
-  data: function() {
-    return  {
+  data: function () {
+    return {
       event: null,
       topic: null,
       unselected: [false, false, false, false, false],
       selected: [false, false, false, false, false],
       rating: null,
       comment: '',
-      sending: false
+      sending: false,
     }
   },
 
   computed: {
     // Our main ids, are computed from either the props or query params on the route
-    eventId: function() { return this.eventIdProp || this.$route.query.e },
-    topicId: function() { return this.topicIdProp || this.$route.query.t }
+    eventId: function () {
+      return this.eventIdProp || this.$route.query.e
+    },
+    topicId: function () {
+      return this.topicIdProp || this.$route.query.t
+    },
   },
 
   mounted() {
@@ -99,51 +100,55 @@ export default {
       this.$router.push({
         name: 'error',
         replace: true,
-        params: { message: 'You shouldn\'t be here! No event or topic id provided!' }
+        params: { message: "You shouldn't be here! No event or topic id provided!" },
       })
       return
     }
 
-    api.getEvent(this.eventId)
-      .then((resp) => {
-        if (resp.data) {
-          this.event = resp.data
-          this.topic = resp.data.topics.find((t) => { if (t.id == this.topicId) { return t } })
-          document.title = `Smilr: Feedback for: ${this.event.title} - ${this.topic.desc}`
-        }
-      })
+    api.getEvent(this.eventId).then((resp) => {
+      if (resp.data) {
+        this.event = resp.data
+        this.topic = resp.data.topics.find((t) => {
+          if (t.id == this.topicId) {
+            return t
+          }
+        })
+        document.title = `Smilr: Feedback for: ${this.event.title} - ${this.topic.desc}`
+      }
+    })
   },
 
   methods: {
-    clickFace: function(num) {
+    clickFace: function (num) {
       for (let i in this.unselected) {
         this.$set(this.unselected, i, true)
         this.$set(this.selected, i, false)
       }
-      this.$set(this.selected, num-1, true)
-      this.$set(this.unselected, num-1, false)
+      this.$set(this.selected, num - 1, true)
+      this.$set(this.unselected, num - 1, false)
       this.rating = num
     },
 
-    submitFeedback: function() {
+    submitFeedback: function () {
       this.sending = true
-      api.postFeedback({
-        rating: parseInt(this.rating),
-        topic: this.topicId,
-        event: this.eventId,
-        comment: this.comment
-      })
+      api
+        .postFeedback({
+          rating: parseInt(this.rating),
+          topic: this.topicId,
+          event: this.eventId,
+          comment: this.comment,
+        })
         .then(() => {
-        // Save a cookie to prevent users giving multiple feeedback
+          // Save a cookie to prevent users giving multiple feeedback
           this.cookieCreate(`feedback_${this.eventId}_${this.topicId}`, this.rating, 9999)
           this.$refs.successModal.show()
         })
     },
 
-    done: function() {
+    done: function () {
       this.$router.push('/')
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -11,7 +11,7 @@
       <hr>
 
       <b>Version: {{ ver }} (Vue.js)</b><br>
-      &copy; Ben Coleman, 2017 - 2019<br>
+      &copy; Ben Coleman, 2017 - 2022<br>
       Provided under the <a target="_blank" href="https://opensource.org/licenses/MIT">MIT License</a><br><br>
       <b-button size="lg" variant="primary" href="https://smilr.benco.io" target="_blank">
         Project details &amp; source code (GitHub)

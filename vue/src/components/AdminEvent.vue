@@ -3,6 +3,7 @@
     <b-card border-variant="primary" header-bg-variant="primary" header-text-variant="white">
       <h1 v-if="editEvent" slot="header">
         <fa icon="edit" /> Edit: {{ event.title }}
+        <fa :icon="utilsFaIcon(event.type)" class="eventTypeIcon float-end" />
       </h1>
       <h1 v-else slot="header">
         <fa icon="calendar-plus" /> Create New Event
@@ -21,10 +22,9 @@
             <option v-for="(type, index) in getEventTypes()" :key="index" :value="type" class="typeOption">
               {{ type }}
             </option>
-          </b-select><fa :icon="utilsFaIcon(event.type)" class="eventTypeIcon float-right" />
+          </b-select>
         </b-form-group>
 
-        <b-container class="nopadding">
           <b-row>
             <b-col sm="6">
               <b-form-group label="Event Start Date" label-for="startInput">
@@ -43,14 +43,13 @@
               </b-form-group>
             </b-col>
           </b-row>
-        </b-container>
 
-        <div class="topicBox">
+        <div class="topicBox mt-3">
           <div class="clearfix">
-            <h2 class="float-left">
-              Topics
-            </h2>
-            <b-button size="lg" variant="primary" class="float-right" @click="addTopic()">
+            <h3 class="float-start">
+              Topic
+            </h3>&nbsp;
+            <b-button size="lg" variant="primary" class="float-end" @click="addTopic()">
               <fa icon="plus-square" /> ADD TOPIC
             </b-button>
           </div>
@@ -220,14 +219,11 @@ export default {
 
 <style>
 .formError {
-  color: #FF0039;
+  color: #bb2344;
   font-size: 60%;
 }
-.typeOption {
-  text-transform: capitalize
-}
 .eventSelect {
-  width: 85%  !important
+  width: 100%;
 }
 .eventTypeIcon {
   font-size: 3rem;

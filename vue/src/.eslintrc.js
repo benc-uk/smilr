@@ -3,7 +3,7 @@ module.exports = {
     node: true,
     es6: true,
   },
-  extends: ['eslint:recommended', 'plugin:vue/recommended'],
+  extends: ['eslint:recommended', 'plugin:vue/essential'],
   rules: {
     // Errors & best practices
     'no-var': 'error',
@@ -12,30 +12,10 @@ module.exports = {
     'no-unused-vars': ['error', { argsIgnorePattern: 'next|res|req' }],
     curly: 'error',
 
-    // ES6
-    'arrow-spacing': 'error',
-    'arrow-parens': 'error',
-
-    // Style
-    'brace-style': ['error', '1tbs', { allowSingleLine: true }],
-    semi: ['error', 'never'],
-    indent: ['error', 2],
-    quotes: ['error', 'single'],
-    camelcase: 'error',
-
-    // Spacing
-    'func-call-spacing': 'error',
-    'block-spacing': 'error',
-    'object-curly-spacing': ['error', 'always'],
-    'no-trailing-spaces': 'error',
-    'no-whitespace-before-property': 'error',
-    'comma-spacing': 'error',
-    'keyword-spacing': 'error',
-
-    // Vue
-    'vue/html-closing-bracket-newline': 'off',
-    'vue/max-attributes-per-line': 'off',
+    'vue/singleline-html-element-content-newline': 'off',
+    'vue/multiline-html-element-content-newline': 'off',
     'vue/multi-word-component-names': 'off',
+    'vue/max-attributes-per-line': 'off',
   },
   parserOptions: {
     parser: 'babel-eslint',
