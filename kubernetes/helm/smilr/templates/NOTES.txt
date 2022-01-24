@@ -5,16 +5,16 @@
 
 {{ if .Values.ingress.domainSuffix }}
 {{ if or .Values.ingress.certIssuer .Values.ingress.certName }}The frontend is accessible at https://{{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}/ 
-{{ else }}The frontend is accessible at http://{{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}/
+{{ else }}Smilr frontend is accessible at http://{{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}/
 {{ end }}
 It might take a while for the DNS record to be created & propagate, so please wait. 
 Check DNS with: dig +short {{ include "smilr.fullname" . }}.{{ .Values.ingress.domainSuffix }}
 {{ else }}
-No domainSuffix was provided, so use the external IP of your ingress
+No domain suffix was provided, use the external IP of your ingress controller to access the app
 Run these commands:
 
-export INGRESS_IP=$(kubectl get svc -l app=addon-http-application-routing-nginx-ingress -A -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}{"\n"}')
-echo -e "\n\nSmilr frontend is accessible at http://$INGRESS_IP/{{ include "smilr.fullname" . }}\n\n"
+INGRESS_IP=$(kubectl get ingress {{ include "smilr.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo -e "\n\nSmilr frontend is accessible at http://$INGRESS_IP/\n\n"
 {{ end }}
 {{ if .Values.mongodb.persistence.enabled }}There might also be a delay while the MongoDB starts and is assigned a persistent volume {{ end }}
 Have fun, bye!

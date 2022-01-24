@@ -1,11 +1,11 @@
 name: smilr
 apiVersion: v2
-version: 3.2.0
+version: 3.3.0
 appVersion: "4.0"
 description: A Helm chart to deploy Smilr microservices app to Kubernetes
 
 icon: https://github.com/benc-uk/smilr/blob/master/vue/public/favicon.png
-maintainers: 
+maintainers:
   - name: Ben Coleman
     email: ben.coleman@microsoft.com
 home: https://github.com/benc-uk/smilr
@@ -13,7 +13,7 @@ sources:
   - https://github.com/benc-uk/smilr
 
 dependencies:
-- name: mongodb
-  version: "^7.0.0"
-  repository: "@stable"
-  condition: mongodb.enabled
+  - name: mongodb
+    repository: https://charts.bitnami.com/bitnami
+    condition: mongodb.enabled
+    version: 10.x.x
