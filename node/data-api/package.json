@@ -23,7 +23,7 @@
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
     "dotenv": "^14.2.0",
-    "express": "^4.17.2",
+    "express": "^4.17.3",
     "express-swagger-generator": "^1.1.17",
     "mongo-querystring": "^4.1.1",
     "mongoose": "^5.0.0",
