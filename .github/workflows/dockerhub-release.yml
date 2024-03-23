@@ -1,5 +1,9 @@
 name: Release Dockerhub Image
 
+# *************************************************
+# *********** DISABLED AND NOT USED ***************
+# *************************************************
+
 on:
   release:
     types: [published]

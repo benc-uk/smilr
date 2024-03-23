@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
+
 import Home from './components/Home'
 import About from './components/About'
 import Events from './components/Events'
@@ -12,11 +12,10 @@ import Login from './components/Login'
 
 import auth from './services/auth'
 
-Vue.use(Router)
+// Vue.use(Router)
 
-let router = new Router({
-  // Assumes we being served via something "SPA aware" with index.html redirects
-  mode: 'history',
+const router = createRouter({
+  history: createWebHashHistory(),
   routes: [
     {
       meta: { title: 'Smilr' },
@@ -94,7 +93,7 @@ let router = new Router({
     // Catch all route, redirects to Error without props, so will redirect to Home
     {
       meta: { title: 'Smilr: Error' },
-      path: '*',
+      path: '/:catchAll(.*)',
       name: 'error-noprops',
       component: Error,
     }

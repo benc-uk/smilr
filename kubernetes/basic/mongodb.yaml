@@ -24,7 +24,7 @@ spec:
       containers:
       - name: mongodb-pods
 
-        image: mongo:4-xenial
+        image: mongo:6-jammy
         imagePullPolicy: Always
 
         ports:

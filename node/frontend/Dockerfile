@@ -27,9 +27,10 @@ RUN npm run build-modern
 #
 # Build Node.js frontend service, pulling in bundled output from previous step
 #
-FROM node:16-alpine
+FROM node:18-alpine
 
-LABEL version="2.9.7" 
+# Matches version in vue/package.json
+LABEL version="2.9.9" 
 ARG basedir="node/frontend"
 ENV NODE_ENV production
 
@@ -49,5 +50,6 @@ COPY ${basedir}/ .
 # Copy in Vue.js app, uses previous build step 'spabuild' as source
 COPY --from=spabuild /build/dist .
 
+#ENV NODE_OPTIONS=--openssl-legacy-provider
 EXPOSE 3000
 ENTRYPOINT [ "npm" , "start" ]

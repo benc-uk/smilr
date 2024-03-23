@@ -39,7 +39,7 @@ let options = {
     info: {
       description: 'Smilr microservice, RESTful data API',
       title: 'Smilr API',
-      version: '6.2.0',
+      version: '6.6.1',
     },
     produces: [
       'application/json',

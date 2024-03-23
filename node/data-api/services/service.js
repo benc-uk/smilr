@@ -70,7 +70,7 @@ class Service {
       let result = await this.model.updateOne(filter, { $set: data }, { upsert: doUpsert })
 
       if (result) {
-        if (result.n !== 1) { return new Error(MSG_NO_RESULT) }
+        if (result.matchedCount !== 1) { return new Error(MSG_NO_RESULT) }
         return data
       } else {
         return new Error(MSG_UPDATE_ERR)
@@ -87,7 +87,7 @@ class Service {
       let result = await this.model.deleteOne(filter)
 
       if (result) {
-        if (result.n !== 1) { return new Error(MSG_NO_RESULT) }
+        if (result.deletedCount !== 1) { return new Error(MSG_NO_RESULT) }
         return { message: `Doc '${id}' was successfully deleted` }
       } else {
         return new Error(MSG_DELETE_ERR)
